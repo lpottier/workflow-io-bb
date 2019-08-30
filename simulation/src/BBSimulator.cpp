@@ -8,7 +8,6 @@
  * (at your option) any later version.
  */
 #include <wrench.h>
-#include <wrench/tools/pegasus/PegasusWorkflowParser.h>
 
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
