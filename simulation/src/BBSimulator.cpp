@@ -9,6 +9,8 @@
  */
 #include <wrench.h>
 
+#include <simgrid/s4u.hpp>
+
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
 
@@ -56,6 +58,13 @@ int main(int argc, char **argv) {
   // Get a vector of all the hosts in the simulated platform
   std::vector<std::string> hostname_list = simulation.getHostnameList();
   std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
+
+  simgrid::s4u::Link* bblink = simgrid::s4u::Link::by_name("2");
+  std::string bbtype = std::string(bblink->get_property("bbtype"));
+  std::string bbsize = std::string(bblink->get_property("bbsize"));
+
+  std::cerr << "BB storage " << bbtype << " of size " << bbsize << " GB " << std::endl;
+  std::cerr.flush();
 
   // Instantiate a storage service
   std::string storage_host = hostname_list[(hostname_list.size() > 2) ? 2 : 1];
