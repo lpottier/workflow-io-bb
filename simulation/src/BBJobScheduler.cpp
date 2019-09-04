@@ -28,10 +28,10 @@ void BBJobScheduler::scheduleTasks(const std::set<std::shared_ptr<wrench::Comput
   }
 
   auto compute_service = *compute_services.begin();
-  std::shared_ptr<wrench::BatchComputeService> batch_service;
-  if (not(batch_service = std::dynamic_pointer_cast<wrench::BatchComputeService>(compute_service))) {
-    throw std::runtime_error("This example Batch Scheduler can only handle a batch service");
-  }
+  // std::shared_ptr<wrench::BatchComputeService> batch_service;
+  // if (not(batch_service = std::dynamic_pointer_cast<wrench::BatchComputeService>(compute_service))) {
+  //   throw std::runtime_error("This example Batch Scheduler can only handle a batch service");
+  // }
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
@@ -44,11 +44,12 @@ void BBJobScheduler::scheduleTasks(const std::set<std::shared_ptr<wrench::Comput
     }
 
     wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, file_locations);
-    std::map<std::string, std::string> batch_job_args;
-    batch_job_args["-N"] = "1";
-    batch_job_args["-t"] = "2000000"; //time in minutes
-    batch_job_args["-c"] = "1"; //number of cores per node
-    this->getJobManager()->submitJob(job, batch_service, batch_job_args);
+    // std::map<std::string, std::string> batch_job_args;
+    // batch_job_args["-N"] = "1";
+    // batch_job_args["-t"] = "2000000"; //time in minutes
+    // batch_job_args["-c"] = "1"; //number of cores per node
+    // this->getJobManager()->submitJob(job, batch_service, batch_job_args);
+    this->getJobManager()->submitJob(job, compute_service);
   }
   WRENCH_INFO("Done with scheduling tasks as standard jobs");
 }

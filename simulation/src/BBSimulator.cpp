@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 
   // Get a vector of all the hosts in the simulated platform
   std::vector<std::string> hostname_list = simulation.getHostnameList();
+  std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
 
   // Instantiate a storage service
   std::string storage_host = hostname_list[(hostname_list.size() > 2) ? 2 : 1];
@@ -74,11 +75,10 @@ int main(int argc, char **argv) {
   std::string wms_host = hostname_list[0];
   // Instantiate a batch service and add it to the simulation
   try {
-    auto batch_service = new wrench::BatchComputeService(
-          wms_host, hostname_list, 0, {},
-          {{wrench::BatchComputeServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD, 2048}});
+    auto baremetal_service = new wrench::BareMetalComputeService(
+          wms_host, hostname_set, 0, {}, {});
 
-    compute_services.insert(simulation.add(batch_service));
+    compute_services.insert(simulation.add(baremetal_service));
   } catch (std::invalid_argument &e) {
     std::cerr << "Error: " << e.what() << std::endl;
     std::exit(1);
@@ -86,9 +86,10 @@ int main(int argc, char **argv) {
 
   // Instantiate a WMS
   auto wms = simulation.add(
-          new BBWMS(std::unique_ptr<BBJobScheduler>(
-                  new BBJobScheduler(storage_service)),
-                        nullptr, compute_services, storage_services, wms_host));
+          new BBWMS(
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(storage_service)),
+            nullptr, compute_services, storage_services, wms_host)
+          );
   wms->addWorkflow(workflow);
 
   // Instantiate a file registry service
