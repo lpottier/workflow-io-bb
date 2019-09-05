@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
 
   //All services run on the main PFS node (by rule PFSHost1)
 
-  // Stage input files from PFS to BB
+  // Stage the chosen input files from PFS to BB
   // TODO
 
   // Launch the simulation

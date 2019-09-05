@@ -15,7 +15,7 @@
             <prop id="type" value="compute"/>
         </host>
 
-        <host id="PFSHost0" speed="1000Gf" core="10">
+        <host id="PFSHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
             <prop id="category" value="pfs"/>
             <prop id="size" value="10000000"/> <!-- size in GB -->
@@ -68,16 +68,16 @@
             <link_ctn id="pfslink"/>
         </route>
 
-        <route src="PFSHost0" dst="Host1">
+        <route src="PFSHost1" dst="Host1">
             <link_ctn id="pfslink"/>
         </route>
-        <route src="PFSHost0" dst="Host2">
+        <route src="PFSHost1" dst="Host2">
             <link_ctn id="pfslink"/>
         </route>
-        <route src="PFSHost0" dst="Host3">
+        <route src="PFSHost1" dst="Host3">
             <link_ctn id="pfslink"/>
         </route>
-        <route src="PFSHost0" dst="Host4">
+        <route src="PFSHost1" dst="Host4">
             <link_ctn id="pfslink"/>
         </route>
 
