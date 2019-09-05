@@ -2,49 +2,78 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
     <zone id="AS0" routing="Full">
-        <host id="Host1" speed="1000Gf" core="10"/>
-        <host id="Host2" speed="1000Gf" core="10"/>
-        <host id="Host3" speed="1000Gf" core="10"/>
-        <host id="Host4" speed="1000Gf" core="10"/>
-        <host id="BBHost0" speed="1000Gf" core="10">
-            <prop id="bbhost" value="nersc-cori"/>
+        <host id="Host1" speed="1000Gf" core="10">
+            <prop id="type" value="compute"/>
         </host>
-        <link id="1" bandwidth="5000GBps" latency="0us"/>
-        <link id="2" bandwidth="10000GBps" latency="0us">
-            <prop id="bbtype" value="nersc-cori"/>
-            <prop id="bbsize" value="10"/> <!-- size in GB -->
+        <host id="Host2" speed="1000Gf" core="10">
+            <prop id="type" value="compute"/>
+        </host>
+        <host id="Host3" speed="1000Gf" core="10">
+            <prop id="type" value="compute"/>
+        </host>
+        <host id="Host4" speed="1000Gf" core="10">
+            <prop id="type" value="compute"/>
+        </host>
+
+        <host id="PFSHost0" speed="1000Gf" core="10">
+            <prop id="type" value="storage"/>
+            <prop id="size" value="10000000"/> <!-- size in GB -->
+        </host>
+        <host id="BBHost0" speed="1000Gf" core="10">
+            <prop id="type" value="storage"/>
+            <prop id="size" value="10"/> <!-- size in GB -->
+        </host>
+
+        <link id="pfs" bandwidth="5000GBps" latency="0us">
+            <prop id="type" value="pfs-cori"/>
+        </link>
+        <link id="bb" bandwidth="10000GBps" latency="0us">
+            <prop id="type" value="bb-cori"/>
         </link>
 
         <route src="Host1" dst="Host2">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
         </route>
         <route src="Host1" dst="Host3">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
         </route>
         <route src="Host1" dst="Host4">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
         </route>
         <route src="Host2" dst="Host3">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
         </route>
         <route src="Host2" dst="Host4">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
         </route>
         <route src="Host3" dst="Host4">
-            <link_ctn id="1"/>
+            <link_ctn id="pfs"/>
+        </route>
+
+        <route src="PFSHost0" dst="Host1">
+            <link_ctn id="pfs"/>
+        </route>
+        <route src="PFSHost0" dst="Host2">
+            <link_ctn id="pfs"/>
+        </route>
+        <route src="PFSHost0" dst="Host3">
+            <link_ctn id="pfs"/>
+        </route>
+        <route src="PFSHost0" dst="Host4">
+            <link_ctn id="pfs"/>
         </route>
 
         <route src="BBHost0" dst="Host1">
-            <link_ctn id="2"/>
+            <link_ctn id="bb"/>
         </route>
         <route src="BBHost0" dst="Host2">
-            <link_ctn id="2"/>
+            <link_ctn id="bb"/>
         </route>
         <route src="BBHost0" dst="Host3">
-            <link_ctn id="2"/>
+            <link_ctn id="bb"/>
         </route>
         <route src="BBHost0" dst="Host4">
-            <link_ctn id="2"/>
-        </route>
+            <link_ctn id="bb"/>
+        </route>        
     </zone>
 </platform>
