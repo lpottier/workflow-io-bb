@@ -18,7 +18,7 @@
         <host id="PFSHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
             <prop id="category" value="pfs"/>
-            <prop id="size" value="10000000"/> <!-- size in GB -->
+            <prop id="size" value="10000000000000"/> <!-- size in GB -->
         </host>
 
         <host id="BBHost1" speed="1000Gf" core="10">
@@ -90,7 +90,7 @@
         <route src="Host3" dst="BBHost3">
             <link_ctn id="bblink"/>
         </route>
-        <route src="Host3" dst="BBHost3">
+        <route src="Host4" dst="BBHost4">
             <link_ctn id="bblink"/>
         </route>       
     </zone>

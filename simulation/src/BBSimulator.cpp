@@ -14,9 +14,11 @@
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
 
-#define PFS_HOST "PFSHost1"
-#define BB_HOST "BBHost1"
 #define COMPUTE_NODE "compute"
+#define STORAGE_NODE "storage"
+#define PFS_NODE "pfs"
+#define BB_NODE "bb"
+
 
 static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
@@ -59,50 +61,69 @@ int main(int argc, char **argv) {
   // Reading and parsing the platform description file to instantiate a simulated platform
   simulation.instantiatePlatform(platform_file);
 
-  if (!wrench::S4U_Simulation::hostExists(BB_HOST)) {
-    throw std::runtime_error("This simulation requires a BBHost0 in the platform file");
-  }
-  if (!wrench::S4U_Simulation::hostExists(PFS_HOST)) {
-    throw std::runtime_error("This simulation requires a PFSHost0 in the platform file");
-  }
   // Get a vector of all the hosts in the simulated platform
   std::vector<std::string> hostname_list = simulation.getHostnameList();
   // std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
 
-  simgrid::s4u::Host* bbhost = simgrid::s4u::Host::by_name(BB_HOST);
-  std::string bbtype = std::string(bbhost->get_property("type"));
-  std::string bbsize = std::string(bbhost->get_property("size"));
-
-  std::cerr << "BB storage " << bbtype << " of size " << bbsize << " GB " << std::endl;
-  std::cerr.flush();
-
-  // Instantiate a storage service
-  std::string pfs_storage_host = PFS_HOST;
-  std::string bb_storage_host = BB_HOST;
-  auto pfs_storage_service = simulation.add(new wrench::SimpleStorageService(pfs_storage_host, 10000000000000.0));
-  auto bb_storage_service = simulation.add(new wrench::SimpleStorageService(bb_storage_host, std::stof(bbsize) ));
+  // Create a list of storage services that will be used by the WMS
+  std::set<std::shared_ptr<wrench::StorageService>> storage_services;
+  std::shared_ptr<wrench::StorageService> pfs_storage_service = nullptr;
+  int nb_bb_nodes = 0;
+  int nb_pfs_nodes = 0;
+  int nb_compute_nodes = 0;
 
   // Construct a list of execution hosts (i.e., compute node)
   std::set<std::string> execution_hosts = {};
 
+  std::string wms_host;
+  std::string file_registry_service_host;
+
+  //Read all hosts and create a list of compute nodes and storage nodes
   for (auto host : hostname_list) {
-    simgrid::s4u::Host* simhost = simgrid::s4u::Host::by_name(host); 
-    if(std::string(simhost->get_property("type")) == std::string(COMPUTE_NODE))
+    simgrid::s4u::Host* simhost = simgrid::s4u::Host::by_name(host);
+    std::string host_type = std::string(simhost->get_property("type")); 
+    
+    if (host_type == std::string(COMPUTE_NODE)) {
       execution_hosts.insert(host);
+      nb_compute_nodes++;
+    }
+    else if (host_type == std::string(STORAGE_NODE)) {
+      std::string size = std::string(simhost->get_property("size"));
+      std::string category = std::string(simhost->get_property("category"));
+
+      std::cerr << category << " " << host_type << " of size " << size << " GB " << std::endl;
+      std::cerr.flush();
+      
+      auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
+      storage_services.insert(host_service);
+
+      if (category == std::string(PFS_NODE)) {
+        pfs_storage_service = host_service;
+        wms_host = host;
+        file_registry_service_host = host;
+        nb_pfs_nodes++;
+      }
+      else if (category == std::string(BB_NODE))
+        nb_bb_nodes++;
+
+
+      storage_services.insert(host_service);
+    }
   }
+
+  if (nb_pfs_nodes != 1)
+    throw std::runtime_error("This simulation requires exactly one PFS host");
 
   if (execution_hosts.empty()) {
     throw std::runtime_error("This simulation requires at least one compute node in the platform file");
   }
-  // Create a list of storage services that will be used by the WMS
-  std::set<std::shared_ptr<wrench::StorageService>> storage_services;
-  storage_services.insert(pfs_storage_service);
-  storage_services.insert(bb_storage_service);
 
+  if (storage_services.empty()) {
+    throw std::runtime_error("This simulation requires at least two storage nodes in the platform file");
+  }
   // Create a list of compute services that will be used by the WMS
   std::set<std::shared_ptr<wrench::ComputeService>> compute_services;
 
-  std::string wms_host = PFS_HOST;
   // Instantiate a bare metal service and add it to the simulation
   try {
     auto baremetal_service = new wrench::BareMetalComputeService(
@@ -123,7 +144,6 @@ int main(int argc, char **argv) {
   wms->addWorkflow(workflow);
 
   // Instantiate a file registry service
-  std::string file_registry_service_host = PFS_HOST;
   auto file_registry_service =
           new wrench::FileRegistryService(file_registry_service_host);
   simulation.add(file_registry_service);
