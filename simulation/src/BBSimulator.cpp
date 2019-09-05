@@ -78,7 +78,9 @@ int main(int argc, char **argv) {
 
   // Instantiate a storage service
   std::string pfs_storage_host = PFS_HOST;
+  std::string bb_storage_host = BB_HOST;
   auto pfs_storage_service = simulation.add(new wrench::SimpleStorageService(pfs_storage_host, 10000000000000.0));
+  auto bb_storage_service = simulation.add(new wrench::SimpleStorageService(bb_storage_host, std::stof(bbsize) ));
 
   // Construct a list of execution hosts (i.e., compute node)
   std::set<std::string> execution_hosts = {};
@@ -95,6 +97,7 @@ int main(int argc, char **argv) {
   // Create a list of storage services that will be used by the WMS
   std::set<std::shared_ptr<wrench::StorageService>> storage_services;
   storage_services.insert(pfs_storage_service);
+  storage_services.insert(bb_storage_service);
 
   // Create a list of compute services that will be used by the WMS
   std::set<std::shared_ptr<wrench::ComputeService>> compute_services;
@@ -134,6 +137,11 @@ int main(int argc, char **argv) {
     return 0;
   }
 
+  //All services run on the main PFS node (by rule PFSHost1)
+
+  // Stage input files from PFS to BB
+  // TODO
+
   // Launch the simulation
   try {
     simulation.launch();
@@ -141,6 +149,9 @@ int main(int argc, char **argv) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
   }
+
+  // Stage out files from BB to PFS
+  // TODO  
 
   return 0;
 }
