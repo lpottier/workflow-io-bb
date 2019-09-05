@@ -14,8 +14,8 @@
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
 
-#define PFS_HOST "PFSHost0"
-#define BB_HOST "BBHost0"
+#define PFS_HOST "PFSHost1"
+#define BB_HOST "BBHost1"
 #define COMPUTE_NODE "compute"
 
 static bool ends_with(const std::string& str, const std::string& suffix) {
