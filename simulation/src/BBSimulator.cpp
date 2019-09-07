@@ -159,8 +159,33 @@ int main(int argc, char **argv) {
 
   //All services run on the main PFS node (by rule PFSHost1)
 
-  // Stage the chosen input files from PFS to BB
+  // Stage the chosen files from PFS to BB
   // TODO
+  std::vector<wrench::WorkflowFile*> all_files = workflow->getFiles();
+  for (auto f : all_files)
+    std::cout << f->getID() << f->getSize() << std::endl;
+
+  // Retrieve the first level of tasks and the last one to connect the new BB tasks
+  int nb_level = workflow->getNumLevels();
+  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
+  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
+
+  wrench::WorkflowTask* bb_stagein = workflow->addTask("bb_stagein", 0, 1, INT_MAX, 1.0, 1);
+  wrench::WorkflowTask* bb_stageout = workflow->addTask("bb_stageout", 0, 1, INT_MAX, 1.0, 1);
+
+  // Connect the BB stage in task to the first tasks in the workflow
+  for (auto task : first_tasks)
+    workflow->addControlDependency(bb_stagein, task);
+  // Connect the BB stage out task to the last tasks in the workflow
+  for (auto task : last_tasks)
+    workflow->addControlDependency(task, bb_stageout);
+
+  // //Example in which we stage in BB all input all
+  for (auto f : input_files) {
+    std::cout << "Staging file: " << f.first << " into storage: " << "BBHost1" << std::endl;
+    //bb_stagein->addSrcDest(f.second, "PFSHost1", "BBHost1");
+    //bb_stageout->addSrcDest(f.second, "BBHost1", "PFSHost1"); // we need to stage them back
+  }
 
   // Launch the simulation
   try {

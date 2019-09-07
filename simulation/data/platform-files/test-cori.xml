@@ -76,6 +76,10 @@
         </route>
         <route src="BBHost1" dst="Host4">
             <link_ctn id="bblink"/>
-        </route>        
+        </route>
+
+        <route src="BBHost1" dst="PFSHost1">
+            <link_ctn id="bblink"/>
+        </route>
     </zone>
 </platform>
