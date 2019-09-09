@@ -20,6 +20,7 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
                      const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
+                     const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_locations,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
@@ -27,7 +28,8 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          storage_services,
          {}, nullptr,
          hostname,
-         "simple") {}
+         "bbwms"),
+         file_locations(file_locations) {}
 
 /**
  * @brief main method of the BBWMS daemon
@@ -46,6 +48,8 @@ int BBWMS::main() {
 
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
+
+  //TODO move files using the 
 
   while (true) {
     // Get the ready tasks

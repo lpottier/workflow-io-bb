@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
   auto wms = simulation.add(
           new BBWMS(
             std::unique_ptr<BBJobScheduler>(new BBJobScheduler(pfs_storage_service)),
-            nullptr, compute_services, storage_services, wms_host)
+            nullptr, compute_services, storage_services, {}, wms_host)
           );
   wms->addWorkflow(workflow);
 
@@ -186,6 +186,9 @@ int main(int argc, char **argv) {
     //bb_stagein->addSrcDest(f.second, "PFSHost1", "BBHost1");
     //bb_stageout->addSrcDest(f.second, "BBHost1", "PFSHost1"); // we need to stage them back
   }
+
+  // !!! TODO !!! in the doc about Summit ->  (Note that a compute service can be associated to a "by default" storage service upon instantiation);
+
 
   // Launch the simulation
   try {
