@@ -135,18 +135,10 @@ int main(int argc, char **argv) {
     std::exit(1);
   }
 
-  // Instantiate a WMS
-  auto wms = simulation.add(
-          new BBWMS(
-            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(pfs_storage_service)),
-            nullptr, compute_services, storage_services, {}, wms_host)
-          );
-  wms->addWorkflow(workflow);
-
+  //All services run on the main PFS node (by rule PFSHost1)
   // Instantiate a file registry service
-  auto file_registry_service =
-          new wrench::FileRegistryService(file_registry_service_host);
-  simulation.add(file_registry_service);
+  auto file_registry_service = new wrench::FileRegistryService(file_registry_service_host);
+  std::shared_ptr<wrench::FileRegistryService> file_registry_ptr = simulation.add(file_registry_service);
 
   // It is necessary to store, or "stage", input files
   auto input_files = workflow->getInputFiles();
@@ -157,35 +149,24 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  //All services run on the main PFS node (by rule PFSHost1)
+  // Stage the chosen files from PFS to BB -> here heuristics
+  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_allocation;
 
-  // Stage the chosen files from PFS to BB
-  // TODO
-  std::vector<wrench::WorkflowFile*> all_files = workflow->getFiles();
-  for (auto f : all_files)
-    std::cout << f->getID() << f->getSize() << std::endl;
+  for (auto f : workflow->getFiles())
+    file_allocation[f] = pfs_storage_service;
 
-  // Retrieve the first level of tasks and the last one to connect the new BB tasks
-  int nb_level = workflow->getNumLevels();
-  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
-  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
-
-  wrench::WorkflowTask* bb_stagein = workflow->addTask("bb_stagein", 0, 1, INT_MAX, 1.0, 1);
-  wrench::WorkflowTask* bb_stageout = workflow->addTask("bb_stageout", 0, 1, INT_MAX, 1.0, 1);
-
-  // Connect the BB stage in task to the first tasks in the workflow
-  for (auto task : first_tasks)
-    workflow->addControlDependency(bb_stagein, task);
-  // Connect the BB stage out task to the last tasks in the workflow
-  for (auto task : last_tasks)
-    workflow->addControlDependency(task, bb_stageout);
-
-  // //Example in which we stage in BB all input all
-  for (auto f : input_files) {
-    std::cout << "Staging file: " << f.first << " into storage: " << "BBHost1" << std::endl;
-    //bb_stagein->addSrcDest(f.second, "PFSHost1", "BBHost1");
-    //bb_stageout->addSrcDest(f.second, "BBHost1", "PFSHost1"); // we need to stage them back
+  for (auto alloc : file_allocation) {
+    std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
   }
+
+  // Instantiate a WMS
+  auto wms = simulation.add(
+          new BBWMS(
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(pfs_storage_service)),
+            nullptr, compute_services, storage_services, file_registry_ptr, 
+            file_allocation, wms_host)
+          );
+  wms->addWorkflow(workflow);
 
   // !!! TODO !!! in the doc about Summit ->  (Note that a compute service can be associated to a "by default" storage service upon instantiation);
 

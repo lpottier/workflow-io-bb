@@ -20,13 +20,14 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
                      const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
+                     std::shared_ptr<wrench::FileRegistryService> file_registry_service,
                      const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_locations,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
          compute_services,
          storage_services,
-         {}, nullptr,
+         {}, file_registry_service,
          hostname,
          "bbwms"),
          file_locations(file_locations) {}
@@ -49,7 +50,32 @@ int BBWMS::main() {
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
 
-  //TODO move files using the 
+  std::shared_ptr<wrench::FileRegistryService> file_registry = this->getAvailableFileRegistryService();
+
+  if (!file_registry)
+    throw std::runtime_error("No FileRegistryService running");
+
+  //Move data from PFS to BB according the given partition
+  for (auto elem : file_locations) {
+    auto attached_storages = file_registry->lookupEntry(elem.first);
+
+    for (auto storage : attached_storages)
+      std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
+
+    std::cout << attached_storages.size() << std::endl;
+
+    if (attached_storages.size() != 1) {
+      WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
+                   (elem.first->getID().c_str()));
+      //throw std::runtime_error("Aborting");
+    }
+
+    // auto pfs_storage = attached_storages.begin(); // first and only element
+
+    //std::cout << pfs_storage << std::endl;
+
+    //data_movement_manager->doSynchronousFileCopy(elem.first, pfs_storage, elem.second);
+  }
 
   while (true) {
     // Get the ready tasks
@@ -80,6 +106,19 @@ int BBWMS::main() {
     }
   }
 
+  //Move back the data from the BB to the PFS according the given partition
+  // for (auto elem : file_locations) {
+  //   attached_storages = lookupEntry(elem.first);
+  //   if (attached_storages.size() != 1) {
+  //     WRENCH_INFO("The file (%s) belongs to %s storages (file must belongs to PFS)",
+  //                  (elem.first->getID().c_str()));
+  //     throw std::runtime_error("Aborting");
+  //   }
+
+  //   auto bb_storage = *attached_storages.begin(); // first and only element
+
+  //   data_movement_manager->doSynchronousFileCopy(elem.first, bb_storage, elem.second);
+  // }
   wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
