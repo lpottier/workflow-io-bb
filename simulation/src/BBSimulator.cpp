@@ -162,7 +162,7 @@ int main(int argc, char **argv) {
   // Instantiate a WMS
   auto wms = simulation.add(
           new BBWMS(
-            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(pfs_storage_service)),
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler({pfs_storage_service}, {})),
             nullptr, compute_services, storage_services, file_registry_ptr, 
             file_allocation, wms_host)
           );

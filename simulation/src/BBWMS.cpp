@@ -53,28 +53,30 @@ int BBWMS::main() {
   std::shared_ptr<wrench::FileRegistryService> file_registry = this->getAvailableFileRegistryService();
 
   if (!file_registry)
-    throw std::runtime_error("No FileRegistryService running");
+    throw std::runtime_error("No File Registry Service available");
 
   //Move data from PFS to BB according the given partition
   for (auto elem : file_locations) {
     auto attached_storages = file_registry->lookupEntry(elem.first);
 
-    for (auto storage : attached_storages)
-      std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
+    // for (auto storage : attached_storages)
+    //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
 
-    std::cout << attached_storages.size() << std::endl;
-
-    if (attached_storages.size() != 1) {
+    if (attached_storages.size() > 1) {
       WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
                    (elem.first->getID().c_str()));
-      //throw std::runtime_error("Aborting");
+      throw std::runtime_error("Aborting");
     }
 
-    // auto pfs_storage = attached_storages.begin(); // first and only element
+    if (attached_storages.size() == 1) { 
+      auto pfs_storage = attached_storages.begin(); // first and only element, must be the PFS
+      //TODO add an assert
+      std::cout << "File " << elem.first->getID() << " is staged in " << (*pfs_storage)->getHostname() << std::endl;
+    } else {
+      std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
+    }
 
-    //std::cout << pfs_storage << std::endl;
-
-    //data_movement_manager->doSynchronousFileCopy(elem.first, pfs_storage, elem.second);
+    //data_movement_manager->doSynchronousFileCopy(elem.first, pfs_storage, elem.second, file_registry);
   }
 
   while (true) {

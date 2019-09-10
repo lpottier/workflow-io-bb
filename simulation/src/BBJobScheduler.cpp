@@ -12,6 +12,15 @@
 XBT_LOG_NEW_DEFAULT_CATEGORY(simple_scheduler, "Log category for BB Scheduler");
 
 /**
+ * @brief Create a JobScheduler with two types of storages PFS and BB
+ */
+BBJobScheduler::BBJobScheduler(
+  const std::set<std::shared_ptr<wrench::StorageService> > &pfs_storage_services,
+  const std::set<std::shared_ptr<wrench::StorageService> > &bb_storage_services) :
+         pfs_storage_services(pfs_storage_services), 
+         bb_storage_services(bb_storage_services) {}
+
+/**
  * @brief Schedule and run a set of ready tasks on available cloud resources
  *
  * @param compute_services: a set of compute services available to run jobs
@@ -28,6 +37,8 @@ void BBJobScheduler::scheduleTasks(const std::set<std::shared_ptr<wrench::Comput
   }
 
   auto compute_service = *compute_services.begin();
+
+  auto default_storage_service = *pfs_storage_services.begin();
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
