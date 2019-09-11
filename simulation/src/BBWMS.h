@@ -24,7 +24,7 @@ public:
               const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
               std::shared_ptr<wrench::FileRegistryService> file_registry_service,
-              const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_locations,
+              const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
               const std::string &hostname);
 
 private:
@@ -32,7 +32,7 @@ private:
 
     /** @brief The job manager */
     std::shared_ptr<wrench::JobManager> job_manager;
-    std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_locations;
+    std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_placements;
 };
 
 #endif //MY_BBWMS_H

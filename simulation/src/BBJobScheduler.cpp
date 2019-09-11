@@ -15,10 +15,8 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(simple_scheduler, "Log category for BB Scheduler");
  * @brief Create a JobScheduler with two types of storages PFS and BB
  */
 BBJobScheduler::BBJobScheduler(
-  const std::set<std::shared_ptr<wrench::StorageService> > &pfs_storage_services,
-  const std::set<std::shared_ptr<wrench::StorageService> > &bb_storage_services) :
-         pfs_storage_services(pfs_storage_services), 
-         bb_storage_services(bb_storage_services) {}
+  const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements) :
+         file_placements(file_placements) {}
 
 /**
  * @brief Schedule and run a set of ready tasks on available cloud resources
@@ -28,29 +26,29 @@ BBJobScheduler::BBJobScheduler(
  *
  * @throw std::runtime_error
  */
-void BBJobScheduler::scheduleTasks(const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
-                                               const std::vector<wrench::WorkflowTask *> &tasks) {
+void BBJobScheduler::scheduleTasks(
+            const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
+            const std::vector<wrench::WorkflowTask *> &tasks) {
 
   // Check that the right compute_services is passed
+  //TODO: MAKE SURE MULTIPLE CS CAN BE USED
   if (compute_services.size() != 1) {
     throw std::runtime_error("This example BB Scheduler requires a single compute service");
   }
 
   auto compute_service = *compute_services.begin();
 
-  auto default_storage_service = *pfs_storage_services.begin();
-
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
-    std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_locations;
-    for (auto f : task->getInputFiles()) {
-      file_locations.insert(std::make_pair(f, default_storage_service));
-    }
-    for (auto f : task->getOutputFiles()) {
-      file_locations.insert(std::make_pair(f, default_storage_service));
-    }
+    // std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_locations;
+    // for (auto f : task->getInputFiles()) {
+    //   file_locations.insert(std::make_pair(f, default_storage_service));
+    // }
+    // for (auto f : task->getOutputFiles()) {
+    //   file_locations.insert(std::make_pair(f, default_storage_service));
+    // }
 
-    wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, file_locations);
+    wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, this->file_placements);
     this->getJobManager()->submitJob(job, compute_service);
   }
   WRENCH_INFO("Done with scheduling tasks as standard jobs");

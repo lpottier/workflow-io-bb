@@ -14,15 +14,14 @@
 
 class BBJobScheduler : public wrench::StandardJobScheduler {
 public:
-  BBJobScheduler(const std::set<std::shared_ptr<wrench::StorageService> > &pfs_storage_services,
-                 const std::set<std::shared_ptr<wrench::StorageService> > &bb_storage_services);
+  BBJobScheduler(const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements);
 
-  void scheduleTasks(const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
-                     const std::vector<wrench::WorkflowTask *> &tasks);
+  void scheduleTasks(
+       const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
+       const std::vector<wrench::WorkflowTask *> &tasks);
 
 private:
-  std::set<std::shared_ptr<wrench::StorageService> > pfs_storage_services;
-  std::set<std::shared_ptr<wrench::StorageService> > bb_storage_services;
+  std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_placements;
 };
 
 #endif //MY_BBSCHEDULER_H

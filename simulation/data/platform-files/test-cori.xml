@@ -18,12 +18,12 @@
         <host id="PFSHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
             <prop id="category" value="pfs"/>
-            <prop id="size" value="10000000000000"/> <!-- size in GB -->
+            <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
         </host>
         <host id="BBHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
             <prop id="category" value="bb"/>
-            <prop id="size" value="10"/> <!-- size in GB -->
+            <prop id="size" value="18446744073709551616"/> <!-- size in B -->
         </host>
 
         <link id="pfslink" bandwidth="5000GBps" latency="0us">
@@ -79,7 +79,7 @@
         </route>
 
         <route src="BBHost1" dst="PFSHost1">
-            <link_ctn id="bblink"/>
+            <link_ctn id="pfslink"/>
         </route>
     </zone>
 </platform>

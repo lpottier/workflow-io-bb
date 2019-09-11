@@ -21,7 +21,7 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
                      std::shared_ptr<wrench::FileRegistryService> file_registry_service,
-                     const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_locations,
+                     const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
@@ -30,7 +30,7 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          {}, file_registry_service,
          hostname,
          "bbwms"),
-         file_locations(file_locations) {}
+         file_placements(file_placements) {}
 
 /**
  * @brief main method of the BBWMS daemon
@@ -55,8 +55,8 @@ int BBWMS::main() {
   if (!file_registry)
     throw std::runtime_error("No File Registry Service available");
 
-  //Move data from PFS to BB according the given partition
-  for (auto elem : file_locations) {
+  //Move specified files from PFS to BB
+  for (auto elem : file_placements) {
     auto attached_storages = file_registry->lookupEntry(elem.first);
 
     // for (auto storage : attached_storages)
@@ -69,15 +69,27 @@ int BBWMS::main() {
     }
 
     if (attached_storages.size() == 1) { 
-      auto pfs_storage = attached_storages.begin(); // first and only element, must be the PFS
+      auto current_storage = *attached_storages.begin(); // first and only element, must be the PFS
       //TODO add an assert
-      std::cout << "File " << elem.first->getID() << " is staged in " << (*pfs_storage)->getHostname() << std::endl;
-    } else {
-      std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
-    }
+      std::cerr << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
+      if (current_storage->getHostname() != elem.second->getHostname()) {
+        data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
+        file_registry->removeEntry(elem.first, current_storage);
+      }
 
-    //data_movement_manager->doSynchronousFileCopy(elem.first, pfs_storage, elem.second, file_registry);
+    } else {
+      //std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
+    }
   }
+
+  //print file_registry
+  for (auto elem : file_placements) {
+    std::cerr << elem.first->getID() << " in [";
+    for (auto storage : file_registry->lookupEntry(elem.first))
+      std::cerr << storage->getHostname() << " ";
+    std::cerr << "]" << std::endl;
+  }
+
 
   while (true) {
     // Get the ready tasks
@@ -108,19 +120,30 @@ int BBWMS::main() {
     }
   }
 
-  //Move back the data from the BB to the PFS according the given partition
-  // for (auto elem : file_locations) {
-  //   attached_storages = lookupEntry(elem.first);
-  //   if (attached_storages.size() != 1) {
-  //     WRENCH_INFO("The file (%s) belongs to %s storages (file must belongs to PFS)",
+  // //Move specified files from PFS to BB
+  // for (auto elem : file_placements) {
+  //   auto attached_storages = file_registry->lookupEntry(elem.first);
+
+  //   // for (auto storage : attached_storages)
+  //   //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
+
+  //   if (attached_storages.size() > 1) {
+  //     WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
   //                  (elem.first->getID().c_str()));
   //     throw std::runtime_error("Aborting");
   //   }
 
-  //   auto bb_storage = *attached_storages.begin(); // first and only element
-
-  //   data_movement_manager->doSynchronousFileCopy(elem.first, bb_storage, elem.second);
+  //   if (attached_storages.size() == 1) { 
+  //     auto current_storage = *attached_storages.begin(); // first and only element, must be the PFS
+  //     //TODO add an assert
+  //     std::cout << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
+  //     if (current_storage->getHostname() != elem.second->getHostname())
+  //       data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
+  //   } else {
+  //     //std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
+  //   }
   // }
+
   wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();

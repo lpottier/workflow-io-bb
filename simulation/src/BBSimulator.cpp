@@ -56,6 +56,11 @@ int main(int argc, char **argv) {
       exit(1);
   }
   std::cerr << "The workflow has " << workflow->getNumberOfTasks() << " tasks " << std::endl;
+  auto sizefiles = workflow->getFiles();
+  double totsize = 0;
+  for (auto f : sizefiles)
+    totsize += f->getSize();
+  std::cerr << "Total workflow files size " << totsize << " in B (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
   std::cerr.flush();
 
   // Reading and parsing the platform description file to instantiate a simulated platform
@@ -68,6 +73,7 @@ int main(int argc, char **argv) {
   // Create a list of storage services that will be used by the WMS
   std::set<std::shared_ptr<wrench::StorageService>> storage_services;
   std::shared_ptr<wrench::StorageService> pfs_storage_service = nullptr;
+  std::shared_ptr<wrench::StorageService> bb_storage_service = nullptr;
   int nb_bb_nodes = 0;
   int nb_pfs_nodes = 0;
   int nb_compute_nodes = 0;
@@ -91,7 +97,7 @@ int main(int argc, char **argv) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
 
-      std::cerr << category << " " << host_type << " of size " << size << " GB " << std::endl;
+      std::cerr << category << " " << host_type << " of size " << std::stod(size) << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB)" << std::endl;
       std::cerr.flush();
       
       auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
@@ -103,8 +109,10 @@ int main(int argc, char **argv) {
         file_registry_service_host = host;
         nb_pfs_nodes++;
       }
-      else if (category == std::string(BB_NODE))
+      else if (category == std::string(BB_NODE)) {
         nb_bb_nodes++;
+        bb_storage_service = host_service;
+      }
 
 
       storage_services.insert(host_service);
@@ -140,7 +148,18 @@ int main(int argc, char **argv) {
   auto file_registry_service = new wrench::FileRegistryService(file_registry_service_host);
   std::shared_ptr<wrench::FileRegistryService> file_registry_ptr = simulation.add(file_registry_service);
 
-  // It is necessary to store, or "stage", input files
+  //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
+  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_placements;
+
+  for (auto f : workflow->getFiles())
+    file_placements[f] = bb_storage_service;
+
+  // for (auto alloc : file_placements) {
+  //   std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
+  // }
+  ////////////////////////
+
+  // It is necessary to store, or "stage", input files in the PFS
   auto input_files = workflow->getInputFiles();
   try {
     simulation.stageFiles(input_files, pfs_storage_service);
@@ -149,22 +168,12 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  // Stage the chosen files from PFS to BB -> here heuristics
-  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_allocation;
-
-  for (auto f : workflow->getFiles())
-    file_allocation[f] = pfs_storage_service;
-
-  for (auto alloc : file_allocation) {
-    std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
-  }
-
   // Instantiate a WMS
   auto wms = simulation.add(
           new BBWMS(
-            std::unique_ptr<BBJobScheduler>(new BBJobScheduler({pfs_storage_service}, {})),
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placements)),
             nullptr, compute_services, storage_services, file_registry_ptr, 
-            file_allocation, wms_host)
+            file_placements, wms_host)
           );
   wms->addWorkflow(workflow);
 
