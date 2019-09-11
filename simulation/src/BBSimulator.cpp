@@ -16,8 +16,8 @@
 
 #define COMPUTE_NODE "compute"
 #define STORAGE_NODE "storage"
-#define PFS_NODE "pfs"
-#define BB_NODE "bb"
+#define PFS_NODE "PFS"
+#define BB_NODE "BB"
 
 
 static bool ends_with(const std::string& str, const std::string& suffix) {
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 
 
   /* Reading and parsing the workflow description file to create a wrench::Workflow object */
-  std::cerr << "Loading workflow..." << std::endl;
+  std::cout << "Loading workflow..." << std::endl;
   wrench::Workflow *workflow;
   if (ends_with(workflow_file, "dax")) {
       workflow = wrench::PegasusWorkflowParser::createWorkflowFromDAX(workflow_file, "1000Gf");
@@ -55,13 +55,13 @@ int main(int argc, char **argv) {
       std::cerr << "Workflow file name must end with '.dax' or '.json'" << std::endl;
       exit(1);
   }
-  std::cerr << "The workflow has " << workflow->getNumberOfTasks() << " tasks " << std::endl;
+  std::cout << "The workflow has " << workflow->getNumberOfTasks() << " tasks " << std::endl;
   auto sizefiles = workflow->getFiles();
   double totsize = 0;
   for (auto f : sizefiles)
     totsize += f->getSize();
-  std::cerr << "Total workflow files size " << totsize << " in B (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
-  std::cerr.flush();
+  std::cout << "Total files size " << totsize << " Bytes (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
+  std::cout.flush();
 
   // Reading and parsing the platform description file to instantiate a simulated platform
   simulation.instantiatePlatform(platform_file);
@@ -97,8 +97,8 @@ int main(int argc, char **argv) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
 
-      std::cerr << category << " " << host_type << " of size " << std::stod(size) << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB)" << std::endl;
-      std::cerr.flush();
+      std::cout << category << " " << host_type << " size " << std::stod(size) << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB)" << std::endl;
+      std::cout.flush();
       
       auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
       storage_services.insert(host_service);
@@ -154,9 +154,10 @@ int main(int argc, char **argv) {
   for (auto f : workflow->getFiles())
     file_placements[f] = bb_storage_service;
 
-  // for (auto alloc : file_placements) {
-  //   std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
-  // }
+  for (auto alloc : file_placements) {
+    std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
+  }
+  std::cout.flush();
   ////////////////////////
 
   // It is necessary to store, or "stage", input files in the PFS
@@ -187,9 +188,6 @@ int main(int argc, char **argv) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
   }
-
-  // Stage out files from BB to PFS
-  // TODO  
 
   return 0;
 }

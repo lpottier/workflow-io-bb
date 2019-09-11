@@ -17,28 +17,28 @@
 
         <host id="PFSHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="pfs"/>
+            <prop id="category" value="PFS"/>
             <prop id="size" value="10000000000000"/> <!-- size in GB -->
         </host>
 
         <host id="BBHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="bb"/>
+            <prop id="category" value="BB"/>
             <prop id="size" value="10"/> <!-- size in GB -->
         </host>
         <host id="BBHost2" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="bb"/>
+            <prop id="category" value="BB"/>
             <prop id="size" value="10"/> <!-- size in GB -->
         </host>        
         <host id="BBHost3" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="bb"/>
+            <prop id="category" value="BB"/>
             <prop id="size" value="10"/> <!-- size in GB -->
         </host>
         <host id="BBHost4" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="bb"/>
+            <prop id="category" value="BB"/>
             <prop id="size" value="10"/> <!-- size in GB -->
         </host> 
 

@@ -17,12 +17,12 @@
 
         <host id="PFSHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="pfs"/>
+            <prop id="category" value="PFS"/>
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
         </host>
         <host id="BBHost1" speed="1000Gf" core="10">
             <prop id="type" value="storage"/>
-            <prop id="category" value="bb"/>
+            <prop id="category" value="BB"/>
             <prop id="size" value="18446744073709551616"/> <!-- size in B -->
         </host>
 
@@ -33,7 +33,7 @@
             <prop id="type" value="bb-cori"/>
         </link>
 
-        <route src="Host1" dst="Host2">
+<!--         <route src="Host1" dst="Host2">
             <link_ctn id="pfslink"/>
         </route>
         <route src="Host1" dst="Host3">
@@ -50,7 +50,7 @@
         </route>
         <route src="Host3" dst="Host4">
             <link_ctn id="pfslink"/>
-        </route>
+        </route> -->
 
         <route src="PFSHost1" dst="Host1">
             <link_ctn id="pfslink"/>
