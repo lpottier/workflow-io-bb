@@ -9,6 +9,7 @@
  */
 #include <wrench.h>
 #include <iomanip>
+#include <limits>
 
 #include <simgrid/s4u.hpp>
 
@@ -20,12 +21,15 @@
 #define PFS_NODE "PFS"
 #define BB_NODE "BB"
 
+typedef std::numeric_limits< double > dbl;
 
 static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
 
 int main(int argc, char **argv) {
+
+  std::cout.precision(dbl::max_digits10);
 
   // Declaration of the top-level WRENCH simulation object
   wrench::Simulation simulation;
@@ -76,11 +80,11 @@ int main(int argc, char **argv) {
 
   // Create a list of storage services that will be used by the WMS
   std::set<std::shared_ptr<wrench::StorageService>> storage_services;
-  std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services = {};
-  std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services = {};
+  std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
+  std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
 
   // Construct a list of execution hosts (i.e., compute node)
-  std::set<std::string> execution_hosts = {};
+  std::set<std::string> execution_hosts;
 
   std::string wms_host;
   std::string file_registry_service_host;
@@ -145,7 +149,7 @@ int main(int argc, char **argv) {
   //All services run on the main PFS node (by rule PFSHost1)
   // Instantiate a file registry service
   auto file_registry_service = new wrench::FileRegistryService(file_registry_service_host);
-  std::shared_ptr<wrench::FileRegistryService> file_registry_ptr = simulation.add(file_registry_service);
+  simulation.add(file_registry_service);
 
   //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
   std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_placements;
@@ -194,7 +198,7 @@ int main(int argc, char **argv) {
             std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placements)),
             nullptr, compute_services, 
             storage_services, pfs_storage_services, bb_storage_services,
-            file_registry_ptr, file_placements, wms_host)
+            file_placements, wms_host)
           );
   wms->addWorkflow(workflow);
 
@@ -209,21 +213,41 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  wrench::SimulationOutput simulation_output = simulation.getOutput();
+  auto& simulation_output = simulation.getOutput();
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
 
   trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
   trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
 
-  std::cout << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
-  std::cout << "Task in first trace entry: " << trace_tasks[0]->getContent()->getTask()->getID() << std::endl;
+  // std::cout << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
+  double makespan = trace_tasks[0]->getDate();
+  for (auto task : trace_tasks)
+    makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
-  // Dump simulations traces
-  // simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
-  //simulation_output.dumpWorkflowExecutionJSON(workflow,"execution.json", false);
-  // // simulation_output->dumpWorkflowExecutionJSON(workflow, output_dir + "/execution-layout.json", true);
-  // simulation_output.dumpWorkflowGraphJSON(workflow, output_dir + "/workflow.json");
+  std::cout << std::left << std::setw(30) 
+            << "WORKFLOW"
+            << std::left << std::setw(30)
+            << "PLATFORM"
+            << std::right << std::setw(20) 
+            << "MAKESPAN(S)" << std::endl;
+  std::cout << std::left << std::setw(30) 
+            << "--------"
+            << std::left << std::setw(30)
+            << "--------"
+            << std::right << std::setw(20) 
+            << "-----------" << std::endl;
+  std::cout << std::left << std::setw(30) 
+            << workflow_file
+            << std::left << std::setw(30)
+            << platform_file
+            << std::right << std::setw(20) 
+            << makespan << std::endl;
+
+  simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
+  simulation_output.dumpWorkflowExecutionJSON(workflow, output_dir + "/execution.json", false);
+  // simulation_output->dumpWorkflowExecutionJSON(workflow, output_dir + "/execution-layout.json", true);
+  simulation_output.dumpWorkflowGraphJSON(workflow, output_dir + "/workflow.json");
 
   return 0;
 }

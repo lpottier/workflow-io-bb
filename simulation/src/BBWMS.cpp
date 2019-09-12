@@ -23,19 +23,22 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
-                     std::shared_ptr<wrench::FileRegistryService> file_registry_service,
                      const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
          compute_services,
          storage_services,
-         {}, file_registry_service,
+         {}, nullptr,
          hostname,
          "bbwms"),
          pfs_storage_services(pfs_storage_services),
          bb_storage_services(bb_storage_services),
          file_placements(file_placements) {}
+
+BBWMS::~BBWMS() {
+
+}
 
 /**
  * @brief main method of the BBWMS daemon
@@ -55,49 +58,20 @@ int BBWMS::main() {
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
 
-  std::shared_ptr<wrench::FileRegistryService> file_registry = this->getAvailableFileRegistryService();
-
   //Transform file_placements into a dict for 
   std::map<std::string, std::shared_ptr<wrench::StorageService>> file_placements_str;
   for (auto alloc : file_placements)
      file_placements_str[alloc.first->getID()] = alloc.second;
 
-  if (!file_registry)
-    throw std::runtime_error("No File Registry Service available");
-
   std::cout << std::right << std::setw(45) << "===    STAGE IN    ===" << std::endl;
   auto pfs_storage = *(this->pfs_storage_services.begin());
-
-  // //Move specified files from PFS to BB
-  // for (auto elem : file_placements) {
-  //   auto attached_storages = file_registry->lookupEntry(elem.first);
-
-  //   // for (auto storage : attached_storages)
-  //   //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
-
-  //   if (attached_storages.size() > 1) {
-  //     WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
-  //                  (elem.first->getID().c_str()));
-  //     throw std::runtime_error("Aborting");
-  //   }
-
-  //   if (attached_storages.size() == 1) { 
-  //     auto current_storage = *attached_storages.begin();
-  //     //TODO add exception management 
-  //     std::cerr << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
-  //     if (current_storage->getHostname() != elem.second->getHostname()) {
-  //       data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
-  //       current_storage->deleteFile(elem.first, file_registry);
-  //     }
-  //   }
-  // }
 
   for (auto file : this->getWorkflow()->getFiles()) {
       if(pfs_storage->lookupFile(file)) {
         data_movement_manager->doSynchronousFileCopy(file, pfs_storage, 
-                                        file_placements_str[file->getID()], 
-                                        file_registry);
-        pfs_storage->deleteFile(file, file_registry);      
+                                        file_placements_str[file->getID()] 
+                                        );
+        pfs_storage->deleteFile(file);      
       }
   }
 
@@ -151,8 +125,8 @@ int BBWMS::main() {
   for (auto bb : this->bb_storage_services) {
     for (auto file : this->getWorkflow()->getFiles()) {
       if(bb->lookupFile(file)) {
-        data_movement_manager->doSynchronousFileCopy(file, bb, pfs_storage, file_registry);
-        bb->deleteFile(file, file_registry); // MAYBE OPTIONAL
+        data_movement_manager->doSynchronousFileCopy(file, bb, pfs_storage);
+        bb->deleteFile(file); // MAYBE OPTIONAL
       }
     }
   }
@@ -174,7 +148,7 @@ int BBWMS::main() {
     }
   }
 
-  //wrench::S4U_Simulation::sleep(10);
+  wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
 

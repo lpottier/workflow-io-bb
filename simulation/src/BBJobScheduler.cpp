@@ -40,14 +40,6 @@ void BBJobScheduler::scheduleTasks(
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
-    // std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_locations;
-    // for (auto f : task->getInputFiles()) {
-    //   file_locations.insert(std::make_pair(f, default_storage_service));
-    // }
-    // for (auto f : task->getOutputFiles()) {
-    //   file_locations.insert(std::make_pair(f, default_storage_service));
-    // }
-
     wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, this->file_placements);
     this->getJobManager()->submitJob(job, compute_service);
   }

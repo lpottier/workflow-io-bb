@@ -49,7 +49,7 @@
             <prop id="type" value="bb-summit"/>
         </link>
 
-<!--         <route src="Host1" dst="Host2">
+        <route src="Host1" dst="Host2">
             <link_ctn id="pfslink"/>
         </route>
         <route src="Host1" dst="Host3">
@@ -67,7 +67,7 @@
         <route src="Host3" dst="Host4">
             <link_ctn id="pfslink"/>
         </route>
- -->
+
         <route src="PFSHost1" dst="Host1">
             <link_ctn id="pfslink"/>
         </route>

@@ -25,10 +25,10 @@ public:
               const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
-              std::shared_ptr<wrench::FileRegistryService> file_registry_service,
               const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
               const std::string &hostname);
 
+    ~BBWMS();
 private:
     int main() override;
 
