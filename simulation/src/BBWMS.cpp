@@ -8,6 +8,7 @@
  * (at your option) any later version.
  */
 #include <iostream>
+#include <iomanip>
 
 #include "BBWMS.h"
 
@@ -20,6 +21,8 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
                      const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
+                     const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
+                     const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
                      std::shared_ptr<wrench::FileRegistryService> file_registry_service,
                      const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
                      const std::string &hostname) : wrench::WMS(
@@ -30,6 +33,8 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          {}, file_registry_service,
          hostname,
          "bbwms"),
+         pfs_storage_services(pfs_storage_services),
+         bb_storage_services(bb_storage_services),
          file_placements(file_placements) {}
 
 /**
@@ -52,44 +57,66 @@ int BBWMS::main() {
 
   std::shared_ptr<wrench::FileRegistryService> file_registry = this->getAvailableFileRegistryService();
 
+  //Transform file_placements into a dict for 
+  std::map<std::string, std::shared_ptr<wrench::StorageService>> file_placements_str;
+  for (auto alloc : file_placements)
+     file_placements_str[alloc.first->getID()] = alloc.second;
+
   if (!file_registry)
     throw std::runtime_error("No File Registry Service available");
 
-  //Move specified files from PFS to BB
-  for (auto elem : file_placements) {
-    auto attached_storages = file_registry->lookupEntry(elem.first);
+  std::cout << std::right << std::setw(45) << "===    STAGE IN    ===" << std::endl;
+  auto pfs_storage = *(this->pfs_storage_services.begin());
 
-    // for (auto storage : attached_storages)
-    //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
+  // //Move specified files from PFS to BB
+  // for (auto elem : file_placements) {
+  //   auto attached_storages = file_registry->lookupEntry(elem.first);
 
-    if (attached_storages.size() > 1) {
-      WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
-                   (elem.first->getID().c_str()));
-      throw std::runtime_error("Aborting");
-    }
+  //   // for (auto storage : attached_storages)
+  //   //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
 
-    if (attached_storages.size() == 1) { 
-      auto current_storage = *attached_storages.begin(); // first and only element, must be the PFS
-      //TODO add an assert
-      std::cerr << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
-      if (current_storage->getHostname() != elem.second->getHostname()) {
-        data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
-        file_registry->removeEntry(elem.first, current_storage);
+  //   if (attached_storages.size() > 1) {
+  //     WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
+  //                  (elem.first->getID().c_str()));
+  //     throw std::runtime_error("Aborting");
+  //   }
+
+  //   if (attached_storages.size() == 1) { 
+  //     auto current_storage = *attached_storages.begin();
+  //     //TODO add exception management 
+  //     std::cerr << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
+  //     if (current_storage->getHostname() != elem.second->getHostname()) {
+  //       data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
+  //       current_storage->deleteFile(elem.first, file_registry);
+  //     }
+  //   }
+  // }
+
+  for (auto file : this->getWorkflow()->getFiles()) {
+      if(pfs_storage->lookupFile(file)) {
+        data_movement_manager->doSynchronousFileCopy(file, pfs_storage, 
+                                        file_placements_str[file->getID()], 
+                                        file_registry);
+        pfs_storage->deleteFile(file, file_registry);      
       }
+  }
 
-    } else {
-      //std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
+  //print current files allocation
+  std::cout << std::left << std::setw(30) << "FILE" << std::setw(20) << 
+               std::left << "STORAGE" << std::endl;
+  std::cout << std::left << std::setw(30) << "----" << std::setw(20) << 
+               std::left << "-------" << std::endl;
+  for (auto storage : this->getAvailableStorageServices()) {
+    for (auto file : this->getWorkflow()->getFiles()) {
+      if(storage->lookupFile(file)) {
+        std::cout << std::left << std::setw(30) << 
+                    file->getID() << std::setw(20) << 
+                    std::left << storage->getHostname() << std::endl;
+      }
     }
   }
 
-  //print file_registry
-  for (auto elem : file_placements) {
-    std::cerr << elem.first->getID() << " in [";
-    for (auto storage : file_registry->lookupEntry(elem.first))
-      std::cerr << storage->getHostname() << " ";
-    std::cerr << "]" << std::endl;
-  }
-
+  std::cout << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
 
   while (true) {
     // Get the ready tasks
@@ -120,31 +147,34 @@ int BBWMS::main() {
     }
   }
 
-  // //Move specified files from PFS to BB
-  // for (auto elem : file_placements) {
-  //   auto attached_storages = file_registry->lookupEntry(elem.first);
+  //Move specified files from PFS to BB
+  for (auto bb : this->bb_storage_services) {
+    for (auto file : this->getWorkflow()->getFiles()) {
+      if(bb->lookupFile(file)) {
+        data_movement_manager->doSynchronousFileCopy(file, bb, pfs_storage, file_registry);
+        bb->deleteFile(file, file_registry); // MAYBE OPTIONAL
+      }
+    }
+  }
 
-  //   // for (auto storage : attached_storages)
-  //   //   std::cout << elem.first->getID() << " -- " << elem.second->getHostname() << " -> " << storage->getHostname() << std::endl;
+  std::cout << std::right << std::setw(45) << "===    STAGE OUT    ===" << std::endl;
+  //print file_registry
+  std::cout << std::left << std::setw(30) << "FILE" << std::setw(20) << 
+               std::left << "STORAGE" << std::endl;
+  std::cout << std::left << std::setw(30) << "----" << std::setw(20) << 
+               std::left << "-------" << std::endl;
 
-  //   if (attached_storages.size() > 1) {
-  //     WRENCH_INFO("The file (%s) belongs to more than one storage (max. authorized -> one storage)",
-  //                  (elem.first->getID().c_str()));
-  //     throw std::runtime_error("Aborting");
-  //   }
+  for (auto storage : this->getAvailableStorageServices()) {
+    for (auto file : this->getWorkflow()->getFiles()) {
+      if(storage->lookupFile(file)) {
+        std::cout << std::left << std::setw(30) << file->getID() 
+                  << std::setw(20) << std::left << storage->getHostname() 
+                  << std::endl;
+      }
+    }
+  }
 
-  //   if (attached_storages.size() == 1) { 
-  //     auto current_storage = *attached_storages.begin(); // first and only element, must be the PFS
-  //     //TODO add an assert
-  //     std::cout << "File " << elem.first->getID() << " is staged in " << current_storage->getHostname() << std::endl;
-  //     if (current_storage->getHostname() != elem.second->getHostname())
-  //       data_movement_manager->doSynchronousFileCopy(elem.first, current_storage, elem.second, file_registry);
-  //   } else {
-  //     //std::cout << "File " << elem.first->getID() << " is not staged" << std::endl;
-  //   }
-  // }
-
-  wrench::S4U_Simulation::sleep(10);
+  //wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
 

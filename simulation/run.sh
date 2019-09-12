@@ -3,8 +3,28 @@
 PWD_REPO=~/research/usc-isi/projects/workflow-io-bb/simulation/
 DIR_OUTPUT_DEV=$PWD_REPO/output/dev-data
 
+PLATFORM=test-cori.xml
+WORKFLOW=genome.dax
+TIMESTAMP=$(date "+%ss")
+
+LOG_OUTPUT=$PWD_REPO/build/bbsimu-${WORKFLOW%%.*}-${PLATFORM%%.*}-$TIMESTAMP
+mkdir -p $LOG_OUTPUT
 
 $PWD_REPO/build/workflow-io-bb \
-    $PWD_REPO/data/platform-files/test-cori.xml \
-    $PWD_REPO/data/workflow-files/genome.dax \
-        2> $PWD_REPO/build/simu.log
+    $PWD_REPO/data/platform-files/$PLATFORM \
+    $PWD_REPO/data/workflow-files/$WORKFLOW \
+    $LOG_OUTPUT
+        2> $LOG_OUTPUT/err.log
+
+echo "Output files written in $LOG_OUTPUT directory"
+
+# PLATFORM=test-summit.xml
+# LOG_OUTPUT=$PWD_REPO/build/bbsimu-${WORKFLOW%%.*}-${PLATFORM%%.*}-$TIMESTAMP
+# mkdir -p $LOG_OUTPUT
+
+# $PWD_REPO/build/workflow-io-bb \
+#     $PWD_REPO/data/platform-files/$PLATFORM \
+#     $PWD_REPO/data/workflow-files/$WORKFLOW \
+#         2> $LOG_OUTPUT
+
+# echo "Log written in $LOG_OUTPUT"

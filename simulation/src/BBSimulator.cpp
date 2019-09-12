@@ -8,6 +8,7 @@
  * (at your option) any later version.
  */
 #include <wrench.h>
+#include <iomanip>
 
 #include <simgrid/s4u.hpp>
 
@@ -33,8 +34,8 @@ int main(int argc, char **argv) {
   simulation.init(&argc, argv);
 
   // Parsing of the command-line arguments for this WRENCH simulation
-  if (argc != 3) {
-    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file>" << std::endl;
+  if (argc != 4) {
+    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <output dir>" << std::endl;
     exit(1);
   }
 
@@ -42,7 +43,10 @@ int main(int argc, char **argv) {
   char *platform_file = argv[1];
   // The second argument is the workflow description file, written in XML using the DAX DTD
   char *workflow_file = argv[2];
+  // The third argument is the output directory (where to write the simulation results)
+  std::string output_dir(argv[3]);
 
+  //MAKE SURE THE DIR EXIST/HAS PERM
 
   /* Reading and parsing the workflow description file to create a wrench::Workflow object */
   std::cout << "Loading workflow..." << std::endl;
@@ -72,17 +76,16 @@ int main(int argc, char **argv) {
 
   // Create a list of storage services that will be used by the WMS
   std::set<std::shared_ptr<wrench::StorageService>> storage_services;
-  std::shared_ptr<wrench::StorageService> pfs_storage_service = nullptr;
-  std::shared_ptr<wrench::StorageService> bb_storage_service = nullptr;
-  int nb_bb_nodes = 0;
-  int nb_pfs_nodes = 0;
-  int nb_compute_nodes = 0;
+  std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services = {};
+  std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services = {};
 
   // Construct a list of execution hosts (i.e., compute node)
   std::set<std::string> execution_hosts = {};
 
   std::string wms_host;
   std::string file_registry_service_host;
+
+  // TODO: Create a set of BB storage and a set of PFS (or a map)
 
   //Read all hosts and create a list of compute nodes and storage nodes
   for (auto host : hostname_list) {
@@ -91,35 +94,31 @@ int main(int argc, char **argv) {
     
     if (host_type == std::string(COMPUTE_NODE)) {
       execution_hosts.insert(host);
-      nb_compute_nodes++;
     }
     else if (host_type == std::string(STORAGE_NODE)) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
 
-      std::cout << category << " " << host_type << " size " << std::stod(size) << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB)" << std::endl;
+      std::cout << category << " " << host_type << " size " << std::stod(size) 
+                << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB) " 
+                << totsize/std::stod(size) << std::endl;
       std::cout.flush();
       
       auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
       storage_services.insert(host_service);
 
       if (category == std::string(PFS_NODE)) {
-        pfs_storage_service = host_service;
+        pfs_storage_services.insert(host_service);
         wms_host = host;
         file_registry_service_host = host;
-        nb_pfs_nodes++;
       }
       else if (category == std::string(BB_NODE)) {
-        nb_bb_nodes++;
-        bb_storage_service = host_service;
+        bb_storage_services.insert(host_service);
       }
-
-
-      storage_services.insert(host_service);
     }
   }
 
-  if (nb_pfs_nodes != 1)
+  if (pfs_storage_services.size() != 1)
     throw std::runtime_error("This simulation requires exactly one PFS host");
 
   if (execution_hosts.empty()) {
@@ -151,11 +150,31 @@ int main(int argc, char **argv) {
   //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
   std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_placements;
 
-  for (auto f : workflow->getFiles())
-    file_placements[f] = bb_storage_service;
+  for (auto f : workflow->getFiles()) {
+    // file_placements[f] = *pfs_storage_services.begin();
+    file_placements[f] = *bb_storage_services.begin();
+  }
+
+  std::cout << std::left << std::setw(30) 
+            << "FILE"
+            << std::left << std::setw(20)
+            << "STORAGE"
+            << std::right << std::setw(20) 
+            << "SIZE(MB)" << std::endl;
+  std::cout << std::left << std::setw(30) 
+            << "----"
+            << std::left << std::setw(20)
+            << "-------"
+            << std::right << std::setw(20) 
+            << "--------" << std::endl;
 
   for (auto alloc : file_placements) {
-    std::cout << alloc.first->getID() << " " << alloc.second->getHostname() << " " << alloc.first->getSize() << std::endl;
+    std::cout << std::left << std::setw(30) 
+              << alloc.first->getID()
+              << std::left << std::setw(20)
+              << alloc.second->getHostname() 
+              << std::right << std::setw(20) 
+              << alloc.first->getSize()/std::pow(2,20) << std::endl;
   }
   std::cout.flush();
   ////////////////////////
@@ -163,7 +182,7 @@ int main(int argc, char **argv) {
   // It is necessary to store, or "stage", input files in the PFS
   auto input_files = workflow->getInputFiles();
   try {
-    simulation.stageFiles(input_files, pfs_storage_service);
+    simulation.stageFiles(input_files, *pfs_storage_services.begin());
   } catch (std::runtime_error &e) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
@@ -173,8 +192,9 @@ int main(int argc, char **argv) {
   auto wms = simulation.add(
           new BBWMS(
             std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placements)),
-            nullptr, compute_services, storage_services, file_registry_ptr, 
-            file_placements, wms_host)
+            nullptr, compute_services, 
+            storage_services, pfs_storage_services, bb_storage_services,
+            file_registry_ptr, file_placements, wms_host)
           );
   wms->addWorkflow(workflow);
 
@@ -188,6 +208,22 @@ int main(int argc, char **argv) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
   }
+
+  auto simulation_output = simulation.getOutput();
+  // std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
+  // std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
+
+  // trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
+  // trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
+
+  // std::cerr << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
+  // std::cerr << "Task in first trace entry: " << trace[0]->getContent()->getTask()->getID() << std::endl;
+
+  // Dump simulations traces
+  // simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
+  // simulation_output.dumpWorkflowExecutionJSON(workflow, output_dir + "/execution.json", false);
+  // // simulation_output->dumpWorkflowExecutionJSON(workflow, output_dir + "/execution-layout.json", true);
+  // simulation_output.dumpWorkflowGraphJSON(workflow, output_dir + "/workflow.json");
 
   return 0;
 }

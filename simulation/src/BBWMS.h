@@ -23,6 +23,8 @@ public:
               std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
               const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
+              const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
+              const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
               std::shared_ptr<wrench::FileRegistryService> file_registry_service,
               const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
               const std::string &hostname);
@@ -32,6 +34,8 @@ private:
 
     /** @brief The job manager */
     std::shared_ptr<wrench::JobManager> job_manager;
+    std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
+    std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
     std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_placements;
 };
 
