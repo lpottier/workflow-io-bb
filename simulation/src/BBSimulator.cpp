@@ -209,19 +209,19 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  auto simulation_output = simulation.getOutput();
-  // std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
-  // std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
+  wrench::SimulationOutput simulation_output = simulation.getOutput();
+  std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
+  std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
 
-  // trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
-  // trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
+  trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
+  trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
 
-  // std::cerr << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
-  // std::cerr << "Task in first trace entry: " << trace[0]->getContent()->getTask()->getID() << std::endl;
+  std::cout << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
+  std::cout << "Task in first trace entry: " << trace_tasks[0]->getContent()->getTask()->getID() << std::endl;
 
   // Dump simulations traces
   // simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
-  // simulation_output.dumpWorkflowExecutionJSON(workflow, output_dir + "/execution.json", false);
+  //simulation_output.dumpWorkflowExecutionJSON(workflow,"execution.json", false);
   // // simulation_output->dumpWorkflowExecutionJSON(workflow, output_dir + "/execution-layout.json", true);
   // simulation_output.dumpWorkflowGraphJSON(workflow, output_dir + "/workflow.json");
 

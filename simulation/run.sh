@@ -13,8 +13,8 @@ mkdir -p $LOG_OUTPUT
 $PWD_REPO/build/workflow-io-bb \
     $PWD_REPO/data/platform-files/$PLATFORM \
     $PWD_REPO/data/workflow-files/$WORKFLOW \
-    $LOG_OUTPUT
-        2> $LOG_OUTPUT/err.log
+    $LOG_OUTPUT \
+    2> $LOG_OUTPUT/err.log
 
 echo "Output files written in $LOG_OUTPUT directory"
 
