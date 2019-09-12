@@ -23,6 +23,7 @@
 
 typedef std::numeric_limits< double > dbl;
 
+
 static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
@@ -44,9 +45,9 @@ int main(int argc, char **argv) {
   }
 
   // The first argument is the platform description file, written in XML following the SimGrid-defined DTD
-  char *platform_file = argv[1];
+  std::string platform_file(argv[1]);
   // The second argument is the workflow description file, written in XML using the DAX DTD
-  char *workflow_file = argv[2];
+  std::string workflow_file(argv[2]);
   // The third argument is the output directory (where to write the simulation results)
   std::string output_dir(argv[3]);
 
@@ -91,6 +92,7 @@ int main(int argc, char **argv) {
 
   // TODO: Create a set of BB storage and a set of PFS (or a map)
 
+  double total_bb_size = 0;
   //Read all hosts and create a list of compute nodes and storage nodes
   for (auto host : hostname_list) {
     simgrid::s4u::Host* simhost = simgrid::s4u::Host::by_name(host);
@@ -118,6 +120,7 @@ int main(int argc, char **argv) {
       }
       else if (category == std::string(BB_NODE)) {
         bb_storage_services.insert(host_service);
+        total_bb_size += std::stod(size);
       }
     }
   }
@@ -225,23 +228,39 @@ int main(int argc, char **argv) {
   for (auto task : trace_tasks)
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
+  std::size_t workflowf_pos = workflow_file.find_last_of("/");
+  std::size_t platformf_pos = platform_file.find_last_of("/");
+
+  std::cout << std::endl;
   std::cout << std::left << std::setw(30) 
             << "WORKFLOW"
             << std::left << std::setw(30)
             << "PLATFORM"
-            << std::right << std::setw(20) 
+            << std::left << std::setw(20) 
+            << "BBSIZE(GB)"
+            << std::left << std::setw(20) 
+            << "BBLINK(GB/S)"
+            << std::left << std::setw(20) 
             << "MAKESPAN(S)" << std::endl;
   std::cout << std::left << std::setw(30) 
             << "--------"
             << std::left << std::setw(30)
             << "--------"
-            << std::right << std::setw(20) 
+            << std::left << std::setw(20) 
+            << "----------"
+            << std::left << std::setw(20) 
+            << "------------"
+            << std::left << std::setw(20) 
             << "-----------" << std::endl;
   std::cout << std::left << std::setw(30) 
-            << workflow_file
+            << workflow_file.substr(workflowf_pos+1)
             << std::left << std::setw(30)
-            << platform_file
-            << std::right << std::setw(20) 
+            << platform_file.substr(platformf_pos+1)
+            << std::left << std::setw(20) 
+            << total_bb_size/std::pow(2,30)
+            << std::left << std::setw(20) 
+            << "TODO"
+            << std::left << std::setw(20) 
             << makespan << std::endl;
 
   simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
