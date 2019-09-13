@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019. <ADD YOUR HEADER INFORMATION>.
+ * Copyright (c) 2019. Loïc Pottier.
  * Generated with the wrench-init tool.
  *
  * This program is free software: you can redistribute it and/or modify
