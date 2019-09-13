@@ -8,6 +8,8 @@
  * (at your option) any later version.
  */
 #include <wrench.h>
+
+#include <iostream>
 #include <iomanip>
 #include <limits>
 #include <fstream>
@@ -16,112 +18,19 @@
 
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
+#include "UtilsPrint.h"
 
 #define COMPUTE_NODE "compute"
 #define STORAGE_NODE "storage"
 #define PFS_NODE "PFS"
 #define BB_NODE "BB"
 
-typedef std::numeric_limits< double > dbl;
-
 static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
 
-void printWorkflowTTY(const std::string& workflow_id, wrench::Workflow* workflow) {
-
-  auto files = workflow->getFiles();
-  auto tasks = workflow->getTasks();
-
-  double totsize = 0;
-  for (auto f : files)
-    totsize += f->getSize();
-
-  double avg_size = totsize/files.size();
-  double sd_size = 0.0;
-
-  for (auto f : files)
-    sd_size += std::pow(f->getSize() - avg_size, 2);
-
-  sd_size = std::sqrt(sd_size/files.size());
-
-  double avg_flop = workflow->getSumFlops(tasks)/tasks.size();
-  double sd_flops = 0.0;
-
-  for (auto t : tasks)
-    sd_flops += std::pow(t->getFlops() - avg_flop, 2);
-
-  sd_flops = std::sqrt(sd_flops/tasks.size());
-
-  std::cout << std::left << std::setw(20) << " WORKFLOW " << std::left << std::setw(20) << workflow_id << std::endl;
-  std::cout << std::left << std::setw(20) << " TASKS " << std::left << std::setw(20) << workflow->getNumberOfTasks() << std::endl;
-  std::cout << std::left << std::setw(20) << " LEVELS " << std::left << std::setw(20) << workflow->getNumLevels() << std::endl;
-  std::cout << std::left << std::setw(20) << " OPTOT(FLOP) " << std::left << std::setw(20) << workflow->getSumFlops(tasks) << std::endl;
-  std::cout << std::left << std::setw(20) << " OPAVG(FLOP) " << std::left << std::setw(20) << avg_flop << std::endl;
-  std::cout << std::left << std::setw(20) << " OPSD(FLOP) " << std::left << std::setw(20) << sd_flops << std::endl;
-  std::cout << std::left << std::setw(20) << " OPSD(%) " << std::left << std::setw(20) << sd_flops*100/avg_flop << std::endl;
-  std::cout << std::left << std::setw(20) << " FILES " << std::left << std::setw(20) << files.size() << std::endl;
-  std::cout << std::left << std::setw(20) << " SIZETOT(B) " << std::left << std::setw(20) << totsize << std::endl;
-  std::cout << std::left << std::setw(20) << " SIZEAVG(B) " << std::left << std::setw(20) << avg_size << std::endl;
-  std::cout << std::left << std::setw(20) << " SIZESD(B) " << std::left << std::setw(20) << sd_size << std::endl;
-  std::cout << std::left << std::setw(20) << " SIZESD(%) " << std::left << std::setw(20) << sd_size*100/avg_size << std::endl;
-
-  std::cout.flush();
-
-}
-
-void printWorkflowFile(const std::string& workflow_id, 
-                       wrench::Workflow* workflow, 
-                       const std::string& output,
-                       const char sep = ' ') {
-
-  std::ofstream ofs;
-  ofs.open(output, std::ofstream::out | std::ofstream::trunc);
-
-  auto files = workflow->getFiles();
-  auto tasks = workflow->getTasks();
-
-  double totsize = 0;
-  for (auto f : files)
-    totsize += f->getSize();
-
-  double avg_size = totsize/files.size();
-  double sd_size = 0.0;
-
-  for (auto f : files)
-    sd_size += std::pow(f->getSize() - avg_size, 2);
-
-  sd_size = std::sqrt(sd_size/files.size());
-
-  double avg_flop = workflow->getSumFlops(tasks)/tasks.size();
-  double sd_flops = 0.0;
-
-  for (auto t : tasks)
-    sd_flops += std::pow(t->getFlops() - avg_flop, 2);
-
-  sd_flops = std::sqrt(sd_flops/tasks.size());
-
-  ofs << "WORKFLOW" << sep << workflow_id << std::endl;
-  ofs << "TASKS" << sep << workflow->getNumberOfTasks() << std::endl;
-  ofs << "LEVELS" << sep << workflow->getNumLevels() << std::endl;
-  ofs << "OPTOT(FLOP)" << sep << workflow->getSumFlops(tasks) << std::endl;
-  ofs << "OPAVG(FLOP)" << sep << avg_flop << std::endl;
-  ofs << "OPSD(FLOP)" << sep << sd_flops << std::endl;
-  ofs << "OPSD(%)" << sep << sd_flops*100/avg_flop << std::endl;
-  ofs << "FILES" << sep << files.size() << std::endl;
-  ofs << "SIZETOT(B)" << sep << totsize << std::endl;
-  ofs << "SIZEAVG(B)" << sep << avg_size << std::endl;
-  ofs << "SIZESD(B)" << sep << sd_size << std::endl;
-  ofs << "SIZESD(%)" << sep << sd_size*100/avg_size << std::endl;
-
-  ofs.close();
-
-}
-
 
 int main(int argc, char **argv) {
-  std::cout.precision(dbl::max_digits10);
-
   // Declaration of the top-level WRENCH simulation object
   wrench::Simulation simulation;
 
@@ -261,28 +170,7 @@ int main(int argc, char **argv) {
     file_placements[f] = *bb_storage_services.begin();
   }
 
-  std::cout << std::left << std::setw(30) 
-            << "FILE"
-            << std::left << std::setw(20)
-            << "STORAGE"
-            << std::right << std::setw(20) 
-            << "SIZE(MB)" << std::endl;
-  std::cout << std::left << std::setw(30) 
-            << "----"
-            << std::left << std::setw(20)
-            << "-------"
-            << std::right << std::setw(20) 
-            << "--------" << std::endl;
-
-  for (auto alloc : file_placements) {
-    std::cout << std::left << std::setw(30) 
-              << alloc.first->getID()
-              << std::left << std::setw(20)
-              << alloc.second->getHostname() 
-              << std::right << std::setw(20) 
-              << alloc.first->getSize()/std::pow(2,20) << std::endl;
-  }
-  std::cout.flush();
+  printFileAllocationTTY(file_placements);
   ////////////////////////
 
   // It is necessary to store, or "stage", input files in the PFS
@@ -318,49 +206,14 @@ int main(int argc, char **argv) {
   }
 
   auto& simulation_output = simulation.getOutput();
+  
+  printSimulationSummaryTTY(simulation_output);
+
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
 
   trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
   trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
-
-  // std::cout << "Number of entries in TaskCompletion trace: " << trace_tasks.size() << std::endl;
-  double makespan = trace_tasks[0]->getDate();
-  for (auto task : trace_tasks)
-    makespan = makespan < task->getDate() ? task->getDate() : makespan;
-
-
-  std::cout << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << "WORKFLOW"
-            << std::left << std::setw(20)
-            << "PLATFORM"
-            << std::left << std::setw(20) 
-            << "BBSIZE(GB)"
-            << std::left << std::setw(20) 
-            << "BBLINK(GB/S)"
-            << std::left << std::setw(20) 
-            << "MAKESPAN(S)" << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << "--------"
-            << std::left << std::setw(20)
-            << "--------"
-            << std::left << std::setw(20) 
-            << "----------"
-            << std::left << std::setw(20) 
-            << "------------"
-            << std::left << std::setw(20) 
-            << "-----------" << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << workflow_id
-            << std::left << std::setw(20)
-            << platform_id
-            << std::left << std::setw(20) 
-            << total_bb_size/std::pow(2,30)
-            << std::left << std::setw(20) 
-            << "TODO"
-            << std::left << std::setw(20) 
-            << makespan << std::endl;
 
   simulation_output.dumpPlatformGraphJSON(output_dir + "/platform.json");
   simulation_output.dumpWorkflowExecutionJSON(workflow, output_dir + "/execution.json", false);

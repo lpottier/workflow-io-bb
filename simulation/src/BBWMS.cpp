@@ -36,9 +36,6 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          bb_storage_services(bb_storage_services),
          file_placements(file_placements) {}
 
-BBWMS::~BBWMS() {
-
-}
 
 /**
  * @brief main method of the BBWMS daemon
@@ -76,19 +73,7 @@ int BBWMS::main() {
   }
 
   //print current files allocation
-  std::cout << std::left << std::setw(30) << "FILE" << std::setw(20) << 
-               std::left << "STORAGE" << std::endl;
-  std::cout << std::left << std::setw(30) << "----" << std::setw(20) << 
-               std::left << "-------" << std::endl;
-  for (auto storage : this->getAvailableStorageServices()) {
-    for (auto file : this->getWorkflow()->getFiles()) {
-      if(storage->lookupFile(file)) {
-        std::cout << std::left << std::setw(30) << 
-                    file->getID() << std::setw(20) << 
-                    std::left << storage->getHostname() << std::endl;
-      }
-    }
-  }
+  this->printFileAllocationTTY();
 
   std::cout << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
 
@@ -132,25 +117,45 @@ int BBWMS::main() {
   }
 
   std::cout << std::right << std::setw(45) << "===    STAGE OUT    ===" << std::endl;
-  //print file_registry
-  std::cout << std::left << std::setw(30) << "FILE" << std::setw(20) << 
-               std::left << "STORAGE" << std::endl;
-  std::cout << std::left << std::setw(30) << "----" << std::setw(20) << 
-               std::left << "-------" << std::endl;
-
-  for (auto storage : this->getAvailableStorageServices()) {
-    for (auto file : this->getWorkflow()->getFiles()) {
-      if(storage->lookupFile(file)) {
-        std::cout << std::left << std::setw(30) << file->getID() 
-                  << std::setw(20) << std::left << storage->getHostname() 
-                  << std::endl;
-      }
-    }
-  }
+  this->printFileAllocationTTY();
 
   wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
 
   return 0;
+}
+
+
+void BBWMS::printFileAllocationTTY() {
+  auto precision = std::cout.precision();
+  std::cout.precision(std::numeric_limits< double >::max_digits10);
+
+  //print current files allocation
+  std::cout << std::left << std::setw(31) 
+            << " FILE"
+            << std::left << std::setw(20)
+            << " STORAGE"
+            << std::left << std::setw(30) 
+            << " SIZE(GB)" << std::endl;
+  std::cout << std::left << std::setw(31) 
+            << " ----"
+            << std::left << std::setw(20)
+            << " -------"
+            << std::left << std::setw(30) 
+            << " --------" << std::endl;
+  for (auto storage : this->getAvailableStorageServices()) {
+    for (auto file : this->getWorkflow()->getFiles()) {
+      if(storage->lookupFile(file)) {
+        std::cout << " " << std::left << std::setw(31) 
+                  << file->getID() << std::setw(20) 
+                  << std::left << storage->getHostname() 
+                  << std::left << std::setw(30)
+                  << file->getSize()/std::pow(2,30) << std::endl;
+      }
+    }
+  }
+  std::cout.flush();
+  //back to previous precision
+  std::cout.precision(precision);
 }

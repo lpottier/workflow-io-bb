@@ -12,6 +12,8 @@
 
 #include <wrench-dev.h>
 
+#include <limits>
+
 class Simulation;
 
 /**
@@ -28,7 +30,7 @@ public:
               const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
               const std::string &hostname);
 
-    ~BBWMS();
+    void printFileAllocationTTY();
 private:
     int main() override;
 

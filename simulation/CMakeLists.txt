@@ -19,6 +19,7 @@ set(SOURCE_FILES
        src/BBJobScheduler.h
        src/BBJobScheduler.cpp
        src/BBSimulator.cpp
+       src/UtilsPrint.cpp
        )
 
 # test files
