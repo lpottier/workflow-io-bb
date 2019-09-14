@@ -9,7 +9,7 @@
  */
 #include "BBJobScheduler.h"
 
-XBT_LOG_NEW_DEFAULT_CATEGORY(simple_scheduler, "Log category for BB Scheduler");
+XBT_LOG_NEW_DEFAULT_CATEGORY(bb_scheduler, "Log category for BB Scheduler");
 
 /**
  * @brief Create a JobScheduler with two types of storages PFS and BB
