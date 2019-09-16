@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
   std::string wms_host;
   std::string file_registry_service_host;
 
-  // TODO: Create a set of BB storage and a set of PFS (or a map)
+  //TODO CREATE a struct to associate each CS with a BB (in BBWMS probably)
 
   double total_bb_size = 0;
   //Read all hosts and create a list of compute nodes and storage nodes
@@ -206,7 +206,6 @@ int main(int argc, char **argv) {
   }
 
   auto& simulation_output = simulation.getOutput();
-  
   printSimulationSummaryTTY(simulation_output);
 
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;

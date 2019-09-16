@@ -16,6 +16,12 @@
 
 class Simulation;
 
+// struct FileAllocation {
+//     wrench::WorkflowFile* file,
+//     std::shared_ptr<wrench::StorageService> src,
+//     std::shared_ptr<wrench::StorageService> dst,
+// };
+
 /**
  *  @brief A Burst Buffer WMS implementation
  */
@@ -31,6 +37,11 @@ public:
               const std::string &hostname);
 
     void printFileAllocationTTY();
+
+    void stageInFilesBB(bool deleteFileAfter = true);
+
+    void stageOutFilesPFS(bool deleteFileAfter = true);
+
 private:
     int main() override;
 

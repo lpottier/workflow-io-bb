@@ -126,6 +126,18 @@ int BBWMS::main() {
   return 0;
 }
 
+// void BBWMS::stageInFilesBB(bool deleteFileAfter = true) {
+
+//   auto pfs_storage = *(this->pfs_storage_services.begin());
+//   auto file_registry_service = this->getAvailableFileRegistryService();
+//   for (auto file : this->file_placements) {
+//     if(pfs_storage->lookupFile(file)) {
+//       data_movement_manager->doSynchronousFileCopy(file, src, dst,file_registry_service);
+//       if (deleteFileAfter)
+//         src->deleteFile(file, file_registry_service);      
+//     }
+//   }
+// }
 
 void BBWMS::printFileAllocationTTY() {
   auto precision = std::cout.precision();
