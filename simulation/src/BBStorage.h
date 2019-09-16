@@ -17,6 +17,7 @@ public:
             double capacity,
             double linkspeed,
             const std::shared_ptr<wrench::SimpleStorageService>& root_storage,
+            const std::set<wrench::WorkflowFile*>& files,
             std::map<std::string, std::string> property_list = {},
             std::map<std::string, double> messagepayload_list = {});
 
@@ -26,12 +27,18 @@ public:
     return this->root_storage;
   }
 
+  const std::set<wrench::WorkflowFile*> getFiles() const { 
+    return this->files;
+  }
+
   double stageInFiles();
   double stageOutFiles();
 
 private:
     double linkspeed;
     std::shared_ptr<wrench::SimpleStorageService> root_storage;
+    //std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService>> data_placement;
+    std::set<wrench::WorkflowFile*> files;
 };
 
 #endif //MY_BBSTORAGE_H

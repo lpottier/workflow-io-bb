@@ -24,6 +24,7 @@ BBStorage::BBStorage(const std::string& hostname,
         double capacity,
         double linkspeed,
         const std::shared_ptr<wrench::SimpleStorageService>& root_storage,
+        const std::set<wrench::WorkflowFile*>& files,
         std::map<std::string, std::string> property_list,
         std::map<std::string, double> messagepayload_list) :
             wrench::SimpleStorageService(hostname, 
@@ -31,14 +32,34 @@ BBStorage::BBStorage(const std::string& hostname,
                 property_list, 
                 messagepayload_list), 
             linkspeed(linkspeed),
-            root_storage(root_storage) {}
+            root_storage(root_storage),
+            files(files) {}
 
-double BBStorage::stageInFiles() {
+void BBStorage::stageInFiles() {
+  // std::map<std::string, std::shared_ptr<wrench::StorageService>> file_placements_str;
+  // for (auto alloc : file_placements)
+  //    file_placements_str[alloc.first->getID()] = alloc.second;
 
-    return 0.0;
+  // std::cout << std::right << std::setw(45) << "===    STAGE IN    ===" << std::endl;
+  // auto pfs_storage = *(this->pfs_storage_services.begin());
+
+  // for (auto file : this->getWorkflow()->getFiles()) {
+  //     if(pfs_storage->lookupFile(file)) {
+  //       data_movement_manager->doSynchronousFileCopy(file, pfs_storage, 
+  //                                       file_placements_str[file->getID()] 
+  //                                       );
+  //       pfs_storage->deleteFile(file);      
+  //     }
+  // }
 }
 
-double BBStorage::stageOutFiles() {
-
-    return 0.0;
+void BBStorage::stageOutFiles() {
+  // for (auto bb : this->bb_storage_services) {
+  //   for (auto file : this->getWorkflow()->getFiles()) {
+  //     if(bb->lookupFile(file)) {
+  //       data_movement_manager->doSynchronousFileCopy(file, bb, pfs_storage);
+  //       bb->deleteFile(file); // MAYBE OPTIONAL
+  //     }
+  //   }
+  // }
 }
