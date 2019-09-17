@@ -189,3 +189,48 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
     //back to previous precision
     std::cout.precision(precision);
 }
+
+void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> >& hostpair_to_link) {
+
+  for (auto hostpair: hostpair_to_link) {
+    std::cout << "Links from " << hostpair.first.first << " to " << hostpair.first.second << std::endl;
+    for (auto link : hostpair.second) {
+        std::cout << " | " << link->get_name() 
+                  << " at speed " << link->get_bandwidth() 
+                  << " latency: " << link->get_latency() << std::endl;
+    }
+  }
+
+}
+
+void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*>& map) {
+
+  std::cout << std::left << std::setw(21) 
+            << " COMPUTE HOST"
+            << std::left << std::setw(20)
+            << "STORAGE"
+            << std::left << std::setw(20) 
+            << "LINK(GB/s)"
+            << std::left << std::setw(20) 
+            << "LATENCY(uS)" << std::endl;
+  std::cout << std::left << std::setw(21) 
+            << " ------------"
+            << std::left << std::setw(20)
+            << "-------"
+            << std::left << std::setw(20) 
+            << "----------"
+            << std::left << std::setw(20) 
+            << "-----------" << std::endl;
+
+  for (auto pair : map) {
+    std::cout << " " << std::left << std::setw(20) 
+              << pair.first.first
+              << std::left << std::setw(20)
+              << pair.first.second
+              << std::left << std::setw(20) 
+              << pair.second->get_bandwidth()
+              << std::left << std::setw(20) 
+              << pair.second->get_latency() << std::endl;
+  }
+}
+

@@ -24,6 +24,8 @@
 #define STORAGE_NODE "storage"
 #define PFS_NODE "PFS"
 #define BB_NODE "BB"
+#define PFS_LINK "pfslink"
+#define BB_LINK "bblink"
 
 static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
@@ -92,20 +94,57 @@ int main(int argc, char **argv) {
   std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
   std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
 
+
   // Construct a list of execution hosts (i.e., compute node)
   std::set<std::string> execution_hosts;
 
   std::string wms_host;
   std::string file_registry_service_host;
 
-  //TODO CREATE a struct to associate each CS with a BB (in BBWMS probably)
+  //Structures that maintain hosts-links information (host_src, host_dest) -> Link
+  std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> > hostpair_to_link;
+  // Pair of compute hosts, BB hosts. By definition all compute hosts have access to the PFS
+  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_attached_to_bb;
+  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_attached_to_pfs;
 
   double total_bb_size = 0;
   //Read all hosts and create a list of compute nodes and storage nodes
   for (auto host : hostname_list) {
     simgrid::s4u::Host* simhost = simgrid::s4u::Host::by_name(host);
-    std::string host_type = std::string(simhost->get_property("type")); 
-    
+    std::string host_type = std::string(simhost->get_property("type"));
+
+    for (auto dest : hostname_list) {
+      if (host == dest) continue;
+      std::vector<simgrid::s4u::Link*> route;
+      simgrid::s4u::Host* host_dest = simgrid::s4u::Host::by_name(dest);
+      std::string host_dest_type = std::string(host_dest->get_property("type"));
+
+      simhost->simgrid::s4u::Host::route_to(host_dest, route, nullptr);
+      
+      // std::cout << "Links from " << host << " to " << dest << std::endl;
+      // for (auto link : route) {
+      //   std::cout << "  " << link->get_name() 
+      //             << " at speed " << link->get_bandwidth() 
+      //             << " latency: " << link->get_latency() << std::endl;
+      // }
+
+      hostpair_to_link[std::make_pair(host,dest)] = route;
+
+      // route.size() == 1 is here to ensure that we consider a route with only one hop
+      // It is a requirement in the private BB case (Summit)
+      if (host_type == std::string(COMPUTE_NODE) && 
+          host_dest_type == std::string(STORAGE_NODE) &&
+          route.size() == 1) {
+        std::string host_dest_category = std::string(host_dest->get_property("category"));
+        if (host_dest_category == std::string(PFS_NODE))
+          cs_attached_to_pfs[std::make_pair(host,dest)] = route[0];
+        else if (host_dest_category == std::string(BB_NODE))
+          cs_attached_to_bb[std::make_pair(host,dest)] = route[0];
+      }
+
+      route.clear();
+    }
+
     if (host_type == std::string(COMPUTE_NODE)) {
       execution_hosts.insert(host);
     }
@@ -113,10 +152,10 @@ int main(int argc, char **argv) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
 
-      std::cout << category << " " << host_type << " size " << std::stod(size) 
-                << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB) " 
-                << totsize/std::stod(size) << std::endl;
-      std::cout.flush();
+      // std::cout << category << " " << host_type << " size " << std::stod(size) 
+      //           << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB) " 
+      //           << totsize/std::stod(size) << std::endl;
+      // std::cout.flush();
       
       auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
       storage_services.insert(host_service);
@@ -132,6 +171,25 @@ int main(int argc, char **argv) {
       }
     }
   }
+
+  // for (auto pair : cs_attached_to_pfs) {
+  //   std::cout << "CS: " << pair.first.first << " attached to PFS:" << pair.first.second 
+  //             << " bandwidth:" << pair.second->get_bandwidth()
+  //             << " latency:" << pair.second->get_latency() 
+  //             << std::endl;
+  // }
+
+  // for (auto pair : cs_attached_to_bb) {
+  //   std::cout << "CS: " << pair.first.first << " attached to BB:" << pair.first.second 
+  //             << " bandwidth:" << pair.second->get_bandwidth()
+  //             << " latency:" << pair.second->get_latency() 
+  //             << std::endl;
+  // }
+
+  printHostStorageAssociationTTY(cs_attached_to_pfs);
+  printHostStorageAssociationTTY(cs_attached_to_bb);
+
+  //printHostRouteTTY(hostpair_to_link);
 
   if (pfs_storage_services.size() != 1)
     throw std::runtime_error("This simulation requires exactly one PFS host");

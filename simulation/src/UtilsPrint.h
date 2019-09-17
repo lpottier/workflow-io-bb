@@ -11,6 +11,7 @@
 #define MY_UTILS_PRINT_H
 
 #include <limits>
+#include <simgrid/s4u.hpp>
 
 #include <wrench-dev.h>
 
@@ -28,5 +29,9 @@ void printFileAllocationTTY(const std::map<wrench::WorkflowFile*, std::shared_pt
 void printWMSFileAllocationTTY(const std::shared_ptr<wrench::WMS>& wms);
 
 void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output);
+
+void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> >& hostpair_to_link);
+
+void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*>& map);
 
 #endif

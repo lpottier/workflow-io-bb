@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
-    <zone id="AS0" routing="Full">
+    <zone id="AS0" routing="Floyd">
         <host id="Host1" speed="1000Gf" core="10">
             <prop id="type" value="compute"/>
         </host>
