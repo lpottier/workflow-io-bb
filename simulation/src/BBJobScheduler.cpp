@@ -14,9 +14,8 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_scheduler, "Log category for BB Scheduler");
 /**
  * @brief Create a JobScheduler with two types of storages PFS and BB
  */
-BBJobScheduler::BBJobScheduler(
-  const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements) :
-         file_placements(file_placements) {}
+BBJobScheduler::BBJobScheduler(const FileMap_t &file_placement) : 
+                file_placement(file_placement) {}
 
 /**
  * @brief Schedule and run a set of ready tasks on available cloud resources
@@ -38,10 +37,42 @@ void BBJobScheduler::scheduleTasks(
 
   auto compute_service = *compute_services.begin();
 
+  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_locations_after_stagein;
+  for (auto tuple : this->file_placement)
+    file_locations_after_stagein[std::get<0>(tuple)] = std::get<2>(tuple);
+
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
-    wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, this->file_placements);
+    wrench::WorkflowJob *job = nullptr;
+    std::vector<wrench::WorkflowTask *> vec_task;
+    vec_task.push_back(task);
+
+    if (task->getID() == "bb_stagein") {
+      std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > input_files;
+      FileMap_t input_file_placement;
+      for (auto tuple : this->file_placement) {
+        if (!std::get<0>(tuple)->isOutput()) {
+          input_files[std::get<0>(tuple)] = std::get<1>(tuple);
+          input_file_placement.insert(tuple);
+        }
+      }
+      job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(vec_task, input_files, {}, input_file_placement, {});
+    }
+    else if (task->getID() == "bb_stageout") {
+      // Build a reverse file allocation to stage out the files (i.e., the src StorageService becomes the dest and vice-versa)
+      FileMap_t reverse_file_placement;
+      for (auto elem : this->file_placement) {
+        reverse_file_placement.insert(std::make_tuple(std::get<0>(elem), std::get<2>(elem), std::get<1>(elem)));
+      }
+
+      job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(vec_task, file_locations_after_stagein, {}, reverse_file_placement, {});
+      reverse_file_placement.clear();
+    }
+    else {
+      job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(vec_task, file_locations_after_stagein, {}, {}, {});
+    }
     this->getJobManager()->submitJob(job, compute_service);
+    vec_task.clear();
   }
   WRENCH_INFO("Done with scheduling tasks as standard jobs");
 }

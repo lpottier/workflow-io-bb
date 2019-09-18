@@ -23,7 +23,6 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
-                     const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
@@ -33,8 +32,7 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          hostname,
          "bbwms"),
          pfs_storage_services(pfs_storage_services),
-         bb_storage_services(bb_storage_services),
-         file_placements(file_placements) {}
+         bb_storage_services(bb_storage_services) {}
 
 
 /**
@@ -55,23 +53,7 @@ int BBWMS::main() {
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
 
-  //Transform file_placements into a dict for 
-  std::map<std::string, std::shared_ptr<wrench::StorageService>> file_placements_str;
-  for (auto alloc : file_placements)
-     file_placements_str[alloc.first->getID()] = alloc.second;
-
   std::cout << std::right << std::setw(45) << "===    STAGE IN    ===" << std::endl;
-  auto pfs_storage = *(this->pfs_storage_services.begin());
-
-  for (auto file : this->getWorkflow()->getFiles()) {
-      if(pfs_storage->lookupFile(file)) {
-        data_movement_manager->doSynchronousFileCopy(file, pfs_storage, 
-                                        file_placements_str[file->getID()] 
-                                        );
-        pfs_storage->deleteFile(file);      
-      }
-  }
-
   //print current files allocation
   this->printFileAllocationTTY();
 
@@ -80,7 +62,6 @@ int BBWMS::main() {
   while (true) {
     // Get the ready tasks
     std::vector<wrench::WorkflowTask *> ready_tasks = this->getWorkflow()->getReadyTasks();
-
     // Get the available compute services
     auto compute_services = this->getAvailableComputeServices<wrench::ComputeService>();
 
@@ -106,38 +87,16 @@ int BBWMS::main() {
     }
   }
 
-  //Move specified files from PFS to BB
-  for (auto bb : this->bb_storage_services) {
-    for (auto file : this->getWorkflow()->getFiles()) {
-      if(bb->lookupFile(file)) {
-        data_movement_manager->doSynchronousFileCopy(file, bb, pfs_storage);
-        bb->deleteFile(file); // MAYBE OPTIONAL
-      }
-    }
-  }
-
-  std::cout << std::right << std::setw(45) << "===    STAGE OUT    ===" << std::endl;
-  this->printFileAllocationTTY();
-
   wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
 
+
+  std::cout << std::right << std::setw(45) << "===    STAGE OUT    ===" << std::endl;
+  this->printFileAllocationTTY();
+
   return 0;
 }
-
-// void BBWMS::stageInFilesBB(bool deleteFileAfter = true) {
-
-//   auto pfs_storage = *(this->pfs_storage_services.begin());
-//   auto file_registry_service = this->getAvailableFileRegistryService();
-//   for (auto file : this->file_placements) {
-//     if(pfs_storage->lookupFile(file)) {
-//       data_movement_manager->doSynchronousFileCopy(file, src, dst,file_registry_service);
-//       if (deleteFileAfter)
-//         src->deleteFile(file, file_registry_service);      
-//     }
-//   }
-// }
 
 void BBWMS::printFileAllocationTTY() {
   auto precision = std::cout.precision();

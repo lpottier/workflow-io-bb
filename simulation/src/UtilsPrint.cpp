@@ -111,7 +111,7 @@ void printWorkflowFile(const std::string& workflow_id,
 
 }
 
-void printFileAllocationTTY(const std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> >& file_placements) {
+void printFileAllocationTTY(const FileMap_t& file_placement) {
 
   auto precision = std::cout.precision();
   std::cout.precision(dbl::max_digits10);
@@ -120,23 +120,29 @@ void printFileAllocationTTY(const std::map<wrench::WorkflowFile*, std::shared_pt
   std::cout << std::left << std::setw(31) 
             << " FILE"
             << std::left << std::setw(20)
-            << "STORAGE"
+            << "SRC"
+            << std::left << std::setw(20)
+            << "DEST"
             << std::left << std::setw(20) 
             << "SIZE(GB)" << std::endl;
   std::cout << std::left << std::setw(31) 
             << " ----"
             << std::left << std::setw(20)
-            << "-------"
+            << "---"
+            << std::left << std::setw(20)
+            << "----"
             << std::left << std::setw(30) 
             << "--------" << std::endl;
 
-  for (auto alloc : file_placements) {
+  for (auto alloc : file_placement) {
     std::cout << " " << std::left << std::setw(30) 
-              << alloc.first->getID()
+              << std::get<0>(alloc)->getID()
               << std::left << std::setw(20)
-              << alloc.second->getHostname() 
+              << std::get<1>(alloc)->getHostname()
+              << std::left << std::setw(20)
+              << std::get<2>(alloc)->getHostname()
               << std::left << std::setw(30) 
-              << alloc.first->getSize()/std::pow(2,30) << std::endl;
+              << std::get<0>(alloc)->getSize()/std::pow(2,30) << std::endl;
   }
   std::cout.flush();
   //back to previous precision
@@ -156,8 +162,8 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
   std::cout << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << "WORKFLOW"
+  std::cout << std::left << std::setw(31) 
+            << " WORKFLOW"
             << std::left << std::setw(20)
             << "PLATFORM"
             << std::left << std::setw(20) 
@@ -166,8 +172,8 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
             << "BBLINK(GB/S)"
             << std::left << std::setw(20) 
             << "MAKESPAN(S)" << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << "--------"
+  std::cout << std::left << std::setw(31) 
+            << " --------"
             << std::left << std::setw(20)
             << "--------"
             << std::left << std::setw(20) 
@@ -176,8 +182,8 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
             << "------------"
             << std::left << std::setw(20) 
             << "-----------" << std::endl;
-  std::cout << std::left << std::setw(20) 
-            << "TODO"
+  std::cout << std::left << std::setw(31) 
+            << " TODO"
             << std::left << std::setw(20)
             << "TODO"
             << std::left << std::setw(20) 
@@ -205,7 +211,7 @@ void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::
 
 void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*>& map) {
 
-  std::cout << std::left << std::setw(21) 
+  std::cout << std::left << std::setw(31) 
             << " COMPUTE HOST"
             << std::left << std::setw(20)
             << "STORAGE"
@@ -213,7 +219,7 @@ void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::s
             << "LINK(GB/s)"
             << std::left << std::setw(20) 
             << "LATENCY(uS)" << std::endl;
-  std::cout << std::left << std::setw(21) 
+  std::cout << std::left << std::setw(31) 
             << " ------------"
             << std::left << std::setw(20)
             << "-------"
@@ -223,7 +229,7 @@ void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::s
             << "-----------" << std::endl;
 
   for (auto pair : map) {
-    std::cout << " " << std::left << std::setw(20) 
+    std::cout << " " << std::left << std::setw(30) 
               << pair.first.first
               << std::left << std::setw(20)
               << pair.first.second

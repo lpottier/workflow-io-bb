@@ -11,17 +11,18 @@
 #define MY_BBSCHEDULER_H
 
 #include <wrench-dev.h>
+#include "Types.h"
 
 class BBJobScheduler : public wrench::StandardJobScheduler {
 public:
-  BBJobScheduler(const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements);
+  BBJobScheduler(const FileMap_t &file_placement);
 
   void scheduleTasks(
        const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
        const std::vector<wrench::WorkflowTask *> &tasks);
 
 private:
-  std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_placements;
+  FileMap_t file_placement;
 };
 
 #endif //MY_BBSCHEDULER_H

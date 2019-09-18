@@ -10,12 +10,11 @@
 #ifndef MY_UTILS_PRINT_H
 #define MY_UTILS_PRINT_H
 
-#include <limits>
-#include <simgrid/s4u.hpp>
+#include "Types.h"
 
+#include <simgrid/s4u.hpp>
 #include <wrench-dev.h>
 
-typedef std::numeric_limits< double > dbl;
 
 void printWorkflowTTY(const std::string& workflow_id, 
                       wrench::Workflow* workflow);
@@ -25,7 +24,7 @@ void printWorkflowFile(const std::string& workflow_id,
                        const std::string& output,
                        const char sep = ' ');
 
-void printFileAllocationTTY(const std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> >& file_placements);
+void printFileAllocationTTY(const FileMap_t& file_placement);
 void printWMSFileAllocationTTY(const std::shared_ptr<wrench::WMS>& wms);
 
 void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output);

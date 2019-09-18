@@ -12,7 +12,7 @@
 
 #include <wrench-dev.h>
 
-#include <limits>
+#include "Types.h"
 
 class Simulation;
 
@@ -33,7 +33,6 @@ public:
               const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
-              const std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> &file_placements,
               const std::string &hostname);
 
     void printFileAllocationTTY();
@@ -49,7 +48,6 @@ private:
     std::shared_ptr<wrench::JobManager> job_manager;
     std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
     std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
-    std::map<wrench::WorkflowFile *, std::shared_ptr<wrench::StorageService>> file_placements;
 };
 
 #endif //MY_BBWMS_H

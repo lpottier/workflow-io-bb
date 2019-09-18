@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <iomanip>
-#include <limits>
 #include <fstream>
 
 #include <simgrid/s4u.hpp>
@@ -220,15 +219,23 @@ int main(int argc, char **argv) {
   auto file_registry_service = new wrench::FileRegistryService(file_registry_service_host);
   simulation.add(file_registry_service);
 
+  FileMap_t file_placement_heuristic;
+
   //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
-  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_placements;
+  //std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_placements;
 
   for (auto f : workflow->getFiles()) {
     // file_placements[f] = *pfs_storage_services.begin();
-    file_placements[f] = *bb_storage_services.begin();
+    //file_placements[f] = *bb_storage_services.begin();
+    file_placement_heuristic.insert(std::make_tuple(
+                                    f, 
+                                    *pfs_storage_services.begin(), 
+                                    *bb_storage_services.begin()
+                                    )
+                              );
   }
 
-  printFileAllocationTTY(file_placements);
+  printFileAllocationTTY(file_placement_heuristic);
   ////////////////////////
 
   // It is necessary to store, or "stage", input files in the PFS
@@ -240,13 +247,41 @@ int main(int argc, char **argv) {
     return 0;
   }
 
+  // Retrieve the first level of tasks and the last one to connect the new BB tasks
+  int nb_level = workflow->getNumLevels();
+  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
+  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
+
+  wrench::WorkflowTask* bb_stagein = workflow->addTask("bb_stagein", 1.0, 1, INT_MAX, 1.0, 1);
+  wrench::WorkflowTask* bb_stageout = workflow->addTask("bb_stageout", 1.0, 1, INT_MAX, 1.0, 1);
+
+  // Connect the BB stage in task to the first tasks in the workflow
+  for (auto task : first_tasks) {
+    workflow->addControlDependency(bb_stagein, task);
+    //auto input_files = task->getInputFiles();
+    // for (auto file : input_files) {
+    //   bb_stagein->addInputFile(file);
+    //   bb_stagein->addOutputFile(file);
+    // }
+  }
+  // Connect the BB stage out task to the last tasks in the workflow
+  for (auto task : last_tasks) {
+    workflow->addControlDependency(task, bb_stageout);
+    //auto output_files = task->getOutputFiles();
+    // for (auto file : output_files) {
+    //   bb_stageout->addInputFile(file);
+    //   bb_stageout->addOutputFile(file);
+    // }
+  }
+
+
   // Instantiate a WMS
   auto wms = simulation.add(
           new BBWMS(
-            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placements)),
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placement_heuristic)),
             nullptr, compute_services, 
             storage_services, pfs_storage_services, bb_storage_services,
-            file_placements, wms_host)
+            wms_host)
           );
   wms->addWorkflow(workflow);
 
