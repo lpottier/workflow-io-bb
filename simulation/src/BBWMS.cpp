@@ -87,7 +87,7 @@ int BBWMS::main() {
     }
   }
 
-  wrench::S4U_Simulation::sleep(10);
+  //wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
 

@@ -30,6 +30,31 @@ static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
 
+void addStageInTask(wrench::Workflow* workflow, const std::string& task_id, int parallelization = 1) {
+  wrench::WorkflowTask* bb_stagein = workflow->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0,  1);
+
+  // Retrieve the first level of tasks to connect the new BB tasks
+  int nb_level = workflow->getNumLevels();
+  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
+  // Connect the BB stage in task to the first tasks in the workflow
+  for (auto task : first_tasks) {
+    workflow->addControlDependency(bb_stagein, task);
+  } 
+}
+
+void addStageOutTask(wrench::Workflow* workflow, const std::string& task_id, int parallelization = 1) {
+  wrench::WorkflowTask* bb_stageout = workflow->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0, 1);
+
+  // Retrieve the last tasks to connect the new BB tasks
+  int nb_level = workflow->getNumLevels();
+  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
+
+  // Connect the BB stage out task to the last tasks in the workflow
+  for (auto task : last_tasks) {
+    workflow->addControlDependency(task, bb_stageout);
+  }
+}
+
 
 int main(int argc, char **argv) {
   // Declaration of the top-level WRENCH simulation object
@@ -119,13 +144,6 @@ int main(int argc, char **argv) {
       std::string host_dest_type = std::string(host_dest->get_property("type"));
 
       simhost->simgrid::s4u::Host::route_to(host_dest, route, nullptr);
-      
-      // std::cout << "Links from " << host << " to " << dest << std::endl;
-      // for (auto link : route) {
-      //   std::cout << "  " << link->get_name() 
-      //             << " at speed " << link->get_bandwidth() 
-      //             << " latency: " << link->get_latency() << std::endl;
-      // }
 
       hostpair_to_link[std::make_pair(host,dest)] = route;
 
@@ -150,11 +168,6 @@ int main(int argc, char **argv) {
     else if (host_type == std::string(STORAGE_NODE)) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
-
-      // std::cout << category << " " << host_type << " size " << std::stod(size) 
-      //           << " Bytes (" << std::stod(size)/std::pow(2,40) << " TB) " 
-      //           << totsize/std::stod(size) << std::endl;
-      // std::cout.flush();
       
       auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
       storage_services.insert(host_service);
@@ -247,33 +260,8 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  // Retrieve the first level of tasks and the last one to connect the new BB tasks
-  int nb_level = workflow->getNumLevels();
-  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
-  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
-
-  wrench::WorkflowTask* bb_stagein = workflow->addTask("bb_stagein", 1.0, 1, INT_MAX, 1.0, 1);
-  wrench::WorkflowTask* bb_stageout = workflow->addTask("bb_stageout", 1.0, 1, INT_MAX, 1.0, 1);
-
-  // Connect the BB stage in task to the first tasks in the workflow
-  for (auto task : first_tasks) {
-    workflow->addControlDependency(bb_stagein, task);
-    //auto input_files = task->getInputFiles();
-    // for (auto file : input_files) {
-    //   bb_stagein->addInputFile(file);
-    //   bb_stagein->addOutputFile(file);
-    // }
-  }
-  // Connect the BB stage out task to the last tasks in the workflow
-  for (auto task : last_tasks) {
-    workflow->addControlDependency(task, bb_stageout);
-    //auto output_files = task->getOutputFiles();
-    // for (auto file : output_files) {
-    //   bb_stageout->addInputFile(file);
-    //   bb_stageout->addOutputFile(file);
-    // }
-  }
-
+  addStageInTask(workflow, "bb_stagein");
+  addStageOutTask(workflow, "bb_stageout");
 
   // Instantiate a WMS
   auto wms = simulation.add(
@@ -290,6 +278,9 @@ int main(int argc, char **argv) {
   printWorkflowTTY(workflow_id, workflow);
   printWorkflowFile(workflow_id, workflow, output_dir + "/workflow-stat.csv");
 
+  std::cout.precision(std::numeric_limits< double >::max_digits10);
+  std::cout << "before the simulation: " << simulation.getCurrentSimulatedDate() << std::endl;
+
   // Launch the simulation
   try {
     simulation.launch();
@@ -297,6 +288,8 @@ int main(int argc, char **argv) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
   }
+
+  std::cout << "before the simulation: " << simulation.getCurrentSimulatedDate() << std::endl;
 
   auto& simulation_output = simulation.getOutput();
   printSimulationSummaryTTY(simulation_output);
@@ -311,6 +304,12 @@ int main(int argc, char **argv) {
   simulation_output.dumpWorkflowExecutionJSON(workflow, output_dir + "/execution.json", false);
   // simulation_output->dumpWorkflowExecutionJSON(workflow, output_dir + "/execution-layout.json", true);
   simulation_output.dumpWorkflowGraphJSON(workflow, output_dir + "/workflow.json");
+
+  auto stage_in = trace_tasks[0]->getContent()->getTask();
+  auto stage_out = trace_tasks[trace_tasks.size()-1]->getContent()->getTask();
+
+  std::cout << "Task in first trace entry: " << stage_in->getID() << " " << stage_in->getStartDate() << " " << stage_in->getEndDate() << " " << stage_in->getEndDate()-stage_in->getStartDate() << std::endl;
+  std::cout << "Task in last trace entry: " << stage_out->getID() << " " << stage_out->getStartDate() << " " << stage_out->getEndDate() << " " << stage_out->getEndDate() - stage_out->getStartDate() << std::endl;
 
   return 0;
 }
