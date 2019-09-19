@@ -30,31 +30,6 @@ static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
 
-void addStageInTask(wrench::Workflow* workflow, const std::string& task_id, int parallelization = 1) {
-  wrench::WorkflowTask* bb_stagein = workflow->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0,  1);
-
-  // Retrieve the first level of tasks to connect the new BB tasks
-  int nb_level = workflow->getNumLevels();
-  std::vector<wrench::WorkflowTask*> first_tasks = workflow->getTasksInTopLevelRange(0,0);
-  // Connect the BB stage in task to the first tasks in the workflow
-  for (auto task : first_tasks) {
-    workflow->addControlDependency(bb_stagein, task);
-  } 
-}
-
-void addStageOutTask(wrench::Workflow* workflow, const std::string& task_id, int parallelization = 1) {
-  wrench::WorkflowTask* bb_stageout = workflow->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0, 1);
-
-  // Retrieve the last tasks to connect the new BB tasks
-  int nb_level = workflow->getNumLevels();
-  std::vector<wrench::WorkflowTask*> last_tasks = workflow->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
-
-  // Connect the BB stage out task to the last tasks in the workflow
-  for (auto task : last_tasks) {
-    workflow->addControlDependency(task, bb_stageout);
-  }
-}
-
 
 int main(int argc, char **argv) {
   // Declaration of the top-level WRENCH simulation object
@@ -259,9 +234,6 @@ int main(int argc, char **argv) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
   }
-
-  addStageInTask(workflow, "bb_stagein");
-  addStageOutTask(workflow, "bb_stageout");
 
   // Instantiate a WMS
   auto wms = simulation.add(

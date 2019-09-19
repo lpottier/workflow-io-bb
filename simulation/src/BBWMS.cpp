@@ -53,9 +53,12 @@ int BBWMS::main() {
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
 
-  std::cout << std::right << std::setw(45) << "===    STAGE IN    ===" << std::endl;
+  std::cout << std::right << std::setw(45) << "===    ADD STAGE-IN/OUT TASKS    ===" << std::endl;
   //print current files allocation
   this->printFileAllocationTTY();
+
+  this->addStageInTask("bb_stagein");
+  this->addStageOutTask("bb_stageout");
 
   std::cout << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
 
@@ -92,10 +95,35 @@ int BBWMS::main() {
   this->job_manager.reset();
 
 
-  std::cout << std::right << std::setw(45) << "===    STAGE OUT    ===" << std::endl;
+  std::cout << std::right << std::setw(45) << "===    END SIMULATION    ===" << std::endl;
   this->printFileAllocationTTY();
 
   return 0;
+}
+
+void BBWMS::addStageInTask(const std::string& task_id, unsigned int parallelization) {
+  wrench::WorkflowTask* bb_stagein = this->getWorkflow()->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0,  1);
+
+  // Retrieve the first level of tasks to connect the new BB tasks
+  int nb_level = this->getWorkflow()->getNumLevels();
+  std::vector<wrench::WorkflowTask*> first_tasks = this->getWorkflow()->getTasksInTopLevelRange(0,0);
+  // Connect the BB stage in task to the first tasks in the workflow
+  for (auto task : first_tasks) {
+    this->getWorkflow()->addControlDependency(bb_stagein, task);
+  } 
+}
+
+void BBWMS::addStageOutTask(const std::string& task_id, unsigned int parallelization) {
+  wrench::WorkflowTask* bb_stageout = this->getWorkflow()->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0, 1);
+
+  // Retrieve the last tasks to connect the new BB tasks
+  int nb_level = this->getWorkflow()->getNumLevels();
+  std::vector<wrench::WorkflowTask*> last_tasks = this->getWorkflow()->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
+
+  // Connect the BB stage out task to the last tasks in the workflow
+  for (auto task : last_tasks) {
+    this->getWorkflow()->addControlDependency(task, bb_stageout);
+  }
 }
 
 void BBWMS::printFileAllocationTTY() {
