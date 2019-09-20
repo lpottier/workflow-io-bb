@@ -18,12 +18,14 @@ public:
   BBStorageService(const std::string& hostname,
             double capacity,
             double linkspeed,
+            double linklatency,
             const std::shared_ptr<wrench::StorageService>& pfs_storage,
             const std::set<wrench::WorkflowFile*>& files,
             std::map<std::string, std::string> property_list = {},
             std::map<std::string, double> messagepayload_list = {});
 
   const double getLinkSpeed() const { return this->linkspeed; }
+  const double getLinkLatency() const { return this->linklatency; }
 
   std::shared_ptr<wrench::StorageService> getPFSStorage() const { 
     return this->pfs_storage;
@@ -39,10 +41,10 @@ public:
 
 private:
     double linkspeed; //In GB/s
+    double linklatency; //in microsecond
     std::shared_ptr<wrench::StorageService> pfs_storage;
     //std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService>> data_placement;
     std::set<wrench::WorkflowFile*> files;
 };
 
 #endif //MY_BBSTORAGESERVICE_H
-

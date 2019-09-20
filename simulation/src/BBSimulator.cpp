@@ -33,6 +33,33 @@ static bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
 }
 
+//route: map (host_src, host_dest) -> Link
+std::pair<double, double> check_links(std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> route) {
+  std::pair<double, double> res = std::make_pair(0.0, 0.0);
+
+  auto first_elem = *route.begin();
+
+  res.first = first_elem.second->get_bandwidth();
+  res.second = first_elem.second->get_latency();
+
+  for (auto elem : route) {
+    // std::cout << "CS: " << elem.first.first << " attached to PFS:" << elem.first.second 
+    //           << " bandwidth:" << elem.second->get_bandwidth()
+    //           << " latency:" << elem.second->get_latency() 
+    //           << std::endl;
+    if (res.first != elem.second->get_bandwidth()) {
+      std::cerr << "Bandwidth issue in the platform XML" << std::endl;
+      exit(1);
+    }
+
+    if (res.second != elem.second->get_latency()) {
+      std::cerr << "Latency issue in the platform XML" << std::endl;
+      exit(1);
+    }
+
+  }
+  return res;
+}
 
 int main(int argc, char **argv) {
   // Declaration of the top-level WRENCH simulation object
@@ -93,14 +120,14 @@ int main(int argc, char **argv) {
 
   // Construct a list of execution hosts (i.e., compute node) and storage hosts (name, size, bandwidth, latency)
   std::set<std::string> execution_hosts;
-  std::set<std::tuple<std::string, double, double, double>> pfs_hosts;
-  std::set<std::tuple<std::string, double, double, double>> bb_hosts;
+  std::set<std::tuple<std::string, double>> pfs_hosts;
+  std::set<std::tuple<std::string, double>> bb_hosts;
 
   //Structures that maintain hosts-links information (host_src, host_dest) -> Link
   std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> > hostpair_to_link;
   // Pair of compute hosts, BB hosts. By definition all compute hosts have access to the PFS
-  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_attached_to_bb;
-  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_attached_to_pfs;
+  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_pfs;
+  std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_bb;
 
   double total_bb_size = 0;
   //Read all hosts and create a list of compute nodes and storage nodes
@@ -119,17 +146,18 @@ int main(int argc, char **argv) {
       hostpair_to_link[std::make_pair(host,dest)] = route;
 
       // If the route is going from a compute node to a storage node
-      // route.size() == 1 is here to ensure that we consider a route with only one hop
+      // route.size() == 1 is here to ensure that we consider a route with only one hop between CN and Storage
       // It is a requirement in the private BB case (Summit)
       if (host_type == std::string(COMPUTE_NODE) && 
           host_dest_type == std::string(STORAGE_NODE) &&
           route.size() == 1) {
         std::string host_dest_category = std::string(host_dest->get_property("category"));
+        
         if (host_dest_category == std::string(PFS_NODE)) {
-          cs_attached_to_pfs[std::make_pair(host,dest)] = route[0];
+          cs_to_pfs[std::make_pair(host,dest)] = route[0];
         }
         else if (host_dest_category == std::string(BB_NODE)) {
-          cs_attached_to_bb[std::make_pair(host,dest)] = route[0];
+          cs_to_bb[std::make_pair(host,dest)] = route[0];
         }
       }
 
@@ -145,29 +173,10 @@ int main(int argc, char **argv) {
 
       if (category == std::string(PFS_NODE)) {
         pfs_hosts.insert(std::make_tuple(host, std::stod(size)));
-
-        // auto host_service = simulation.add(new PFSStorageService(
-        //                                             host, 
-        //                                             std::stod(size),
-        //                                             0.0,
-        //                                             {})
-        //                                   );
-        // storage_services.insert(host_service);
-        // pfs_storage_services.insert(host_service);
       }
       else if (category == std::string(BB_NODE)) {
         bb_hosts.insert(std::make_tuple(host, std::stod(size)));
         total_bb_size += std::stod(size);
-        // auto host_service = simulation.add(new BBStorageService(
-        //                                             host,
-        //                                             std::stod(size),
-        //                                             0.0,
-        //                                             nullptr,
-        //                                             {})
-        //                                   );
-
-        // storage_services.insert(host_service);
-        // bb_storage_services.insert(host_service);
       }
     }
   }
@@ -186,8 +195,14 @@ int main(int argc, char **argv) {
   //             << std::endl;
   // }
 
-  printHostStorageAssociationTTY(cs_attached_to_pfs);
-  printHostStorageAssociationTTY(cs_attached_to_bb);
+  auto pfs_comm = check_links(cs_to_pfs);
+  auto bb_comm = check_links(cs_to_bb);
+
+  // std::cout << "PFS:" << pfs_comm.first << " " << pfs_comm.second << std::endl;
+  // std::cout << "BB:" << bb_comm.first << " " << bb_comm.second << std::endl;
+
+  printHostStorageAssociationTTY(cs_to_pfs);
+  printHostStorageAssociationTTY(cs_to_bb);
 
   //printHostRouteTTY(hostpair_to_link);
 
@@ -213,7 +228,8 @@ int main(int argc, char **argv) {
     pfs_storage_service = simulation.add(new PFSStorageService(
                                               pfs_host, 
                                               std::get<1>(*pfs_hosts.begin()),
-                                              0.0,
+                                              pfs_comm.first,
+                                              pfs_comm.second,
                                               {})
                                       );
     storage_services.insert(pfs_storage_service);
@@ -227,7 +243,8 @@ int main(int argc, char **argv) {
       auto service = simulation.add(new BBStorageService(
                                             std::get<0>(bbhost),
                                             std::get<1>(bbhost),
-                                            0.0,
+                                            bb_comm.first,
+                                            bb_comm.second,
                                             pfs_storage_service,
                                             {})
                                   );

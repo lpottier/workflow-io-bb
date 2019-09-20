@@ -16,6 +16,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_storage, "Log category for BB Storage");
  * @param hostname: the name of the host on which to start the service
  * @param capacity: the storage capacity in bytes
  * @param linkspeed: the storage bandwidth in bytes per second
+ * @param linklatency: the storage latency in micro second
  * @param pfs_storage: the storage on top of the BB in the hierarchy (usually the PFS)
  * @param files: files that should be allocated in that storage
  * @param property_list: a property list ({} means "use all defaults")
@@ -24,6 +25,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_storage, "Log category for BB Storage");
 BBStorageService::BBStorageService(const std::string& hostname,
         double capacity,
         double linkspeed,
+        double linklatency,
         const std::shared_ptr<wrench::StorageService>& pfs_storage,
         const std::set<wrench::WorkflowFile*>& files,
         std::map<std::string, std::string> property_list,
@@ -33,5 +35,6 @@ BBStorageService::BBStorageService(const std::string& hostname,
                 property_list, 
                 messagepayload_list),
             linkspeed(linkspeed),
+            linklatency(linklatency),
             pfs_storage(pfs_storage),
             files(files) {}

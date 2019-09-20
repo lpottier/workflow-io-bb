@@ -18,11 +18,13 @@ public:
   PFSStorageService(const std::string& hostname,
             double capacity,
             double linkspeed,
+            double linklatency,
             const std::set<wrench::WorkflowFile*>& files,
             std::map<std::string, std::string> property_list = {},
             std::map<std::string, double> messagepayload_list = {});
 
   const double getLinkSpeed() const { return this->linkspeed; }
+  const double getLinkLatency() const { return this->linklatency; }
 
   const std::set<wrench::WorkflowFile*> getFiles() const { 
     return this->files;
@@ -34,6 +36,7 @@ public:
 
 private:
     double linkspeed;
+    double linklatency;
     //std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService>> data_placement;
     std::set<wrench::WorkflowFile*> files;
 };
