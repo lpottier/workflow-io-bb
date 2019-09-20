@@ -15,6 +15,9 @@
 
 #include <simgrid/s4u.hpp>
 
+#include "BBTypes.h"
+#include "BBStorageService.h"
+#include "PFSStorageService.h"
 #include "BBJobScheduler.h"
 #include "BBWMS.h"
 #include "UtilsPrint.h"
@@ -88,17 +91,10 @@ int main(int argc, char **argv) {
   std::vector<std::string> hostname_list = simulation.getHostnameList();
   // std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
 
-  // Create a list of storage services that will be used by the WMS
-  std::set<std::shared_ptr<wrench::StorageService>> storage_services;
-  std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
-  std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
-
-
-  // Construct a list of execution hosts (i.e., compute node)
+  // Construct a list of execution hosts (i.e., compute node) and storage hosts (name, size, bandwidth, latency)
   std::set<std::string> execution_hosts;
-
-  std::string wms_host;
-  std::string file_registry_service_host;
+  std::set<std::tuple<std::string, double, double, double>> pfs_hosts;
+  std::set<std::tuple<std::string, double, double, double>> bb_hosts;
 
   //Structures that maintain hosts-links information (host_src, host_dest) -> Link
   std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> > hostpair_to_link;
@@ -122,16 +118,19 @@ int main(int argc, char **argv) {
 
       hostpair_to_link[std::make_pair(host,dest)] = route;
 
+      // If the route is going from a compute node to a storage node
       // route.size() == 1 is here to ensure that we consider a route with only one hop
       // It is a requirement in the private BB case (Summit)
       if (host_type == std::string(COMPUTE_NODE) && 
           host_dest_type == std::string(STORAGE_NODE) &&
           route.size() == 1) {
         std::string host_dest_category = std::string(host_dest->get_property("category"));
-        if (host_dest_category == std::string(PFS_NODE))
+        if (host_dest_category == std::string(PFS_NODE)) {
           cs_attached_to_pfs[std::make_pair(host,dest)] = route[0];
-        else if (host_dest_category == std::string(BB_NODE))
+        }
+        else if (host_dest_category == std::string(BB_NODE)) {
           cs_attached_to_bb[std::make_pair(host,dest)] = route[0];
+        }
       }
 
       route.clear();
@@ -143,18 +142,32 @@ int main(int argc, char **argv) {
     else if (host_type == std::string(STORAGE_NODE)) {
       std::string size = std::string(simhost->get_property("size"));
       std::string category = std::string(simhost->get_property("category"));
-      
-      auto host_service = simulation.add(new wrench::SimpleStorageService(host, std::stod(size)));
-      storage_services.insert(host_service);
 
       if (category == std::string(PFS_NODE)) {
-        pfs_storage_services.insert(host_service);
-        wms_host = host;
-        file_registry_service_host = host;
+        pfs_hosts.insert(std::make_tuple(host, std::stod(size)));
+
+        // auto host_service = simulation.add(new PFSStorageService(
+        //                                             host, 
+        //                                             std::stod(size),
+        //                                             0.0,
+        //                                             {})
+        //                                   );
+        // storage_services.insert(host_service);
+        // pfs_storage_services.insert(host_service);
       }
       else if (category == std::string(BB_NODE)) {
-        bb_storage_services.insert(host_service);
+        bb_hosts.insert(std::make_tuple(host, std::stod(size)));
         total_bb_size += std::stod(size);
+        // auto host_service = simulation.add(new BBStorageService(
+        //                                             host,
+        //                                             std::stod(size),
+        //                                             0.0,
+        //                                             nullptr,
+        //                                             {})
+        //                                   );
+
+        // storage_services.insert(host_service);
+        // bb_storage_services.insert(host_service);
       }
     }
   }
@@ -178,23 +191,60 @@ int main(int argc, char **argv) {
 
   //printHostRouteTTY(hostpair_to_link);
 
-  if (pfs_storage_services.size() != 1)
+  if (pfs_hosts.size() != 1)
     throw std::runtime_error("This simulation requires exactly one PFS host");
 
   if (execution_hosts.empty()) {
     throw std::runtime_error("This simulation requires at least one compute node in the platform file");
   }
 
-  if (storage_services.empty()) {
+  if (bb_hosts.empty()) {
     throw std::runtime_error("This simulation requires at least two storage nodes in the platform file");
   }
+
+  // Create a list of storage services that will be used by the WMS
+  std::set<std::shared_ptr<wrench::StorageService>> storage_services;
+  std::shared_ptr<PFSStorageService> pfs_storage_service;
+  std::set<std::shared_ptr<BBStorageService>> bb_storage_services;
+
+  std::string pfs_host = std::get<0>(*pfs_hosts.begin()); // Only one PFS is allowed for now
+  
+  try {
+    pfs_storage_service = simulation.add(new PFSStorageService(
+                                              pfs_host, 
+                                              std::get<1>(*pfs_hosts.begin()),
+                                              0.0,
+                                              {})
+                                      );
+    storage_services.insert(pfs_storage_service);
+  } catch (std::invalid_argument &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    std::exit(1);
+  }
+
+  try {
+    for (auto bbhost : bb_hosts) {
+      auto service = simulation.add(new BBStorageService(
+                                            std::get<0>(bbhost),
+                                            std::get<1>(bbhost),
+                                            0.0,
+                                            pfs_storage_service,
+                                            {})
+                                  );
+      storage_services.insert(service);
+      bb_storage_services.insert(service);
+    }
+  } catch (std::invalid_argument &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    std::exit(1);
+  }  
+
   // Create a list of compute services that will be used by the WMS
   std::set<std::shared_ptr<wrench::ComputeService>> compute_services;
-
   // Instantiate a bare metal service and add it to the simulation
   try {
     auto baremetal_service = new wrench::BareMetalComputeService(
-          wms_host, execution_hosts, 0, {}, {});
+          pfs_host, execution_hosts, 0, {}, {});
 
     compute_services.insert(simulation.add(baremetal_service));
   } catch (std::invalid_argument &e) {
@@ -204,8 +254,14 @@ int main(int argc, char **argv) {
 
   //All services run on the main PFS node (by rule PFSHost1)
   // Instantiate a file registry service
-  auto file_registry_service = new wrench::FileRegistryService(file_registry_service_host);
-  simulation.add(file_registry_service);
+  try {
+    auto file_registry_service = new wrench::FileRegistryService(pfs_host);
+    simulation.add(file_registry_service);
+
+  } catch (std::invalid_argument &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    std::exit(1);
+  }
 
   FileMap_t file_placement_heuristic;
 
@@ -217,7 +273,7 @@ int main(int argc, char **argv) {
     //file_placements[f] = *bb_storage_services.begin();
     file_placement_heuristic.insert(std::make_tuple(
                                     f, 
-                                    *pfs_storage_services.begin(), 
+                                    pfs_storage_service, 
                                     *bb_storage_services.begin()
                                     )
                               );
@@ -229,7 +285,7 @@ int main(int argc, char **argv) {
   // It is necessary to store, or "stage", input files in the PFS
   auto input_files = workflow->getInputFiles();
   try {
-    simulation.stageFiles(input_files, *pfs_storage_services.begin());
+    simulation.stageFiles(input_files, pfs_storage_service);
   } catch (std::runtime_error &e) {
     std::cerr << "Exception: " << e.what() << std::endl;
     return 0;
@@ -240,8 +296,8 @@ int main(int argc, char **argv) {
           new BBWMS(
             std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placement_heuristic)),
             nullptr, compute_services, 
-            storage_services, pfs_storage_services, bb_storage_services,
-            wms_host)
+            storage_services,
+            pfs_host)
           );
   wms->addWorkflow(workflow);
 
@@ -282,6 +338,9 @@ int main(int argc, char **argv) {
 
   std::cout << "Task in first trace entry: " << stage_in->getID() << " " << stage_in->getStartDate() << " " << stage_in->getEndDate() << " " << stage_in->getEndDate()-stage_in->getStartDate() << std::endl;
   std::cout << "Task in last trace entry: " << stage_out->getID() << " " << stage_out->getStartDate() << " " << stage_out->getEndDate() << " " << stage_out->getEndDate() - stage_out->getStartDate() << std::endl;
+
+  //SEGFAULT ?
+  //std::cout << simulation.getHostName() << std::endl;
 
   return 0;
 }

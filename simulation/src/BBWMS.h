@@ -12,7 +12,7 @@
 
 #include <wrench-dev.h>
 
-#include "Types.h"
+#include "BBTypes.h"
 
 class Simulation;
 
@@ -25,8 +25,6 @@ public:
               std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
               const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
               const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
-              const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
-              const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
               const std::string &hostname);
 
     void addStageInTask(const std::string& task_id, unsigned int parallelization = 1);
@@ -39,8 +37,6 @@ private:
 
     /** @brief The job manager */
     std::shared_ptr<wrench::JobManager> job_manager;
-    std::set<std::shared_ptr<wrench::StorageService>> pfs_storage_services;
-    std::set<std::shared_ptr<wrench::StorageService>> bb_storage_services;
 };
 
 #endif //MY_BBWMS_H

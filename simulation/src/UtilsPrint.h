@@ -10,7 +10,7 @@
 #ifndef MY_UTILS_PRINT_H
 #define MY_UTILS_PRINT_H
 
-#include "Types.h"
+#include "BBTypes.h"
 
 #include <simgrid/s4u.hpp>
 #include <wrench-dev.h>

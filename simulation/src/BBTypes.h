@@ -7,8 +7,8 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef MY_BBTYPES_H
+#define MY_BBTYPES_H
 
 #include <wrench-dev.h>
 
@@ -20,11 +20,16 @@ typedef std::set<std::tuple<wrench::WorkflowFile*,
          std::shared_ptr<wrench::StorageService>, 
          std::shared_ptr<wrench::StorageService> > > FileMap_t;
 
+enum STORAGE_TYPE {
+    PFS,
+    BB
+};
+
 // struct FileAllocation {
 //     wrench::WorkflowFile* file,
 //     std::shared_ptr<wrench::StorageService> src,
 //     std::shared_ptr<wrench::StorageService> dst,
 // };
 
-#endif //MY_TYPES_H
+#endif //MY_BBTYPES_H
 

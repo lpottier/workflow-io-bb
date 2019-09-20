@@ -21,8 +21,6 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
                      std::unique_ptr<wrench::PilotJobScheduler> pilot_job_scheduler,
                      const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                      const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
-                     const std::set<std::shared_ptr<wrench::StorageService>> &pfs_storage_services,
-                     const std::set<std::shared_ptr<wrench::StorageService>> &bb_storage_services,
                      const std::string &hostname) : wrench::WMS(
          std::move(standard_job_scheduler),
          std::move(pilot_job_scheduler),
@@ -30,9 +28,7 @@ BBWMS::BBWMS(std::unique_ptr<wrench::StandardJobScheduler> standard_job_schedule
          storage_services,
          {}, nullptr,
          hostname,
-         "bbwms"),
-         pfs_storage_services(pfs_storage_services),
-         bb_storage_services(bb_storage_services) {}
+         "bbwms") {}
 
 
 /**
@@ -93,7 +89,6 @@ int BBWMS::main() {
   //wrench::S4U_Simulation::sleep(10);
 
   this->job_manager.reset();
-
 
   std::cout << std::right << std::setw(45) << "===    END SIMULATION    ===" << std::endl;
   this->printFileAllocationTTY();

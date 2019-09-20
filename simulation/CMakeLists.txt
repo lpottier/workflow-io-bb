@@ -19,13 +19,13 @@ set(SOURCE_FILES
        src/BBJobScheduler.h
        src/BBJobScheduler.cpp
        src/BBSimulator.cpp
-       # src/BBStorage.h
-       # src/BBStorage.cpp
-       # src/PFSStorage.h
-       # src/PFSStorage.cpp
+       src/BBStorageService.h
+       src/BBStorageService.cpp
+       src/PFSStorageService.h
+       src/PFSStorageService.cpp
        src/UtilsPrint.h
        src/UtilsPrint.cpp
-       src/Types.h
+       src/BBTypes.h
        )
 
 # test files

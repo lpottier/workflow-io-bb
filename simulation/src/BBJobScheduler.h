@@ -10,8 +10,9 @@
 #ifndef MY_BBSCHEDULER_H
 #define MY_BBSCHEDULER_H
 
+#include "BBTypes.h"
+
 #include <wrench-dev.h>
-#include "Types.h"
 
 class BBJobScheduler : public wrench::StandardJobScheduler {
 public:
