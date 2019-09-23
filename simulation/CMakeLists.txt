@@ -14,19 +14,21 @@ include_directories(src/ ${SIMGRID_INSTALL_PATH}/include /usr/local/include /opt
 
 # source files
 set(SOURCE_FILES
-       src/BBWMS.h
-       src/BBWMS.cpp
-       src/BBJobScheduler.h
-       src/BBJobScheduler.cpp
-       src/BBSimulator.cpp
-       src/BBStorageService.h
-       src/BBStorageService.cpp
-       src/PFSStorageService.h
-       src/PFSStorageService.cpp
-       src/UtilsPrint.h
-       src/UtilsPrint.cpp
-       src/BBTypes.h
-       )
+      src/main.cpp
+      src/BBSimulation.h
+      src/BBSimulation.cpp
+      src/BBWMS.h
+      src/BBWMS.cpp
+      src/BBJobScheduler.h
+      src/BBJobScheduler.cpp
+      src/BBStorageService.h
+      src/BBStorageService.cpp
+      src/PFSStorageService.h
+      src/PFSStorageService.cpp
+      src/UtilsPrint.h
+      src/UtilsPrint.cpp
+      src/BBTypes.h
+      )
 
 # test files
 set(TEST_FILES
