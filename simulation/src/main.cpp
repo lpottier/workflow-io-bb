@@ -16,6 +16,7 @@
 #include <simgrid/s4u.hpp>
 
 #include "BBSimulation.h"
+#include "BBDecision.h"
 
 int main(int argc, char **argv) {
 
@@ -79,10 +80,14 @@ int main(int argc, char **argv) {
   printFileAllocationTTY(file_placement_heuristic);
   ////////////////////////
 
-
+  EFT schedule_heuristic;
+  InitialFileAlloc initFileAlloc(file_placement_heuristic);
 
   // It is necessary to store, or "stage", input files in the PFS
   std::pair<int, double> stagein_fstat = simulation.stage_input_files();
+
+  auto ftest = *(workflow->getFiles()).begin();
+  initFileAlloc(ftest);
 
   std::shared_ptr<wrench::WMS> wms = simulation.instantiate_wms_service(file_placement_heuristic);
 

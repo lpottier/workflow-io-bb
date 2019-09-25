@@ -17,6 +17,7 @@ set(SOURCE_FILES
       src/main.cpp
       src/BBSimulation.h
       src/BBSimulation.cpp
+      src/BBDecision.h
       src/BBWMS.h
       src/BBWMS.cpp
       src/BBJobScheduler.h
