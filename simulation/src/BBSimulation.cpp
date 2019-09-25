@@ -15,35 +15,28 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
  *
  * @param hostname: the name of the host on which to start the service
  */
-BBSimulation::BBSimulation(int argc, char **argv,
-                           const std::string& platform_file,
+BBSimulation::BBSimulation(const std::string& platform_file,
                            const std::string& workflow_file,
                            const std::string& output_dir) :
             wrench::Simulation() {
-
-
-  // Initialization of the simulation
-  this->init(&argc, argv);
-
-  //MAKE SURE THE FILE/DIR EXIST/HAS PERM
-
-  // Reading and parsing the platform description file to instantiate a simulated platform
-  this->instantiatePlatform(platform_file);
-
-  // // Get a vector of all the hosts in the simulated platform
-  std::vector<std::string> hostname_list = this->getHostnameList();
-  // std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
 
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["output_dir"] = output_dir;
 }
 
-bool BBSimulation::ends_with(const std::string& str, const std::string& suffix) {
-    return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
+void BBSimulation::init(int *argc, char **argv) {
+  // Initialization of the simulation
+  this->wrench::Simulation::init(argc, argv);
+
+  //MAKE SURE THE FILE/DIR EXIST/HAS PERM
+
+  // // Get a vector of all the hosts in the simulated platform
+  //std::vector<std::string> hostname_list = this->getHostnameList();
+  // std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
 }
 
-void BBSimulation::parse_input(wrench::Workflow *workflow) {
+wrench::Workflow* BBSimulation::parse_inputs() {
   std::size_t workflowf_pos = this->raw_args["workflow_file"].find_last_of("/");
   std::size_t platformf_pos = this->raw_args["platform_file"].find_last_of("/");
 
@@ -52,11 +45,14 @@ void BBSimulation::parse_input(wrench::Workflow *workflow) {
 
   //MAKE SURE THE DIR EXIST/HAS PERM
 
+  // Reading and parsing the platform description file to instantiate a simulated platform
+  this->instantiatePlatform(raw_args["platform_file"]);
+
   /* Reading and parsing the workflow description file to create a wrench::Workflow object */
   ;
-  if (this->ends_with(this->raw_args["workflow_file"], "dax")) {
+  if (ends_with(this->raw_args["workflow_file"], "dax")) {
       this->workflow = wrench::PegasusWorkflowParser::createWorkflowFromDAX(raw_args["workflow_file"], "1000Gf");
-  } else if (this->ends_with(this->raw_args["workflow_file"],"json")) {
+  } else if (ends_with(this->raw_args["workflow_file"],"json")) {
       this->workflow = wrench::PegasusWorkflowParser::createWorkflowFromJSON(raw_args["workflow_file"], "1000Gf");
   } else {
       std::cerr << "Workflow file name must end with '.dax' or '.json'" << std::endl;
@@ -70,12 +66,13 @@ void BBSimulation::parse_input(wrench::Workflow *workflow) {
     totsize += f->getSize();
   std::cout << "Total files size " << totsize << " Bytes (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
   std::cout.flush();
-
+  return this->workflow;
 }
 
-void BBSimulation::create_hosts() {
+std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> BBSimulation::create_hosts() {
   std::vector<std::string> hostname_list = this->getHostnameList();
 
+  int pfs_count = 0;
   //Read all hosts and create a list of compute nodes and storage nodes
   for (auto host : hostname_list) {
     simgrid::s4u::Host* simhost = simgrid::s4u::Host::by_name(host);
@@ -118,6 +115,7 @@ void BBSimulation::create_hosts() {
       std::string category = std::string(simhost->get_property("category"));
 
       if (category == std::string(PFS_NODE)) {
+        pfs_count++;
         this->pfs_storage_host = std::make_tuple(host, std::stod(size));
       }
       else if (category == std::string(BB_NODE)) {
@@ -125,6 +123,17 @@ void BBSimulation::create_hosts() {
       }
     }
   }
+
+  if (pfs_count != 1)
+    throw std::runtime_error("This simulation requires exactly one PFS host");
+
+  if (this->execution_hosts.empty())
+    throw std::runtime_error("This simulation requires at least one compute node in the platform file");
+
+  if (this->bb_storage_hosts.empty())
+    throw std::runtime_error("This simulation requires at least one burst buffer node in the platform file");
+
+  return this->hostpair_to_link;
 }
 
 
@@ -230,7 +239,7 @@ wrench::FileRegistryService* BBSimulation::instantiate_file_registry_service() {
   return file_registry_service;
 }
 
-void BBSimulation::stage_input_files() {
+std::pair<int, double> BBSimulation::stage_input_files() {
   // It is necessary to store, or "stage", input files in the PFS
   auto input_files = this->workflow->getInputFiles();
   try {
@@ -239,6 +248,14 @@ void BBSimulation::stage_input_files() {
     std::cerr << "Exception: " << e.what() << std::endl;
     std::exit(1);
   }
+
+  double result = std::accumulate(
+                      std::begin(input_files), std::end(input_files), 0,
+                      [](double previous, std::pair<std::string, wrench::WorkflowFile*> elem) 
+                                        { return previous + elem.second->getSize(); }
+                                );
+
+  return std::make_pair(input_files.size(), result);
 }
 
 std::shared_ptr<wrench::WMS> BBSimulation::instantiate_wms_service(const FileMap_t& file_placement_heuristic) {
@@ -252,4 +269,39 @@ std::shared_ptr<wrench::WMS> BBSimulation::instantiate_wms_service(const FileMap
           );
   this->wms->addWorkflow(this->workflow);
   return this->wms;
+}
+
+void BBSimulation::dumpWorkflowStatCSV() {
+  printWorkflowFile(this->workflow_id, 
+                    this->workflow, 
+                    this->raw_args["output_dir"] + "/" + this->workflow_id + "-stat.csv");
+}
+
+
+void BBSimulation::dumpAllOutputJSON(bool layout) {
+  auto& simulation_output = this->getOutput();
+
+  simulation_output.dumpPlatformGraphJSON(this->raw_args["output_dir"] + "/" + this->platform_id + ".json");
+  simulation_output.dumpWorkflowExecutionJSON(this->workflow, this->raw_args["output_dir"] + "/" + this->workflow_id + "-execution.json", false);
+
+  if (layout)
+    simulation_output.dumpWorkflowExecutionJSON(this->workflow, this->raw_args["output_dir"] + "/" + this->workflow_id + "-execution-layout.json", true);
+
+  simulation_output.dumpWorkflowGraphJSON(this->workflow, this->raw_args["output_dir"] + "/" + this->workflow_id + ".json");
+}
+
+void BBSimulation::dumpResultPerTaskCSV(const std::string& output, char sep) {
+  auto& simulation_output = this->getOutput();
+
+  std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks;
+  std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampFileCopyCompletion> *> trace_copyfiles;
+
+  trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
+  trace_copyfiles = simulation_output.getTrace<wrench::SimulationTimestampFileCopyCompletion>();
+
+  auto stage_in = trace_tasks[0]->getContent()->getTask();
+  auto stage_out = trace_tasks[trace_tasks.size()-1]->getContent()->getTask();
+
+  std::cout << "Task in first trace entry: " << stage_in->getID() << " " << stage_in->getStartDate() << " " << stage_in->getEndDate() << " " << stage_in->getEndDate()-stage_in->getStartDate() << std::endl;
+  std::cout << "Task in last trace entry: " << stage_out->getID() << " " << stage_out->getStartDate() << " " << stage_out->getEndDate() << " " << stage_out->getEndDate() - stage_out->getStartDate() << std::endl;
 }

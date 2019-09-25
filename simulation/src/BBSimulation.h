@@ -39,21 +39,29 @@ class Simulation;
  */
 class BBSimulation : public wrench::Simulation {
 public:
-    BBSimulation(int argc, char **argv,
-                 const std::string& platform_file,
+    BBSimulation(const std::string& platform_file,
                  const std::string& workflow_file,
                  const std::string& output_dir);
 
+    void init(int *argc, char **argv);
+    wrench::Workflow* parse_inputs();
+    std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
     std::set<std::shared_ptr<wrench::StorageService>> instantiate_storage_services();
     std::set<std::shared_ptr<wrench::ComputeService>> instantiate_compute_services();
     wrench::FileRegistryService* instantiate_file_registry_service();
-    void stage_input_files();
+    std::pair<int, double> stage_input_files();
     std::shared_ptr<wrench::WMS> instantiate_wms_service(const FileMap_t& file_placement_heuristic);
 
+    std::shared_ptr<PFSStorageService> getPFSService() { return this->pfs_storage_service; }
+    std::set<std::shared_ptr<BBStorageService>> getBBServices() { return this->bb_storage_services; }
+    std::set<std::shared_ptr<wrench::StorageService>> getStorageServices() { return this->storage_services; }
+    std::set<std::shared_ptr<wrench::ComputeService>> getComputeServices() { return this->compute_services; }
+
+    void dumpAllOutputJSON(bool layout = false);
+    void dumpWorkflowStatCSV();
+    void dumpResultPerTaskCSV(const std::string& output, char sep = ' ');
+
 private:
-    bool ends_with(const std::string& str, const std::string& suffix);
-    void parse_input(wrench::Workflow *workflow);
-    void create_hosts();
     std::pair<double, double> check_links(std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> route);
 
     std::map<std::string, std::string> raw_args;
@@ -76,6 +84,7 @@ private:
     std::set<std::string> execution_hosts;
     std::set<std::shared_ptr<wrench::ComputeService>> compute_services;
 
+    // Structures that maintain hosts-links information (host_src, host_dest) -> Link
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> > hostpair_to_link;
     std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_pfs;
     std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_bb;

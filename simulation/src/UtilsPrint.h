@@ -15,6 +15,7 @@
 #include <simgrid/s4u.hpp>
 #include <wrench-dev.h>
 
+bool ends_with(const std::string& str, const std::string& suffix);
 
 void printWorkflowTTY(const std::string& workflow_id, 
                       wrench::Workflow* workflow);
