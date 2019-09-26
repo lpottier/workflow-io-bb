@@ -38,14 +38,14 @@ echo "STAMP PREPARATION $(date --rfc-3339=ns)"
 
 # Create the final output directory and run directory
 #outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${SLURM_JOB_NUM_NODES}N.XXXXXX)
-outdir="$(pwd)/results"; mkdir ${outdir}
+outdir="$(pwd)/output"; mkdir ${outdir}
 if [ $use_bb = true ]; then
     ./bbinfo.sh
     rundir=$DW_JOB_STRIPED/swarp-run
     mkdir $rundir
 else
     indir="../input" # The input data is already on OST 1
-    lfs setstripe -c 1 -o 1 ${outdir}
+    #lfs setstripe -c 1 -o 1 ${outdir}
     rundir=$outdir
 fi
 # Create a output and run directory for each SWarp process
