@@ -2,6 +2,7 @@
 #SBATCH -p debug
 #SBATCH -N @NODES@
 #SBATCH -A mpccc
+#SBATCH -C haswell
 #SBATCH -t 00:10:00
 #SBATCH -J swarp-scaling
 #SBATCH -o output.%j

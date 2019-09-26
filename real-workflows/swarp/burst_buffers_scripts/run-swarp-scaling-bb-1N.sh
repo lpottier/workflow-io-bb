@@ -2,6 +2,7 @@
 #SBATCH -p debug
 #SBATCH -N 1
 #SBATCH -A mpccc
+#SBATCH -C haswell
 #SBATCH -t 00:10:00
 #SBATCH -J swarp-scaling
 #SBATCH -o output.%j
@@ -12,7 +13,7 @@
 #SBATCH -d singleton
 #DW jobdw capacity=150GB access_mode=striped type=scratch
 #@STAGE@
-#DW stage_in source=/global/cscratch1/sd/$USER/sky-survey/deepsky-scaling-input destination=$DW_JOB_STRIPED/input/1 type=directory
+#DW stage_in source=/global/cscratch1/sd/lpottier/input destination=$DW_JOB_STRIPED/input/1 type=directory
 
 use_bb=true
 module unload darshan
@@ -23,10 +24,10 @@ LAUNCH="$SCRATCH/sky-survey/scaling-3/sync_launch.sh"
 export CONTROL_FILE="$SCRATCH/control_file.txt"
 
 CORES_PER_PROCESS=16
-CONFIG_DIR=$SCRATCH/sky-survey/config  # -numa
+CONFIG_DIR=$SCRATCH/config  # -numa
 RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
 COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp
-EXE=$SCRATCH/sky-survey/swarp/install/bin/swarp
+EXE=$SCRATCH/swarp/install/bin/swarp
 
 FILE_PATTERN='PTF201111*'
 IMAGE_PATTERN='PTF201111*.w.fits'

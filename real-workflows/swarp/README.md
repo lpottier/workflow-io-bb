@@ -11,7 +11,7 @@ One SWarp pipeline consists into two tasks:
 Note that, both tasks are implemented by the same executable `swarp`, so 
 both steps could be done as one bigger step. `swarp` is a C multi-threaded (POSIX thread) code.
 
-For instance, with 12 threads on one Intel(R) Xeon(R) CPU E5-2698 v3, each step takes approximately 30s to complete.
+For instance, with 12 threads on one _Intel(R) Xeon(R) CPU E5-2698 v3_, each step takes approximately 30s to complete.
 
 ## How to run the one pipeline?
 
@@ -19,7 +19,11 @@ Has been tested with GCC 7.3.0. Find [SWarp manual](https://www.astromatic.net/p
 
 ### Without Burst Buffers
 
-Run `run/run-swarp.sh` . Make sure to modify the path regarding your install of SWarp and where are the `input/`.
+Run `run/run-swarp.sh` (need a cluster with SLURM). Make sure to modify the path regarding your install of SWarp and where are the `input/`.
+
+- To run manually _rsmpl_: `swarp-2.38.0-install/bin/swarp -c config/resample.swarp input/PTF201111*.w.fits`
+- To run manually _coadd_: `swarp-2.38.0-install/bin/swarp -c config/combine.swarp PTF201111*.w.resamp.fits` 
+
 
 The configuration files in `config` directory control the problem.
 For efficiency, set the following variables according to the DRAM available on your machine:
@@ -29,7 +33,7 @@ MEM_MAX                31744           # Maximum amount of usable RAM (MiB)
 COMBINE_BUFSIZE        24576           # RAM dedicated to co-addition (MiB)
 ```
 
-Note that those files are set such that each stage run on 12 threads and both stage are run separately. 
+Note that those files are set such that each stage run on 12 threads and both stages run separately.
 ```
 COMBINE                N               # Combine resampled images (Y/N)?
 RESAMPLE               Y               # Resample input images (Y/N)?
@@ -43,3 +47,4 @@ NTHREADS               12               # No. threads
 If `NTHREADS = 0` or if `NTHREADS` is not defined then automatically the number of threads equals to the number of cores.
 
 ### With Burst Buffers
+
