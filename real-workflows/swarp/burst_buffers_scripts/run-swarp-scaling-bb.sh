@@ -22,6 +22,8 @@ set -x
 LAUNCH="$SCRATCH/sky-survey/scaling-3/sync_launch.sh"
 export CONTROL_FILE="$SCRATCH/control_file.txt"
 
+export | grep SLURM
+
 CORES_PER_PROCESS=16
 CONFIG_DIR=$SCRATCH/sky-survey/config  # -numa
 RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
