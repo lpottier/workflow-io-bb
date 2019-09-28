@@ -13,6 +13,11 @@ both steps could be done as one bigger step. `swarp` is a C multi-threaded (POSI
 
 For instance, with 12 threads on one _Intel(R) Xeon(R) CPU E5-2698 v3_, each step takes approximately 30s to complete.
 
+You can pull a docker image with the input and the workflow ready to execute here: 
+```
+docker push lpottier/swarp:latest
+```
+
 ## How to run the one pipeline?
 
 Has been tested with GCC 7.3.0. Find [SWarp manual](https://www.astromatic.net/pubsvn/software/swarp/trunk/doc/swarp.pdf)
@@ -46,5 +51,18 @@ NTHREADS               12               # No. threads
 ```
 If `NTHREADS = 0` or if `NTHREADS` is not defined then automatically the number of threads equals to the number of cores.
 
-### With Burst Buffers
+### With Burst Buffers on Cori (NERSC)
+
+#### Interactive mode 
+To run in interactive mode:
+```
+salloc -N 1 -C haswell -q interactive -t 01:00:00 --bbf=run/bbf.conf
+```
+and then in the shell open by `salloc`:
+```
+./run/interactive-swarp-bb.sh
+```
+To exit the shell created by `salloc` type `exit`.
+
+#### Classic `sbatch` mode 
 
