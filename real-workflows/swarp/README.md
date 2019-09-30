@@ -66,3 +66,4 @@ To exit the shell created by `salloc` type `exit`.
 
 #### Classic `sbatch` mode 
 
+Go to `burst_buffers_scripts` and run `./submit-swarp.sh`. By default it will run on one node on all the input files (everything is staged in the burst buffers).

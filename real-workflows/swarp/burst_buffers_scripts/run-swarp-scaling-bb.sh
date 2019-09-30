@@ -7,7 +7,7 @@
 #SBATCH -o output.%j
 #SBATCH -e error.%j
 #SBATCH --mail-user=lpottier@isi.edu
-#SBATCH --mail-type=FAIL
+#SBATCH --mail-type=END,FAIL
 #SBATCH --export=ALL
 #SBATCH -d singleton
 #DW jobdw capacity=150GB access_mode=striped type=scratch
@@ -26,9 +26,9 @@ export CONTROL_FILE="$SCRATCH/control_file.txt"
 
 CORES_PER_PROCESS=16
 CONFIG_DIR=$SCRATCH/$SWARP_DIR/config  # -numa
-RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
-COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp
-EXE=$SCRATCH/$SWARP_DIR/swarp/swarp-2.38.0-install/bin/swarp
+RESAMPLE_CONFIG=${CONFIG_DIR}/resample-orig.swarp
+COMBINE_CONFIG=${CONFIG_DIR}/combine-orig.swarp
+EXE=$SCRATCH/$SWARP_DIR/swarp-2.38.0-install/bin/swarp
 
 FILE_PATTERN='PTF201111*'
 IMAGE_PATTERN='PTF201111*.w.fits'
