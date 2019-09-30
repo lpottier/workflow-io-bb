@@ -10,7 +10,7 @@ for i in 1; do
     script="run-swarp-scaling-bb-${i}N.sh"
     sed "s/@NODES@/${i}/" "run-swarp-scaling-bb.sh" > ${outdir}/${script}
     for j in $(seq ${i} -1 1); do
-	stage_in="#DW stage_in source=/global/cscratch1/sd/lpottier/scaling-input destination=\$DW_JOB_STRIPED/input/${j} type=directory"
+	stage_in="#DW stage_in source=/global/cscratch1/sd/lpottier/input destination=\$DW_JOB_STRIPED/input/${j} type=directory"
 	sed -i "s|@STAGE@|@STAGE@\n${stage_in}|" ${outdir}/${script}
     done
     cp "bbinfo.sh" "sync_launch.sh" "${outdir}"

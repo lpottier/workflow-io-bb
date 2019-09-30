@@ -1,14 +1,13 @@
 #!/bin/bash -l
 #SBATCH -p debug
 #SBATCH -N @NODES@
-#SBATCH -A mpccc
 #SBATCH -C haswell
 #SBATCH -t 00:10:00
 #SBATCH -J swarp-scaling
 #SBATCH -o output.%j
 #SBATCH -e error.%j
 #SBATCH --mail-user=lpottier@isi.edu
-#SBATCH --mail-type=ALL
+#SBATCH --mail-type=FAIL
 #SBATCH --export=ALL
 #SBATCH -d singleton
 #DW jobdw capacity=150GB access_mode=striped type=scratch
@@ -16,19 +15,20 @@
 
 use_bb=true
 module unload darshan
-module load ipm/2.0.3-git_serial-io-preload
+#module load ipm/2.0.3-git_serial-io-preload
 
 set -x
-LAUNCH="$SCRATCH/sky-survey/scaling-3/sync_launch.sh"
+SWARP_DIR=workflow-io-bb/real-workflows/swarp
+LAUNCH="$SCRATCH/$SWARP_DIR/burst_buffers_scripts/sync_launch.sh"
 export CONTROL_FILE="$SCRATCH/control_file.txt"
 
-export | grep SLURM
+#export | grep SLURM
 
 CORES_PER_PROCESS=16
-CONFIG_DIR=$SCRATCH/sky-survey/config  # -numa
+CONFIG_DIR=$SCRATCH/$SWARP_DIR/config  # -numa
 RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
 COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp
-EXE=$SCRATCH/sky-survey/swarp/install/bin/swarp
+EXE=$SCRATCH/$SWARP_DIR/swarp/swarp-2.38.0-install/bin/swarp
 
 FILE_PATTERN='PTF201111*'
 IMAGE_PATTERN='PTF201111*.w.fits'

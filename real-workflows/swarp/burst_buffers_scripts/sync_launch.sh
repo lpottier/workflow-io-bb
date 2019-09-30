@@ -15,5 +15,5 @@ echo "TIME SYNC LAUNCH $tdiff"
 echo "STAMP SYNC LAUNCH END $(date --rfc-3339=ns)"
 
 # Launch the application. "exec" may be helpful when using IPM.
-# exec "$@"
-env LD_PRELOAD=$IPM_PATH/lib/libipm.so "$@"
+exec "$@"
+#env LD_PRELOAD=$IPM_PATH/lib/libipm.so "$@"
