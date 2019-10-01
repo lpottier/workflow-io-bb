@@ -1,10 +1,10 @@
 #!/bin/bash -l
 
 #module load gcc/7.3.0
-
 #module load allinea-reports
-
 set -x
+
+module load perftools-base perftools
 BASE=$(pwd)
 #BASE="$SCRATCH/deep-sky"
 
@@ -21,6 +21,8 @@ RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
 
 export RESAMP_DIR=resamp_files
 
+export CORE_COUNT=1
+
 rm -rf ${RESAMP_DIR}
 
 mkdir -p ${OUTPUT_DIR}
@@ -28,13 +30,13 @@ mkdir -p ${RESAMP_DIR}
 rm -f ${OUTPUT_DIR}/* resample.xml combine.xml coadd.fits coadd.weight.fits PTF201111*.w.resamp*
 ls
 
-MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR pegasus-kickstart"
+MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
-srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
+srun -n 1 -C "haswell" -c 1 --cpu-bind=cores \
      $MONITORING -l "$OUTPUT_DIR/stat-resample.xml" $EXE \
      -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN}
 
-srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
+srun -n 1 -C "haswell" -c 1 --cpu-bind=cores \
      $MONITORING -l "$OUTPUT_DIR/stat-combine.xml" $EXE \
      -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
 

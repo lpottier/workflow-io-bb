@@ -91,4 +91,4 @@ WRITE_XML              Y               # Write XML file (Y/N)?
 XML_NAME               ${OUTPUT_DIR}/combine.xml     # Filename for XML output
 VERBOSE_TYPE           FULL            # QUIET,NORMAL or FULL
  
-NTHREADS               1               # No. threads
+NTHREADS               ${CORE_COUNT}   # No. threads
