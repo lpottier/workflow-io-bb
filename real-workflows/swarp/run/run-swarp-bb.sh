@@ -6,7 +6,7 @@ set -x
 BASE=$(pwd)
 #BASE="$SCRATCH/deep-sky"
 
-EXE=${BASE}/swarp-2.38.0-install/bin/swarp
+EXE=${BASE}/bin/swarp
 INPUT_DIR=${BASE}/input
 OUPUT_DIR=${BASE}/ouput
 CONFIG_DIR=${BASE}/config
@@ -21,8 +21,13 @@ mkdir -p ${OUPUT_DIR}
 rm -f ${OUPUT_DIR}/* resample.xml combine.xml coadd.fits coadd.weight.fits PTF201111*.w.resamp*
 ls
 
-srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
-     $EXE -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN} --bbf=bbf.conf
+MONITORING="pegasus-kickstart -Z "
 
 srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
-     $EXE -c $COMBINE_CONFIG ${OUPUT_DIR}/${RESAMPLE_PATTERN} --bbf=bbf.conf
+     $MONITORING $EXE -l $OUPUT_DIR/stat-resample.yaml \
+     -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN}
+
+srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
+     $MONITORING $EXE -l $OUPUT_DIR/stat-combine.yaml \
+     -c $COMBINE_CONFIG ${OUPUT_DIR}/${RESAMPLE_PATTERN}
+

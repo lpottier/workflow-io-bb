@@ -87,7 +87,7 @@ COPY_KEYWORDS          OBJECT          # List of FITS keywords to propagate
 WRITE_FILEINFO         N               # Write information about each input
                                        # file in the output image header?
 WRITE_XML              Y               # Write XML file (Y/N)?
-XML_NAME               ${OUTPUT_DIR}resample.xml       # Filename for XML output
+XML_NAME               ${OUTPUT_DIR}/resample.xml       # Filename for XML output
 VERBOSE_TYPE           FULL          # QUIET,NORMAL or FULL
  
-NTHREADS               12               # No. threads
+NTHREADS               1               # No. threads

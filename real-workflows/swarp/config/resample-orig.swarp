@@ -90,4 +90,4 @@ WRITE_XML              Y               # Write XML file (Y/N)?
 XML_NAME               resample.xml    # Filename for XML output
 VERBOSE_TYPE           FULL            # QUIET,NORMAL or FULL
  
-NTHREADS               12               # No. threads
+NTHREADS               1               # No. threads
