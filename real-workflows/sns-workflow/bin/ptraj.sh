@@ -9,5 +9,5 @@ if [ ! -z "${PEGASUS_SCRATCH_DIR}" ]; then
         cd $PEGASUS_SCRATCH_DIR
 fi
 
-srun cpptraj "$@"
+srun --cpu-bind=cores cpptraj "$@"
 
