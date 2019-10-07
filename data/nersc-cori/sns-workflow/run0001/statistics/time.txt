@@ -1,0 +1,34 @@
+
+# Job instance statistics per day:
+#   the number of job instances run, total runtime sorted by day
+# Invocation statistics per day:
+#   the number of invocations , total runtime sorted by day
+# Job instance statistics by host per day:
+#   the number of job instance run, total runtime on each host sorted by day
+# Invocation by host per day:
+#   the number of invocations, total runtime on each host sorted by day
+
+# Job instances statistics per day
+Date[YYYY-MM-DD]              Count               Runtime (sec)       
+2019-10-04                    5                   812.0               
+
+# Invocation statistics run per day
+Date[YYYY-MM-DD]              Count               Runtime (sec)       
+2019-10-04                    30                  585.922             
+
+# Job instances statistics on host per day
+Date[YYYY-MM-DD]       Host                     Count     Runtime (sec)       
+2019-10-04             nid01200                 1         77.0                
+2019-10-04             nid00674                 1         74.0                
+2019-10-04             nid00681                 1         266.0               
+2019-10-04             nid00687                 1         74.0                
+2019-10-04             nid01277                 1         321.0               
+
+# Invocation statistics on host per day
+Date[YYYY-MM-DD]       Host                     Count     Runtime (sec)       
+2019-10-04             cori-lb.nersc.gov        20        36.789              
+2019-10-04             nid01200                 2         20.842              
+2019-10-04             nid00674                 2         31.7                
+2019-10-04             nid00681                 2         169.927             
+2019-10-04             nid00687                 2         7.723               
+2019-10-04             nid01277                 2         318.941             
