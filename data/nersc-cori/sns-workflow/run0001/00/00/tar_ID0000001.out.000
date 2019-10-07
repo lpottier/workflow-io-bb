@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-10-04T14:47:00.693-07:00" duration="0.196" transformation="tar" derivation="ID0000001" resource="nersc" wf-label="refinement-20191004T214203Z" wf-stamp="2019-10-04T14:42:03-07:00" interface="lo:0" hostaddr="128.55.209.23" hostname="cori-lb.nersc.gov" pid="64447" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-10-04T14:47:00.829-07:00" duration="0.059" pid="64469">
+    <usage utime="0.000" stime="0.018" maxrss="4028" minflt="373" majflt="0" nswap="0" inblock="64" outblock="224" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="119" nivcsw="6"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/usr/bin/tar">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100755" size="433256" inode="41568" nlink="1" blksize="1024" blocks="847" mtime="2019-04-03T07:21:59-07:00" atime="2019-04-03T07:21:59-07:00" ctime="2019-04-03T07:21:59-07:00" uid="0" user="root" gid="0" group="root"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-xzvf</arg>
+      <arg nr="2">sassena_db.tar.gz</arg>
+    </argument-vector>
+  </mainjob>
+  <jobids condor="195.0" lrm="296666" lrmtype="slurm"/>
+  <cwd>/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001</cwd>
+  <usage utime="0.064" stime="0.072" maxrss="2396" minflt="186" majflt="0" nswap="0" inblock="0" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="12" nivcsw="9"/>
+  <machine page-size="4096">
+    <stamp>2019-10-04T14:47:00.693-07:00</stamp>
+    <uname system="linux" nodename="cori03" release="4.12.14-150.27-default" machine="x86_64">#1 SMP Thu Jul 11 11:24:28 UTC 2019 (bf2abc2)</uname>
+    <linux>
+      <ram total="527490780" free="222265432" shared="4929152" buffer="2711508"/>
+      <swap total="33554428" free="48648"/>
+      <boot idle="103211950.320">2019-09-13T00:25:21.214-07:00</boot>
+      <cpu count="64" speed="2300" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="6.75" min5="6.34" min15="6.76"/>
+      <procs total="2206" running="4" sleeping="2145" stopped="53" zombie="4" vmsize="598988116" rss="239772364"/>
+      <task total="5670" running="7" sleeping="5588" stopped="71" zombie="4"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="final" lfn="database/db-neutron-coherent.xml">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/database/db-neutron-coherent.xml">3C3F786D6C2076657273696F6E3D2231</file>
+    <statinfo mode="0100750" size="446" inode="144191451897550478" nlink="1" blksize="4194304" blocks="1" mtime="2014-09-15T15:02:36-07:00" atime="2019-10-04T14:47:00-07:00" ctime="2019-10-04T14:47:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="66934a1b4fb20ee3f0c153cd817f16e017bf0f3c11230d79bd36d83511e3dfda" timing="0.055"/>
+  </statcall>
+  <statcall error="0" id="final" lfn="database/db-neutron-incoherent.xml">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/database/db-neutron-incoherent.xml">3C3F786D6C2076657273696F6E3D2231</file>
+    <statinfo mode="0100750" size="448" inode="144191451897550479" nlink="1" blksize="4194304" blocks="1" mtime="2014-09-15T15:02:35-07:00" atime="2019-10-04T14:47:00-07:00" ctime="2019-10-04T14:47:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="880e50ebdba1670a09890e2278edf5f0429d6b51a13cea4f37179855a6b85b61" timing="0.056"/>
+  </statcall>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="2053" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T14:02:33-07:00" atime="2019-10-04T14:02:33-07:00" ctime="2019-10-04T14:02:33-07:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.k6ztTf" descriptor="3"/>
+    <statinfo mode="0100600" size="744" inode="34628674" nlink="1" blksize="4096" blocks="8" mtime="2019-10-04T14:47:00-07:00" atime="2019-10-04T14:47:00-07:00" ctime="2019-10-04T14:47:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>database/
+database/db-neutron-coherent.xml
+database/db-neutron-incoherent.xml
+database/db-xray-coherent.xml
+database/definitions/
+database/definitions/exclusionfactors-neutron.xml
+database/definitions/exclusionfactors-xray.xml
+database/definitions/masses.xml
+database/definitions/names.xml
+database/definitions/scatterfactors-neutron-coherent-SASSIM.xml
+database/definitions/scatterfactors-neutron-coherent.xml
+database/definitions/scatterfactors-neutron-incoherent.xml
+database/definitions/scatterfactors-xray-slater-SASSIM.xml
+database/definitions/scatterfactors-xray-table-SERENA.xml
+database/definitions/scatterfactors-xray-table.xml
+database/definitions/sizes-neutron.xml
+database/definitions/sizes-xray.xml
+database/definitions/sizes.xml
+</data>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.g0OsOm" descriptor="4"/>
+    <statinfo mode="0100600" size="0" inode="34628675" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T14:47:00-07:00" atime="2019-10-04T14:47:00-07:00" ctime="2019-10-04T14:47:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.4jlsJt" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="34628676" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T14:47:00-07:00" atime="2019-10-04T14:47:00-07:00" ctime="2019-10-04T14:47:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>

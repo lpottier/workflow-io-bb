@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-10-04T18:52:47.080-07:00" duration="31.732" transformation="sassena" derivation="ID0000006" resource="nersc" wf-label="refinement-20191004T214203Z" wf-stamp="2019-10-04T14:42:03-07:00" interface="ipogif0" hostaddr="10.128.2.167" hostname="nid00674" pid="58925" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-10-04T18:52:47.106-07:00" duration="31.700" pid="58926">
+    <usage utime="0.092" stime="0.089" maxrss="18728" minflt="5377" majflt="7" nswap="0" inblock="1420" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="13780" nivcsw="2"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena.sh">23212F62696E2F626173680A73657420</file>
+      <statinfo mode="0100770" size="360" inode="184222377" nlink="1" blksize="131072" blocks="1" mtime="2019-10-04T09:43:51-07:00" atime="2019-10-04T18:52:46-07:00" ctime="2019-10-04T09:43:51-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">--config</arg>
+      <arg nr="2">sassenaCoh_200.xml</arg>
+    </argument-vector>
+    <proc ppid="58925" pid="58926" exe="/bin/bash" start="1570240367.107029" stop="1570240398.802503" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12268" rsspeak="2972" rchar="289428" wchar="27333" rbytes="727040" wbytes="0" cwbytes="0" syscr="793" syscw="302">
+      <file name="/dev/null" bread="0" nread="0" bwrite="96" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="4549" nwrite="13" bseek="0" nseek="0" size="4835"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libreadline.so.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="317432"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libtinfo.so.6.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="189288"/>
+      <file name="/global/u1/skel/read-only/.bashrc" bread="1334" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1334"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena.sh" bread="696" nread="4" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+    </proc>
+    <proc ppid="58926" pid="58927" exe="/bin/bash" start="1570240367.130927" stop="1570240367.131491" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12136" rsspeak="2648" rchar="0" wchar="100" rbytes="0" wbytes="0" cwbytes="0" syscr="0" syscw="3">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[562937]" bread="0" nread="0" bwrite="100" nwrite="3" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="58926" pid="58928" exe="/opt/cray/pe/modules/3.2.11.1/bin/modulecmd" start="1570240367.133162" stop="1570240367.219185" utime="0.000" stime="0.010" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="26300" rsspeak="6136" rchar="37344" wchar="2173" rbytes="197632" wbytes="0" cwbytes="0" syscr="48" syscw="7">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="87" nwrite="1" bseek="0" nseek="0" size="131"/>
+      <file name="pipe:[562938]" bread="0" nread="0" bwrite="2066" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena.sh" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/libtcl8.6.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1803600"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="220"/>
+      <file name="/usr/lib64/tcl/tcl8.6/init.tcl" bread="24415" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="24415"/>
+      <file name="/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell" bread="3817" nread="8" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1267"/>
+    </proc>
+    <proc ppid="58926" pid="58930" exe="/usr/bin/srun" start="1570240367.223518" stop="1570240398.795610" utime="0.070" stime="0.040" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18728" rchar="243316" wchar="20415" rbytes="529408" wbytes="0" cwbytes="0" syscr="707" syscw="278">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4835"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena.sh" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/lib64/libjob.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="22512"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/usr/lib64/liblz4.so.1.8.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="84344"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/usr/lib64/slurm/libslurmfull.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9356256"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/lib64/libjobctl.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="8064"/>
+      <file name="/nersc/slurm/etc_20190925154729/slurm.conf" bread="27962" nread="28" bwrite="0" nwrite="0" bseek="0" nseek="0" size="27962"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="260"/>
+      <file name="/lib64/libnss_compat-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="42336"/>
+      <file name="/lib64/libnss_nis.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="55728"/>
+      <file name="/usr/lib64/libnsl.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="108720"/>
+      <file name="/lib64/libtirpc.so.3.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="236800"/>
+      <file name="/usr/lib64/libgssapi_krb5.so.2.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305680"/>
+      <file name="/usr/lib64/libkrb5.so.3.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="892640"/>
+      <file name="/usr/lib64/libk5crypto.so.3.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="199552"/>
+      <file name="/usr/lib64/libcom_err.so.2.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14712"/>
+      <file name="/usr/lib64/libkrb5support.so.0.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="52416"/>
+      <file name="/usr/lib64/libkeyutils.so.1.6" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14640"/>
+      <file name="/lib64/libresolv-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="97192"/>
+      <file name="/lib64/libselinux.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="159480"/>
+      <file name="/usr/lib64/libpcre.so.1.2.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="575800"/>
+      <file name="/proc/filesystems" bread="398" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/passwd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="3610"/>
+      <file name="/usr/lib64/slurm" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1980"/>
+      <file name="/usr/lib64/slurm/select_cons_res.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="652080"/>
+      <file name="/usr/lib64/slurm/select_cons_tres.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="734440"/>
+      <file name="/usr/lib64/slurm/select_cray_aries.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="493224"/>
+      <file name="/opt/cray/alpscomm/1.3.11-7.0.0.1_3.44__gc11442f.ari/lib64/libalpscomm_sn.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="40680"/>
+      <file name="/opt/cray/swrap/1.3.1-7.0.0.1_1.18__gc085a9f.ari/lib64/libswrap.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="17776"/>
+      <file name="/opt/cray/socketauth/1.3.1-7.0.0.1_1.21__gfdd1da0.ari/lib64/libsocketauth.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="22896"/>
+      <file name="/opt/cray/comm_msg/1.2.3-7.0.0.1_1.18__g60fcb6d.ari/lib64/libcomm_msg.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="12544"/>
+      <file name="/opt/cray/sysadm/2.4.136-7.0.0.1_4.39__g4685a09.ari/lib64/libsysadm.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="45816"/>
+      <file name="/opt/cray/codbc/2.5.105-7.0.0.1_1.18__g811bbf2.ari/lib64/libcodbc.so.0.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="37176"/>
+      <file name="/usr/lib64/libodbc.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="444248"/>
+      <file name="/opt/cray/sysutils/2.5.72-7.0.0.1_1.18__g0dd4e0a.ari/lib64/libsysutils.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="56344"/>
+      <file name="/usr/lib64/libxmlrpc-epi.so.0.0.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="89048"/>
+      <file name="/usr/lib64/libgnutls.so.30.23.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1771856"/>
+      <file name="/usr/lib64/libltdl.so.7.3.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="39552"/>
+      <file name="/usr/lib64/libexpat.so.1.6.7" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="203032"/>
+      <file name="/usr/lib64/libp11-kit.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="404528"/>
+      <file name="/usr/lib64/libtasn1.so.6.5.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="76336"/>
+      <file name="/usr/lib64/libnettle.so.6.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="232808"/>
+      <file name="/usr/lib64/libhogweed.so.4.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="229256"/>
+      <file name="/usr/lib64/libgmp.so.10.3.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="615352"/>
+      <file name="/usr/lib64/libidn2.so.0.3.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="117160"/>
+      <file name="/usr/lib64/libunistring.so.2.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1577136"/>
+      <file name="/usr/lib64/libffi.so.7.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="39440"/>
+      <file name="/usr/lib64/slurm/select_linear.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="424112"/>
+      <file name="/usr/lib64/slurm/switch_cray_aries.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="521336"/>
+      <file name="/opt/cray/alpscomm/1.3.11-7.0.0.1_3.44__gc11442f.ari/lib64/libalpscomm_cn.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="54064"/>
+      <file name="/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/lib64/libugni.so.0.6.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="577488"/>
+      <file name="/opt/cray/nodeservices/1.3.5-7.0.0.1_1.17__g886af01.ari/lib64/libnodeservices.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="17048"/>
+      <file name="/usr/lib64/slurm/switch_generic.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="278320"/>
+      <file name="/usr/lib64/slurm/switch_none.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="232064"/>
+      <file name="/nersc/slurm/etc_20190925154729/plugstack.conf" bread="1198" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1198"/>
+      <file name="/usr/lib64/shifter/shifter_slurm.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="590728"/>
+      <file name="/opt/cray/pe/atp/2.1.3/spank/libAtpSLaunch.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="10336"/>
+      <file name="/usr/lib/nersc-slurm-plugins/zonesort.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="19776"/>
+      <file name="/usr/lib64/libnuma.so.1.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="48280"/>
+      <file name="/proc/58930/status" bread="2254" nread="4" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/system/node" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/system/node/node0/meminfo" bread="965" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/sys/devices/system/node/node1/meminfo" bread="965" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/sys/devices/system/cpu" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/usr/lib/nersc-slurm-plugins/sdn_plugin.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="85512"/>
+      <file name="/usr/lib64/libmunge.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="46488"/>
+      <file name="/usr/lib64/libjansson.so.4.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="61144"/>
+      <file name="/usr/lib64/libcurl.so.4.5.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="559408"/>
+      <file name="/usr/lib64/libnghttp2.so.14.16.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="153640"/>
+      <file name="/usr/lib64/libssh.so.4.4.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="467240"/>
+      <file name="/usr/lib64/libpsl.so.5.3.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="63744"/>
+      <file name="/usr/lib64/libssl.so.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="442648"/>
+      <file name="/usr/lib64/libcrypto.so.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2664208"/>
+      <file name="/usr/lib64/libldap_r-2.4.so.2.10.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="335408"/>
+      <file name="/usr/lib64/liblber-2.4.so.2.10.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="60464"/>
+      <file name="/lib64/librt-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="42112"/>
+      <file name="/usr/lib64/libsasl2.so.3.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="118504"/>
+      <file name="/dev/urandom" bread="1732" nread="8" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/usr/lib/nersc-slurm-plugins/perf.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="43192"/>
+      <file name="/usr/lib/nersc-slurm-plugins/myquota.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14936"/>
+      <file name="/etc/shifter/udiRoot.conf" bread="10862" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="10862"/>
+      <file name="/usr/lib64/slurm/launch_slurm.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="328648"/>
+      <file name="/usr/lib64/slurm/cli_filter_lua.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="297928"/>
+      <file name="/usr/lib64/liblua5.3.so.5.3.0" bread="1664" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237296"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/nersc/slurm/etc_20190925154729/cli_filter.lua" bread="12864" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4288"/>
+      <file name="/usr/lib64/lua/5.3/lfs.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29264"/>
+      <file name="/usr/share/lua/5.3/socket.lua" bread="13344" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4448"/>
+      <file name="/usr/lib64/lua/5.3/socket/core.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="58224"/>
+      <file name="/etc/opt/cray/llm/sessionid" bread="57" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="19"/>
+      <file name="/usr/lib64/slurm/mpi_openmpi.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="222088"/>
+      <file name="/etc/host.conf" bread="370" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="370"/>
+      <file name="/etc/resolv.conf" bread="862" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="862"/>
+      <file name="/sys/devices/virtual/gni/ghal0/quiesce_status" bread="6" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/usr/lib64/slurm/auth_munge.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="238032"/>
+      <file name="/usr/lib64/slurm/gres_gpu.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="326752"/>
+      <file name="/usr/lib64/slurm/gres_mic.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="279400"/>
+      <file name="/usr/lib64/slurm/gres_mps.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="332800"/>
+      <file name="/usr/lib64/slurm/gres_nic.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="283920"/>
+      <file name="/usr/lib64/slurm/route_default.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="210936"/>
+    </proc>
+    <proc ppid="58930" pid="58933" exe="/usr/bin/myquota" start="1570240367.284940" stop="1570240367.380805" utime="0.000" stime="0.010" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="17096" rsspeak="2232" rchar="55250" wchar="40" rbytes="140288" wbytes="0" cwbytes="0" syscr="73" syscw="10">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4636"/>
+      <file name="pipe:[805157]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805158]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/liblustreapi.so.1.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="173656"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/dev/urandom" bread="4" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/myquota.conf" bread="125" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="125"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="220"/>
+      <file name="/global/cscratch1/.etc/cscratch.quota" bread="18043" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18043"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/proc/58933/mounts" bread="24927" nread="25" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/global/cscratch1/sd/lpottier" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+    </proc>
+    <proc ppid="58930" pid="58951" exe="/usr/bin/srun" start="1570240393.125961" stop="1570240398.795748" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="188164" rsspeak="8516" rchar="1" wchar="0" rbytes="112640" wbytes="0" cwbytes="0" syscr="1" syscw="0">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4835"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="58930" pid="58952" exe="/usr/bin/date" start="1570240393.130567" stop="1570240393.172857" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="4568" rsspeak="816" rchar="11030" wchar="26" rbytes="0" wbytes="0" cwbytes="0" syscr="17" syscw="1">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4636"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805192]" bread="0" nread="0" bwrite="26" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libreadline.so.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="317432"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libc-2.26.so" bread="1664" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libtinfo.so.6.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="189288"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+    </proc>
+    <proc ppid="58926" pid="58953" exe="/usr/bin/srun" start="1570240393.177135" stop="1570240398.780207" utime="0.070" stime="0.040" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18560" rchar="243316" wchar="20415" rbytes="380928" wbytes="0" cwbytes="0" syscr="707" syscw="278">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4835"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="58926" pid="58954" exe="/usr/bin/srun" start="1570240393.179120" stop="1570240398.777732" utime="0.070" stime="0.040" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18556" rchar="243315" wchar="20413" rbytes="380928" wbytes="0" cwbytes="0" syscr="705" syscw="276">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4835"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805195]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805196]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="58926" pid="58955" exe="/usr/bin/srun" start="1570240393.181845" stop="1570240398.779042" utime="0.070" stime="0.040" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18560" rchar="243316" wchar="20414" rbytes="380928" wbytes="0" cwbytes="0" syscr="707" syscw="277">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="18909" nwrite="226" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="199" nwrite="3" bseek="0" nseek="0" size="4835"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805195]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805196]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805197]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805198]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="58926" pid="58956" exe="/usr/bin/srun" start="1570240393.182237" stop="1570240393.248526" utime="0.060" stime="0.030" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18536" rchar="221910" wchar="914" rbytes="380928" wbytes="0" cwbytes="0" syscr="345" syscw="41">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4636"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805182]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805195]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805196]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805197]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805198]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/virtual/gni/ghal0/quiesce_status" bread="2" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+    </proc>
+    <proc ppid="58926" pid="59018" exe="/usr/bin/srun" start="1570240398.778926" stop="1570240398.795691" utime="0.070" stime="0.040" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="393144" rsspeak="18728" rchar="243316" wchar="20415" rbytes="529408" wbytes="0" cwbytes="0" syscr="707" syscw="278">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.6DsQsK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18909"/>
+      <file name="/tmp/ks.err.bguRic" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4835"/>
+      <file name="socket:[805178]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805191]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[805197]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[805198]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids condor="201.0" lrm="25013211" lrmtype="slurm"/>
+  <cwd>/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001</cwd>
+  <usage utime="0.015" stime="0.082" maxrss="2336" minflt="234" majflt="1" nswap="0" inblock="60" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="12664" nivcsw="4"/>
+  <machine page-size="4096">
+    <stamp>2019-10-04T18:52:47.080-07:00</stamp>
+    <uname system="linux" nodename="nid00674" release="4.12.14-25.22_5.0.79-cray_ari_c" machine="x86_64">#1 SMP Fri Aug 9 16:20:09 UTC 2019 (d32c384)</uname>
+    <linux>
+      <ram total="131895024" free="129424640" shared="396664" buffer="3164"/>
+      <swap total="0" free="0"/>
+      <boot idle="7737247.950">2019-10-02T21:53:56.441-07:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.11" min5="4.22" min15="19.01"/>
+      <procs total="782" running="1" sleeping="781" vmsize="6373788" rss="264108"/>
+      <task total="821" running="1" sleeping="820"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="final" lfn="fqt_coh_200.hd5">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/fqt_coh_200.hd5">894844460D0A1A0A0000000000080800</file>
+    <statinfo mode="0100660" size="912215" inode="144191443811017021" nlink="1" blksize="4194304" blocks="1784" mtime="2019-10-04T18:53:18-07:00" atime="2019-10-04T18:53:14-07:00" ctime="2019-10-04T18:53:18-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="fc719778aa31f5ca731ac519073ad65410b3c9752c29103c7d45960b10ef4d1a" timing="0.210"/>
+  </statcall>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="1029" nlink="1" blksize="4096" blocks="0" mtime="2019-10-02T21:56:45-07:00" atime="2019-10-02T21:56:45-07:00" ctime="2019-10-02T21:56:45-07:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.6DsQsK" descriptor="3"/>
+    <statinfo mode="0100600" size="18909" inode="845996" nlink="1" blksize="4096" blocks="40" mtime="2019-10-04T18:53:18-07:00" atime="2019-10-04T18:52:47-07:00" ctime="2019-10-04T18:53:18-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>       0.Info&gt;&gt;This software is being developed by Benjamin Lindner.                    
+       0.Info&gt;&gt;For help, suggestions or correspondense use:                             
+       0.Info&gt;&gt;ben@benlabs.net, Benjamin Lindner (Main Developer, Impl. &amp; Maintenance)  
+       0.Info&gt;&gt;franc@cmm.ki.si, Franci Merzel (Methodology)                             
+       0.Info&gt;&gt;For publications include the following references:                       
+       0.Info&gt;&gt;.........................................................................
+       0.Info&gt;&gt;1. Sassena - X-ray and Neutron Scattering Calculated                     
+       0.Info&gt;&gt;  from Molecular Dynamics Trajectories using Massively Parallel Computers
+       0.Info&gt;&gt;  published as a Computer Program in Physics Paper                       
+       0.Info&gt;&gt;.........................................................................
+       0.Info&gt;&gt;Version Information: 1.4.2                                       
+       0.Info&gt;&gt;                                                                 
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;......................D.E.S.C.R.I.P.T.I.O.N......................
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;This binary computes the scattering intensities directly from    
+       0.Info&gt;&gt;a molecular dynamics trajectory.                                 
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;...................I.N.I.T.I.A.L.I.Z.A.T.I.O.N...................
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;Looking for configuration file: sassenaCoh_200.xml               
+       0.Info&gt;&gt;Reading parameters from XML file: sassenaCoh_200.xml             
+       0.Info&gt;&gt;Added frames from /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/ptraj_200.dcd using format: dcd
+       0.Info&gt;&gt;Options: first=0, last=0, lastset=0, stride=1                    
+       0.Info&gt;&gt;stager.target=system                                             
+       0.Info&gt;&gt;scattering.type=all                                              
+       0.Info&gt;&gt;scattering.dsp.type=autocorrelate                                
+       0.Info&gt;&gt;scattering.dsp.method=fftw                                       
+       0.Info&gt;&gt;scattering.average.orientation.type=vectors                      
+       0.Info&gt;&gt;scattering.average.orientation.vectors.type=sphere               
+       0.Info&gt;&gt;scattering.average.orientation.vectors.algorithm=boost_uniform_on_sphere
+       0.Info&gt;&gt;scattering.average.orientation.vectors.resolution=500            
+       0.Info&gt;&gt;scattering.average.orientation.vectors.seed=5                    
+       0.Info&gt;&gt;Generating orientations for orientational averaging using sphere,boost_uniform_on_sphere
+       0.Info&gt;&gt;Initialized orientational averaging with 500 vectors.            
+       0.Info&gt;&gt;scattering.signal.file=fqt_coh_200.hd5                           
+       0.Info&gt;&gt;scattering.signal.filepath=/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/fqt_coh_200.hd5
+       0.Info&gt;&gt;scattering.signal.fqt=1                                          
+       0.Info&gt;&gt;scattering.signal.fq0=1                                          
+       0.Info&gt;&gt;scattering.signal.fq=1                                           
+       0.Info&gt;&gt;scattering.signal.fq2=1                                          
+       0.Info&gt;&gt;Analyzing command line for parameter overwrites                  
+       0.Info&gt;&gt;Reading database...                                              
+       0.Info&gt;&gt;Checking database...                                             
+       0.Info&gt;&gt;Testing mapping between PDB names and atom labels                
+       0.Info&gt;&gt;Testing database completeness for referenced atom labels         
+       0.Info&gt;&gt;Check succeeded. Database seems OK.                              
+       0.Info&gt;&gt;Initializing sample...                                           
+       0.Info&gt;&gt;Reading structure from file: /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/crd.md18_vmd_autopsf.pdb
+       0.Info&gt;&gt;Done. Atoms read: 3692                                           
+       0.Info&gt;&gt;Reading frames from: /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/ptraj_200.dcd
+       0.Info&gt;&gt;Found 40 frames                                                  
+       0.Info&gt;&gt;Total number of coordinate sets found: 40                        
+       0.Info&gt;&gt;Set background scattering length density set to 0                
+       0.Info&gt;&gt;Exchanging sample, database &amp; params information with compute nodes... 
+       0.Info&gt;&gt;params...                                                        
+       0.Info&gt;&gt;database...                                                      
+       0.Info&gt;&gt;sample...                                                        
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;......................C.O.M.P.U.T.A.T.I.O.N......................
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;Setting up services...                                           
+       0.Info&gt;&gt;Initializing data file service...                                
+       0.Info&gt;&gt;Initializing monitor service...                                  
+       0.Info&gt;&gt;Starting data file service...                                    
+       0.Info&gt;&gt;Starting monitor service...                                      
+       0.Info&gt;&gt;Services setup and running...                                    
+       0.Info&gt;&gt;Checking /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/fqt_coh_200.hd5 for old results.
+       0.Info&gt;&gt;Broadcasting service information                                 
+       0.Info&gt;&gt;Server host name    : nid00674                                   
+       0.Info&gt;&gt;FileService Port    : 43361                                      
+       0.Info&gt;&gt;MonitorService Port : 39993                                      
+       0.Info&gt;&gt;Setting up parallel environment...                               
+       0.Info&gt;&gt;Searching for decomposition plan:                                
+       0.Info&gt;&gt;nodes    = 12                                                    
+       0.Info&gt;&gt;qvectors = 100                                                   
+       0.Info&gt;&gt;frames   = 40                                                    
+       0.Info&gt;&gt;atoms   = 3692                                                   
+       0.Info&gt;&gt;All interference scattering detected. Applying frame decomposition.
+       0.Info&gt;&gt;Automatic decomposition. Searching for best utilization.         
+       0.Info&gt;&gt;Final decomposition parameters:                                  
+       0.Info&gt;&gt;NN                : 12                                           
+       0.Info&gt;&gt;NQ                : 100                                          
+       0.Info&gt;&gt;NAF               : 40                                           
+       0.Info&gt;&gt;NP                : 3                                            
+       0.Info&gt;&gt;NNpP              : 4                                            
+       0.Info&gt;&gt;NAFcycles         : 10                                           
+       0.Info&gt;&gt;NQcycles          : 34                                           
+       0.Info&gt;&gt;CompEl (WASTE/USE): 80/4000                                      
+       0.Info&gt;&gt;utilization(1=best)    : 0.98039215686274506                     
+       0.Info&gt;&gt;Initializing Scatter Device, Vectors (all)                       
+       0.Info&gt;&gt;Starting scattering...                                           
+       0.Info&gt;&gt;Checking memory requirements for scattering calculation...       
+       0.Info&gt;&gt;required limits.computation.memory.result_buffer=640             
+       0.Info&gt;&gt;required limits.computation.memory.signal_buffer=640             
+       0.Info&gt;&gt;required limits.computation.memory.exchange_buffer=640           
+       0.Info&gt;&gt;required limits.computation.memory.alignpad_buffer=1280          
+       0.Info&gt;&gt;Memory limits ok                                                 
+       0.Info&gt;&gt;Staging data...                                                  
+       0.Info&gt;&gt;Forcing stager.mode=frames                                       
+       0.Info&gt;&gt;Staging first partition.                                         
+       0.Info&gt;&gt;Staging remaining partitions.                                    
+       0.Info&gt;&gt;Target initialized.                                              
+       0.Info&gt;&gt;Target produces a background scattering length density of -0.026505794317721352
+       0.Info&gt;&gt;Starting computation...                                          
+       0.Info&gt;&gt;Orientational averaging includes 500 vectors                     
+       0.Info&gt;&gt;Setting progress sampling factor for monitoring to 1             
+       0.Info&gt;&gt;Progress: 3.584%, ETOTAL: 50.109625704622324 s, ETA: 48.313777704622325 s
+       0.Info&gt;&gt;Progress: 7.168%, ETOTAL: 25.056068489289739 s, ETA: 23.26013048928974 s
+       0.Info&gt;&gt;Progress: 10.752%, ETOTAL: 16.704585118376549 s, ETA: 14.908589118376549 s
+       0.Info&gt;&gt;Progress: 21.504%, ETOTAL: 8.3573223076327956 s, ETA: 6.5601653076327962 s
+       0.Info&gt;&gt;Progress: 32.256%, ETOTAL: 5.6070496853793514 s, ETA: 3.7984146853793512 s
+       0.Info&gt;&gt;Progress: 43.008%, ETOTAL: 4.2056143026481587 s, ETA: 2.3968653026481581 s
+       0.Info&gt;&gt;Progress: 51.177%, ETOTAL: 7.405401654704157 s, ETA: 3.6155696547041565 s
+       0.Info&gt;&gt;Progress: 63.596%, ETOTAL: 5.9788691517271531 s, ETA: 2.1765641517271521 s
+       0.Info&gt;&gt;Progress: 72.097%, ETOTAL: 5.2740046506146419 s, ETA: 1.4716196506146417 s
+       0.Info&gt;&gt;Progress: 80.432%, ETOTAL: 4.7357033867879368 s, ETA: 0.92667838678793668 s
+       0.Info&gt;&gt;Progress: 92.687%, ETOTAL: 4.1096822251967415 s, ETA: 0.30055622519674097 s
+       0.Info&gt;&gt;Scattering finished...                                           
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;.....................R.U.N...A.N.A.L.Y.S.I.S.....................
+       0.Info&gt;&gt;.................................................................
+       0.Info&gt;&gt;Aggregating timing information for performance analysis...       
+       0.Info&gt;&gt;                                                                 
+       0.Info&gt;&gt;                    Performance Analysis                         
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt; mean and total runtimes:                                        
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;          measure |    total |       count |     mean |   stddev 
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;   sd:c:b:dspstore| 2.133e-01|        50000| 4.266e-06| 3.038e-06
+       0.Info&gt;&gt;   sd:c:b:exchange| 2.026e+00|        50000| 4.052e-05| 5.912e-05
+       0.Info&gt;&gt;   sd:c:b:progress| 8.349e-02|        50000| 1.670e-06| 2.368e-06
+       0.Info&gt;&gt;    sd:c:b:scatter| 4.638e+01|        50000| 9.275e-04| 5.930e-05
+       0.Info&gt;&gt;        sd:c:block| 4.886e+01|          400| 1.221e-01| 7.094e-03
+       0.Info&gt;&gt;         sd:c:init| 3.245e-01|          400| 8.111e-04| 1.731e-04
+       0.Info&gt;&gt;       sd:c:reduce| 3.419e-03|          400| 8.548e-06| 2.832e-06
+       0.Info&gt;&gt;         sd:c:wait| 3.972e-03|          400| 9.930e-06| 3.435e-05
+       0.Info&gt;&gt;        sd:compute| 4.919e+01|          400| 1.230e-01| 7.160e-03
+       0.Info&gt;&gt;         sd:runner| 4.919e+01|           12| 4.100e+00| 0.000e+00
+       0.Info&gt;&gt;          sd:stage| 4.901e-02|           12| 4.084e-03| 0.000e+00
+       0.Info&gt;&gt; sd:worker:scatter| 4.385e+01|       200000| 2.192e-04| 1.488e-05
+       0.Info&gt;&gt;    sd:worker:wait| 4.666e+00|       200000| 2.333e-05| 5.569e-05
+       0.Info&gt;&gt;          sd:write| 5.510e-04|          400| 1.377e-06| 4.963e-07
+       0.Info&gt;&gt;           st:fill| 3.887e-03|           12| 3.239e-04| 0.000e+00
+       0.Info&gt;&gt;          st:first| 1.475e-02|            4| 3.686e-03| 0.000e+00
+       0.Info&gt;&gt;           st:load| 1.467e-02|           40| 3.668e-04| 5.180e-05
+       0.Info&gt;&gt;           st:wait| 3.017e-02|           12| 2.514e-03| 0.000e+00
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt; watermarks:                                                     
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;          measure |      min |      max                          
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;   sd:c:b:dspstore| 2.000e-06| 2.560e-04                         
+       0.Info&gt;&gt;   sd:c:b:exchange| 2.000e-06| 7.970e-04                         
+       0.Info&gt;&gt;   sd:c:b:progress| 1.000e-06| 1.350e-04                         
+       0.Info&gt;&gt;    sd:c:b:scatter| 7.530e-04| 1.518e-03                         
+       0.Info&gt;&gt;        sd:c:block| 1.159e-01| 1.645e-01                         
+       0.Info&gt;&gt;         sd:c:init| 6.260e-04| 1.404e-03                         
+       0.Info&gt;&gt;       sd:c:reduce| 3.000e-06| 3.200e-05                         
+       0.Info&gt;&gt;         sd:c:wait| 1.000e-06| 2.090e-04                         
+       0.Info&gt;&gt;        sd:compute| 1.167e-01| 1.654e-01                         
+       0.Info&gt;&gt;         sd:runner| 4.043e+00| 4.137e+00                         
+       0.Info&gt;&gt;          sd:stage| 4.076e-03| 4.093e-03                         
+       0.Info&gt;&gt; sd:worker:scatter| 1.740e-04| 5.120e-04                         
+       0.Info&gt;&gt;    sd:worker:wait| 0.000e+00| 1.698e-03                         
+       0.Info&gt;&gt;          sd:write| 0.000e+00| 7.000e-06                         
+       0.Info&gt;&gt;           st:fill| 3.160e-04| 3.340e-04                         
+       0.Info&gt;&gt;          st:first| 3.664e-03| 3.741e-03                         
+       0.Info&gt;&gt;           st:load| 3.420e-04| 5.490e-04                         
+       0.Info&gt;&gt;           st:wait| 3.000e-06| 3.746e-03                         
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;                                                                 
+       0.Info&gt;&gt;         Performance Analysis (relative to total time * nodes)   
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt; mean and total runtimes:                                        
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;          measure |    total |       count |     mean |   stddev 
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;   sd:c:b:dspstore| 3.970e-03|        50000| 7.941e-08| 4.144e-07
+       0.Info&gt;&gt;   sd:c:b:exchange| 3.771e-02|        50000| 7.542e-07| 8.066e-06
+       0.Info&gt;&gt;   sd:c:b:progress| 1.554e-03|        50000| 3.108e-08| 3.230e-07
+       0.Info&gt;&gt;    sd:c:b:scatter| 8.632e-01|        50000| 1.726e-05| 8.090e-06
+       0.Info&gt;&gt;        sd:c:block| 9.094e-01|          400| 2.273e-03| 9.678e-04
+       0.Info&gt;&gt;         sd:c:init| 6.039e-03|          400| 1.510e-05| 2.362e-05
+       0.Info&gt;&gt;       sd:c:reduce| 6.364e-05|          400| 1.591e-07| 3.864e-07
+       0.Info&gt;&gt;         sd:c:wait| 7.393e-05|          400| 1.848e-07| 4.686e-06
+       0.Info&gt;&gt;        sd:compute| 9.156e-01|          400| 2.289e-03| 9.768e-04
+       0.Info&gt;&gt;         sd:runner| 9.157e-01|           12| 7.630e-02| 0.000e+00
+       0.Info&gt;&gt;          sd:stage| 9.122e-04|           12| 7.602e-05| 0.000e+00
+       0.Info&gt;&gt; sd:worker:scatter| 8.161e-01|       200000| 4.081e-06| 2.030e-06
+       0.Info&gt;&gt;    sd:worker:wait| 8.685e-02|       200000| 4.342e-07| 7.598e-06
+       0.Info&gt;&gt;          sd:write| 1.026e-05|          400| 2.564e-08| 6.771e-08
+       0.Info&gt;&gt;           st:fill| 7.235e-05|           12| 6.029e-06| 0.000e+00
+       0.Info&gt;&gt;          st:first| 2.745e-04|            4| 6.862e-05| 0.000e+00
+       0.Info&gt;&gt;           st:load| 2.731e-04|           40| 6.828e-06| 7.068e-06
+       0.Info&gt;&gt;           st:wait| 5.616e-04|           12| 4.680e-05| 0.000e+00
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt; watermarks:                                                     
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;          measure |      min |      max                          
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;   sd:c:b:dspstore| 3.723e-08| 4.765e-06                         
+       0.Info&gt;&gt;   sd:c:b:exchange| 3.723e-08| 1.483e-05                         
+       0.Info&gt;&gt;   sd:c:b:progress| 1.861e-08| 2.513e-06                         
+       0.Info&gt;&gt;    sd:c:b:scatter| 1.402e-05| 2.825e-05                         
+       0.Info&gt;&gt;        sd:c:block| 2.157e-03| 3.061e-03                         
+       0.Info&gt;&gt;         sd:c:init| 1.165e-05| 2.613e-05                         
+       0.Info&gt;&gt;       sd:c:reduce| 5.584e-08| 5.956e-07                         
+       0.Info&gt;&gt;         sd:c:wait| 1.861e-08| 3.890e-06                         
+       0.Info&gt;&gt;        sd:compute| 2.171e-03| 3.078e-03                         
+       0.Info&gt;&gt;         sd:runner| 7.524e-02| 7.700e-02                         
+       0.Info&gt;&gt;          sd:stage| 7.587e-05| 7.618e-05                         
+       0.Info&gt;&gt; sd:worker:scatter| 3.239e-06| 9.530e-06                         
+       0.Info&gt;&gt;    sd:worker:wait| 0.000e+00| 3.160e-05                         
+       0.Info&gt;&gt;          sd:write| 0.000e+00| 1.303e-07                         
+       0.Info&gt;&gt;           st:fill| 5.882e-06| 6.217e-06                         
+       0.Info&gt;&gt;          st:first| 6.820e-05| 6.963e-05                         
+       0.Info&gt;&gt;           st:load| 6.366e-06| 1.022e-05                         
+       0.Info&gt;&gt;           st:wait| 5.584e-08| 6.972e-05                         
+       0.Info&gt;&gt;-----------------------------------------------------------------
+       0.Info&gt;&gt;Total runtime (s): 4.4772270000000001                            
+       0.Info&gt;&gt;Successfully finished... Have a nice day!                        
+</data>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.bguRic" descriptor="4"/>
+    <statinfo mode="0100600" size="4835" inode="845997" nlink="1" blksize="4096" blocks="16" mtime="2019-10-04T18:53:13-07:00" atime="2019-10-04T18:52:47-07:00" ctime="2019-10-04T18:53:13-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>+ module swap craype-haswell craype-haswell
+++ /opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash swap craype-haswell craype-haswell
++ eval CRAY_CPU_TARGET=haswell &apos;;export&apos; &apos;CRAY_CPU_TARGET;LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7&apos; &apos;;export&apos; &apos;LOADEDMODULES;PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M&apos; &apos;;export&apos; &apos;PE_PRODUCT_LIST;_LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7&apos; &apos;;export&apos; &apos;_LMFILES_;&apos;
+++ CRAY_CPU_TARGET=haswell
+++ export CRAY_CPU_TARGET
+++ LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7
+++ export LOADEDMODULES
+++ PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M
+++ export PE_PRODUCT_LIST
+++ _LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7
+++ export _LMFILES_
++ &apos;[&apos; &apos;!&apos; -z /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001 &apos;]&apos;
++ cd /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001
++ srun /global/homes/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena --config sassenaCoh_200.xml
+PE 0: MPICH Warning: For one-sided operations, XPMEM will not be used for a specific
+RMA window if that window&apos;s memory is no more than 4K.
+Updating to CLE 5.2UP02 or beyond will resolve this issue.
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.uXOT8D" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="845998" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T18:52:47-07:00" atime="2019-10-04T18:52:47-07:00" ctime="2019-10-04T18:52:47-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>

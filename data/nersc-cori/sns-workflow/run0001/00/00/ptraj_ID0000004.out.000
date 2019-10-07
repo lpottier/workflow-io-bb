@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-10-04T18:43:39.710-07:00" duration="8.426" transformation="amber::ptraj" derivation="ID0000004" resource="nersc" wf-label="refinement-20191004T214203Z" wf-stamp="2019-10-04T14:42:03-07:00" interface="ipogif0" hostaddr="10.128.2.180" hostname="nid00687" pid="52812" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-10-04T18:43:40.409-07:00" duration="7.723" pid="52813">
+    <usage utime="0.073" stime="0.091" maxrss="18720" minflt="6643" majflt="7" nswap="0" inblock="1356" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="2596" nivcsw="2"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/ptraj.sh">23212F62696E2F626173680A73657420</file>
+      <statinfo mode="0100770" size="222" inode="331143015" nlink="1" blksize="131072" blocks="1" mtime="2019-10-03T19:38:48-07:00" atime="2019-10-04T09:57:19-07:00" ctime="2019-10-03T19:38:48-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">b30.top</arg>
+    </argument-vector>
+  </mainjob>
+  <jobids condor="199.0" lrm="25012802" lrmtype="slurm"/>
+  <cwd>/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001</cwd>
+  <usage utime="0.005" stime="0.023" maxrss="2336" minflt="193" majflt="1" nswap="0" inblock="24" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="126" nivcsw="2"/>
+  <machine page-size="4096">
+    <stamp>2019-10-04T18:43:39.710-07:00</stamp>
+    <uname system="linux" nodename="nid00687" release="4.12.14-25.22_5.0.79-cray_ari_c" machine="x86_64">#1 SMP Fri Aug 9 16:20:09 UTC 2019 (d32c384)</uname>
+    <linux>
+      <ram total="131895024" free="129455088" shared="387532" buffer="3108"/>
+      <swap total="0" free="0"/>
+      <boot idle="7712351.280">2019-10-02T22:09:22.211-07:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.00" min5="2.66" min15="8.81"/>
+      <procs total="795" running="1" sleeping="794" vmsize="7811740" rss="245152"/>
+      <task total="833" running="1" sleeping="832"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="final" lfn="ptraj_200.fit">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/ptraj_200.fit">234672616D652020202020524D53445F</file>
+    <statinfo mode="0100660" size="902" inode="144191338567450413" nlink="1" blksize="4194304" blocks="8" mtime="2019-10-04T18:43:47-07:00" atime="2019-10-04T18:43:47-07:00" ctime="2019-10-04T18:43:47-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="1866dd29e39c1a32968c3bd55f66e1be916a14d8728da864cf016a8a3d23a9f9" timing="0.228"/>
+  </statcall>
+  <statcall error="0" id="final" lfn="ptraj_200.dcd">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/ptraj_200.dcd">54000000434F52442800000001000000</file>
+    <statinfo mode="0100660" size="1775556" inode="144191338567450412" nlink="1" blksize="4194304" blocks="3472" mtime="2019-10-04T18:43:47-07:00" atime="2019-10-04T18:43:47-07:00" ctime="2019-10-04T18:43:47-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="aaeeadfcd4b8ed8ece40dbf3bf77e1290ae3d835ae9451bc1395cbb2a86488b3" timing="0.215"/>
+  </statcall>
+  <statcall error="0" id="stdin">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/ptraj_200.conf">7472616A696E2070726F64756374696F</file>
+    <statinfo mode="0100640" size="92" inode="144191456477776912" nlink="1" blksize="4194304" blocks="8" mtime="2019-10-04T14:45:00-07:00" atime="2019-10-04T14:45:00-07:00" ctime="2019-10-04T14:45:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.E6V8Kj" descriptor="3"/>
+    <statinfo mode="0100600" size="2227" inode="802972" nlink="1" blksize="4096" blocks="8" mtime="2019-10-04T18:43:47-07:00" atime="2019-10-04T18:43:39-07:00" ctime="2019-10-04T18:43:47-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+CPPTRAJ: Trajectory Analysis. V15.00
+    ___  ___  ___  ___
+     | \/ | \/ | \/ | 
+    _|_/\_|_/\_|_/\_|_
+
+| Date/time: 10/04/19  18:43:47
+| Available memory: 126383 MB
+
+	Reading &apos;b30.top&apos; as Amber Topology
+INPUT: Reading Input from STDIN
+  [trajin production_200.dcd]
+	Reading &apos;production_200.dcd&apos; as Charmm DCD
+  [rms first out ptraj_200.fit time 1.0]
+    RMSD: (*), reference is first frame (*), with fitting.
+  [trajout ptraj_200.dcd charmm]
+	Writing &apos;ptraj_200.dcd&apos; as Charmm DCD
+---------- RUN BEGIN -------------------------------------------------
+
+PARAMETER FILES:
+ 0: &apos;b30.top&apos;, 3692 atoms, 1436 res, box: Orthogonal, 1436 mol, 1128 solvent, 40 frames
+
+INPUT TRAJECTORIES:
+ 0: &apos;production_200.dcd&apos; is a CHARMM DCD file Little Endian 32 bit, Parm b30.top (Orthogonal box) (reading 40 of 40)
+  Coordinate processing will occur on 40 frames.
+
+OUTPUT TRAJECTORIES:
+  &apos;ptraj_200.dcd&apos; is a CHARMM DCD file Little Endian 32 bit, Parm b30.top: Writing 40 frames (1-Last, 1)
+TIME: Run Initialization took 0.0000 seconds.
+
+BEGIN TRAJECTORY PROCESSING:
+.....................................................
+ACTION SETUP FOR PARM &apos;b30.top&apos; (1 actions):
+  0: [rms first out ptraj_200.fit time 1.0]
+	Target mask: [*](3692)
+	Reference mask: [*](3692)
+Warning: Coordinates are being rotated and box coordinates are present.
+Warning: Unit cell vectors are NOT rotated; imaging will not be possible
+Warning:  after the RMS-fit is performed.
+----- production_200.dcd (1-40, 1) -----
+ 0% 10% 21% 31% 41% 51% 62% 72% 82% 92% 100% Complete.
+
+Read 40 frames and processed 40 frames.
+TIME: Trajectory processing: 0.0222 s
+TIME: Avg. throughput= 1801.5583 frames / second.
+
+ACTION OUTPUT:
+
+DATASETS:
+  1 data set:
+	RMSD_00000 &quot;RMSD_00000&quot; (double, rms), size is 40
+
+DATAFILES:
+  ptraj_200.fit (Standard Data File):  RMSD_00000
+---------- RUN END ---------------------------------------------------
+TIME: Total execution time: 0.0826 seconds.
+--------------------------------------------------------------------------------
+To cite CPPTRAJ use:
+Daniel R. Roe and Thomas E. Cheatham, III, &quot;PTRAJ and CPPTRAJ: Software for
+  Processing and Analysis of Molecular Dynamics Trajectory Data&quot;. J. Chem.
+  Theory Comput., 2013, 9 (7), pp 3084-3095.
+
+</data>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.kd8NMB" descriptor="4"/>
+    <statinfo mode="0100600" size="11793" inode="802973" nlink="1" blksize="4096" blocks="24" mtime="2019-10-04T18:43:40-07:00" atime="2019-10-04T18:43:39-07:00" ctime="2019-10-04T18:43:40-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>+ module swap craype-haswell craype-haswell
+++ /opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash swap craype-haswell craype-haswell
++ eval CRAY_CPU_TARGET=haswell &apos;;export&apos; &apos;CRAY_CPU_TARGET;LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7&apos; &apos;;export&apos; &apos;LOADEDMODULES;PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M&apos; &apos;;export&apos; &apos;PE_PRODUCT_LIST;_LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7&apos; &apos;;export&apos; &apos;_LMFILES_;&apos;
+++ CRAY_CPU_TARGET=haswell
+++ export CRAY_CPU_TARGET
+++ LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7
+++ export LOADEDMODULES
+++ PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M
+++ export PE_PRODUCT_LIST
+++ _LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7
+++ export _LMFILES_
++ module load amber
+++ /opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash load amber
++ eval AMBERHOME=/global/common/cori/software/amber/14/hsw &apos;;export&apos; &apos;AMBERHOME;AMBER_DAT=/global/common/cori/software/amber/14/hsw/dat&apos; &apos;;export&apos; &apos;AMBER_DAT;LD_LIBRARY_PATH=/global/common/cori/software/amber/14/hsw/lib:/opt/gcc/6.1.0/snos/lib64:/opt/cray/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari/lib64:/opt/intel/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/lib/intel64:/usr/syscom/nsg/lib&apos; &apos;;export&apos; &apos;LD_LIBRARY_PATH;LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7:amber/14&apos; &apos;;export&apos; &apos;LOADEDMODULES;OMP_NUM_THREADS=1&apos; &apos;;export&apos; &apos;OMP_NUM_THREADS;PATH=/global/common/cori/software/amber/14/hsw/bin:/global/common/cori_cle7/software/darshan/3.1.7/bin:/global/common/cori/software/altd/2.0/bin:/usr/common/software/bin:/usr/common/mss/bin:/usr/common/nsg/bin:/opt/cray/pe/mpt/7.7.6/gni/bin:/opt/cray/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari/bin:/opt/cray/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari/sbin:/opt/cray/alps/default/bin:/opt/cray/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari/bin:/opt/cray/pe/craype/2.5.18/bin:/opt/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64:/opt/ovis/bin:/opt/ovis/sbin:/usr/syscom/nsg/sbin:/usr/syscom/nsg/bin:/opt/cray/pe/modules/3.2.11.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/cray/pe/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin&apos; &apos;;export&apos; &apos;PATH;PYTHONPATH=/global/common/cori/software/amber/14/hsw/lib/python2.7/site-packages:/opt/ovis/lib/python2.7/site-packages&apos; &apos;;export&apos; &apos;PYTHONPATH;_LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7:/usr/common/software/modulefiles/amber/14&apos; &apos;;export&apos; &apos;_LMFILES_;&apos;
+++ AMBERHOME=/global/common/cori/software/amber/14/hsw
+++ export AMBERHOME
+++ AMBER_DAT=/global/common/cori/software/amber/14/hsw/dat
+++ export AMBER_DAT
+++ LD_LIBRARY_PATH=/global/common/cori/software/amber/14/hsw/lib:/opt/gcc/6.1.0/snos/lib64:/opt/cray/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari/lib64:/opt/intel/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/lib/intel64:/usr/syscom/nsg/lib
+++ export LD_LIBRARY_PATH
+++ LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7:amber/14
+++ export LOADEDMODULES
+++ OMP_NUM_THREADS=1
+++ export OMP_NUM_THREADS
+++ PATH=/global/common/cori/software/amber/14/hsw/bin:/global/common/cori_cle7/software/darshan/3.1.7/bin:/global/common/cori/software/altd/2.0/bin:/usr/common/software/bin:/usr/common/mss/bin:/usr/common/nsg/bin:/opt/cray/pe/mpt/7.7.6/gni/bin:/opt/cray/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari/bin:/opt/cray/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari/sbin:/opt/cray/alps/default/bin:/opt/cray/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari/bin:/opt/cray/pe/craype/2.5.18/bin:/opt/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64:/opt/ovis/bin:/opt/ovis/sbin:/usr/syscom/nsg/sbin:/usr/syscom/nsg/bin:/opt/cray/pe/modules/3.2.11.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/cray/pe/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin
+++ export PATH
+++ PYTHONPATH=/global/common/cori/software/amber/14/hsw/lib/python2.7/site-packages:/opt/ovis/lib/python2.7/site-packages
+++ export PYTHONPATH
+++ _LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7:/usr/common/software/modulefiles/amber/14
+++ export _LMFILES_
++ &apos;[&apos; &apos;!&apos; -z /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001 &apos;]&apos;
++ cd /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001
++ srun cpptraj b30.top
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.rO7tOT" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="802974" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T18:43:39-07:00" atime="2019-10-04T18:43:39-07:00" ctime="2019-10-04T18:43:39-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>

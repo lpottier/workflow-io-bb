@@ -1,0 +1,1281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-10-04T18:14:00.374-07:00" duration="170.564" transformation="namd" derivation="ID0000003" resource="nersc" wf-label="refinement-20191004T214203Z" wf-stamp="2019-10-04T14:42:03-07:00" interface="ipogif0" hostaddr="10.128.2.174" hostname="nid00681" pid="63413" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-10-04T18:14:01.009-07:00" duration="169.927" pid="63415">
+    <usage utime="0.105" stime="0.107" maxrss="18728" minflt="6291" majflt="9" nswap="0" inblock="1324" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="18979" nivcsw="2"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh">23212F62696E2F626173680A73657420</file>
+      <statinfo mode="0100770" size="360" inode="257155215" nlink="1" blksize="131072" blocks="1" mtime="2019-10-03T17:54:23-07:00" atime="2019-10-04T17:26:10-07:00" ctime="2019-10-03T17:54:23-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">production_200.conf</arg>
+    </argument-vector>
+    <proc ppid="63413" pid="63415" exe="/bin/bash" start="1570238041.009848" stop="1570238210.933664" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12268" rsspeak="2972" rchar="402940" wchar="78908" rbytes="677888" wbytes="0" cwbytes="0" syscr="1631" syscw="1030">
+      <file name="/dev/null" bread="0" nread="0" bwrite="96" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="4583" nwrite="16" bseek="0" nseek="0" size="4933"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libreadline.so.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="317432"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libtinfo.so.6.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="189288"/>
+      <file name="/global/u1/skel/read-only/.bashrc" bread="1334" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1334"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" bread="1006" nread="5" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+    </proc>
+    <proc ppid="63415" pid="63416" exe="/bin/bash" start="1570238041.041336" stop="1570238041.041915" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12136" rsspeak="2648" rchar="0" wchar="100" rbytes="0" wbytes="0" cwbytes="0" syscr="0" syscw="3">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[741786]" bread="0" nread="0" bwrite="100" nwrite="3" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="63415" pid="63417" exe="/opt/cray/pe/modules/3.2.11.1/bin/modulecmd" start="1570238041.044072" stop="1570238041.083507" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="25416" rsspeak="5276" rchar="58032" wchar="104" rbytes="152576" wbytes="0" cwbytes="0" syscr="58" syscw="11">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="64" nwrite="1" bseek="0" nseek="0" size="85"/>
+      <file name="pipe:[741787]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/libtcl8.6.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1803600"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="220"/>
+      <file name="/usr/lib64/tcl/tcl8.6/init.tcl" bread="48830" nread="12" bwrite="0" nwrite="0" bseek="0" nseek="0" size="24415"/>
+    </proc>
+    <proc ppid="63415" pid="63420" exe="/opt/cray/pe/modules/3.2.11.1/bin/modulecmd" start="1570238041.084535" stop="1570238041.193207" utime="0.010" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="26300" rsspeak="6136" rchar="37344" wchar="2173" rbytes="25600" wbytes="0" cwbytes="0" syscr="48" syscw="7">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="87" nwrite="1" bseek="0" nseek="0" size="223"/>
+      <file name="pipe:[741788]" bread="0" nread="0" bwrite="2066" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/libtcl8.6.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1803600"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="220"/>
+      <file name="/usr/lib64/tcl/tcl8.6/init.tcl" bread="24415" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="24415"/>
+      <file name="/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell" bread="3817" nread="8" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1267"/>
+    </proc>
+    <proc ppid="63415" pid="63422" exe="/usr/bin/srun" start="1570238041.198022" stop="1570238210.923701" utime="0.080" stime="0.060" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18728" rchar="298486" wchar="71852" rbytes="499712" wbytes="0" cwbytes="0" syscr="1485" syscw="992">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4933"/>
+      <file name="/global/u2/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="360"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/lib64/libjob.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="22512"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/usr/lib64/liblz4.so.1.8.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="84344"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/usr/lib64/slurm/libslurmfull.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9356256"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/lib64/libjobctl.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="8064"/>
+      <file name="/nersc/slurm/etc_20190925154729/slurm.conf" bread="27962" nread="28" bwrite="0" nwrite="0" bseek="0" nseek="0" size="27962"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="260"/>
+      <file name="/lib64/libnss_compat-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="42336"/>
+      <file name="/lib64/libnss_nis.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="55728"/>
+      <file name="/usr/lib64/libnsl.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="108720"/>
+      <file name="/lib64/libtirpc.so.3.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="236800"/>
+      <file name="/usr/lib64/libgssapi_krb5.so.2.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305680"/>
+      <file name="/usr/lib64/libkrb5.so.3.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="892640"/>
+      <file name="/usr/lib64/libk5crypto.so.3.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="199552"/>
+      <file name="/usr/lib64/libcom_err.so.2.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14712"/>
+      <file name="/usr/lib64/libkrb5support.so.0.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="52416"/>
+      <file name="/usr/lib64/libkeyutils.so.1.6" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14640"/>
+      <file name="/lib64/libresolv-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="97192"/>
+      <file name="/lib64/libselinux.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="159480"/>
+      <file name="/usr/lib64/libpcre.so.1.2.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="575800"/>
+      <file name="/proc/filesystems" bread="398" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/passwd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="3610"/>
+      <file name="/usr/lib64/slurm" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1980"/>
+      <file name="/usr/lib64/slurm/select_cons_res.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="652080"/>
+      <file name="/usr/lib64/slurm/select_cons_tres.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="734440"/>
+      <file name="/usr/lib64/slurm/select_cray_aries.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="493224"/>
+      <file name="/opt/cray/alpscomm/1.3.11-7.0.0.1_3.44__gc11442f.ari/lib64/libalpscomm_sn.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="40680"/>
+      <file name="/opt/cray/swrap/1.3.1-7.0.0.1_1.18__gc085a9f.ari/lib64/libswrap.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="17776"/>
+      <file name="/opt/cray/socketauth/1.3.1-7.0.0.1_1.21__gfdd1da0.ari/lib64/libsocketauth.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="22896"/>
+      <file name="/opt/cray/comm_msg/1.2.3-7.0.0.1_1.18__g60fcb6d.ari/lib64/libcomm_msg.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="12544"/>
+      <file name="/opt/cray/sysadm/2.4.136-7.0.0.1_4.39__g4685a09.ari/lib64/libsysadm.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="45816"/>
+      <file name="/opt/cray/codbc/2.5.105-7.0.0.1_1.18__g811bbf2.ari/lib64/libcodbc.so.0.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="37176"/>
+      <file name="/usr/lib64/libodbc.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="444248"/>
+      <file name="/opt/cray/sysutils/2.5.72-7.0.0.1_1.18__g0dd4e0a.ari/lib64/libsysutils.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="56344"/>
+      <file name="/usr/lib64/libxmlrpc-epi.so.0.0.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="89048"/>
+      <file name="/usr/lib64/libgnutls.so.30.23.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1771856"/>
+      <file name="/usr/lib64/libltdl.so.7.3.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="39552"/>
+      <file name="/usr/lib64/libexpat.so.1.6.7" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="203032"/>
+      <file name="/usr/lib64/libp11-kit.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="404528"/>
+      <file name="/usr/lib64/libtasn1.so.6.5.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="76336"/>
+      <file name="/usr/lib64/libnettle.so.6.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="232808"/>
+      <file name="/usr/lib64/libhogweed.so.4.5" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="229256"/>
+      <file name="/usr/lib64/libgmp.so.10.3.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="615352"/>
+      <file name="/usr/lib64/libidn2.so.0.3.3" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="117160"/>
+      <file name="/usr/lib64/libunistring.so.2.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1577136"/>
+      <file name="/usr/lib64/libffi.so.7.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="39440"/>
+      <file name="/usr/lib64/slurm/select_linear.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="424112"/>
+      <file name="/usr/lib64/slurm/switch_cray_aries.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="521336"/>
+      <file name="/opt/cray/alpscomm/1.3.11-7.0.0.1_3.44__gc11442f.ari/lib64/libalpscomm_cn.so.0.1.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="54064"/>
+      <file name="/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/lib64/libugni.so.0.6.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="577488"/>
+      <file name="/opt/cray/nodeservices/1.3.5-7.0.0.1_1.17__g886af01.ari/lib64/libnodeservices.so.0.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="17048"/>
+      <file name="/usr/lib64/slurm/switch_generic.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="278320"/>
+      <file name="/usr/lib64/slurm/switch_none.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="232064"/>
+      <file name="/nersc/slurm/etc_20190925154729/plugstack.conf" bread="1198" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1198"/>
+      <file name="/usr/lib64/shifter/shifter_slurm.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="590728"/>
+      <file name="/opt/cray/pe/atp/2.1.3/spank/libAtpSLaunch.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="10336"/>
+      <file name="/usr/lib/nersc-slurm-plugins/zonesort.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="19776"/>
+      <file name="/usr/lib64/libnuma.so.1.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="48280"/>
+      <file name="/proc/63422/status" bread="2254" nread="4" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/system/node" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/system/node/node0/meminfo" bread="965" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/sys/devices/system/node/node1/meminfo" bread="965" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/sys/devices/system/cpu" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/usr/lib/nersc-slurm-plugins/sdn_plugin.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="85512"/>
+      <file name="/usr/lib64/libmunge.so.2.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="46488"/>
+      <file name="/usr/lib64/libjansson.so.4.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="61144"/>
+      <file name="/usr/lib64/libcurl.so.4.5.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="559408"/>
+      <file name="/usr/lib64/libnghttp2.so.14.16.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="153640"/>
+      <file name="/usr/lib64/libssh.so.4.4.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="467240"/>
+      <file name="/usr/lib64/libpsl.so.5.3.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="63744"/>
+      <file name="/usr/lib64/libssl.so.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="442648"/>
+      <file name="/usr/lib64/libcrypto.so.1.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2664208"/>
+      <file name="/usr/lib64/libldap_r-2.4.so.2.10.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="335408"/>
+      <file name="/usr/lib64/liblber-2.4.so.2.10.9" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="60464"/>
+      <file name="/lib64/librt-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="42112"/>
+      <file name="/usr/lib64/libsasl2.so.3.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="118504"/>
+      <file name="/dev/urandom" bread="1733" nread="9" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/usr/lib/nersc-slurm-plugins/perf.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="43192"/>
+      <file name="/usr/lib/nersc-slurm-plugins/myquota.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14936"/>
+      <file name="/etc/shifter/udiRoot.conf" bread="10862" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="10862"/>
+      <file name="/usr/lib64/slurm/launch_slurm.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="328648"/>
+      <file name="/usr/lib64/slurm/cli_filter_lua.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="297928"/>
+      <file name="/usr/lib64/liblua5.3.so.5.3.0" bread="1664" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237296"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/nersc/slurm/etc_20190925154729/cli_filter.lua" bread="12864" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4288"/>
+      <file name="/usr/lib64/lua/5.3/lfs.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29264"/>
+      <file name="/usr/share/lua/5.3/socket.lua" bread="13344" nread="6" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4448"/>
+      <file name="/usr/lib64/lua/5.3/socket/core.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="58224"/>
+      <file name="/etc/opt/cray/llm/sessionid" bread="57" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="19"/>
+      <file name="/usr/lib64/slurm/mpi_openmpi.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="222088"/>
+      <file name="/etc/host.conf" bread="370" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="370"/>
+      <file name="/etc/resolv.conf" bread="862" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="862"/>
+      <file name="/sys/devices/virtual/gni/ghal0/quiesce_status" bread="4" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/usr/lib64/slurm/auth_munge.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="238032"/>
+      <file name="/usr/lib64/slurm/gres_gpu.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="326752"/>
+      <file name="/usr/lib64/slurm/gres_mic.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="279400"/>
+      <file name="/usr/lib64/slurm/gres_mps.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="332800"/>
+      <file name="/usr/lib64/slurm/gres_nic.so" bread="2496" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="283920"/>
+      <file name="/usr/lib64/slurm/route_default.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="210936"/>
+    </proc>
+    <proc ppid="63422" pid="63425" exe="/usr/bin/myquota" start="1570238041.269594" stop="1570238041.369826" utime="0.000" stime="0.010" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="17096" rsspeak="2232" rchar="55192" wchar="40" rbytes="140288" wbytes="0" cwbytes="0" syscr="73" syscw="10">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4734"/>
+      <file name="pipe:[745782]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745783]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/liblustreapi.so.1.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="173656"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/dev/urandom" bread="4" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/myquota.conf" bread="125" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="125"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237400"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9231296"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="220"/>
+      <file name="/global/cscratch1/.etc/cscratch.quota" bread="18043" nread="3" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18043"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/proc/63425/mounts" bread="24869" nread="25" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/global/cscratch1/sd/lpottier" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+    </proc>
+    <proc ppid="63422" pid="63448" exe="/usr/bin/srun" start="1570238077.083098" stop="1570238210.923860" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="188164" rsspeak="8500" rchar="1" wchar="0" rbytes="100352" wbytes="0" cwbytes="0" syscr="1" syscw="0">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4933"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="63422" pid="63449" exe="/usr/bin/date" start="1570238077.087696" stop="1570238077.149626" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="4568" rsspeak="816" rchar="11030" wchar="26" rbytes="7168" wbytes="0" cwbytes="0" syscr="17" syscw="1">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4734"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745804]" bread="0" nread="0" bwrite="26" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libreadline.so.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="317432"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libc-2.26.so" bread="1664" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libtinfo.so.6.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="189288"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+    </proc>
+    <proc ppid="63415" pid="63450" exe="/usr/bin/srun" start="1570238077.151999" stop="1570238210.907004" utime="0.080" stime="0.050" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18556" rchar="298486" wchar="71852" rbytes="324608" wbytes="0" cwbytes="0" syscr="1485" syscw="992">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4933"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="63415" pid="63451" exe="/usr/bin/srun" start="1570238077.154043" stop="1570238210.904807" utime="0.080" stime="0.050" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18552" rchar="298485" wchar="71850" rbytes="324608" wbytes="0" cwbytes="0" syscr="1483" syscw="990">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4933"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745806]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745807]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="63415" pid="63452" exe="/usr/bin/srun" start="1570238077.156920" stop="1570238210.905878" utime="0.080" stime="0.050" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18556" rchar="298486" wchar="71851" rbytes="324608" wbytes="0" cwbytes="0" syscr="1485" syscw="991">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="70536" nwrite="942" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="199" nwrite="3" bseek="0" nseek="0" size="4933"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745806]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745807]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745808]" bread="1" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745809]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="63415" pid="63453" exe="/usr/bin/srun" start="1570238077.157318" stop="1570238077.223508" utime="0.060" stime="0.040" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18532" rchar="221503" wchar="724" rbytes="324608" wbytes="0" cwbytes="0" syscr="333" syscw="39">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4734"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745797]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745806]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745807]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745808]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="socket:[745809]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/sys/devices/virtual/gni/ghal0/quiesce_status" bread="2" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+    </proc>
+    <proc ppid="63415" pid="63577" exe="/usr/bin/srun" start="1570238210.905764" stop="1570238210.923776" utime="0.080" stime="0.060" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="393148" rsspeak="18728" rchar="298486" wchar="71852" rbytes="499712" wbytes="0" cwbytes="0" syscr="1485" syscw="992">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.qfwkY0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="70536"/>
+      <file name="/tmp/ks.err.iT9Nbo" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4933"/>
+      <file name="socket:[745793]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745803]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[745808]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids condor="197.0" lrm="25012109" lrmtype="slurm"/>
+  <cwd>/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001</cwd>
+  <usage utime="0.012" stime="0.117" maxrss="2336" minflt="237" majflt="1" nswap="0" inblock="64" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="17680" nivcsw="3"/>
+  <machine page-size="4096">
+    <stamp>2019-10-04T18:14:00.374-07:00</stamp>
+    <uname system="linux" nodename="nid00681" release="4.12.14-25.22_5.0.79-cray_ari_c" machine="x86_64">#1 SMP Fri Aug 9 16:20:09 UTC 2019 (d32c384)</uname>
+    <linux>
+      <ram total="131895024" free="129453588" shared="388272" buffer="3408"/>
+      <swap total="0" free="0"/>
+      <boot idle="7667733.860">2019-10-02T22:06:25.715-07:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.00" min5="0.33" min15="6.17"/>
+      <procs total="787" running="1" sleeping="786" vmsize="7553668" rss="249700"/>
+      <task total="826" running="1" sleeping="825"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="final" lfn="production_200.dcd">
+    <file name="/global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001/production_200.dcd">54000000434F524428000000E8030000</file>
+    <statinfo mode="0100640" size="1775636" inode="144191291406681676" nlink="1" blksize="4194304" blocks="3472" mtime="2019-10-04T18:16:50-07:00" atime="2019-10-04T18:16:50-07:00" ctime="2019-10-04T18:16:50-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <checksum type="sha256" value="6c38563dc7dd74d57429cee49d2f4cb495afe614c0e1c186df5190b7fcb37429" timing="0.258"/>
+  </statcall>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-10-02T22:09:16-07:00" atime="2019-10-02T22:09:16-07:00" ctime="2019-10-02T22:09:16-07:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.qfwkY0" descriptor="3"/>
+    <statinfo mode="0100600" size="70536" inode="875591" nlink="1" blksize="4096" blocks="144" mtime="2019-10-04T18:16:50-07:00" atime="2019-10-04T18:14:00-07:00" ctime="2019-10-04T18:16:50-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>Charm++&gt; Running on MPI version: 3.1
+Charm++&gt; level of thread support used: MPI_THREAD_SINGLE (desired: MPI_THREAD_SINGLE)
+Charm++&gt; Running in non-SMP mode: numPes 12
+Charm++&gt; Using recursive bisection (scheme 3) for topology aware partitions
+Converse/Charm++ Commit ID: v6.7.1-0-gbdf6a1b-namd-charm-6.7.1-build-2016-Nov-07-136676
+CharmLB&gt; Load balancer assumes all CPUs are same.
+Charm++&gt; Running on 1 unique compute nodes (64-way SMP).
+Info: NAMD 2.12 for CRAY-XC-MPI
+Info: 
+Info: Please visit http://www.ks.uiuc.edu/Research/namd/
+Info: for updates, documentation, and support information.
+Info: 
+Info: Please cite Phillips et al., J. Comp. Chem. 26:1781-1802 (2005)
+Info: in all publications reporting results obtained with NAMD.
+Info: 
+Info: Based on Charm++/Converse 60701 for mpi-crayxc
+Info: Built Tue Oct 24 11:43:55 PDT 2017 by papajim on cori09
+Info: Running on 12 processors, 12 nodes, 1 physical nodes.
+Info: CPU topology information available.
+Info: Charm++/Converse parallel runtime startup completed at 0.00300193 s
+Info: 92.0234 MB of memory in use based on /proc/self/stat
+Info: Configuration file is production_200.conf
+Info: Working in the current directory /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001
+TCL: Suspending until startup complete.
+Info: EXTENDED SYSTEM FILE   equilibrate_200.restart.xsc
+Info: SIMULATION PARAMETERS:
+Info: TIMESTEP               1
+Info: NUMBER OF STEPS        0
+Info: STEPS PER CYCLE        20
+Info: PERIODIC CELL BASIS 1  33.6947 0 0
+Info: PERIODIC CELL BASIS 2  0 33.6947 0
+Info: PERIODIC CELL BASIS 3  0 0 33.6947
+Info: PERIODIC CELL CENTER   0 0 0
+Info: LOAD BALANCER  Centralized
+Info: LOAD BALANCING STRATEGY  New Load Balancers -- DEFAULT
+Info: LDB PERIOD             4000 steps
+Info: FIRST LDB TIMESTEP     100
+Info: LAST LDB TIMESTEP     -1
+Info: LDB BACKGROUND SCALING 1
+Info: HOM BACKGROUND SCALING 1
+Info: PME BACKGROUND SCALING 1
+Info: MIN ATOMS PER PATCH    40
+Info: VELOCITY FILE          equilibrate_200.restart.vel
+Info: CENTER OF MASS MOVING INITIALLY? NO
+Info: DIELECTRIC             1
+Info: EXCLUDE                SCALED ONE-FOUR
+Info: 1-4 ELECTROSTATICS SCALED BY 1
+Info: MODIFIED 1-4 VDW PARAMETERS WILL BE USED
+Info: DCD FILENAME           production_200.dcd
+Info: DCD FREQUENCY          1000
+Info: DCD FIRST STEP         1000
+Info: DCD FILE WILL CONTAIN UNIT CELL DATA
+Info: XST FILENAME           production_200.xst
+Info: XST FREQUENCY          1000
+Info: NO VELOCITY DCD OUTPUT
+Info: NO FORCE DCD OUTPUT
+Info: OUTPUT FILENAME        production_200
+Info: BINARY OUTPUT FILES WILL BE USED
+Info: RESTART FILENAME       production_200.restart
+Info: RESTART FREQUENCY      1000
+Info: BINARY RESTART FILES WILL BE USED
+Info: SWITCHING ACTIVE
+Info: SWITCHING ON           10
+Info: SWITCHING OFF          12
+Info: PAIRLIST DISTANCE      14
+Info: PAIRLIST SHRINK RATE   0.01
+Info: PAIRLIST GROW RATE     0.01
+Info: PAIRLIST TRIGGER       0.3
+Info: PAIRLISTS PER CYCLE    2
+Info: PAIRLISTS ENABLED
+Info: MARGIN                 0.495
+Info: HYDROGEN GROUP CUTOFF  2.5
+Info: PATCH DIMENSION        16.995
+Info: ENERGY OUTPUT STEPS    1000
+Info: CROSSTERM ENERGY INCLUDED IN DIHEDRAL
+Info: TIMING OUTPUT STEPS    1000
+Info: PRESSURE OUTPUT STEPS  1000
+Info: LANGEVIN DYNAMICS ACTIVE
+Info: LANGEVIN TEMPERATURE   200
+Info: LANGEVIN USING BBK INTEGRATOR
+Info: LANGEVIN DAMPING COEFFICIENT IS 1 INVERSE PS
+Info: LANGEVIN DYNAMICS NOT APPLIED TO HYDROGENS
+Info: LANGEVIN PISTON PRESSURE CONTROL ACTIVE
+Info:        TARGET PRESSURE IS 1.01325 BAR
+Info:     OSCILLATION PERIOD IS 100 FS
+Info:             DECAY TIME IS 50 FS
+Info:     PISTON TEMPERATURE IS 200 K
+Info:       PRESSURE CONTROL IS ATOM-BASED
+Info:    INITIAL STRAIN RATE IS -6.45442e-05 -6.45442e-05 -6.45442e-05
+Info:       CELL FLUCTUATION IS ISOTROPIC
+Info: PARTICLE MESH EWALD (PME) ACTIVE
+Info: PME TOLERANCE               1e-06
+Info: PME EWALD COEFFICIENT       0.257952
+Info: PME INTERPOLATION ORDER     6
+Info: PME GRID DIMENSIONS         40 40 40
+Info: PME MAXIMUM GRID SPACING    1
+Info: Attempting to read FFTW data from system
+Info: Attempting to read FFTW data from FFTW_NAMD_2.12_CRAY-XC-MPI_FFTW3.txt
+Info: Optimizing 6 FFT steps.  1... 2... 3... 4... 5... 6...   Done.
+Info: Writing FFTW data to FFTW_NAMD_2.12_CRAY-XC-MPI_FFTW3.txt
+Info: FULL ELECTROSTATIC EVALUATION FREQUENCY      1
+Info: USING VERLET I (r-RESPA) MTS SCHEME.
+Info: C1 SPLITTING OF LONG RANGE ELECTROSTATICS
+Info: PLACING ATOMS IN PATCHES BY HYDROGEN GROUPS
+Info: RANDOM NUMBER SEED     1570238078
+Info: USE HYDROGEN BONDS?    NO
+Info: COORDINATE PDB         crd.md18_vmd_autopsf.pdb
+Info: STRUCTURE FILE         Q42.psf
+Info: PARAMETER file: CHARMM format! 
+Info: PARAMETERS             par_all27_prot_lipid.inp
+Info: USING ARITHMETIC MEAN TO COMBINE L-J SIGMA PARAMETERS
+Info: BINARY COORDINATES     equilibrate_200.restart.coor
+Info: SUMMARY OF PARAMETERS:
+Info: 180 BONDS
+Info: 447 ANGLES
+Info: 566 DIHEDRAL
+Info: 46 IMPROPER
+Info: 6 CROSSTERM
+Info: 120 VDW
+Info: 0 VDW_PAIRS
+Info: 0 NBTHOLE_PAIRS
+Info: TIME FOR READING PSF FILE: 0.220088
+Info: Reading pdb file crd.md18_vmd_autopsf.pdb
+Info: TIME FOR READING PDB FILE: 0.0247741
+Info: 
+Info: ****************************
+Info: STRUCTURE SUMMARY:
+Info: 3692 ATOMS
+Info: 2256 BONDS
+Info: 1128 ANGLES
+Info: 0 DIHEDRALS
+Info: 0 IMPROPERS
+Info: 0 CROSSTERMS
+Info: 0 EXCLUSIONS
+Info: 11076 DEGREES OF FREEDOM
+Info: 1436 HYDROGEN GROUPS
+Info: 3 ATOMS IN LARGEST HYDROGEN GROUP
+Info: 1436 MIGRATION GROUPS
+Info: 3 ATOMS IN LARGEST MIGRATION GROUP
+Info: TOTAL MASS = 26849.6 amu
+Info: TOTAL CHARGE = 0 e
+Info: MASS DENSITY = 1.1655 g/cm^3
+Info: ATOM DENSITY = 0.0965113 atoms/A^3
+Info: *****************************
+Info: Reading from binary file equilibrate_200.restart.coor
+Info: 
+Info: Entering startup at 0.463482 s, 111.047 MB of memory in use
+Info: Startup phase 0 took 0.000179052 s, 111.047 MB of memory in use
+Info: ADDED 3384 IMPLICIT EXCLUSIONS
+Info: Startup phase 1 took 0.00346303 s, 111.578 MB of memory in use
+Info: NONBONDED TABLE R-SQUARED SPACING: 0.0625
+Info: NONBONDED TABLE SIZE: 769 POINTS
+Info: ABSOLUTE IMPRECISION IN FAST TABLE FORCE: 2.64698e-23 AT 11.9138
+Info: RELATIVE IMPRECISION IN FAST TABLE FORCE: 1.40436e-16 AT 11.9138
+Info: INCONSISTENCY IN FAST TABLE ENERGY VS FORCE: 0.000325096 AT 11.9556
+Info: ABSOLUTE IMPRECISION IN SCOR TABLE FORCE: 4.10282e-22 AT 11.9138
+Info: RELATIVE IMPRECISION IN SCOR TABLE FORCE: 3.56912e-15 AT 11.9138
+Info: INCONSISTENCY IN SCOR TABLE ENERGY VS FORCE: 0.000324844 AT 11.9556
+Info: ABSOLUTE IMPRECISION IN VDWA TABLE ENERGY: 9.86076e-32 AT 11.8295
+Info: RELATIVE IMPRECISION IN VDWA TABLE ENERGY: 6.75473e-14 AT 11.9138
+Info: ABSOLUTE IMPRECISION IN VDWA TABLE FORCE: 4.62223e-32 AT 11.9138
+Info: RELATIVE IMPRECISION IN VDWA TABLE FORCE: 2.12237e-15 AT 11.9138
+Info: INCONSISTENCY IN VDWA TABLE ENERGY VS FORCE: 0.0040507 AT 0.251946
+Info: ABSOLUTE IMPRECISION IN VDWB TABLE ENERGY: 4.1359e-25 AT 11.8295
+Info: RELATIVE IMPRECISION IN VDWB TABLE ENERGY: 7.56853e-15 AT 11.9138
+Info: ABSOLUTE IMPRECISION IN VDWB TABLE FORCE: 3.87741e-26 AT 11.9138
+Info: RELATIVE IMPRECISION IN VDWB TABLE FORCE: 5.97409e-16 AT 11.9138
+Info: INCONSISTENCY IN VDWB TABLE ENERGY VS FORCE: 0.00150189 AT 0.251946
+Info: Startup phase 2 took 0.00101304 s, 112.434 MB of memory in use
+Info: Startup phase 3 took 0.000102043 s, 112.434 MB of memory in use
+Info: Startup phase 4 took 0.000130892 s, 112.434 MB of memory in use
+Info: Startup phase 5 took 9.70364e-05 s, 112.434 MB of memory in use
+Info: PATCH GRID IS 3 (PERIODIC) BY 1 (PERIODIC) BY 1 (PERIODIC)
+Info: PATCH GRID IS 2-AWAY BY 1-AWAY BY 1-AWAY
+Info: Reading from binary file equilibrate_200.restart.vel
+Info: REMOVING COM VELOCITY -0.00740213 -0.0110224 0.0931051
+Info: LARGEST PATCH (2) HAS 1246 ATOMS
+Info: TORUS A SIZE 12 USING 0
+Info: TORUS B SIZE 1 USING 0
+Info: TORUS C SIZE 1 USING 0
+Info: TORUS MINIMAL MESH SIZE IS 1 BY 1 BY 1
+Info: Placed 100% of base nodes on same physical node as patch
+Info: Startup phase 6 took 0.0161309 s, 113.348 MB of memory in use
+Info: PME using 10 and 10 processors for FFT and reciprocal sum.
+Info: PME GRID LOCATIONS: 1 2 3 4 5 6 7 9 10 11
+Info: PME TRANS LOCATIONS: 1 2 3 4 5 6 8 9 10 11
+Info: PME USING 10 GRID NODES AND 10 TRANS NODES
+Info: Startup phase 7 took 0.211685 s, 113.348 MB of memory in use
+Info: Startup phase 8 took 0.000437021 s, 113.348 MB of memory in use
+LDB: Central LB being created...
+Info: Startup phase 9 took 0.000164032 s, 113.348 MB of memory in use
+Info: CREATING 102 COMPUTE OBJECTS
+Info: Startup phase 10 took 0.000399113 s, 113.348 MB of memory in use
+Info: Building spanning tree ... send: 1 recv: 0 with branch factor 4
+Info: useSync: 0 useProxySync: 0
+Info: Startup phase 11 took 0.000103951 s, 113.348 MB of memory in use
+Info: Startup phase 12 took 7.39098e-05 s, 113.348 MB of memory in use
+Info: Finished startup at 0.697461 s, 113.348 MB of memory in use
+
+TCL: Running for 40000 steps
+PRESSURE: 0 -308.804 194.648 -118.155 194.648 -2419.05 -99.7431 -118.155 -99.7431 -2155.73
+GPRESSURE: 0 143.004 -118.808 -293.046 99.1503 -693.822 -242.232 -425.995 -112.53 -756.489
+ETITLE:      TS           BOND          ANGLE          DIHED          IMPRP               ELECT            VDW       BOUNDARY           MISC        KINETIC               TOTAL           TEMP      POTENTIAL         TOTAL3        TEMPAVG            PRESSURE      GPRESSURE         VOLUME       PRESSAVG      GPRESSAVG
+
+ENERGY:       0      1419.3449       718.5859         0.0000         0.0000         -52053.6814      4376.5292         0.0000         0.0000      3162.4631         -42376.7583       287.3644    -45539.2214    -42344.1891       287.3644          -1627.8618      -435.7691     38254.5814     -1627.8618      -435.7691
+
+OPENING EXTENDED SYSTEM TRAJECTORY FILE
+LDB: ============= START OF LOAD BALANCING ============== 0.825111
+LDB: ============== END OF LOAD BALANCING =============== 0.825199
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 0.825433
+LDB: ============= START OF LOAD BALANCING ============== 1.31453
+LDB: Largest compute 5 load 0.272782 is 128.2% of average load 0.212861
+LDB: Average compute 0.023894 is 11.2% of average load 0.212861
+LDB: Partitioning computes with target load 0.047789
+LDB: Increased migratable compute count from 84 to 113
+LDB: Largest unpartitionable compute is 0.003723
+LDB: ============== END OF LOAD BALANCING =============== 1.31496
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 1.31548
+Info: Initial time: 12 CPUs 0.00614127 s/step 0.0710795 days/ns 113.348 MB memory
+LDB: ============= START OF LOAD BALANCING ============== 1.43066
+LDB: ============== END OF LOAD BALANCING =============== 1.4307
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 1.43083
+LDB: ============= START OF LOAD BALANCING ============== 1.88654
+LDB: Largest compute 42 load 0.046804 is 22.8% of average load 0.205354
+LDB: Average compute 0.017245 is 8.4% of average load 0.205354
+LDB: TIME 1.8867 LOAD: AVG 0.205354 MAX 0.437217  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 113.348 MB
+LDB: TIME 1.88686 LOAD: AVG 0.205354 MAX 0.246394  PROXIES: TOTAL 16 MAXPE 2 MAXPATCH 6 TorusLB MEM: 113.348 MB
+LDB: ============== END OF LOAD BALANCING =============== 1.88717
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 1.88767
+Info: Initial time: 12 CPUs 0.00565053 s/step 0.0653997 days/ns 125.883 MB memory
+LDB: ============= START OF LOAD BALANCING ============== 2.23224
+LDB: Largest compute 42 load 0.064052 is 24.1% of average load 0.265412
+LDB: Average compute 0.022021 is 8.3% of average load 0.265412
+LDB: TIME 2.23238 LOAD: AVG 0.265412 MAX 0.315125  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 156.023 MB
+LDB: TIME 2.23249 LOAD: AVG 0.265412 MAX 0.315125  PROXIES: TOTAL 16 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 156.023 MB
+LDB: TIME 2.23262 LOAD: AVG 0.265412 MAX 0.295752  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 156.023 MB
+LDB: ============== END OF LOAD BALANCING =============== 2.23291
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 2.23333
+Info: Initial time: 12 CPUs 0.00344036 s/step 0.039819 days/ns 162.18 MB memory
+LDB: ============= START OF LOAD BALANCING ============== 2.55646
+LDB: Largest compute 42 load 0.063193 is 24.2% of average load 0.261456
+LDB: Average compute 0.021684 is 8.3% of average load 0.261456
+LDB: TIME 2.55658 LOAD: AVG 0.261456 MAX 0.289875  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 174.18 MB
+LDB: TIME 2.55669 LOAD: AVG 0.261456 MAX 0.289875  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 174.18 MB
+LDB: TIME 2.55677 LOAD: AVG 0.261456 MAX 0.289875  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 174.18 MB
+LDB: ============== END OF LOAD BALANCING =============== 2.55695
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 2.55734
+Info: Benchmark time: 12 CPUs 0.00322885 s/step 0.037371 days/ns 174.18 MB memory
+Info: Benchmark time: 12 CPUs 0.00320321 s/step 0.0370742 days/ns 174.18 MB memory
+Info: Benchmark time: 12 CPUs 0.00322546 s/step 0.0373317 days/ns 174.18 MB memory
+Info: Benchmark time: 12 CPUs 0.00320794 s/step 0.0371289 days/ns 174.18 MB memory
+Info: Benchmark time: 12 CPUs 0.00324131 s/step 0.0375152 days/ns 174.18 MB memory
+Info: Benchmark time: 12 CPUs 0.00325588 s/step 0.0376838 days/ns 174.18 MB memory
+PRESSURE: 1000 2873.33 339.552 690.159 339.552 952.95 -97.7636 690.159 -97.7636 1005.52
+GPRESSURE: 1000 1287.67 -128.829 -58.3679 -422.917 525.892 -813.593 58.4756 -548.046 520.635
+PRESSAVG: 1000 70.9657 40.2645 112.536 40.2645 -216.827 153.921 112.536 153.921 159.583
+GPRESSAVG: 1000 65.6936 40.303 110.318 39.5656 -213.866 153.55 111.475 153.874 158.141
+TIMING: 1000  CPU: 3.80814, 0.00379171/step  Wall: 3.80814, 0.00379171/step, 0.0410769 hours remaining, 180.437500 MB of memory in use.
+ENERGY:    1000      1346.4662       719.6582         0.0000         0.0000         -52342.5183      4544.0238         0.0000         0.0000      2941.3753         -42790.9949       267.2747    -45732.3701    -42760.6799       278.0706           1610.6006       778.0657     37663.6166         4.5739         3.3228
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 1000
+OPENING COORDINATE DCD FILE
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 1000
+WRITING COORDINATES TO RESTART FILE AT STEP 1000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=1000) takes 0.003 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 1000
+FINISHED WRITING RESTART VELOCITIES
+The last velocity output (seq=1000) takes 0.001 seconds, 192.570 MB of memory in use
+PRESSURE: 2000 -582.274 -294.447 11.24 -294.447 -681.916 -278.287 11.24 -278.287 -1142.93
+GPRESSURE: 2000 534.008 -116.331 798.679 -149.939 -509.355 284.825 510.311 530.632 462.02
+PRESSAVG: 2000 40.703 -39.0387 230.796 -39.0387 -173.049 -41.9666 230.796 -41.9666 136.191
+GPRESSAVG: 2000 42.0967 -36.184 230.585 -39.8742 -175.773 -40.413 232.177 -43.0535 137.358
+TIMING: 2000  CPU: 7.06229, 0.00325414/step  Wall: 7.06229, 0.00325414/step, 0.0343493 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    2000      1384.4111       687.3207         0.0000         0.0000         -52608.3236      4540.8853         0.0000         0.0000      2850.5317         -43145.1748       259.0200    -45995.7065    -43115.8208       265.6979           -802.3733       162.2242     37829.6932         1.2817         1.2275
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 2000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 2000
+WRITING COORDINATES TO RESTART FILE AT STEP 2000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=2000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 2000
+FINISHED WRITING RESTART VELOCITIES
+The last velocity output (seq=2000) takes 0.002 seconds, 192.570 MB of memory in use
+PRESSURE: 3000 551.793 1189.01 -31.7616 1189.01 -8.2387 365.916 -31.7616 365.916 491.127
+GPRESSURE: 3000 -1113.62 5.44202 192.813 -48.3371 280.057 75.1023 -229.543 144.379 293.005
+PRESSAVG: 3000 -194.791 -114.095 61.6294 -114.095 143.471 -46.2572 61.6294 -46.2572 30.8529
+GPRESSAVG: 3000 -194.757 -117.999 63.2506 -111.318 143.006 -49.8103 56.9315 -47.2868 32.2073
+TIMING: 3000  CPU: 10.2812, 0.00321893/step  Wall: 10.2812, 0.00321893/step, 0.0330834 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    3000      1289.3633       689.1852         0.0000         0.0000         -52609.6791      4484.5610         0.0000         0.0000      2765.7110         -43380.8585       251.3126    -46146.5695    -43350.2253       255.4595            344.8939      -180.1858     37668.9911        -6.8223        -6.5147
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 3000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 3000
+WRITING COORDINATES TO RESTART FILE AT STEP 3000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=3000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 3000
+FINISHED WRITING RESTART VELOCITIES
+The last velocity output (seq=3000) takes 0.002 seconds, 192.570 MB of memory in use
+PRESSURE: 4000 254.786 -861.645 -142.043 -861.645 680.222 107.592 -142.043 107.592 -2665.82
+GPRESSURE: 4000 -302.029 77.4058 -265.566 106.838 -24.7128 -125.449 -634.1 77.3091 -1742.93
+PRESSAVG: 4000 -66.7856 118.392 -199.233 118.392 95.5353 43.1302 -199.233 43.1302 -2.34691
+GPRESSAVG: 4000 -64.2219 122.313 -201.829 113.741 94.9317 42.8872 -195.608 46.0194 -5.13019
+TIMING: 4000  CPU: 13.4808, 0.00319955/step  Wall: 13.4808, 0.00319955/step, 0.0319955 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    4000      1277.2719       641.6467         0.0000         0.0000         -52670.3174      4450.3443         0.0000         0.0000      2656.9931         -43644.0614       241.4337    -46301.0545    -43615.9022       247.4701           -576.9365      -689.8907     37757.7141         8.8009         8.5265
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 4000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 4000
+WRITING COORDINATES TO RESTART FILE AT STEP 4000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=4000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 4000
+FINISHED WRITING RESTART VELOCITIES
+The last velocity output (seq=4000) takes 0.002 seconds, 192.570 MB of memory in use
+LDB: ============= START OF LOAD BALANCING ============== 15.1363
+LDB: ============== END OF LOAD BALANCING =============== 15.1363
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 15.1365
+LDB: ============= START OF LOAD BALANCING ============== 15.4596
+LDB: Largest compute 42 load 0.059768 is 23.2% of average load 0.257303
+LDB: Average compute 0.021350 is 8.3% of average load 0.257303
+LDB: TIME 15.4597 LOAD: AVG 0.257303 MAX 0.289777  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.57 MB
+LDB: TIME 15.4598 LOAD: AVG 0.257303 MAX 0.289777  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.57 MB
+LDB: TIME 15.4599 LOAD: AVG 0.257303 MAX 0.286483  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.57 MB
+LDB: ============== END OF LOAD BALANCING =============== 15.4602
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 15.4606
+PRESSURE: 5000 -2575.74 687.13 -1105.21 687.13 196.603 -84.289 -1105.21 -84.289 -716.084
+GPRESSURE: 5000 386.591 477.855 -88.7957 732.022 549.793 89.0684 -446.744 159.319 57.4002
+PRESSAVG: 5000 -81.6098 135.528 -112.525 135.528 315.341 -102.391 -112.525 -102.391 -163.398
+GPRESSAVG: 5000 -81.1699 134.984 -110.078 138.048 318.133 -99.1272 -112.368 -99.3267 -162.651
+TIMING: 5000  CPU: 16.7346, 0.00325387/step  Wall: 16.7346, 0.00325387/step, 0.0316348 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    5000      1300.8641       631.4073         0.0000         0.0000         -52981.3827      4607.2770         0.0000         0.0000      2593.7183         -43848.1160       235.6841    -46441.8343    -43819.2579       238.4596          -1031.7416       331.2613     37346.5597        23.4444        24.7706
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 5000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 5000
+WRITING COORDINATES TO RESTART FILE AT STEP 5000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=5000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 5000
+FINISHED WRITING RESTART VELOCITIES
+The last velocity output (seq=5000) takes 0.002 seconds, 192.570 MB of memory in use
+PRESSURE: 6000 733.331 295.244 -142.04 295.244 -568.682 -63.0223 -142.04 -63.0223 -748.048
+GPRESSURE: 6000 171.167 778.221 141.999 775.693 -754.349 -34.3644 190.997 13.1282 -809.381
+PRESSAVG: 6000 80.9937 128.696 -96.2333 128.696 124.96 -197.753 -96.2333 -197.753 -283.305
+GPRESSAVG: 6000 77.3905 128.546 -98.5256 131.352 120.194 -197.243 -95.1415 -202.374 -283.564
+TIMING: 6000  CPU: 19.9475, 0.00321283/step  Wall: 19.9475, 0.00321283/step, 0.0303434 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    6000      1214.8605       601.1096         0.0000         0.0000         -52794.4964      4479.0145         0.0000         0.0000      2511.0447         -43988.4671       228.1718    -46499.5118    -43962.6923       232.3766           -194.4662      -464.1878     37355.8912       -25.7837       -28.6600
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 6000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 6000
+WRITING COORDINATES TO RESTART FILE AT STEP 6000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=6000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 6000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 7000 -319.621 118.418 546.333 118.418 -1549.99 110.972 546.333 110.972 383.966
+GPRESSURE: 7000 -541.749 489.92 -63.1463 401.868 -949.468 520.189 -242.546 107.957 -566.858
+PRESSAVG: 7000 50.2862 300.092 -144.683 300.092 -55.7531 -16.3827 -144.683 -16.3827 7.7387
+GPRESSAVG: 7000 52.1985 300.914 -139.474 294.11 -52.8959 -20.2861 -143.352 -12.7097 6.48084
+TIMING: 7000  CPU: 23.1551, 0.00320769/step  Wall: 23.1551, 0.00320769/step, 0.0294038 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    7000      1212.0994       625.2375         0.0000         0.0000         -52889.5677      4494.5944         0.0000         0.0000      2483.4653         -44074.1711       225.6657    -46557.6364    -44047.6934       227.9374           -495.2135      -686.0250     37568.8667         0.7573         1.9278
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 7000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 7000
+WRITING COORDINATES TO RESTART FILE AT STEP 7000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=7000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 7000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 8000 -440.516 -1171.4 271.814 -1171.4 -575.547 -723.824 271.814 -723.824 -51.8098
+GPRESSURE: 8000 -454.059 -256.181 -125.997 -454.976 -280.655 -401.816 99.9112 -284.904 -642.43
+PRESSAVG: 8000 54.8638 74.2026 23.7346 74.2026 -210.615 -49.756 23.7346 -49.756 93.7115
+GPRESSAVG: 8000 55.1903 73.3347 19.6728 77.8363 -209.114 -49.6703 20.2497 -50.7475 92.5982
+TIMING: 8000  CPU: 26.417, 0.00326183/step  Wall: 26.417, 0.00326183/step, 0.028994 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    8000      1182.5100       605.5425         0.0000         0.0000         -52895.1660      4489.6014         0.0000         0.0000      2426.9138         -44190.5982       220.5270    -46617.5120    -44166.4956       224.6127           -355.9578      -459.0480     37260.1629       -20.6797       -20.4420
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 8000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 8000
+WRITING COORDINATES TO RESTART FILE AT STEP 8000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=8000) takes 0.002 seconds, 192.570 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 8000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 29.0381
+LDB: ============== END OF LOAD BALANCING =============== 29.0381
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 29.0383
+LDB: ============= START OF LOAD BALANCING ============== 29.3638
+LDB: Largest compute 42 load 0.062088 is 23.9% of average load 0.259607
+LDB: Average compute 0.021566 is 8.3% of average load 0.259607
+LDB: TIME 29.364 LOAD: AVG 0.259607 MAX 0.288362  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.57 MB
+LDB: TIME 29.3641 LOAD: AVG 0.259607 MAX 0.288362  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.57 MB
+LDB: TIME 29.3641 LOAD: AVG 0.259607 MAX 0.288362  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.57 MB
+LDB: ============== END OF LOAD BALANCING =============== 29.3643
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 29.3647
+PRESSURE: 9000 -276.688 1146.76 530.061 1146.76 -40.4178 -560.803 530.061 -560.803 -1351.88
+GPRESSURE: 9000 -1306.4 106.383 -233.057 -127.256 -399.297 -202.768 -281.177 -333.728 -224.853
+PRESSAVG: 9000 77.1412 196.099 -113.051 196.099 -110.072 -172.465 -113.051 -172.465 -38.346
+GPRESSAVG: 9000 72.8293 196.051 -113.897 192.753 -109.913 -169.531 -113.693 -172.035 -36.3752
+TIMING: 9000  CPU: 30.5893, 0.00417235/step  Wall: 30.5893, 0.00417235/step, 0.0359285 hours remaining, 192.570312 MB of memory in use.
+ENERGY:    9000      1171.2558       622.3357         0.0000         0.0000         -53067.1415      4525.6354         0.0000         0.0000      2446.7830         -44301.1316       222.3325    -46747.9146    -44276.1899       221.5028           -556.3281      -643.5181     37284.3835       -23.7588       -24.4861
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 9000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 9000
+WRITING COORDINATES TO RESTART FILE AT STEP 9000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=9000) takes 0.002 seconds, 192.703 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 9000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 10000 -1287.52 -264.386 -747.988 -264.386 -155.565 -54.1888 -747.988 -54.1888 549.308
+GPRESSURE: 10000 -408.117 183.752 -689.18 -130.054 -1035.43 92.4888 -446.926 -193.365 392.079
+PRESSAVG: 10000 -165.153 91.6159 -33.9219 91.6159 -128.009 -23.332 -33.9219 -23.332 302.022
+GPRESSAVG: 10000 -161.995 92.2533 -31.0515 94.3161 -131.348 -26.9665 -33.5833 -24.6254 300.622
+TIMING: 10000  CPU: 33.7943, 0.00320498/step  Wall: 33.7943, 0.00320498/step, 0.0267081 hours remaining, 192.703125 MB of memory in use.
+ETITLE:      TS           BOND          ANGLE          DIHED          IMPRP               ELECT            VDW       BOUNDARY           MISC        KINETIC               TOTAL           TEMP      POTENTIAL         TOTAL3        TEMPAVG            PRESSURE      GPRESSURE         VOLUME       PRESSAVG      GPRESSAVG
+
+ENERGY:   10000      1178.1771       616.6337         0.0000         0.0000         -53067.1229      4554.6710         0.0000         0.0000      2401.6989         -44315.9422       218.2358    -46717.6412    -44294.3619       219.8346           -297.9250      -350.4887     37416.7697         2.9533         2.4266
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 10000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 10000
+WRITING COORDINATES TO RESTART FILE AT STEP 10000
+FINISHED WRITING RESTART COORDINATES
+The last position output (seq=10000) takes 0.002 seconds, 192.703 MB of memory in use
+WRITING VELOCITIES TO RESTART FILE AT STEP 10000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 11000 -652.892 626.719 -676.37 626.719 -634.777 139.656 -676.37 139.656 543.883
+GPRESSURE: 11000 -129.731 581.315 -176.313 499.159 123.638 0.629841 46.0817 269.853 556.477
+PRESSAVG: 11000 -27.3795 80.5261 62.1467 80.5261 56.5868 -85.8219 62.1467 -85.8219 -17.2285
+GPRESSAVG: 11000 -24.84 82.0719 59.9552 81.8264 58.2488 -84.1497 63.1789 -84.3494 -15.8455
+TIMING: 11000  CPU: 37.8867, 0.00409245/step  Wall: 37.8867, 0.00409245/step, 0.032967 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   11000      1172.8586       641.4921         0.0000         0.0000         -53150.9694      4617.2882         0.0000         0.0000      2365.6472         -44353.6833       214.9599    -46719.3305    -44330.9301       217.9722           -247.9288       183.4612     37230.4892         3.9929         5.8544
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 11000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 11000
+WRITING COORDINATES TO RESTART FILE AT STEP 11000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 11000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 12000 1774.09 -388.296 -277.643 -388.296 1637.29 -395.656 -277.643 -395.656 -255.723
+GPRESSURE: 12000 1497 -490.052 -846.206 128.043 722.859 -78.4139 -819.618 113.584 -63.1866
+PRESSAVG: 12000 128.162 -118.42 -46.0431 -118.42 87.4749 -183.112 -46.0431 -183.112 -164.113
+GPRESSAVG: 12000 128.449 -118.736 -46.4639 -120.004 89.7059 -186.834 -49.4783 -182.481 -162.478
+TIMING: 12000  CPU: 41.0524, 0.00316569/step  Wall: 41.0524, 0.00316569/step, 0.024622 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   12000      1166.9045       601.0126         0.0000         0.0000         -53303.4844      4714.9937         0.0000         0.0000      2399.2459         -44421.3276       218.0129    -46820.5735    -44398.8139       216.2149           1051.8867       718.8916     37141.4156        17.1747        18.5590
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 12000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 12000
+WRITING COORDINATES TO RESTART FILE AT STEP 12000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 12000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 42.717
+LDB: ============== END OF LOAD BALANCING =============== 42.717
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 42.7172
+LDB: ============= START OF LOAD BALANCING ============== 43.0426
+LDB: Largest compute 42 load 0.063556 is 24.5% of average load 0.258956
+LDB: Average compute 0.021512 is 8.3% of average load 0.258956
+LDB: TIME 43.0427 LOAD: AVG 0.258956 MAX 0.287954  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 43.0428 LOAD: AVG 0.258956 MAX 0.287954  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 43.0429 LOAD: AVG 0.258956 MAX 0.287954  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 43.0431
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 43.0435
+PRESSURE: 13000 355.211 -116.923 -716.187 -116.923 -71.8205 -1154.22 -716.187 -1154.22 94.1608
+GPRESSURE: 13000 735.741 279.811 -467.775 120.569 887.537 -302.69 -599.817 9.99555 154.308
+PRESSAVG: 13000 216.317 -221.789 73.0731 -221.789 -56.6133 -259.086 73.0731 -259.086 -218.612
+GPRESSAVG: 13000 215.358 -223.106 72.8512 -223.522 -58.3585 -256.006 79.6175 -259.515 -223.229
+TIMING: 13000  CPU: 44.2985, 0.00324608/step  Wall: 44.2985, 0.00324608/step, 0.0243456 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   13000      1158.3964       621.6271         0.0000         0.0000         -53311.1159      4688.8438         0.0000         0.0000      2343.7060         -44498.5426       212.9661    -46842.2486    -44476.4992       214.8120            125.8505       592.5286     36952.2863       -19.6362       -22.0765
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 13000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 13000
+WRITING COORDINATES TO RESTART FILE AT STEP 13000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 13000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 14000 -334.177 -556.88 19.8818 -556.88 -556.226 467.874 19.8818 467.874 -209.327
+GPRESSURE: 14000 -502.664 -656.506 -288.174 -757.715 -357.042 225.38 -128.745 202.901 262.565
+PRESSAVG: 14000 160.911 -66.117 -83.8296 -66.117 -145.458 -376.842 -83.8296 -376.842 41.4132
+GPRESSAVG: 14000 160.028 -63.7649 -84.7104 -65.8083 -143.685 -379.14 -86.6527 -379.002 44.4481
+TIMING: 14000  CPU: 47.5514, 0.00325288/step  Wall: 47.5514, 0.00325288/step, 0.023493 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   14000      1113.7892       605.7010         0.0000         0.0000         -53194.4687      4597.4453         0.0000         0.0000      2316.9649         -44560.5683       210.5362    -46877.5332    -44536.2499       211.9425           -366.5768      -199.0468     37254.8620        18.9553        20.2635
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 14000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 14000
+WRITING COORDINATES TO RESTART FILE AT STEP 14000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 14000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 15000 -929.649 -397.589 -1607.81 -397.589 -503.121 -510.485 -1607.81 -510.485 -902.608
+GPRESSURE: 15000 -770.488 298.144 -151.913 327.985 -779.451 -187.746 -177.393 -320.256 438.011
+PRESSAVG: 15000 -143.812 -186.202 71.4235 -186.202 140.427 -195.16 71.4235 -195.16 37.2468
+GPRESSAVG: 15000 -148.961 -189.543 75.1267 -186.762 141.033 -192.173 73.3504 -193.811 38.8619
+TIMING: 15000  CPU: 50.7668, 0.00321541/step  Wall: 50.7668, 0.00321541/step, 0.0223292 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   15000      1115.2327       603.1591         0.0000         0.0000         -53255.3469      4580.1755         0.0000         0.0000      2331.2724         -44625.5072       211.8363    -46956.7796    -44601.7119       208.9734           -778.4592      -370.6429     37284.0704        11.2871        10.3112
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 15000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 15000
+WRITING COORDINATES TO RESTART FILE AT STEP 15000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 15000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 16000 835.454 408.524 1231.53 408.524 -595.719 -190.621 1231.53 -190.621 690.709
+GPRESSURE: 16000 796.186 589.791 319.991 270.333 599.587 -566.989 74.356 -703.099 388.495
+PRESSAVG: 16000 -24.6476 58.5277 147.936 58.5277 -110.008 58.8011 147.936 58.8011 115.743
+GPRESSAVG: 16000 -22.5287 59.9069 143.87 60.4485 -112.189 56.45 145.363 57.8571 108.808
+TIMING: 16000  CPU: 53.9913, 0.00322448/step  Wall: 53.9913, 0.00322448/step, 0.0214966 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   16000      1110.6390       608.4492         0.0000         0.0000         -53364.5832      4719.0846         0.0000         0.0000      2262.3321         -44664.0783       205.5719    -46926.4105    -44643.2876       206.5683            310.1479       594.7560     37152.1455        -6.3041        -8.6365
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 16000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 16000
+WRITING COORDINATES TO RESTART FILE AT STEP 16000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 16000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 55.658
+LDB: ============== END OF LOAD BALANCING =============== 55.658
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 55.6582
+LDB: ============= START OF LOAD BALANCING ============== 55.9798
+LDB: Largest compute 42 load 0.061880 is 24.0% of average load 0.257524
+LDB: Average compute 0.021359 is 8.3% of average load 0.257524
+LDB: TIME 55.9799 LOAD: AVG 0.257524 MAX 0.284319  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 55.98 LOAD: AVG 0.257524 MAX 0.284319  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 55.9801 LOAD: AVG 0.257524 MAX 0.284319  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 55.9803
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 55.9807
+PRESSURE: 17000 -456.788 825.323 440.39 825.323 745.116 98.2133 440.39 98.2133 79.3851
+GPRESSURE: 17000 71.4076 441.052 -40.365 477.937 432.33 -605.316 94.649 -686.76 -384.061
+PRESSAVG: 17000 48.5635 -39.1857 3.17909 -39.1857 -105.583 -59.9267 3.17909 -59.9267 147.806
+GPRESSAVG: 17000 49.6247 -41.7871 5.51664 -39.8919 -105.778 -58.6081 2.86671 -59.9505 149.354
+TIMING: 17000  CPU: 57.2109, 0.00321957/step  Wall: 57.2109, 0.00321957/step, 0.0205695 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   17000      1090.7990       607.5434         0.0000         0.0000         -53295.6254      4657.3282         0.0000         0.0000      2241.1870         -44698.7678       203.6505    -46939.9547    -44677.3693       205.6212            122.5713        39.8921     37307.8319        30.2623        31.0668
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 17000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 17000
+WRITING COORDINATES TO RESTART FILE AT STEP 17000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 17000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 18000 -864.992 648.484 900.213 648.484 -1597.94 -627.677 900.213 -627.677 -984.697
+GPRESSURE: 18000 -293.761 352.661 592.048 564.569 63.7957 128.969 389.609 155.182 -564.86
+PRESSAVG: 18000 89.2889 -16.6362 88.5137 -16.6362 -139.943 -41.3237 88.5137 -41.3237 60.6469
+GPRESSAVG: 18000 91.2442 -14.2616 91.0541 -16.9088 -139.912 -38.2556 89.5647 -42.0662 63.8331
+TIMING: 18000  CPU: 60.4402, 0.00322932/step  Wall: 60.4402, 0.00322932/step, 0.0197347 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   18000      1110.3681       631.4122         0.0000         0.0000         -53378.1510      4648.7275         0.0000         0.0000      2227.1440         -44760.4992       202.3745    -46987.6432    -44740.0886       204.9907          -1149.2107      -264.9418     37331.3670         3.3310         5.0551
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 18000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 18000
+WRITING COORDINATES TO RESTART FILE AT STEP 18000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 18000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 19000 375.854 436.914 -1120.26 436.914 -643.309 699.855 -1120.26 699.855 -549.339
+GPRESSURE: 19000 206.057 128.803 -437.976 101.343 -951.64 370.769 -256.097 101.162 -624.734
+PRESSAVG: 19000 181.768 -72.4743 34.4156 -72.4743 -89.4129 -2.8289 34.4156 -2.8289 -169.549
+GPRESSAVG: 19000 181.834 -73.1801 33.1254 -73.5621 -88.6087 -6.27342 34.4676 -1.5369 -175.955
+TIMING: 19000  CPU: 63.6855, 0.0032453/step  Wall: 63.6855, 0.0032453/step, 0.0189309 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   19000      1056.2978       577.7319         0.0000         0.0000         -53268.1210      4595.7065         0.0000         0.0000      2275.4699         -44762.9149       206.7657    -47038.3848    -44740.1764       203.5418           -272.2645      -456.7723     37318.9669       -25.7315       -27.5769
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 19000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 19000
+WRITING COORDINATES TO RESTART FILE AT STEP 19000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 19000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 20000 1269.62 -345.731 -1306.68 -345.731 144.397 -965.119 -1306.68 -965.119 387.859
+GPRESSURE: 20000 -72.5249 -207.649 -192.142 16.1838 -386.027 -128.38 -818.683 -7.32118 -138.456
+PRESSAVG: 20000 103.552 -1.20723 -39.8964 -1.20723 73.2128 -68.1794 -39.8964 -68.1794 -197.582
+GPRESSAVG: 20000 98.5305 -3.2051 -42.2695 -0.289749 73.8965 -66.157 -40.4156 -69.0055 -192.781
+TIMING: 20000  CPU: 66.9346, 0.00324913/step  Wall: 66.9346, 0.00324913/step, 0.0180507 hours remaining, 192.703125 MB of memory in use.
+ETITLE:      TS           BOND          ANGLE          DIHED          IMPRP               ELECT            VDW       BOUNDARY           MISC        KINETIC               TOTAL           TEMP      POTENTIAL         TOTAL3        TEMPAVG            PRESSURE      GPRESSURE         VOLUME       PRESSAVG      GPRESSAVG
+
+ENERGY:   20000      1032.7636       604.2582         0.0000         0.0000         -53245.6871      4627.4345         0.0000         0.0000      2226.3855         -44754.8453       202.3056    -46981.2308    -44732.9713       204.0295            600.6257      -199.0028     37360.6236        -6.9390        -6.7846
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 20000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 20000
+WRITING COORDINATES TO RESTART FILE AT STEP 20000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 20000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 68.5884
+LDB: ============== END OF LOAD BALANCING =============== 68.5884
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 68.5886
+LDB: ============= START OF LOAD BALANCING ============== 68.91
+LDB: Largest compute 42 load 0.060854 is 23.7% of average load 0.257224
+LDB: Average compute 0.021344 is 8.3% of average load 0.257224
+LDB: TIME 68.9101 LOAD: AVG 0.257224 MAX 0.284665  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 68.9103 LOAD: AVG 0.257224 MAX 0.284665  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 68.9103 LOAD: AVG 0.257224 MAX 0.284665  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 68.9105
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 68.9109
+PRESSURE: 21000 -260.87 -122.368 -173.888 -122.368 -805.871 595.27 -173.888 595.27 -654.406
+GPRESSURE: 21000 -341.277 -318.356 172.071 -163.266 -428.85 237.784 -67.7824 277.231 -902.929
+PRESSAVG: 21000 182.592 168.607 11.0928 168.607 -290.046 -72.4605 11.0928 -72.4605 119.561
+GPRESSAVG: 21000 184.11 166.373 11.8195 167.493 -291.549 -74.1236 10.9996 -72.4331 121.942
+TIMING: 21000  CPU: 70.1743, 0.00323973/step  Wall: 70.1743, 0.00323973/step, 0.0170986 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   21000      1086.5757       585.9800         0.0000         0.0000         -53272.1195      4586.9534         0.0000         0.0000      2258.9151         -44753.6953       205.2614    -47012.6104    -44735.6180       204.1691           -573.7156      -557.6854     37253.7929         4.0355         4.8346
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 21000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 21000
+WRITING COORDINATES TO RESTART FILE AT STEP 21000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 21000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 22000 -190.739 383.209 -292.636 383.209 1438.24 47.3947 -292.636 47.3947 -232.312
+GPRESSURE: 22000 -20.827 243.141 314.322 50.0937 1249.4 -412.006 96.7078 -299.083 -444.139
+PRESSAVG: 22000 146.185 -6.25585 -112.315 -6.25585 -146.136 -149.702 -112.315 -149.702 96.6296
+GPRESSAVG: 22000 148.148 -3.55316 -110.108 -7.65675 -146.208 -150.159 -114.745 -152.354 92.2357
+TIMING: 22000  CPU: 73.4441, 0.00326976/step  Wall: 73.4441, 0.00326976/step, 0.0163488 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   22000      1063.2208       633.4171         0.0000         0.0000         -53378.6121      4689.8500         0.0000         0.0000      2268.0467         -44724.0774       206.0912    -46992.1241    -44702.8555       204.5566            338.3974       261.4793     37391.5330        32.2260        31.3920
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 22000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 22000
+WRITING COORDINATES TO RESTART FILE AT STEP 22000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 22000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 23000 2623.49 -664.027 428.987 -664.027 260.636 460.132 428.987 460.132 132.989
+GPRESSURE: 23000 1191.46 -144.616 235.23 -650.193 -224.37 69.5254 -224.316 18.749 578.2
+PRESSAVG: 23000 95.8162 -33.7048 -49.8997 -33.7048 -215.449 -273.681 -49.8997 -273.681 125.722
+GPRESSAVG: 23000 92.7805 -33.941 -50.9169 -33.2901 -215.751 -275.606 -48.7607 -270.917 128.775
+TIMING: 23000  CPU: 76.6721, 0.00322802/step  Wall: 76.6721, 0.00322802/step, 0.0152434 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   23000      1021.2186       568.4231         0.0000         0.0000         -53258.3847      4700.1795         0.0000         0.0000      2237.3131         -44731.2503       203.2985    -46968.5635    -44709.2337       205.1992           1005.7052       515.0972     37209.1240         2.0296         1.9349
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 23000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 23000
+WRITING COORDINATES TO RESTART FILE AT STEP 23000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 23000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 24000 1294.95 -1120.37 -271.476 -1120.37 -148.289 -516.395 -271.476 -516.395 745.819
+GPRESSURE: 24000 866.146 282.331 140.484 -76.9892 413.96 -30.6171 68.5593 -8.97755 -89.2018
+PRESSAVG: 24000 425.641 -127.497 98.5295 -127.497 -292.613 -211.769 98.5295 -211.769 -119.813
+GPRESSAVG: 24000 426.912 -125.819 100.132 -126.006 -289.844 -209.92 102.927 -214.535 -126.193
+TIMING: 24000  CPU: 79.9052, 0.00323313/step  Wall: 79.9052, 0.00323313/step, 0.0143695 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   24000      1036.2544       590.8569         0.0000         0.0000         -53357.6171      4697.0226         0.0000         0.0000      2220.7319         -44812.7512       201.7918    -47033.4831    -44792.3736       203.1100            630.8278       396.9682     37102.7717         4.4051         3.6250
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 24000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 24000
+WRITING COORDINATES TO RESTART FILE AT STEP 24000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 24000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 83.2551
+LDB: ============== END OF LOAD BALANCING =============== 83.2551
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 83.2553
+LDB: ============= START OF LOAD BALANCING ============== 83.586
+LDB: Largest compute 42 load 0.064312 is 24.9% of average load 0.257975
+LDB: Average compute 0.021406 is 8.3% of average load 0.257975
+LDB: TIME 83.5861 LOAD: AVG 0.257975 MAX 0.297563  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 83.5862 LOAD: AVG 0.257975 MAX 0.297563  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 83.5863 LOAD: AVG 0.257975 MAX 0.271357  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 83.5866
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 83.587
+PRESSURE: 25000 -717.423 351.551 1570.46 351.551 -167.361 57.6169 1570.46 57.6169 587.125
+GPRESSURE: 25000 351.399 295.088 137.45 265.227 226.47 -391.462 475.691 -551.031 -250.007
+PRESSAVG: 25000 194.235 138.298 4.43084 138.298 -49.3216 -23.4997 4.43084 -23.4997 -135.099
+GPRESSAVG: 25000 198.881 138.157 2.51085 138.515 -48.6262 -19.16 6.52189 -22.589 -134.356
+TIMING: 25000  CPU: 84.751, 0.00484579/step  Wall: 84.751, 0.00484579/step, 0.0201908 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   25000      1053.2216       582.6259         0.0000         0.0000         -53366.2472      4673.9782         0.0000         0.0000      2231.3009         -44825.1206       202.7522    -47056.4215    -44804.3618       201.4949            -99.2196       109.2872     37231.2670         3.2715         5.2997
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 25000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 25000
+WRITING COORDINATES TO RESTART FILE AT STEP 25000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 25000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 26000 -243.849 -383.972 632.919 -383.972 454.573 -213.777 632.919 -213.777 709.916
+GPRESSURE: 26000 723.058 142.669 179.051 -80.1613 732.801 -582.581 270.11 -585.068 591.297
+PRESSAVG: 26000 217.527 -91.9215 143.987 -91.9215 -221.212 -260.834 143.987 -260.834 -19.609
+GPRESSAVG: 26000 215.611 -91.5653 144.167 -93.81 -219.704 -263.037 143.475 -260.431 -15.353
+TIMING: 26000  CPU: 87.8504, 0.00309932/step  Wall: 87.8504, 0.00309932/step, 0.0120529 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   26000      1074.2917       619.3946         0.0000         0.0000         -53505.2678      4747.8003         0.0000         0.0000      2224.7818         -44838.9993       202.1598    -47063.7812    -44819.2593       200.3212            306.8801       682.3855     37144.5582        -7.7646        -6.4820
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 26000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 26000
+WRITING COORDINATES TO RESTART FILE AT STEP 26000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 26000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 27000 2335.61 269.847 -212.999 269.847 -1130.63 101.149 -212.999 101.149 1425.9
+GPRESSURE: 27000 493.843 194.583 -51.5257 127.857 -670.421 -91.2301 104.742 -176.256 24.5884
+PRESSAVG: 27000 123.705 -164.312 195.83 -164.312 -217.26 -246.804 195.83 -246.804 40.0414
+GPRESSAVG: 27000 121.365 -164.195 196.493 -163.732 -218.39 -248.11 193.206 -245.896 35.3694
+TIMING: 27000  CPU: 90.9742, 0.00312382/step  Wall: 90.9742, 0.00312382/step, 0.0112805 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   27000      1000.8838       589.8575         0.0000         0.0000         -53263.6950      4622.0436         0.0000         0.0000      2238.8796         -44812.0304       203.4409    -47050.9100    -44792.1893       200.7928            876.9635       -50.6632     37011.3715       -17.8379       -20.5517
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 27000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 27000
+WRITING COORDINATES TO RESTART FILE AT STEP 27000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 27000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 28000 -2007.92 -236.366 886.492 -236.366 39.7946 289.006 886.492 289.006 -957.89
+GPRESSURE: 28000 -475.601 -542.251 306.87 -428.25 179.942 251.35 228.315 -121.215 61.4444
+PRESSAVG: 28000 281.458 -37.4044 188.672 -37.4044 -312.539 -196.82 188.672 -196.82 -69.5989
+GPRESSAVG: 28000 282.661 -33.9093 188.181 -35.3264 -313.349 -196.34 188.382 -199.212 -66.8577
+TIMING: 28000  CPU: 94.0908, 0.00311661/step  Wall: 94.0908, 0.00311661/step, 0.0103887 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   28000      1098.7126       584.8087         0.0000         0.0000         -53331.9572      4653.4025         0.0000         0.0000      2194.5158         -44800.5176       199.4096    -46995.0334    -44782.2093       201.1205           -975.3390       -78.0713     37332.8284       -33.5598       -32.5150
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 28000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 28000
+WRITING COORDINATES TO RESTART FILE AT STEP 28000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 28000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 95.7301
+LDB: ============== END OF LOAD BALANCING =============== 95.7301
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 95.7303
+LDB: ============= START OF LOAD BALANCING ============== 96.0452
+LDB: Largest compute 42 load 0.060829 is 23.5% of average load 0.258562
+LDB: Average compute 0.021465 is 8.3% of average load 0.258562
+LDB: TIME 96.0453 LOAD: AVG 0.258562 MAX 0.281994  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 96.0454 LOAD: AVG 0.258562 MAX 0.281994  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 96.0455 LOAD: AVG 0.258562 MAX 0.281994  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 96.0457
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 96.0461
+PRESSURE: 29000 2243.68 139.133 563.941 139.133 -479.406 -2.07081 563.941 -2.07081 -82.256
+GPRESSURE: 29000 614.751 -91.0288 -268.132 29.5196 -927.562 -253.84 82.2733 -188.129 -355.955
+PRESSAVG: 29000 153.232 -34.9068 175.31 -34.9068 -76.3019 -83.3973 175.31 -83.3973 -15.0318
+GPRESSAVG: 29000 153.562 -38.9451 173.241 -36.0823 -76.3322 -82.2678 172.097 -81.7626 -14.4235
+TIMING: 29000  CPU: 97.2193, 0.00312852/step  Wall: 97.2193, 0.00312852/step, 0.00955936 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   29000      1020.2175       605.4728         0.0000         0.0000         -53261.0614      4623.8625         0.0000         0.0000      2184.5661         -44826.9425       198.5055    -47011.5086    -44807.2709       201.5282            560.6731      -222.9216     37292.3750        20.6329        20.9355
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 29000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 29000
+WRITING COORDINATES TO RESTART FILE AT STEP 29000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 29000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 30000 -239.347 -413.828 270.339 -413.828 1885.04 74.0526 270.339 74.0526 -48.6684
+GPRESSURE: 30000 716.364 -587.976 238.452 -313.136 623.29 65.8552 185.446 -81.61 -49.1298
+PRESSAVG: 30000 151.284 -41.1618 244.339 -41.1618 -164.806 -172.01 244.339 -172.01 -39.3686
+GPRESSAVG: 30000 151.277 -40.6086 248.691 -39.2155 -165.59 -173.409 246.666 -170.244 -41.3508
+TIMING: 30000  CPU: 100.364, 0.00314428/step  Wall: 100.364, 0.00314428/step, 0.00873411 hours remaining, 192.703125 MB of memory in use.
+ETITLE:      TS           BOND          ANGLE          DIHED          IMPRP               ELECT            VDW       BOUNDARY           MISC        KINETIC               TOTAL           TEMP      POTENTIAL         TOTAL3        TEMPAVG            PRESSURE      GPRESSURE         VOLUME       PRESSAVG      GPRESSAVG
+
+ENERGY:   30000      1047.8576       604.8207         0.0000         0.0000         -53446.4699      4721.6332         0.0000         0.0000      2225.0901         -44847.0683       202.1878    -47072.1584    -44827.3321       200.2083            532.3399       430.1746     37249.5721       -17.6299       -18.5548
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 30000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 30000
+WRITING COORDINATES TO RESTART FILE AT STEP 30000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 30000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 31000 -708.438 47.6711 1139.4 47.6711 972.736 -1658.04 1139.4 -1658.04 -1195.64
+GPRESSURE: 31000 114.42 -742.287 869.843 -512.292 1498.26 -128.142 773.182 -65.4512 792.312
+PRESSAVG: 31000 171.23 -263.877 341.024 -263.877 -268.548 -259.288 341.024 -259.288 -27.1306
+GPRESSAVG: 31000 173.54 -264.648 338.289 -267.409 -268.749 -258.808 340.751 -264.146 -24.3599
+TIMING: 31000  CPU: 103.478, 0.00311459/step  Wall: 103.478, 0.00311459/step, 0.00778648 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   31000      1083.3282       604.2000         0.0000         0.0000         -53448.9617      4747.3963         0.0000         0.0000      2191.8097         -44822.2276       199.1637    -47014.0373    -44803.0999       200.8283           -310.4488       801.6627     37003.5345       -41.4829       -39.8565
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 31000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 31000
+WRITING COORDINATES TO RESTART FILE AT STEP 31000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 31000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 32000 1144.56 -140.442 426.817 -140.442 404.011 -158.823 426.817 -158.823 532.727
+GPRESSURE: 32000 734.335 -181.352 141.482 62.3621 -127.699 88.2905 -520.255 -23.2951 608.238
+PRESSAVG: 32000 101.525 -267.83 254.667 -267.83 -245.898 -204.22 254.667 -204.22 257.859
+GPRESSAVG: 32000 99.1589 -266.532 257.432 -266.87 -248.143 -204.036 256.642 -199.141 255.371
+TIMING: 32000  CPU: 106.586, 0.00310795/step  Wall: 106.586, 0.00310795/step, 0.00690657 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   32000      1030.4805       601.5962         0.0000         0.0000         -53402.5776      4707.3185         0.0000         0.0000      2208.1280         -44855.0544       200.6465    -47063.1824    -44836.0659       200.2518            693.7661       404.9578     37145.8853        37.8286        35.4623
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 32000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 32000
+WRITING COORDINATES TO RESTART FILE AT STEP 32000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 32000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 108.207
+LDB: ============== END OF LOAD BALANCING =============== 108.207
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 108.207
+LDB: ============= START OF LOAD BALANCING ============== 108.518
+LDB: Largest compute 42 load 0.060305 is 23.4% of average load 0.257623
+LDB: Average compute 0.021371 is 8.3% of average load 0.257623
+LDB: TIME 108.518 LOAD: AVG 0.257623 MAX 0.277029  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 108.518 LOAD: AVG 0.257623 MAX 0.277029  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 108.518 LOAD: AVG 0.257623 MAX 0.277029  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 108.518
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 108.519
+PRESSURE: 33000 888.707 -570.964 749.604 -570.964 1105.11 -612.291 749.604 -612.291 1267.97
+GPRESSURE: 33000 147.685 57.765 149.608 -2.81576 -264.588 -267.163 363.234 -420.143 1004.53
+PRESSAVG: 33000 38.1278 -219.978 71.3986 -219.978 -103.536 -59.9602 71.3986 -59.9602 90.413
+GPRESSAVG: 33000 36.0582 -219.348 71.6841 -219.28 -100.101 -59.6773 66.9184 -61.4965 91.3058
+TIMING: 33000  CPU: 109.699, 0.00311317/step  Wall: 109.699, 0.00311317/step, 0.00605339 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   33000      1019.5196       608.9010         0.0000         0.0000         -53349.8213      4687.1884         0.0000         0.0000      2163.0671         -44871.1451       196.5520    -47034.2122    -44851.8090       199.5541           1087.2651       295.8760     37128.3849         8.3351         9.0878
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 33000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 33000
+WRITING COORDINATES TO RESTART FILE AT STEP 33000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 33000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 34000 1268.98 676.472 -253.242 676.472 -653.027 -1051.25 -253.242 -1051.25 535.64
+GPRESSURE: 34000 686.099 342.151 -257.035 311.385 -163.969 -167.415 -152.924 -359.094 364.074
+PRESSAVG: 34000 -37.5943 -290.286 159.096 -290.286 -21.1599 -188.501 159.096 -188.501 43.9527
+GPRESSAVG: 34000 -35.234 -289.878 160.127 -287.785 -22.2464 -189.141 161.249 -185.954 43.6408
+TIMING: 34000  CPU: 112.921, 0.00322204/step  Wall: 112.921, 0.00322204/step, 0.00537007 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   34000      1047.3576       639.6897         0.0000         0.0000         -53427.2150      4697.4898         0.0000         0.0000      2165.0621         -44877.6158       196.7333    -47042.6779    -44857.2039       199.0621            383.8651       295.4012     37167.4276        -4.9338        -4.6132
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 34000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 34000
+WRITING COORDINATES TO RESTART FILE AT STEP 34000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 34000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 35000 1445.86 925.537 -800.737 925.537 816.974 -438.928 -800.737 -438.928 956.195
+GPRESSURE: 35000 -31.5585 -52.2565 -269.948 -23.2199 -133.071 177.621 -406.335 26.2126 -417.228
+PRESSAVG: 35000 185.123 -401.885 56.1232 -401.885 66.1302 -163.637 56.1232 -163.637 -240.212
+GPRESSAVG: 35000 184.904 -405.987 54.9634 -402.676 66.076 -161.955 57.1147 -165.965 -238.644
+TIMING: 35000  CPU: 116.055, 0.00313353/step  Wall: 116.055, 0.00313353/step, 0.00435213 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   35000      1017.9771       608.6199         0.0000         0.0000         -53317.9460      4640.3447         0.0000         0.0000      2225.8207         -44825.1835       202.2542    -47051.0042    -44807.3811       199.0609           1073.0086      -193.9526     37310.7879         3.6802         4.1121
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 35000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 35000
+WRITING COORDINATES TO RESTART FILE AT STEP 35000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 35000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 36000 -1841.66 -755.666 -575.619 -755.666 -3098.88 -401.353 -575.619 -401.353 -2453.24
+GPRESSURE: 36000 -285.918 -602.142 -355.316 -652.895 -831.808 26.1843 -251.972 -107.931 -1739.67
+PRESSAVG: 36000 378.221 -420.666 133.828 -420.666 49.0523 8.41099 133.828 8.41099 -397.465
+GPRESSAVG: 36000 376.871 -420.967 133.322 -421.963 50.297 4.49228 135.014 8.81598 -398.226
+TIMING: 36000  CPU: 119.15, 0.00309534/step  Wall: 119.15, 0.00309534/step, 0.00343926 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   36000      1110.9319       624.4229         0.0000         0.0000         -53402.4915      4577.7726         0.0000         0.0000      2232.2821         -44857.0819       202.8414    -47089.3640    -44837.7579       200.0074          -2464.5919      -952.4649     37430.4991         9.9360         9.6473
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 36000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 36000
+WRITING COORDINATES TO RESTART FILE AT STEP 36000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 36000
+FINISHED WRITING RESTART VELOCITIES
+LDB: ============= START OF LOAD BALANCING ============== 120.787
+LDB: ============== END OF LOAD BALANCING =============== 120.787
+Info: useSync: 0 useProxySync: 0
+LDB: =============== DONE WITH MIGRATION ================ 120.787
+LDB: ============= START OF LOAD BALANCING ============== 121.104
+LDB: Largest compute 32 load 0.059512 is 22.9% of average load 0.260234
+LDB: Average compute 0.021639 is 8.3% of average load 0.260234
+LDB: TIME 121.104 LOAD: AVG 0.260234 MAX 0.285063  PROXIES: TOTAL 15 MAXPE 2 MAXPATCH 5 None MEM: 192.703 MB
+LDB: TIME 121.104 LOAD: AVG 0.260234 MAX 0.285063  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: TIME 121.104 LOAD: AVG 0.260234 MAX 0.285063  PROXIES: TOTAL 17 MAXPE 2 MAXPATCH 6 RefineTorusLB MEM: 192.703 MB
+LDB: ============== END OF LOAD BALANCING =============== 121.104
+Info: useSync: 0 useProxySync: 0
+Info: build node-aware spanning tree with send: 1, recv: 0 with branch factor 4
+LDB: =============== DONE WITH MIGRATION ================ 121.104
+PRESSURE: 37000 1732.33 -193.158 -140.095 -193.158 -799.912 126.344 -140.095 126.344 -1627.39
+GPRESSURE: 37000 133.652 -297.229 22.7453 -267.803 -69.0129 180.732 117.522 -88.8578 -959.517
+PRESSAVG: 37000 295.542 -335.39 48.7737 -335.39 23.5316 145.26 48.7737 145.26 -292.263
+GPRESSAVG: 37000 294.71 -330.792 49.4535 -332.994 25.04 145.646 47.9205 146.126 -293.684
+TIMING: 37000  CPU: 122.28, 0.00312937/step  Wall: 122.28, 0.00312937/step, 0.00260781 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   37000      1032.6519       603.4438         0.0000         0.0000         -53267.6431      4632.2414         0.0000         0.0000      2192.6478         -44806.6582       199.2399    -46999.3060    -44787.6514       200.3983           -231.6586      -298.2925     37397.9935         8.9369         8.6887
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 37000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 37000
+WRITING COORDINATES TO RESTART FILE AT STEP 37000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 37000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 38000 1296.34 67.2455 1143.79 67.2455 38.18 -105.689 1143.79 -105.689 -727.552
+GPRESSURE: 38000 516.91 142.415 579.011 133.746 231.072 -577.396 658.331 -410.685 -636.064
+PRESSAVG: 38000 83.5865 -129.116 192.431 -129.116 127.309 -54.0599 192.431 -54.0599 -181.916
+GPRESSAVG: 38000 85.4776 -130.789 191.833 -128.175 125.064 -50.7859 191.62 -56.592 -178.26
+TIMING: 38000  CPU: 125.396, 0.00311677/step  Wall: 125.396, 0.00311677/step, 0.00173154 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   38000      1028.9016       591.1501         0.0000         0.0000         -53299.6805      4660.6283         0.0000         0.0000      2219.7499         -44799.2506       201.7026    -47019.0004    -44780.3849       201.8601            202.3230        37.3061     37278.7819         9.6597        10.7605
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 38000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 38000
+WRITING COORDINATES TO RESTART FILE AT STEP 38000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 38000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 39000 410.767 -233.082 -693.662 -233.082 2280.48 -760.953 -693.662 -760.953 -53.2512
+GPRESSURE: 39000 752.669 -5.96362 294.032 -215.321 628.661 -266.454 -155.062 -161.377 -726.648
+PRESSAVG: 39000 200.943 -237.597 310.572 -237.597 144.856 -3.12176 310.572 -3.12176 -352.475
+GPRESSAVG: 39000 198.147 -240.48 314.121 -239.352 144.818 -0.830397 311.162 0.203665 -356.06
+TIMING: 39000  CPU: 128.591, 0.00319486/step  Wall: 128.591, 0.00319486/step, 0.000887461 hours remaining, 192.703125 MB of memory in use.
+ENERGY:   39000      1005.8064       606.1759         0.0000         0.0000         -53336.5444      4678.6971         0.0000         0.0000      2225.6881         -44820.1769       202.2422    -47045.8650    -44799.6274       200.3609            879.3308       218.2274     37165.2097        -2.2251        -4.3649
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 39000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 39000
+WRITING COORDINATES TO RESTART FILE AT STEP 39000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 39000
+FINISHED WRITING RESTART VELOCITIES
+PRESSURE: 40000 2661.44 -2.60767 194.263 -2.60767 2252.23 -725.757 194.263 -725.757 1504.57
+GPRESSURE: 40000 895.073 92.9853 506.952 424.469 668.578 -255.027 182.284 -634.1 593.209
+PRESSAVG: 40000 15.1725 -89.0464 177.505 -89.0464 361.491 -85.6336 177.505 -85.6336 -388.534
+GPRESSAVG: 40000 17.3172 -86.7541 176.848 -86.5819 362.607 -87.6807 177.525 -87.1062 -387.018
+TIMING: 40000  CPU: 131.682, 0.00309029/step  Wall: 131.682, 0.00309029/step, 0 hours remaining, 192.703125 MB of memory in use.
+ETITLE:      TS           BOND          ANGLE          DIHED          IMPRP               ELECT            VDW       BOUNDARY           MISC        KINETIC               TOTAL           TEMP      POTENTIAL         TOTAL3        TEMPAVG            PRESSURE      GPRESSURE         VOLUME       PRESSAVG      GPRESSAVG
+
+ENERGY:   40000       993.3558       599.6186         0.0000         0.0000         -53378.5508      4738.9131         0.0000         0.0000      2238.0045         -44808.6588       203.3613    -47046.6633    -44789.1850       201.4464           2139.4136       718.9534     37039.7494        -3.9570        -2.3645
+
+WRITING EXTENDED SYSTEM TO RESTART FILE AT STEP 40000
+WRITING COORDINATES TO DCD FILE production_200.dcd AT STEP 40000
+WRITING COORDINATES TO RESTART FILE AT STEP 40000
+FINISHED WRITING RESTART COORDINATES
+WRITING VELOCITIES TO RESTART FILE AT STEP 40000
+FINISHED WRITING RESTART VELOCITIES
+WRITING EXTENDED SYSTEM TO OUTPUT FILE AT STEP 40000
+CLOSING EXTENDED SYSTEM TRAJECTORY FILE
+WRITING COORDINATES TO OUTPUT FILE AT STEP 40000
+CLOSING COORDINATE DCD FILE production_200.dcd
+WRITING VELOCITIES TO OUTPUT FILE AT STEP 40000
+====================================================
+
+WallClock: 132.432922  CPUTime: 132.432922  Memory: 192.703125 MB
+[Partition 0][Node 0] End of program
+</data>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.iT9Nbo" descriptor="4"/>
+    <statinfo mode="0100600" size="4933" inode="875592" nlink="1" blksize="4096" blocks="16" mtime="2019-10-04T18:14:37-07:00" atime="2019-10-04T18:14:00-07:00" ctime="2019-10-04T18:14:37-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>+ module unload namd
+++ /opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash unload namd
++ eval
++ module swap craype-haswell craype-haswell
+++ /opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash swap craype-haswell craype-haswell
++ eval CRAY_CPU_TARGET=haswell &apos;;export&apos; &apos;CRAY_CPU_TARGET;LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7&apos; &apos;;export&apos; &apos;LOADEDMODULES;PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M&apos; &apos;;export&apos; &apos;PE_PRODUCT_LIST;_LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7&apos; &apos;;export&apos; &apos;_LMFILES_;&apos;
+++ CRAY_CPU_TARGET=haswell
+++ export CRAY_CPU_TARGET
+++ LOADEDMODULES=modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:altd/2.0:darshan/3.1.7
+++ export LOADEDMODULES
+++ PE_PRODUCT_LIST=CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M
+++ export PE_PRODUCT_LIST
+++ _LMFILES_=/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.28__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.32__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.26__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.41__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.25__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.34__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.1__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.41__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.39__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/usr/common/software/modulefiles/altd/2.0:/usr/common/software/modulefiles/darshan/3.1.7
+++ export _LMFILES_
++ &apos;[&apos; -z 12 &apos;]&apos;
++ &apos;[&apos; &apos;!&apos; -z /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001 &apos;]&apos;
++ cd /global/cscratch1/sd/lpottier/workflow-sns/lpottier/pegasus/refinement-20191004T214203Z/run0001
++ srun /global/homes/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2 production_200.conf
+PE 0: MPICH Warning: For one-sided operations, XPMEM will not be used for a specific
+RMA window if that window&apos;s memory is no more than 4K.
+Updating to CLE 5.2UP02 or beyond will resolve this issue.
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.ywAipL" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="875593" nlink="1" blksize="4096" blocks="0" mtime="2019-10-04T18:14:00-07:00" atime="2019-10-04T18:14:00-07:00" ctime="2019-10-04T18:14:00-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>
