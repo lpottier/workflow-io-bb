@@ -19,20 +19,20 @@ tr amber::ptraj {
         os "linux"
         type "INSTALLED"
         profile globus "jobtype" "single"
-    profile pegasus "glite.arguments" "--qos debug --constraint=haswell --licenses=SCRATCH"
+        profile pegasus "glite.arguments" "--qos debug --constraint=haswell --licenses=SCRATCH"
     }
 }
 
 tr sassena {
     site nersc {
-        pfn "/global/project/projectdirs/m2187/papajim/sns-software/Sassena_1.42_cout/bin/sassena"
+        #pfn "/global/project/projectdirs/m2187/papajim/sns-software/Sassena_1.42_cout/bin/sassena"
         pfn "/global/homes/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/sassena.sh"
         arch "x86_64"
         os "linux"
         type "INSTALLED"
         profile pegasus "exitcode.successmsg" "Successfully finished..."
         profile globus "jobtype" "mpi"
-    profile pegasus "glite.arguments" "--qos debug --constraint=haswell --licenses=SCRATCH"
+        profile pegasus "glite.arguments" "--qos debug --constraint=haswell --licenses=SCRATCH"
     }
 }
 
@@ -42,8 +42,8 @@ tr tar {
         arch "x86_64"
         os "linux"
         type "INSTALLED"
-    profile pegasus "queue" "@escori"
-    profile pegasus "glite.arguments" "--qos xfer --licenses=SCRATCH"
+        profile pegasus "queue" "@escori"
+        profile pegasus "glite.arguments" "--qos xfer --licenses=SCRATCH"
     }
 }
 
