@@ -1,136 +1,10 @@
 #!/usr/bin/env python3
 
-
-# #!/bin/bash -l
-# #SBATCH -p debug
-# #SBATCH -N @NODES@
-# #SBATCH -C haswell
-# #SBATCH -t 00:10:00
-# #SBATCH -J swarp-scaling
-# #SBATCH -o output.%j
-# #SBATCH -e error.%j
-# #SBATCH --mail-user=lpottier@isi.edu
-# #SBATCH --mail-type=END,FAIL
-# #SBATCH --export=ALL
-# #SBATCH -d singleton
-# #DW jobdw capacity=150GB access_mode=striped type=scratch
-# #@STAGE@
-
-# use_bb=true
-# module unload darshan
-# #module load ipm/2.0.3-git_serial-io-preload
-
-# set -x
-# SWARP_DIR=workflow-io-bb/real-workflows/swarp
-# LAUNCH="$SCRATCH/$SWARP_DIR/burst_buffers_scripts/sync_launch.sh"
-# export CONTROL_FILE="$SCRATCH/control_file.txt"
-
-# #export | grep SLURM
-
-# CORES_PER_PROCESS=16
-# CONFIG_DIR=$SCRATCH/$SWARP_DIR/config  # -numa
-# RESAMPLE_CONFIG=${CONFIG_DIR}/resample-orig.swarp
-# COMBINE_CONFIG=${CONFIG_DIR}/combine-orig.swarp
-# EXE=$SCRATCH/$SWARP_DIR/bin/swarp
-
-# FILE_PATTERN='PTF201111*'
-# IMAGE_PATTERN='PTF201111*.w.fits'
-# RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
-
-# echo "NUM NODES ${SLURM_JOB_NUM_NODES}"
-# echo "STAMP PREPARATION $(date --rfc-3339=ns)"
-
-
-# # Create the final output directory and run directory
-# #outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${SLURM_JOB_NUM_NODES}N.XXXXXX)
-# outdir="$(pwd)/output"; mkdir ${outdir}
-# if [ $use_bb = true ]; then
-#     ./bbinfo.sh
-#     rundir=$DW_JOB_STRIPED/swarp-run
-#     mkdir $rundir
-# else
-#     indir="../input" # The input data is already on OST 1
-#     #lfs setstripe -c 1 -o 1 ${outdir}
-#     rundir=$outdir
-# fi
-# # Create a output and run directory for each SWarp process
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     mkdir -p ${rundir}/${process}
-#     mkdir -p ${outdir}/${process}
-# done
-
-
-# cd ${rundir}
-# echo "STAMP RESAMPLE PREP $(date --rfc-3339=ns)"
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     echo "Launching resample process ${process}"
-#     indir="$DW_JOB_STRIPED/input/${process}" # This data has already been staged in
-#     cd ${process}
-#     srun \
-#     -N 1 \
-#     -n 1 \
-#     -c ${CORES_PER_PROCESS} \
-#     -o "output.resample.%j.${process}" \
-#     -e "error.resample.%j.${process}" \
-#     $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} &
-#     cd ..
-# done
-# sleep 10
-# touch $CONTROL_FILE
-# echo "STAMP RESAMPLE $(date --rfc-3339=ns)"
-# t1=$(date +%s.%N)
-# wait
-# rm $CONTROL_FILE
-# t2=$(date +%s.%N)
-# tdiff=$(echo "$t2 - $t1" | bc -l)
-# echo "TIME RESAMPLE $tdiff"
-
-# # Copy the stdout, stderr, SWarp XML files and IPM XML file
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}
-# done
-
-
-# echo "STAMP COMBINE PREP $(date --rfc-3339=ns)"
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     echo "Launching coadd process ${process}"
-#     cd ${process}
-#     srun \
-#     -N 1 \
-#     -n 1 \
-#     -c ${CORES_PER_PROCESS} \
-#     -o "output.coadd.%j.${process}" \
-#     -e "error.coadd.%j.${process}" \
-#     $LAUNCH $EXE -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &
-#     cd ..
-# done
-# sleep 10
-# touch $CONTROL_FILE
-# echo "STAMP COMBINE $(date --rfc-3339=ns)"
-# t1=$(date +%s.%N)
-# wait
-# rm $CONTROL_FILE
-# t2=$(date +%s.%N)
-# tdiff=$(echo "$t2 - $t1" | bc -l)
-# echo "TIME COMBINE $tdiff"
-
-# # Copy the stdout, stderr, SWarp XML files and IPM XML file
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     ls -lh ${rundir}/${process}/*.fits $DW_JOB_STRIPED/input/${process}/*.fits > ${outdir}/${process}/list_of_files.out
-#     cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}
-# done
-# du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/disk_usage.out
-
-
-# echo "STAMP CLEANUP $(date --rfc-3339=ns)"
-# for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do
-#     rm -v ${process}/*.fits
-# done
-# echo "STAMP DONE $(date --rfc-3339=ns)"
-
 import os
 import sys
 import stat
+import platform
+import time
 import subprocess as sb
 
 class SwarpInstance:
@@ -142,7 +16,8 @@ class SwarpInstance:
         self.size_bb = size_bb
 
     def slurm_header(self):
-        string = "#SBATCH -p debug\n"
+        string = "#!/bin/bash -l\n"
+        string += "#SBATCH -p debug\n"
         if self.standalone:
             string += "#SBATCH -N @NODES@\n"
         else:
@@ -175,12 +50,14 @@ class SwarpInstance:
     def script_globalvars(self):
         string = "set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/burst_buffers_scripts/sync_launch.sh\"\n"
+        string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
+        string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
         string += "CORES_PER_PROCESS={}\n".format(self.num_cores)
         string += "CONFIG_DIR=$SCRATCH/$SWARP_DIR/config\n"
         string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample-orig.swarp\n"
         string += "COMBINE_CONFIG=${CONFIG_DIR}/combine-orig.swarp\n"
-        string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
 
         string += "FILE_PATTERN='PTF201111*'\n"
         string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
@@ -313,40 +190,10 @@ class SwarpInstance:
             print("File {} already exists and will be re-written.".format("bbinfo.sh"))
             pass
 
-################
-
-# #!/bin/bash
-# #set -x
-# for i in 1; do
-# #for i in 4; do
-# #for i in 2 16 32; do
-# #for i in 1 2 4 32 64; do
-# #for i in 8 16 64; do
-# #for i in 1 2 4 8; do
-# #for i in 16 32 64; do
-#     outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)
-#     script="run-swarp-scaling-bb-${i}N.sh"
-#     echo $outdir
-#     echo $script
-#     sed "s/@NODES@/${i}/" "run-swarp-scaling-bb.sh" > ${outdir}/${script}
-#     for j in $(seq ${i} -1 1); do
-#     stage_in="#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory"
-#     sed -i "s|@STAGE@|@STAGE@\n${stage_in}|" ${outdir}/${script}
-#     done
-#     cp "bbinfo.sh" "sync_launch.sh" "${outdir}"
-#     cd "${outdir}"
-#     sbatch ${script}
-#     cd ..
-# done
-
-################
-
 class SwarpRun:
-    def __init__(self, pipelines=[1], standalone=True):
+    def __init__(self, pipelines=[1]):
         self.pipelines = pipelines
         self.num_pipelines = len(pipelines)
-        self.standalone = standalone
-
 
     def pipeline_to_str(self):
         res = ""
@@ -364,19 +211,21 @@ class SwarpRun:
 
         if os.path.exists(file):
             print("File {} already exists and will be re-written.".format(file))
-        print(self.pipeline_to_str())
-        #string = "outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)"
+
         with open(file, 'w') as f:
             f.write("#!/bin/bash\n")
             f.write("set -x\n")
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
-            f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+            if platform.system() == "Darwin":
+                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+            else:
+                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
             f.write("    for j in $(seq ${i} -1 1); do\n")
             f.write("        stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-            f.write("        sed -i \"s|@STAGE@|@STAGE@\n${stage_in}|\" ${outdir}/${script}\n")
+            f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
             f.write("    done\n")
             f.write("    cp \"bbinfo.sh\" \"sync_launch.sh\" \"${outdir}\"\n")
             f.write("    cd \"${outdir}\"\n")
@@ -388,11 +237,20 @@ class SwarpRun:
 
 
 if __name__ == '__main__':
-    print("Generate Slurm scripts")
+    print("=== Generate Slurm scripts for SWarp workflow")
+    today = time.localtime()
+    print("=== Executed: {}-{}-{} at {}:{}:{}.".format(today.tm_mday,
+                                                    today.tm_mon, 
+                                                    today.tm_year, 
+                                                    today.tm_hour, 
+                                                    today.tm_min, 
+                                                    today.tm_sec)
+                                                )
+    print("=== Machine: {}".format(platform.platform()))
 
     instance1core = SwarpInstance()
-    instance1core.write("run-swarp-scaling-bb.sh", overide=True)
+    instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
     run1 = SwarpRun(pipelines=[1])
-    run1.standalone("submit.sh", overide=True)
+    run1.standalone(file="submit.sh", overide=True)
     
