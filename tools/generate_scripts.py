@@ -135,7 +135,7 @@ import subprocess as sb
 
 class SwarpInstance:
 
-    def __init__(self, standalone=True, ,num_nodes=1, num_cores=1, size_bb=50):
+    def __init__(self, standalone=True, num_nodes=1, num_cores=1, size_bb=50):
         self.standalone = standalone
         self.num_nodes = num_nodes
         self.num_cores = num_cores
@@ -358,26 +358,33 @@ class SwarpRun:
         return res
 
 
-    def standalone(self, write, overide=False):
-        #string = "outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)"
-        string = "#!/bin/bash\n"
-        string += "set -x\n"
-        string += "for i in {}; do\n".format(self.pipeline_to_str())
-        string += "    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n"
-        string += "    script=\"run-swarp-scaling-bb-${i}N.sh\"\n"
-        string += "    echo $outdir\n"
-        string += "    echo $script\n"
-        string += "    for j in $(seq ${i} -1 1); do\n"
-        string += "        stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n"    
-        string += "        sed -i \"s|@STAGE@|@STAGE@\n${stage_in}|\" ${outdir}/${script}\n"
-        string += "    done\n"
-        string += "    cp \"bbinfo.sh\" \"sync_launch.sh\" \"${outdir}\"\n"
-        string += "    cd \"${outdir}\"\n"
-        string += "    sbatch ${script}\n"
-        string += "    cd ..\n"
-        string += "done\n"
+    def standalone(self, file, overide=False):
+        if not overide and os.path.exists(file):
+            raise FileNotFoundError("File {} already exists.".format(file))
 
-        return string
+        if os.path.exists(file):
+            print("File {} already exists and will be re-written.".format(file))
+        print(self.pipeline_to_str())
+        #string = "outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)"
+        with open(file, 'w') as f:
+            f.write("#!/bin/bash\n")
+            f.write("set -x\n")
+            f.write("for i in {}; do\n".format(self.pipeline_to_str()))
+            f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+            f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
+            f.write("    echo $outdir\n")
+            f.write("    echo $script\n")
+            f.write("    for j in $(seq ${i} -1 1); do\n")
+            f.write("        stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+            f.write("        sed -i \"s|@STAGE@|@STAGE@\n${stage_in}|\" ${outdir}/${script}\n")
+            f.write("    done\n")
+            f.write("    cp \"bbinfo.sh\" \"sync_launch.sh\" \"${outdir}\"\n")
+            f.write("    cd \"${outdir}\"\n")
+            f.write("    sbatch ${script}\n")
+            f.write("    cd ..\n")
+            f.write("done\n")
+
+        os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
 
 if __name__ == '__main__':
@@ -387,7 +394,5 @@ if __name__ == '__main__':
     instance1core.write("run-swarp-scaling-bb.sh", overide=True)
     
     run1 = SwarpRun(pipelines=[1])
-    run1.standalone(overide=True)
-
-    #sbatch ${script}
+    run1.standalone("submit.sh", overide=True)
     
