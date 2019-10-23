@@ -11,6 +11,9 @@ import subprocess as sb
 from enum import Enum,unique,auto
 
 SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
+BBINFO = "bbinfo.sh"
+WRAPPER = "wrapper.sh"
+
 
 @unique
 class TaskType(Enum):
@@ -258,9 +261,9 @@ class SwarpInstance:
         if self.standalone:
             string += "#@STAGE@\n"
         else:
-            string += "#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=$DW_JOB_STRIPED/input/ type=directory\n"
-            string += "#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config destination=$DW_JOB_STRIPED/config type=directory\n"
-            string += "#DW stage_out source=$DW_JOB_STRIPED/output/  destination=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/output type=directory\n"
+            string += "#DW stage_in source={}/input destination=$DW_JOB_STRIPED/input/ type=directory\n".format(SWARP_DIR)
+            string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
+            string += "#DW stage_out source=$DW_JOB_STRIPED/output/  destination={}/output type=directory\n".format(SWARP_DIR)
         string += "\n"
         return string
 
@@ -273,7 +276,7 @@ class SwarpInstance:
     def script_globalvars(self):
         string = "set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
-        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/sync_launch.sh\"\n".format(self.script_dir)
+        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
         string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
         string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
@@ -295,7 +298,7 @@ class SwarpInstance:
     def create_output_dirs(self):
         string = "# Create the final output directory and run directory\n"
         string += "outdir=\"$(pwd)/output\"; mkdir ${outdir}\n"
-        string +=  "sh bbinfo.sh\n"
+        string +=  "sh {}\n".format(BBINFO)
         string +=  "rundir=$DW_JOB_STRIPED/swarp-run\n"
         string +=  "mkdir $rundir\n"
         string += "# Create a output and run directory for each SWarp process\n"
@@ -374,7 +377,6 @@ class SwarpInstance:
         string += "    rm -v ${process}/*.fits\n"
         string += "done\n"
         string += "echo \"STAMP DONE $(date --rfc-3339=ns)\"\n"
-        string += "\n"
         return string
 
     @staticmethod
@@ -391,7 +393,7 @@ class SwarpInstance:
         return string
 
     @staticmethod
-    def write_bbinfo(file="bbinfo.sh", overide=False):
+    def write_bbinfo(file=BBINFO, overide=False):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
         with open(file, 'w') as f:
@@ -406,7 +408,7 @@ class SwarpInstance:
         return string
 
     @staticmethod
-    def write_launch(file="sync_launch.sh", overide=False):
+    def write_launch(file=WRAPPER, overide=False):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
         with open(file, 'w') as f:
@@ -436,12 +438,12 @@ class SwarpInstance:
         try:
             SwarpInstance.write_bbinfo(overide=overide)
         except FileNotFoundError:
-            print(" === SWarp script: file {} already exists and will be re-written.".format("bbinfo.sh"))
+            print(" === SWarp script: file {} already exists and will be re-written.".format(BBINFO))
             pass
         try:
             SwarpInstance.write_launch(overide=overide)
         except FileNotFoundError:
-            print(" === SWarp script: file {} already exists and will be re-written.".format("bbinfo.sh"))
+            print(" === SWarp script: file {} already exists and will be re-written.".format(WRAPPER))
             pass
 
 class SwarpRun:
@@ -479,10 +481,10 @@ class SwarpRun:
             f.write("    echo $script\n")
             f.write("    sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             f.write("    for j in $(seq ${i} -1 1); do\n")
-            f.write("       stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+            f.write("       stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
             f.write("       sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
             f.write("    done\n")
-            f.write("    cp \"bbinfo.sh\" \"sync_launch.sh\" \"${outdir}\"\n")
+            f.write("    cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
             f.write("    cd \"${outdir}\"\n")
             f.write("    sbatch ${script}\n")
             f.write("    cd ..\n")
@@ -519,7 +521,7 @@ if __name__ == '__main__':
 
     sched_config = SwarpSchedulerConfig(num_nodes=1, num_cores=1)
     bb_config = SwarpBurstBufferConfig(
-                size_bb=50, 
+                size_bb=50,
                 stage_input_dirs=[
                     "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input", 
                     "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config"],
