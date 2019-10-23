@@ -309,12 +309,12 @@ class SwarpInstance:
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
         string += "    srun \\ \n"
-        string += "        -N 1 \\ \n"
-        string += "        -n 1 \\ \n"
-        string += "        -c ${CORES_PER_PROCESS} \\ \n"
-        string += "        -o \"output.resample.%j.${process}\" \\ \n"
-        string += "        -e \"error.resample.%j.${process}\" \\ \n"
-        string += "        $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} \n"
+        string += "       -N 1 \\ \n"
+        string += "       -n 1 \\ \n"
+        string += "       -c ${CORES_PER_PROCESS} \\ \n"
+        string += "       -o \"output.resample.%j.${process}\" \\ \n"
+        string += "       -e \"error.resample.%j.${process}\" \\ \n"
+        string += "       $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} \n"
         string += "    cd ..\n"
         string += "done\n"
         string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
@@ -333,12 +333,12 @@ class SwarpInstance:
         string += "    echo \"Launching coadd process ${process}\"\n"
         string += "    cd ${process}\n"
         string += "    srun \\ \n"
-        string += "        -N 1 \\ \n"
-        string += "        -n 1 \\ \n"
-        string += "        -c ${CORES_PER_PROCESS} \\ \n"
-        string += "        -o \"output.coadd.%j.${process}\" \\ \n"
-        string += "        -e \"error.coadd.%j.${process}\" \\ \n"
-        string += "        $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} \n"
+        string += "       -N 1 \\ \n"
+        string += "       -n 1 \\ \n"
+        string += "       -c ${CORES_PER_PROCESS} \\ \n"
+        string += "       -o \"output.coadd.%j.${process}\" \\ \n"
+        string += "       -e \"error.coadd.%j.${process}\" \\ \n"
+        string += "       $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} \n"
         string += "    cd ..\n"
         string += "done\n"
         return string    
@@ -450,7 +450,7 @@ class SwarpRun:
 
         with open(file, 'w') as f:
             f.write("#!/bin/bash\n")
-            f.write("set -x\n")
+            f.write("#set -x\n")
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
             if platform.system() == "Darwin":
                 f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
@@ -459,9 +459,10 @@ class SwarpRun:
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
+            f.write("    sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             f.write("    for j in $(seq ${i} -1 1); do\n")
-            f.write("        stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-            f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+            f.write("       stage_in=\"#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+            f.write("       sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
             f.write("    done\n")
             f.write("    cp \"bbinfo.sh\" \"sync_launch.sh\" \"${outdir}\"\n")
             f.write("    cd \"${outdir}\"\n")
