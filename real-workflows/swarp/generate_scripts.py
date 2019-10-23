@@ -5,6 +5,7 @@ import sys
 import stat
 import platform
 import time
+import tempfile
 import subprocess as sb
 
 from enum import Enum,unique,auto
@@ -482,6 +483,7 @@ if __name__ == '__main__':
                                                 )
     print(" === Machine: {}".format(platform.platform()))
 
+    # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if not os.path.exists("build"):
         os.mkdir("build")
         print(" === Directory {}/ created".format("build"))
