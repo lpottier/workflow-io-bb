@@ -314,15 +314,17 @@ class SwarpInstance:
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
         string += "    srun \\ \n"
-        string += "    \t-N 1 \\ \n"
-        string += "    \t-n 1 \\ \n"
-        string += "    \t-c ${CORES_PER_PROCESS} \\ \n"
-        string += "    \t-o \"output.resample.%j.${process}\" \\ \n"
-        string += "    \t-e \"error.resample.%j.${process}\" \\ \n"
-        string += "    \t$LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} \n"
+        string += "        -N 1 \\ \n"
+        string += "        -n 1 \\ \n"
+        string += "        -c ${CORES_PER_PROCESS} \\ \n"
+        string += "        -o \"output.resample.%j.${process}\" \\ \n"
+        string += "        -e \"error.resample.%j.${process}\" \\ \n"
+        string += "        $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "\n"
+        string += "wait\n"
         string += "\n"
         return string
 
@@ -345,11 +347,13 @@ class SwarpInstance:
         string += "    \t-c ${CORES_PER_PROCESS} \\ \n"
         string += "    \t-o \"output.coadd.%j.${process}\" \\ \n"
         string += "    \t-e \"error.coadd.%j.${process}\" \\ \n"
-        string += "    \t$LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} \n"
+        string += "    \t$LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
-        return string    
+        string += "wait\n"
+        string += "\n"
+        return string
 
     def script_ending(self):
         string = "# Copy the stdout, stderr, SWarp XML files and IPM XML file\n"
@@ -359,6 +363,7 @@ class SwarpInstance:
         string += "done\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/disk_usage.out\n"
 
+        string += "\n"
 
         string += "echo \"STAMP CLEANUP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
