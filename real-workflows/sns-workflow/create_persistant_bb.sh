@@ -1,9 +1,12 @@
 #!/bin/bash
-#SBATCH --qos=debug
-#SBATCH --time=1
-#SBATCH --nodes=1
+#SBATCH -p debug
+#SBATCH -t 00:05:00
+#SBATCH -N 1
 #SBATCH --constraint=haswell
-#BB create_persistent name=sns_workflow capacity=200GB access_mode=striped type=scratch
+#BB create_persistent name=lpottier_bb capacity=50GB access_mode=striped type=scratch
+#DW persistentdw name=lpottier_bb
 
-echo $DW_PERSISTENT_STRIPED_sns_workflow/
+ls $DW_PERSISTENT_STRIPED_lpottier_bb/
+mkdir $DW_PERSISTENT_STRIPED_lpottier_bb/test_create
+ls $DW_PERSISTENT_STRIPED_lpottier_bb/
 

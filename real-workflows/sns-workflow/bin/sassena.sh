@@ -1,4 +1,5 @@
 #!/bin/bash
+#DW persistentdw name=lpottier_bb
 set -Eexo pipefail
 
 #module unload namd

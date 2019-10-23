@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --qos=debug
-#SBATCH --time=1
-#SBATCH --nodes=1
+#SBATCH -p debug
+#SBATCH -t 00:05:00
+#SBATCH -N 1
 #SBATCH --constraint=haswell
-#BB destroy_persistent name=sns_workflow
+#BB destroy_persistent name=lpottier_bb
 

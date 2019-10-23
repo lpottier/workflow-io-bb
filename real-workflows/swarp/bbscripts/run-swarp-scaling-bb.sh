@@ -10,7 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --export=ALL
 #SBATCH -d singleton
-#DW jobdw capacity=150GB access_mode=striped type=scratch
+#DW jobdw capacity=100GB access_mode=striped type=scratch
 #@STAGE@
 
 use_bb=true
