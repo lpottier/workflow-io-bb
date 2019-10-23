@@ -14,6 +14,9 @@ SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
+# Cori fragment size -> 20.14GiB
+DU_ONE_RUN = 769 #Disk Usage for one run in MB (just for input)
+
 
 @unique
 class TaskType(Enum):
@@ -311,6 +314,7 @@ class SwarpInstance:
 
     def script_run_resample(self):
         string = "cd ${rundir}\n"
+        string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
         string += "echo \"STAMP RESAMPLE PREP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching resample process ${process}\"\n"
@@ -330,6 +334,7 @@ class SwarpInstance:
         string += "t2=$(date +%s.%N)\n"
         string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
         string += "echo \"TIME RESAMPLE $tdiff\"\n"
+        string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
         string += "\n"
         return string
 
