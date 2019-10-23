@@ -324,7 +324,15 @@ class SwarpInstance:
         string += "done\n"
         string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
         string += "\n"
+        # string += "sleep 10\n"
+        # string += "touch $CONTROL_FILE\n"
+        string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
+        # string += "rm $CONTROL_FILE\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME RESAMPLE $tdiff\"\n"
         string += "\n"
         return string
 
@@ -351,7 +359,15 @@ class SwarpInstance:
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
+        # string += "sleep 10\n"
+        # string += "touch $CONTROL_FILE\n"
+        string += "echo \"STAMP COMBINE $(date --rfc-3339=ns)\"\n"
+        string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
+        # string += "rm $CONTROL_FILE\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME COMBINE $tdiff\"\n"
         string += "\n"
         return string
 
