@@ -260,11 +260,13 @@ class SwarpInstance:
             string += "#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input destination=$DW_JOB_STRIPED/input/ type=directory\n"
             string += "#DW stage_in source=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config destination=$DW_JOB_STRIPED/config type=directory\n"
             string += "#DW stage_out source=$DW_JOB_STRIPED/output/  destination=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/output type=directory\n"
+        string += "\n"
         return string
 
     def script_modules(self):
         string = "module unload darshan\n"
         string += "module load perftools-base perftools\n"
+        string += "\n"
         return string
 
     def script_globalvars(self):
@@ -285,6 +287,7 @@ class SwarpInstance:
 
         string += "echo \"NUM NODES ${SLURM_JOB_NUM_NODES}\"\n"
         string += "echo \"STAMP PREPARATION $(date --rfc-3339=ns)\"\n"
+        string += "\n"
         return string
 
 
@@ -299,6 +302,7 @@ class SwarpInstance:
         string += "    mkdir -p ${rundir}/${process}\n"
         string += "    mkdir -p ${outdir}/${process}\n"
         string += "done\n"
+        string += "\n"
         return string
 
     def script_run_resample(self):
@@ -318,6 +322,7 @@ class SwarpInstance:
         string += "    cd ..\n"
         string += "done\n"
         string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "\n"
         return string
 
     def script_copy_resample(self):
@@ -325,6 +330,7 @@ class SwarpInstance:
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
         string += "done\n"
+        string += "\n"
         return string
 
     def script_run_combine(self):
@@ -341,6 +347,7 @@ class SwarpInstance:
         string += "        $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} \n"
         string += "    cd ..\n"
         string += "done\n"
+        string += "\n"
         return string    
 
     def script_ending(self):
@@ -357,6 +364,7 @@ class SwarpInstance:
         string += "    rm -v ${process}/*.fits\n"
         string += "done\n"
         string += "echo \"STAMP DONE $(date --rfc-3339=ns)\"\n"
+        string += "\n"
         return string
 
     @staticmethod
