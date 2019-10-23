@@ -15,8 +15,9 @@ BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
 # Cori fragment size -> 20.14GiB
-DU_ONE_RUN = 769 #Disk Usage for one run in MB (just for input)
 
+INPUT_ONE_RUN = 769 #Input size in MB
+SIZE_ONE_PIPELINE = 1688 #Disk Usage for one run in MB
 
 @unique
 class TaskType(Enum):
