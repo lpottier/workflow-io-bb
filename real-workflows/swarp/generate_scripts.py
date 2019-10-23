@@ -263,6 +263,7 @@ class SwarpInstance:
 
     def script_modules(self):
         string = "module unload darshan\n"
+        string += "module load perftools-base perftools\n"
         return string
 
     def script_globalvars(self):
@@ -484,7 +485,7 @@ if __name__ == '__main__':
     if not os.path.exists("build"):
         os.mkdir("build")
         print(" === Directory {}/ created".format("build"))
-    
+
     old_path = os.getcwd()
     os.chdir(old_path+"/build/")
     print(" === Current directory {}".format(os.getcwd()))
