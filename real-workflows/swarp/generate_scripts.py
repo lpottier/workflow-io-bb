@@ -225,7 +225,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, resample_config, combine_config, sched_config, bb_config, standalone=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True):
         self.standalone = standalone
 
         self.resample_config = resample_config
@@ -233,6 +233,7 @@ class SwarpInstance:
 
         self.bb_config = bb_config
         self.sched_config = sched_config
+        self.script_dir = script_dir
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -272,7 +273,7 @@ class SwarpInstance:
     def script_globalvars(self):
         string = "set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
-        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/bbscripts/sync_launch.sh\"\n"
+        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/sync_launch.sh\"\n".format(self.script_dir)
         string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
         string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
@@ -517,10 +518,11 @@ if __name__ == '__main__':
                     "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/output"]
                 )
 
-    instance1core = SwarpInstance(resample_config=resample_config, 
-                                    combine_config=combine_config, 
-                                    sched_config=sched_config, 
-                                    bb_config=bb_config)
+    instance1core = SwarpInstance(script_dir="build",
+                                resample_config=resample_config, 
+                                combine_config=combine_config, 
+                                sched_config=sched_config, 
+                                bb_config=bb_config)
 
     instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
