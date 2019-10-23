@@ -373,11 +373,25 @@ class SwarpInstance:
     @staticmethod
     def write_bbinfo(file="bbinfo.sh", overide=False):
         if os.path.exists(file):
-            raise FileNotFoundError("File {} already exists.".format(file))
+            raise FileNotFoundError("file {} already exists.".format(file))
         with open(file, 'w') as f:
             f.write(SwarpInstance.bbinfo())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
+    @staticmethod
+    def launch():
+        string = "#!/bin/bash\n"
+        string += "echo \"STAMP SYNC LAUNCH BEGIN $(date --rfc-3339=ns)\"\n"
+        string += "exec \"$@\"\n"
+        return string
+
+    @staticmethod
+    def write_launch(file="sync_launch.sh", overide=False):
+        if os.path.exists(file):
+            raise FileNotFoundError("file {} already exists.".format(file))
+        with open(file, 'w') as f:
+            f.write(SwarpInstance.launch())
+        os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
     def write(self, file, overide=False):
         if not overide and os.path.exists(file):
@@ -401,6 +415,11 @@ class SwarpInstance:
 
         try:
             SwarpInstance.write_bbinfo(overide=overide)
+        except FileNotFoundError:
+            print(" === SWarp script: file {} already exists and will be re-written.".format("bbinfo.sh"))
+            pass
+        try:
+            SwarpInstance.write_launch(overide=overide)
         except FileNotFoundError:
             print(" === SWarp script: file {} already exists and will be re-written.".format("bbinfo.sh"))
             pass
@@ -462,6 +481,14 @@ if __name__ == '__main__':
                                                 )
     print(" === Machine: {}".format(platform.platform()))
 
+    if not os.path.exists("build"):
+        os.mkdir("build")
+        print(" === Directory {}/ created".format("build"))
+    
+    old_path = os.getcwd()
+    os.chdir(old_path+"/build/")
+    print(" === Current directory {}".format(os.getcwd()))
+
     resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=1, resample_dir='.')
     resample_config.write(overide=True) #Write out the resample.swarp
 
@@ -488,6 +515,9 @@ if __name__ == '__main__':
     run1 = SwarpRun(pipelines=[1])
     run1.standalone(file="submit.sh", overide=True)
     
+    os.chdir(old_path)
+    print(" === Switch to initial directory {}".format(os.getcwd()))
+
 
 
     
