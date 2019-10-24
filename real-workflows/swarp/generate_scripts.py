@@ -14,6 +14,7 @@ SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
+NTHREADS = 1
 # Cori fragment size -> 20.14GiB
 
 INPUT_ONE_RUN = 769 #Input size in MB
@@ -524,15 +525,15 @@ if __name__ == '__main__':
     os.chdir(old_path+"/build/")
     sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
-    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=1, resample_dir='.')
+    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=NTHREADS, resample_dir='.')
     resample_config.write(overide=True) #Write out the resample.swarp
 
-    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=1, resample_dir='.')
+    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=NTHREADS, resample_dir='.')
     combine_config.write(overide=True) #Write out the combine.swarp
 
-    sched_config = SwarpSchedulerConfig(num_nodes=1, num_cores=1)
+    sched_config = SwarpSchedulerConfig(num_nodes=1, num_cores=NTHREADS)
     bb_config = SwarpBurstBufferConfig(
-                size_bb=1,
+                size_bb=100,
                 stage_input_dirs=[
                     SWARP_DIR + "/input", 
                     SWARP_DIR + "/config"],
@@ -549,7 +550,7 @@ if __name__ == '__main__':
 
     instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
-    run1 = SwarpRun(pipelines=[1])
+    run1 = SwarpRun(pipelines=[1,2])
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
