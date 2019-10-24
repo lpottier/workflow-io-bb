@@ -322,7 +322,7 @@ class SwarpInstance:
         string += "    echo \"Launching resample process ${process}\"\n"
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $LAUNCH \"pegasus-kickstart -z -l stat.resample.xml $EXE\" -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
+        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
         string += "    cd ..\n"
         string += "done\n"
         string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
@@ -353,7 +353,7 @@ class SwarpInstance:
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching coadd process ${process}\"\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" $LAUNCH \"pegasus-kickstart -z -l stat.combine.xml $EXE\" -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
+        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
@@ -549,7 +549,7 @@ if __name__ == '__main__':
 
     instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
-    run1 = SwarpRun(pipelines=[1,2])
+    run1 = SwarpRun(pipelines=[1])
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
