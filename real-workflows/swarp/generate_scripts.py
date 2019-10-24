@@ -181,10 +181,10 @@ class SwarpWorkflowConfig:
             raise FileNotFoundError("file {} already exists".format(file))
 
         if self.existing_file != None and os.path.exists(self.existing_file):
-            print(" === workflow: file {} already exists and will be used.".format(self.existing_file))
+            sys.stderr.write(" === workflow: file {} already exists and will be used.\n".format(self.existing_file))
 
         if os.path.exists(file):
-            print(" === workflow: file {} already exists and will be re-written.".format(file))
+            sys.stderr.write(" === workflow: file {} already exists and will be re-written.\n".format(file))
 
         with open(file, 'w') as f:
             f.write(self.output())
@@ -409,7 +409,7 @@ class SwarpInstance:
     @staticmethod
     def launch():
         string = "#!/bin/bash\n"
-        string += "echo \"STAMP SYNC LAUNCH BEGIN $(date --rfc-3339=ns)\"\n"
+        #string += "echo \"STAMP SYNC LAUNCH BEGIN $(date --rfc-3339=ns)\"\n"
         string += "exec \"$@\"\n"
         return string
 
@@ -426,7 +426,7 @@ class SwarpInstance:
             raise FileNotFoundError("file {} already exists".format(file))
 
         if os.path.exists(file):
-            print(" === SWarp script: file {} already exists and will be re-written.".format(file))
+            sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(file))
 
         with open(file, 'w') as f:
             f.write(self.slurm_header())
@@ -444,35 +444,40 @@ class SwarpInstance:
         try:
             SwarpInstance.write_bbinfo(overide=overide)
         except FileNotFoundError:
-            print(" === SWarp script: file {} already exists and will be re-written.".format(BBINFO))
+            sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(BBINFO))
             pass
         try:
             SwarpInstance.write_launch(overide=overide)
         except FileNotFoundError:
-            print(" === SWarp script: file {} already exists and will be re-written.".format(WRAPPER))
+            sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
 
 class SwarpRun:
     def __init__(self, pipelines=[1]):
-        self.pipelines = pipelines
-        self.num_pipelines = len(pipelines)
+        self._pipelines = pipelines
+        self._num_pipelines = len(pipelines)
 
     def pipeline_to_str(self):
         res = ""
-        for i in range(self.num_pipelines):
-            if i > 0 and i < self.num_pipelines:
-                res += "{} ".format(str(self.pipelines[i]))
+        for i in range(self._num_pipelines):
+            if i > 0 and i < self._num_pipelines:
+                res += "{} ".format(str(self._pipelines[i]))
             else:
-                 res += "{}".format(str(self.pipelines[i]))
+                 res += "{}".format(str(self._pipelines[i]))
         return res
 
+    def pipelines(self):
+        return self._pipelines
+
+    def num_pipelines(self):
+        return self._num_pipelines
 
     def standalone(self, file, overide=False):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
         if os.path.exists(file):
-            print(" === Submit script: file {} already exists and will be re-written.".format(file))
+            sys.stderr.write(" === Submit script: file {} already exists and will be re-written.\n".format(file))
 
         with open(file, 'w') as f:
             f.write("#!/bin/bash\n")
@@ -499,25 +504,25 @@ class SwarpRun:
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
 if __name__ == '__main__':
-    print(" === Generate Slurm scripts for SWarp workflow")
+    sys.stderr.write(" === Generate Slurm scripts for SWarp workflow\n")
     today = time.localtime()
-    print(" === Executed: {}-{}-{} at {}:{}:{}.".format(today.tm_mday,
+    sys.stderr.write(" === Executed: {}-{}-{} at {}:{}:{}.\n".format(today.tm_mday,
                                                     today.tm_mon, 
                                                     today.tm_year, 
                                                     today.tm_hour, 
                                                     today.tm_min, 
                                                     today.tm_sec)
                                                 )
-    print(" === Machine: {}".format(platform.platform()))
+    sys.stderr.write(" === Machine: {}.\n".format(platform.platform()))
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if not os.path.exists("build"):
         os.mkdir("build")
-        print(" === Directory {}/ created".format("build"))
+        sys.stderr.write(" === Directory {}/ created.\n".format("build"))
 
     old_path = os.getcwd()
     os.chdir(old_path+"/build/")
-    print(" === Current directory {}".format(os.getcwd()))
+    sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
     resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=1, resample_dir='.')
     resample_config.write(overide=True) #Write out the resample.swarp
@@ -527,13 +532,14 @@ if __name__ == '__main__':
 
     sched_config = SwarpSchedulerConfig(num_nodes=1, num_cores=1)
     bb_config = SwarpBurstBufferConfig(
-                size_bb=50,
+                size_bb=1,
                 stage_input_dirs=[
-                    "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input", 
-                    "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config"],
+                    SWARP_DIR + "/input", 
+                    SWARP_DIR + "/config"],
                 stage_output_dirs=[
-                    "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/output"]
+                    SWARP_DIR + "/output"]
                 )
+
 
     instance1core = SwarpInstance(script_dir="build",
                                 resample_config=resample_config, 
@@ -544,10 +550,14 @@ if __name__ == '__main__':
     instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
     run1 = SwarpRun(pipelines=[1])
+    if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
+        sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
+        sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
+
     run1.standalone(file="submit.sh", overide=True)
     
     os.chdir(old_path)
-    print(" === Switch to initial directory {}".format(os.getcwd()))
+    sys.stderr.write(" === Switch to initial directory {}\n".format(os.getcwd()))
 
 
 
