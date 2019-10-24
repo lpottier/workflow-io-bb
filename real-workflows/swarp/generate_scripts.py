@@ -459,12 +459,11 @@ class SwarpRun:
         self._num_pipelines = len(pipelines)
 
     def pipeline_to_str(self):
-        res = ""
-        for i in range(self._num_pipelines):
-            if i > 0 and i < self._num_pipelines:
-                res += "{} ".format(str(self._pipelines[i]))
-            else:
-                 res += "{}".format(str(self._pipelines[i]))
+        res = "{}".format(str(self._pipelines[0]))
+        for i in range(1,self._num_pipelines-1):
+            res += " {}".format(str(self._pipelines[i]))
+        if self._num_pipelines > 1:
+            res += " {}".format(str(self._pipelines[-1]))
         return res
 
     def pipelines(self):
