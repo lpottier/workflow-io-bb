@@ -341,7 +341,7 @@ class SwarpInstance:
         return string
 
     def script_copy_resample(self):
-        string = "# Copy the stdout, stderr, SWarp XML files and IPM XML file\n"
+        string = "# Copy the stdout, stderr, SWarp XML files\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
         string += "done\n"
