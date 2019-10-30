@@ -1,0 +1,88 @@
++ SWARP_DIR=workflow-io-bb/real-workflows/swarp
++ LAUNCH=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/build/wrapper.sh
++ EXE=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp
++ export CONTROL_FILE=/global/cscratch1/sd/lpottier/control_file.txt
++ CONTROL_FILE=/global/cscratch1/sd/lpottier/control_file.txt
++ CORES_PER_PROCESS=1
++ CONFIG_DIR=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config
++ RESAMPLE_CONFIG=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/resample-orig.swarp
++ COMBINE_CONFIG=/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/combine-orig.swarp
++ FILE_PATTERN='PTF201111*'
++ IMAGE_PATTERN='PTF201111*.w.fits'
++ RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
++ echo 'NUM NODES 1'
+++ date --rfc-3339=ns
++ echo 'STAMP PREPARATION 2019-10-24 11:00:48.267020435-07:00'
+++ pwd
++ outdir=/global/u2/l/lpottier/workflow-io-bb/real-workflows/swarp/build/swarp-run-1N.8Fmy02/output
++ mkdir /global/u2/l/lpottier/workflow-io-bb/real-workflows/swarp/build/swarp-run-1N.8Fmy02/output
++ sh bbinfo.sh
++ rundir=/var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
++ mkdir /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ mkdir -p /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1
++ mkdir -p /global/u2/l/lpottier/workflow-io-bb/real-workflows/swarp/build/swarp-run-1N.8Fmy02/output/1
++ cd /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
++ du -sh /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
+++ date --rfc-3339=ns
++ echo 'STAMP RESAMPLE PREP 2019-10-24 11:00:49.338648095-07:00'
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ echo 'Launching resample process 1'
++ indir=/var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1
++ cd 1
++ cd ..
++ srun -N 1 -n 1 -c 1 -o output.resample.%j.1 -e error.resample.%j.1 pegasus-kickstart -z -l stat.resample.xml /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/build/wrapper.sh /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp -c /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/resample-orig.swarp /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111015420_2_o_32874_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025412_2_o_33288_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025428_2_o_33289_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111035427_2_o_33741_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111085228_2_o_34301_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111095206_2_o_34706_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111155050_2_o_35570_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111165032_2_o_35994_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111184953_2_o_36749_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111224851_2_o_37387_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111234857_2_o_37754_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111265053_2_o_38612_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111274755_2_o_38996_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111284696_2_o_39396_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111294943_2_o_39822_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111304878_2_o_40204_06.w.fits
+++ date --rfc-3339=ns
++ echo 'STAMP RESAMPLE 2019-10-24 11:00:49.350784894-07:00'
+++ date --rfc-3339=ns
++ echo 'STAMP RESAMPLE 2019-10-24 11:00:49.354930766-07:00'
+++ date +%s.%N
++ t1=1571940049.358875256
++ wait
+++ date +%s.%N
++ t2=1571940172.665332715
+++ echo '1571940172.665332715 - 1571940049.358875256'
+++ bc -l
++ tdiff=123.306457459
++ echo 'TIME RESAMPLE 123.306457459'
++ du -sh /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ cp -n -v 1/output.resample.25388855.1 1/error.resample.25388855.1 1/resample.xml 1/stat.resample.xml /global/u2/l/lpottier/workflow-io-bb/real-workflows/swarp/build/swarp-run-1N.8Fmy02/output/1
+++ date --rfc-3339=ns
++ echo 'STAMP COMBINE PREP 2019-10-24 11:02:52.824357083-07:00'
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ echo 'Launching coadd process 1'
++ cd 1
++ cd ..
++ srun -N 1 -n 1 -c 1 -o output.coadd.%j.1 -e error.coadd.%j.1 pegasus-kickstart -z -l stat.combine.xml /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/build/wrapper.sh /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp -c -c /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/combine-orig.swarp PTF201111015420_2_o_32874_06.w.resamp.fits PTF201111025412_2_o_33288_06.w.resamp.fits PTF201111025428_2_o_33289_06.w.resamp.fits PTF201111035427_2_o_33741_06.w.resamp.fits PTF201111085228_2_o_34301_06.w.resamp.fits PTF201111095206_2_o_34706_06.w.resamp.fits PTF201111155050_2_o_35570_06.w.resamp.fits PTF201111165032_2_o_35994_06.w.resamp.fits PTF201111184953_2_o_36749_06.w.resamp.fits PTF201111224851_2_o_37387_06.w.resamp.fits PTF201111234857_2_o_37754_06.w.resamp.fits PTF201111265053_2_o_38612_06.w.resamp.fits PTF201111274755_2_o_38996_06.w.resamp.fits PTF201111284696_2_o_39396_06.w.resamp.fits PTF201111294943_2_o_39822_06.w.resamp.fits PTF201111304878_2_o_40204_06.w.resamp.fits
+++ date --rfc-3339=ns
++ echo 'STAMP COMBINE 2019-10-24 11:02:52.833721065-07:00'
+++ date +%s.%N
++ t1=1571940172.840997201
++ wait
+srun: Job 25388855 step creation temporarily disabled, retrying
+srun: Step created for job 25388855
+srun: error: nid00691: task 0: Exited with exit code 1
+srun: Terminating job step 25388855.1
+++ date +%s.%N
++ t2=1571940191.202188711
+++ echo '1571940191.202188711 - 1571940172.840997201'
+++ bc -l
++ tdiff=18.361191510
++ echo 'TIME COMBINE 18.361191510'
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ ls -lh /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111015420_2_o_32874_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111015420_2_o_32874_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111025412_2_o_33288_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111025412_2_o_33288_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111025428_2_o_33289_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111025428_2_o_33289_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111035427_2_o_33741_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111035427_2_o_33741_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111085228_2_o_34301_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111085228_2_o_34301_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111095206_2_o_34706_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111095206_2_o_34706_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111155050_2_o_35570_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111155050_2_o_35570_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111165032_2_o_35994_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111165032_2_o_35994_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111184953_2_o_36749_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111184953_2_o_36749_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111224851_2_o_37387_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111224851_2_o_37387_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111234857_2_o_37754_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111234857_2_o_37754_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111265053_2_o_38612_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111265053_2_o_38612_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111274755_2_o_38996_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111274755_2_o_38996_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111284696_2_o_39396_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111284696_2_o_39396_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111294943_2_o_39822_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111294943_2_o_39822_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111304878_2_o_40204_06.w.resamp.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run/1/PTF201111304878_2_o_40204_06.w.resamp.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111015420_2_o_32874_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111015420_2_o_32874_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025412_2_o_33288_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025412_2_o_33288_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025428_2_o_33289_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111025428_2_o_33289_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111035427_2_o_33741_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111035427_2_o_33741_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111085228_2_o_34301_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111085228_2_o_34301_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111095206_2_o_34706_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111095206_2_o_34706_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111155050_2_o_35570_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111155050_2_o_35570_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111165032_2_o_35994_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111165032_2_o_35994_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111184953_2_o_36749_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111184953_2_o_36749_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111224851_2_o_37387_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111224851_2_o_37387_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111234857_2_o_37754_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111234857_2_o_37754_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111265053_2_o_38612_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111265053_2_o_38612_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111274755_2_o_38996_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111274755_2_o_38996_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111284696_2_o_39396_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111284696_2_o_39396_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111294943_2_o_39822_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111294943_2_o_39822_06.w.weight.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111304878_2_o_40204_06.w.fits /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input/1/PTF201111304878_2_o_40204_06.w.weight.fits
++ cp -n -v 1/output.coadd.25388855.1 1/output.resample.25388855.1 1/error.coadd.25388855.1 1/error.resample.25388855.1 1/resample.xml 1/stat.combine.xml 1/stat.resample.xml 1/swarp.xml /global/u2/l/lpottier/workflow-io-bb/real-workflows/swarp/build/swarp-run-1N.8Fmy02/output/1
++ du -sh /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//input /var/opt/cray/dws/mounts/batch/25388855_striped_scratch//swarp-run
+++ date --rfc-3339=ns
++ echo 'STAMP CLEANUP 2019-10-24 11:03:11.413612272-07:00'
+++ seq 1 1
++ for process in $(seq 1 ${SLURM_JOB_NUM_NODES})
++ rm -v 1/PTF201111015420_2_o_32874_06.w.resamp.fits 1/PTF201111015420_2_o_32874_06.w.resamp.weight.fits 1/PTF201111025412_2_o_33288_06.w.resamp.fits 1/PTF201111025412_2_o_33288_06.w.resamp.weight.fits 1/PTF201111025428_2_o_33289_06.w.resamp.fits 1/PTF201111025428_2_o_33289_06.w.resamp.weight.fits 1/PTF201111035427_2_o_33741_06.w.resamp.fits 1/PTF201111035427_2_o_33741_06.w.resamp.weight.fits 1/PTF201111085228_2_o_34301_06.w.resamp.fits 1/PTF201111085228_2_o_34301_06.w.resamp.weight.fits 1/PTF201111095206_2_o_34706_06.w.resamp.fits 1/PTF201111095206_2_o_34706_06.w.resamp.weight.fits 1/PTF201111155050_2_o_35570_06.w.resamp.fits 1/PTF201111155050_2_o_35570_06.w.resamp.weight.fits 1/PTF201111165032_2_o_35994_06.w.resamp.fits 1/PTF201111165032_2_o_35994_06.w.resamp.weight.fits 1/PTF201111184953_2_o_36749_06.w.resamp.fits 1/PTF201111184953_2_o_36749_06.w.resamp.weight.fits 1/PTF201111224851_2_o_37387_06.w.resamp.fits 1/PTF201111224851_2_o_37387_06.w.resamp.weight.fits 1/PTF201111234857_2_o_37754_06.w.resamp.fits 1/PTF201111234857_2_o_37754_06.w.resamp.weight.fits 1/PTF201111265053_2_o_38612_06.w.resamp.fits 1/PTF201111265053_2_o_38612_06.w.resamp.weight.fits 1/PTF201111274755_2_o_38996_06.w.resamp.fits 1/PTF201111274755_2_o_38996_06.w.resamp.weight.fits 1/PTF201111284696_2_o_39396_06.w.resamp.fits 1/PTF201111284696_2_o_39396_06.w.resamp.weight.fits 1/PTF201111294943_2_o_39822_06.w.resamp.fits 1/PTF201111294943_2_o_39822_06.w.resamp.weight.fits 1/PTF201111304878_2_o_40204_06.w.resamp.fits 1/PTF201111304878_2_o_40204_06.w.resamp.weight.fits
+++ date --rfc-3339=ns
++ echo 'STAMP DONE 2019-10-24 11:03:11.435750684-07:00'

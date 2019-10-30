@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-10-24T11:03:10.222-07:00" duration="0.311" interface="ipogif0" hostaddr="10.128.2.184" hostname="nid00691" pid="14937" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-10-24T11:03:10.279-07:00" duration="0.253" pid="14938">
+    <usage utime="0.013" stime="0.032" maxrss="7396" minflt="2035" majflt="1" nswap="0" inblock="1504" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="2213" nivcsw="5"/>
+    <status raw="256"><regular exitcode="1"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/build/wrapper.sh">23212F62696E2F626173680A65786563</file>
+      <statinfo mode="0100744" size="22" inode="144191974642126747" nlink="1" blksize="4194304" blocks="8" mtime="2019-10-23T18:01:38-07:00" atime="2019-10-24T11:00:58-07:00" ctime="2019-10-23T18:01:38-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp</arg>
+      <arg nr="2">-c</arg>
+      <arg nr="3">-c</arg>
+      <arg nr="4">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/combine-orig.swarp</arg>
+      <arg nr="5">PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="6">PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="7">PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="8">PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="9">PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="10">PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="11">PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="12">PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="13">PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="14">PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="15">PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="16">PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="17">PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="18">PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="19">PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="20">PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="14937" pid="14938" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1571940190.295331" stop="1571940190.531775" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="71928" rsspeak="2048" rchar="104183" wchar="8207" rbytes="770048" wbytes="0" cwbytes="0" syscr="122" syscw="25">
+      <file name="/dev/null" bread="0" nread="0" bwrite="68" nwrite="1" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.cDGqYM" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.6WN0h9" bread="0" nread="0" bwrite="282" nwrite="5" bseek="0" nseek="0" size="282"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libreadline.so.7.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="317432"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libc-2.26.so" bread="1664" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libtinfo.so.6.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="189288"/>
+      <file name="/global/u1/skel/read-only/.bashrc" bread="1334" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1334"/>
+      <file name="/global/u2/l/lpottier/.bashrc.ext" bread="1123" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1123"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/build/wrapper.sh" bread="44" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="22"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/sys/devices/system/cpu/online" bread="5" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4096"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/combine-orig.swarp" bread="4928" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4928"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run/1/swarp.xml" bread="0" nread="0" bwrite="7697" nwrite="1" bseek="0" nseek="0" size="7697"/>
+    </proc>
+    <proc ppid="14938" pid="14939" exe="/bin/bash" start="1571940190.305832" stop="1571940190.306486" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12140" rsspeak="2664" rchar="0" wchar="100" rbytes="0" wbytes="0" cwbytes="0" syscr="0" syscw="3">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.cDGqYM" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.6WN0h9" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[8212474]" bread="0" nread="0" bwrite="100" nwrite="3" bseek="0" nseek="0" size="0"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14938" pid="14940" exe="/bin/bash" start="1571940190.308283" stop="1571940190.349144" utime="0.000" stime="0.000" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="12140" rsspeak="1936" rchar="83933" wchar="60" rbytes="286720" wbytes="0" cwbytes="0" syscr="91" syscw="15">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.cDGqYM" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.6WN0h9" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[8195734]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14940" pid="14941" exe="/opt/cray/pe/modules/3.2.11.1/bin/modulecmd" start="1571940190.308786" stop="1571940190.348381" utime="0.000" stime="0.020" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="27460" rsspeak="7148" rchar="83933" wchar="60" rbytes="286720" wbytes="0" cwbytes="0" syscr="91" syscw="15">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="pipe:[8195734]" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.6WN0h9" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/usr/lib64/libtcl8.6.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1803600"/>
+      <file name="/lib64/libdl-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="18616"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/lib64/libz.so.1.2.11" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="92216"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/etc/nsswitch.conf" bread="1214" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1214"/>
+      <file name="/usr/lib64/libnss_slurm.so.2" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="237536"/>
+      <file name="/usr/lib64/libslurm.so.34.0.0" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9257744"/>
+      <file name="/var/spool/slurmd" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="260"/>
+      <file name="/usr/lib64/tcl/tcl8.6/init.tcl" bread="73245" nread="18" bwrite="0" nwrite="0" bseek="0" nseek="0" size="24415"/>
+      <file name="/opt/cray/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari/etc/.version" bread="71" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="63"/>
+      <file name="/opt/cray/ari/modulefiles/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari" bread="717" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="709"/>
+      <file name="/opt/cray/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari/etc/.version" bread="71" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="63"/>
+      <file name="/opt/cray/ari/modulefiles/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari" bread="537" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="529"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="25388855" lrmtype="slurm"/>
+  <cwd>/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run/1</cwd>
+  <usage utime="0.008" stime="0.038" maxrss="6680" minflt="417" majflt="1" nswap="0" inblock="8" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="1950" nivcsw="9"/>
+  <machine page-size="4096">
+    <stamp>2019-10-24T11:03:10.222-07:00</stamp>
+    <uname system="linux" nodename="nid00691" release="4.12.14-25.22_5.0.79-cray_ari_c" machine="x86_64">#1 SMP Fri Aug 9 16:20:09 UTC 2019 (d32c384)</uname>
+    <linux>
+      <ram total="131895024" free="128992716" shared="419312" buffer="3208"/>
+      <swap total="0" free="0"/>
+      <boot idle="47421535.360">2019-10-11T21:04:33.773-07:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.72" min5="6.53" min15="17.28"/>
+      <procs total="817" running="1" sleeping="816" vmsize="9623972" rss="390504"/>
+      <task total="890" running="1" sleeping="889"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-10-21T06:24:30-07:00" atime="2019-10-21T06:24:30-07:00" ctime="2019-10-21T06:24:30-07:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.cDGqYM" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="8328437" nlink="1" blksize="4096" blocks="0" mtime="2019-10-24T11:03:10-07:00" atime="2019-10-24T11:03:10-07:00" ctime="2019-10-24T11:03:10-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.6WN0h9" descriptor="4"/>
+    <statinfo mode="0100600" size="282" inode="8328438" nlink="1" blksize="4096" blocks="8" mtime="2019-10-24T11:03:10-07:00" atime="2019-10-24T11:03:10-07:00" ctime="2019-10-24T11:03:10-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+&gt; WARNING: -c not found, using internal defaults
+
+&#xe01b;[1M&gt; 
+&#xe01b;[1A----- SWarp 2.38.0 started on 2019-10-24 at 11:03:10 with 64 threads
+
+&#xe01b;[1M&gt; Examining input data ...
+&#xe01b;[1A
+&gt; *Error*: /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/combine-orig.swarp not found
+
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.iF5ABv" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="8328439" nlink="1" blksize="4096" blocks="0" mtime="2019-10-24T11:03:10-07:00" atime="2019-10-24T11:03:10-07:00" ctime="2019-10-24T11:03:10-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="kickstart">
+    <file name="/global/common/software/m2187/pegasus/pegasus-4.9.3dev/bin/pegasus-kickstart">7F454C46020101000000000000000000</file>
+    <statinfo mode="0100775" size="329728" inode="73274947" nlink="1" blksize="1024" blocks="644" mtime="2019-08-09T15:25:13-07:00" atime="2019-10-24T11:00:58-07:00" ctime="2019-10-01T16:33:44-07:00" uid="74935" user="papajim" gid="62982" group="m2187"/>
+  </statcall>
+  <statcall error="0" id="logfile">
+    <file name="/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run/1/stat.combine.xml">3C3F786D6C2076657273696F6E3D2231</file>
+    <statinfo mode="0100640" size="8192" inode="29403392" nlink="1" blksize="8388608" blocks="16" mtime="2019-10-24T11:03:10-07:00" atime="2019-10-24T11:03:10-07:00" ctime="2019-10-24T11:03:10-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <environment>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_interlagos">160</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_x86_64">8.6</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_GNU_x86_skylake">8.2</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_haswell">86</env>
+    <env key="CRAYPAT_ALPS_COMPONENT">/opt/cray/pe/perftools/7.0.6/sbin/pat_alps</env>
+    <env key="PE_LIBSCI_DEFAULT_VOLATILE_PRGENV">CRAY GNU INTEL</env>
+    <env key="LS_COLORS">no=00:fi=00:di=01;34:ln=00;36:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=41;33;01:ex=00;32:*.cmd=00;32:*.exe=01;32:*.com=01;32:*.bat=01;32:*.btm=01;32:*.dll=01;32:*.tar=00;31:*.tbz=00;31:*.tgz=00;31:*.rpm=00;31:*.deb=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.lzma=00;31:*.zip=00;31:*.zoo=00;31:*.z=00;31:*.Z=00;31:*.gz=00;31:*.bz2=00;31:*.tb2=00;31:*.tz2=00;31:*.tbz2=00;31:*.xz=00;31:*.avi=01;35:*.bmp=01;35:*.dl=01;35:*.fli=01;35:*.gif=01;35:*.gl=01;35:*.jpg=01;35:*.jpeg=01;35:*.mkv=01;35:*.mng=01;35:*.mov=01;35:*.mp4=01;35:*.mpg=01;35:*.pcx=01;35:*.pbm=01;35:*.pgm=01;35:*.png=01;35:*.ppm=01;35:*.svg=01;35:*.tga=01;35:*.tif=01;35:*.webm=01;35:*.webp=01;35:*.wmv=01;35:*.xbm=01;35:*.xcf=01;35:*.xpm=01;35:*.aiff=00;32:*.ape=00;32:*.au=00;32:*.flac=00;32:*.m4a=00;32:*.mid=00;32:*.mp3=00;32:*.mpc=00;32:*.ogg=00;32:*.voc=00;32:*.wav=00;32:*.wma=00;32:*.wv=00;32:</env>
+    <env key="LD_LIBRARY_PATH">/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/lib64:/opt/intel/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/lib/intel64:/usr/syscom/nsg/lib</env>
+    <env key="CSHRCREAD">true</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_GNU_sandybridge">8.2</env>
+    <env key="HOSTTYPE">x86_64</env>
+    <env key="ALPS_LLI_STATUS_OFFSET">1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_GNU_x86_skylake">8.2</env>
+    <env key="ATP_IGNORE_SIGTERM">1</env>
+    <env key="XTPE_NETWORK_TARGET">aries</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_interlagos">160</env>
+    <env key="CRAY_UDREG_POST_LINK_OPTS">-L/opt/cray/udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari/lib64</env>
+    <env key="PE_HUGEPAGES_TEXT_SEGMENT">0x20000000</env>
+    <env key="SLURM_NODEID">0</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_share">share</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_ivybridge">ivybridge</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_x86_skylake">8.6</env>
+    <env key="SLURM_TASK_PID">14937</env>
+    <env key="PKG_CONFIG_PATH_DEFAULT">/opt/cray/pe/papi/5.6.0.6/lib64/pkgconfig</env>
+    <env key="PRGENVMODULES">PrgEnv-cray:PrgEnv-gnu:PrgEnv-intel:PrgEnv-pgi</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_sandybridge">16.0</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPS_GNU_x86_64">82</env>
+    <env key="PE_LIBSCI_OMP_REQUIRES"></env>
+    <env key="SSH_CONNECTION">128.9.44.53 33266 128.55.209.23 22</env>
+    <env key="PE_MPICH_NV_LIBS_nvidia35">-lcudart</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_x86_64">86</env>
+    <env key="LESSCLOSE">lessclose.sh %s %s</env>
+    <env key="PE_SMA_DEFAULT_DIR_PGI_DEFAULT64">64</env>
+    <env key="CRAY_LD_LIBRARY_PATH">/opt/cray/pe/perftools/7.0.6/lib64:/opt/cray/pe/mpt/7.7.6/gni/mpich-cray/16.0/lib:/opt/cray/pe/mpt/7.7.6/gni/mpich-intel/16.0/lib:/opt/cray/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari/lib64:/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/lib64:/opt/cray/xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari/lib64:/opt/cray/dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari/lib64:/opt/cray/pe/pmi/5.0.14/lib64:/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/lib64:/opt/cray/udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari/lib64:/opt/cray/pe/libsci/19.02.1/INTEL/16.0/x86_64/lib</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_haswell">86</env>
+    <env key="PE_MPICH_DEFAULT_DIR_CRAY_DEFAULT64">64</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_skylake">86</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_sandybridge">8.6</env>
+    <env key="PE_PAPI_DEFAULT_ACCEL_FAMILY_LIBS_nvidia">,-lcupti,-lcudart,-lcuda</env>
+    <env key="SLURM_PRIO_PROCESS">0</env>
+    <env key="PE_TRILINOS_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/trilinos/12.12.1.1/@PRGENV@/@PE_TRILINOS_DEFAULT_GENCOMPS@/@PE_TRILINOS_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="XKEYSYMDB">/usr/X11R6/lib/X11/XKeysymDB</env>
+    <env key="PAT_BUILD_OPTIONS">-Dlink-instr=--copy-dt-needed-entries</env>
+    <env key="PE_ENV">INTEL</env>
+    <env key="CRAYPAT_COMPILER_OPTIONS">1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_x86_skylake">160</env>
+    <env key="CRAY_MPICH2_DIR">/opt/cray/pe/mpt/7.7.6/gni/mpich-intel/16.0</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPS_GNU_x86_64">81 71</env>
+    <env key="CRAYPAT_LD_LIBRARY_PATH">/opt/cray/pe/gcc-libs:/opt/cray/gcc-libs:/opt/cray/pe/perftools/7.0.6/lib64</env>
+    <env key="PE_PETSC_DEFAULT_VOLATILE_PRGENV">CRAY CRAY64 GNU GNU64 INTEL INTEL64</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_GNU_interlagos">82</env>
+    <env key="PE_PRODUCT_LIST">CRAYPE_HASWELL:CRAY_RCA:CRAY_ALPS:DVS:CRAY_XPMEM:CRAY_DMAPP:CRAY_PMI:CRAY_UGNI:CRAY_UDREG:CRAY_LIBSCI:CRAYPE:INTEL:HUGETLB2M:PERFTOOLS:CRAYPAT</env>
+    <env key="CRAYPAT_ROOT">/opt/cray/pe/perftools/7.0.6</env>
+    <env key="PE_TPSL_64_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH:PE_LIBSCI</env>
+    <env key="CRAY_DMAPP_INCLUDE_OPTS">-I/opt/cray/dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari/include -I/opt/cray/gni-headers/5.0.12.0-7.0.0.1_7.46__g3b1768f.ari/include</env>
+    <env key="LIBGL_ALWAYS_INDIRECT">1</env>
+    <env key="HUGETLB_DEFAULT_PAGE_SIZE">2M</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_GNU_x86_64">8.2</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_skylake">8.6</env>
+    <env key="PE_LIBSCI_MODULE_NAME">cray-libsci/19.02.1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_GNU_x86_skylake">82</env>
+    <env key="PE_LIBSCI_GENCOMPILERS_CRAY_x86_64">8.6</env>
+    <env key="TZ">US/Pacific</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_GNU_interlagos">82</env>
+    <env key="SLURM_SUBMIT_DIR">/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run/1</env>
+    <env key="PE_MPICH_CXX_PKGCONFIG_LIBS">mpichcxx</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_x86_skylake">16.0</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_GNU_haswell">82</env>
+    <env key="WINDOWMANAGER">/usr/bin/gnome</env>
+    <env key="LESS">-M -I -R</env>
+    <env key="PE_PETSC_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/petsc/3.9.3.0/complex/@PRGENV@/@PE_PETSC_DEFAULT_GENCOMPS@/@PE_PETSC_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="JAVA_ROOT">/usr/lib64/jvm/java</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_mic_knl">160</env>
+    <env key="HOSTNAME">nid00691</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_interlagos">8.6</env>
+    <env key="SLURM_JOB_DEPENDENCY">singleton</env>
+    <env key="OLDPWD">/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_GNU_haswell">82</env>
+    <env key="CSHEDIT">emacs</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_GNU_haswell">8.2</env>
+    <env key="PAT_BUILD_PAPI_BASEDIR">/opt/cray/pe/papi/5.6.0.6</env>
+    <env key="CRAY_RCA_INCLUDE_OPTS">-I/opt/cray/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari/include -I/opt/cray/krca/2.2.5-7.0.0.1_4.42__g92086a7.ari/include -I/opt/cray-hss-devel/9.0.0/include</env>
+    <env key="ENVIRONMENT">BATCH</env>
+    <env key="PE_TPSL_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/tpsl/18.06.1/@PRGENV@/@PE_TPSL_DEFAULT_GENCOMPS@/@PE_TPSL_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="GPG_TTY">not a tty</env>
+    <env key="LESS_ADVANCED_PREPROCESSOR">no</env>
+    <env key="PE_MPICH_DIR_CRAY_DEFAULT64">64</env>
+    <env key="PE_MPICH_GENCOMPS_CRAY">86</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_x86_64">x86_64</env>
+    <env key="COLORTERM">1</env>
+    <env key="ZAP_LIBPATH">/opt/ovis/lib64/ovis-lib</env>
+    <env key="DVS_MAXNODES">1__</env>
+    <env key="FPATH">:/opt/cray/pe/modules/3.2.11.1/init/sh_funcs/no_redirect:/opt/cray/pe/modules/3.2.11.1/init/sh_funcs/no_redirect:/opt/cray/pe/modules/3.2.11.1/init/sh_funcs/no_redirect</env>
+    <env key="SLURM_SPANK_NERSC_ZONESORT_INTERVAL">0</env>
+    <env key="PE_TPSL_64_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/tpsl/18.06.1/@PRGENV@64/@PE_TPSL_64_DEFAULT_GENCOMPS@/@PE_TPSL_64_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_GNU_sandybridge">82 71</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_GNU_interlagos">82 71</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_GNU_interlagos">8.2</env>
+    <env key="PE_NETCDF_HDF5PARALLEL_DEFAULT_REQUIRED_PRODUCTS">PE_HDF5_PARALLEL</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_x86_64">8.6</env>
+    <env key="JAVA_HOME">/usr/lib64/jvm/java</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_x86_skylake">x86_skylake</env>
+    <env key="APP2_STATE">7.0.6</env>
+    <env key="SLURM_PROCID">0</env>
+    <env key="PE_MPICH_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/mpt/7.7.6/gni/mpich-@PRGENV@@PE_MPICH_DEFAULT_DIR_DEFAULT64@/@PE_MPICH_DEFAULT_GENCOMPS@/lib/pkgconfig</env>
+    <env key="SLURM_JOB_GID">79874</env>
+    <env key="MACHTYPE">x86_64-suse-linux</env>
+    <env key="PE_HUGEPAGES_PAGE_SIZE">0x20000000</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_broadwell">broadwell</env>
+    <env key="ALTD_WORKDIR">/global/cscratch1/altd/logs</env>
+    <env key="PE_PAPI_DEFAULT_ACCEL_LIBS"></env>
+    <env key="SLURMD_NODENAME">nid00691</env>
+    <env key="PE_SMA_DEFAULT_COMPFLAG"></env>
+    <env key="PE_PKGCONFIG_PRODUCTS">PE_HUGEPAGES:PE_MPICH:PE_LIBSCI:OS_DATAWARP</env>
+    <env key="PE_CRAY_DEFAULT_FIXED_PKGCONFIG_PATH">/opt/cray/pe/parallel-netcdf/1.8.1.4/CRAY/8.6/lib/pkgconfig:/opt/cray/pe/netcdf-hdf5parallel/4.6.1.3/CRAY/8.6/lib/pkgconfig:/opt/cray/pe/netcdf/4.6.1.3/CRAY/8.6/lib/pkgconfig:/opt/cray/pe/hdf5-parallel/1.10.2.0/CRAY/8.6/lib/pkgconfig:/opt/cray/pe/hdf5/1.10.2.0/CRAY/8.6/lib/pkgconfig:/opt/cray/pe/ga/5.3.0.10/CRAY/8.6/lib/pkgconfig</env>
+    <env key="CRAY_MPICH_BASEDIR">/opt/cray/pe/mpt/7.7.6/gni</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_x86_skylake">86</env>
+    <env key="HUGETLB_VERBOSE">0</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_sandybridge">160</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_mic_knl">8.6</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_sandybridge">160</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_mic_knl">160</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_skylake">160</env>
+    <env key="PE_LIBSCI_GENCOMPILERS_GNU_x86_64">8.1 7.1</env>
+    <env key="HUGETLB_MORECORE_HEAPBASE">10000000000</env>
+    <env key="DVS_VERSION">0.9.0</env>
+    <env key="MINICOM">-c on</env>
+    <env key="SLURM_TASKS_PER_NODE">1</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_mic_knl">16.0</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_GNU_skylake">8.2 7.1</env>
+    <env key="PE_MPICH_PKGCONFIG_VARIABLES">PE_MPICH_NV_LIBS_@accelerator@:PE_MPICH_ALTERNATE_LIBS_@multithreaded@:PE_MPICH_ALTERNATE_LIBS_@dpm@</env>
+    <env key="PE_MPICH_PKGCONFIG_LIBS">mpich</env>
+    <env key="PE_PARALLEL_NETCDF_DEFAULT_FIXED_PRGENV">GNU CRAY INTEL</env>
+    <env key="QT_SYSTEM_DIR">/usr/share/desktop-data</env>
+    <env key="OSTYPE">linux</env>
+    <env key="ATP_MRNET_COMM_PATH">/opt/cray/pe/atp/2.1.3/libexec/atp_mrnet_commnode_wrapper</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_GNU_interlagos">8.2</env>
+    <env key="PE_NETCDF_DEFAULT_REQUIRED_PRODUCTS">PE_HDF5</env>
+    <env key="PE_MPICH_NV_LIBS"></env>
+    <env key="PE_FFTW2_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH</env>
+    <env key="CRAY_PRGENVINTEL">loaded</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_GNU_x86_64">82 71</env>
+    <env key="PE_TPSL_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH:PE_LIBSCI</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_GNU_sandybridge">82</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_interlagos">86</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_mic_knl">86</env>
+    <env key="SLURM_NNODES">1</env>
+    <env key="USER">lpottier</env>
+    <env key="PAGER">less</env>
+    <env key="MODULE_VERSION">3.2.11.1</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_abudhabi">abudhabi</env>
+    <env key="CRAY_ALPS_POST_LINK_OPTS">-L/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/lib64</env>
+    <env key="MAN_POSIXLY_CORRECT">1</env>
+    <env key="SHMEM_ABORT_ON_ERROR">1</env>
+    <env key="PE_PKG_CONFIG_PATH">/opt/cray/pe/cti/1.0.9.1/lib/pkgconfig:/opt/cray/pe/cti/1.0.7/lib/pkgconfig</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_mic_knl">8.6</env>
+    <env key="PE_MPICH_DEFAULT_GENCOMPILERS_CRAY">8.6</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_interlagos">16.0</env>
+    <env key="PE_LIBSCI_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH</env>
+    <env key="DVS_INCLUDE_OPTS">-I/opt/cray/dvs/2.11_2.2.140-7.0.0.1_13.5__gdf9ebba2/include</env>
+    <env key="TOOLMODULES">apprentice:apprentice2:atp:chapel:cray-lgdb:cray-snplauncher:craypat:craypkg-gen:ddt:gdb:iobuf:papi:perftools:perftools-lite:stat:totalview:xt-craypat:xt-lgdb:xt-papi:xt-totalview</env>
+    <env key="CRAY_CPU_TARGET">haswell</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_GNU_x86_64">8.2</env>
+    <env key="PE_LIBSCI_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="PE_INTEL_DEFAULT_FIXED_PKGCONFIG_PATH">/opt/cray/pe/parallel-netcdf/1.8.1.4/INTEL/18.0/lib/pkgconfig:/opt/cray/pe/netcdf-hdf5parallel/4.6.1.3/INTEL/16.0/lib/pkgconfig:/opt/cray/pe/netcdf/4.6.1.3/INTEL/16.0/lib/pkgconfig:/opt/cray/pe/mpt/7.7.6/gni/mpich-INTEL/16.0/lib/pkgconfig:/opt/cray/pe/hdf5-parallel/1.10.2.0/INTEL/16.0/lib/pkgconfig:/opt/cray/pe/hdf5/1.10.2.0/INTEL/16.0/lib/pkgconfig:/opt/cray/pe/ga/5.3.0.10/INTEL/18.0/lib/pkgconfig</env>
+    <env key="PE_GA_DEFAULT_GENCOMPS_GNU">82 73</env>
+    <env key="PE_SMA_DEFAULT_PKGCONFIG_VARIABLES">PE_SMA_COMPFLAG_@prgenv@</env>
+    <env key="PE_LIBSCI_VOLATILE_PRGENV">CRAY GNU INTEL</env>
+    <env key="KSH_AUTOLOAD">1</env>
+    <env key="PKGCONFIG_ENABLED">1</env>
+    <env key="CRAY_UGNI_POST_LINK_OPTS">-L/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/lib64</env>
+    <env key="PE_MPICH_GENCOMPS_GNU">82 71</env>
+    <env key="MORE">-sl</env>
+    <env key="PE_PAPI_DEFAULT_ACCEL_LIBS_nvidia35">,-lcupti,-lcudart,-lcuda</env>
+    <env key="PE_FORTRAN_PKGCONFIG_LIBS">mpichf90</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="PE_MPICH_GENCOMPILERS_CRAY">8.6</env>
+    <env key="INTEL_MAJOR_VERSION">19</env>
+    <env key="CRAY_LIBSCI_BASE_DIR">/opt/cray/pe/libsci/19.02.1</env>
+    <env key="PE_SMA_DEFAULT_DIR_CRAY_DEFAULT64">64</env>
+    <env key="PE_NETCDF_HDF5PARALLEL_DEFAULT_FIXED_PRGENV">GNU CRAY INTEL</env>
+    <env key="PWD">/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/swarp-run/1</env>
+    <env key="TARGETMODULES">craype-abudhabi:craype-abudhabi-cu:craype-accel-host:craype-accel-nvidia20:craype-accel-nvidia30:craype-accel-nvidia35:craype-barcelona:craype-broadwell:craype-haswell:craype-hugepages128K:craype-hugepages128M:craype-hugepages16M:craype-hugepages256M:craype-hugepages2M:craype-hugepages32M:craype-hugepages4M:craype-hugepages512K:craype-hugepages512M:craype-hugepages64M:craype-hugepages8M:craype-intel-knc:craype-interlagos:craype-interlagos-cu:craype-istanbul:craype-ivybridge:craype-mc12:craype-mc8:craype-mic-knl:craype-network-aries:craype-network-gemini:craype-network-infiniband:craype-network-none:craype-network-seastar:craype-sandybridge:craype-shanghai:craype-target-compute_node:craype-target-local_host:craype-target-native:craype-xeon:xtpe-barcelona:xtpe-interlagos:xtpe-interlagos-cu:xtpe-istanbul:xtpe-mc12:xtpe-mc8:xtpe-network-gemini:xtpe-network-seastar:xtpe-shanghai:xtpe-target-native:xtpe-xeon</env>
+    <env key="PE_MPICH_NV_LIBS_nvidia20">-lcudart</env>
+    <env key="SLURM_JOB_NODELIST">nid00691</env>
+    <env key="HOME">/global/homes/l/lpottier</env>
+    <env key="SLURM_CLUSTER_NAME">cori</env>
+    <env key="PE_HUGEPAGES_PKGCONFIG_VARIABLES">PE_HUGEPAGES_TEXT_SEGMENT:PE_HUGEPAGES_PAGE_SIZE</env>
+    <env key="CRAY_PMI_INCLUDE_OPTS">-I/opt/cray/pe/pmi/5.0.14/include</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_haswell">8.6</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_sandybridge">16.0</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_GNU_haswell">8.2</env>
+    <env key="PELOCAL_PRGENV">true</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_GNU_sandybridge">82</env>
+    <env key="NERSC_HOST">cori</env>
+    <env key="craype_already_loaded">0</env>
+    <env key="PE_LIBSCI_REQUIRED_PRODUCTS">PE_MPICH</env>
+    <env key="ATP_HOME">/opt/cray/pe/atp/2.1.3</env>
+    <env key="PEGASUS_HOME">/global/common/software/m2187/pegasus/development</env>
+    <env key="intel_already_loaded">0</env>
+    <env key="SLURM_NODELIST">nid00691</env>
+    <env key="HOST">cori01</env>
+    <env key="SSH_CLIENT">128.9.44.53 33266 22</env>
+    <env key="ALT_LINKER">/global/common/cori/software/altd/2.0/bin/ld</env>
+    <env key="ALTD_VERBOSE">0</env>
+    <env key="PE_PETSC_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH:PE_LIBSCI:PE_HDF5_PARALLEL:PE_TPSL</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_haswell">16.0</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_x86_64">8.6</env>
+    <env key="XNLSPATH">/usr/share/X11/nls</env>
+    <env key="PE_MPICH_FORTRAN_PKGCONFIG_LIBS">mpichf90</env>
+    <env key="CPATH">/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/include</env>
+    <env key="CHPL_CG_CPP_LINES">1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="PE_LIBSCI_PKGCONFIG_LIBS">libsci_mpi:libsci</env>
+    <env key="HUGETLB_MORECORE">yes</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_sandybridge">86</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_haswell">16.0</env>
+    <env key="PE_MPICH_DEFAULT_GENCOMPS_CRAY">86</env>
+    <env key="SDK_HOME">/usr/lib64/jvm/java</env>
+    <env key="PE_LIBSCI_OMP_REQUIRES_openmp">_mp</env>
+    <env key="SLURM_JOB_CPUS_PER_NODE">64</env>
+    <env key="BASH_ENV">/global/homes/l/lpottier/.bashrc</env>
+    <env key="XDG_DATA_DIRS">/usr/share</env>
+    <env key="PE_CXX_PKGCONFIG_LIBS">mpichcxx</env>
+    <env key="SLURM_TOPOLOGY_ADDR">s34.s11.nid00691</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPS_CRAY_x86_64">87</env>
+    <env key="INTEL_MINOR_VERSION">19</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_haswell">160</env>
+    <env key="CRAY_RCA_POST_LINK_OPTS">-L/opt/cray/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari/lib64 -lrca</env>
+    <env key="PE_MPICH_MODULE_NAME">cray-mpich</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_sandybridge">86</env>
+    <env key="NLSPATH">/opt/intel/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64/locale/%l_%t/%N:/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/lib/intel64/locale/%l_%t/%N</env>
+    <env key="CRAY_LIBSCI_DIR">/opt/cray/pe/libsci/19.02.1</env>
+    <env key="LIBGL_DEBUG">quiet</env>
+    <env key="SLURM_WORKING_CLUSTER">cori:ctl1:6817:8704:108</env>
+    <env key="PE_LIBSCI_DEFAULT_OMP_REQUIRES"></env>
+    <env key="PE_LIBSCI_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/libsci/19.02.1/@PRGENV@/@PE_LIBSCI_GENCOMPS@/@PE_LIBSCI_TARGET@/lib/pkgconfig</env>
+    <env key="PE_MPICH_TARGET_VAR_nvidia35">-lcudart</env>
+    <env key="JDK_HOME">/usr/lib64/jvm/java</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_GNU_sandybridge">8.2</env>
+    <env key="LIBSCI_VERSION">19.02.1</env>
+    <env key="SLURM_JOB_NAME">swarp-scaling</env>
+    <env key="CRAY_UDREG_INCLUDE_OPTS">-I/opt/cray/udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari/include</env>
+    <env key="PROFILEREAD">true</env>
+    <env key="TMPDIR">/tmp</env>
+    <env key="PE_TRILINOS_DEFAULT_VOLATILE_PRGENV">CRAY GNU INTEL</env>
+    <env key="LIBRARY_PATH">/opt/intel/compilers_and_libraries_2019.3.199/linux/compiler/lib/intel64:/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl/lib/intel64</env>
+    <env key="PERFTOOLS_VERSION">7.0.6</env>
+    <env key="PE_MPICH_DEFAULT_GENCOMPILERS_GNU">8.2 7.1</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPILERS_CRAY_x86_64">8.7</env>
+    <env key="PE_LIBSCI_DEFAULT_OMP_REQUIRES_openmp">_mp</env>
+    <env key="PE_PKGCONFIG_LIBS">craype-hugepages:mpich:AtpSigHandler:cray-rca:libsci_mpi:libsci</env>
+    <env key="SLURM_JOBID">25388855</env>
+    <env key="RCLOCAL_PRGENV">true</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_GNU_x86_skylake">82</env>
+    <env key="USERMODULES">PrgEnv-cray:PrgEnv-gnu:PrgEnv-intel:PrgEnv-pathscale:PrgEnv-pgi:acml:alps:apprentice:apprentice2:atp:blcr:cce:chapel:cray-ccdb:cray-fftw:cray-ga:cray-hdf5:cray-hdf5-parallel:cray-lgdb:cray-libsci:cray-libsci_acc:cray-mpich:cray-mpich-compat:cray-mpich2:cray-netcdf:cray-netcdf-hdf5parallel:cray-parallel-netcdf:cray-petsc:cray-petsc-complex:cray-shmem:cray-snplauncher:cray-tpsl:cray-trilinos:craypat:craype:craypkg-gen:cudatoolkit:ddt:fftw:ga:gcc:hdf5:hdf5-parallel:intel:iobuf:java:lgdb:libfast:libsci_acc:mpich1:netcdf:netcdf-hdf5parallel:netcdf-nofsync:netcdf-nofsync-hdf5parallel:ntk:onesided:papi:parallel-netcdf:pathscale:perftools:perftools-lite:petsc:petsc-complex:pgi:pmi:stat:totalview:tpsl:trilinos:xt-asyncpe:xt-craypat:xt-lgdb:xt-libsci:xt-mpich2:xt-mpt:xt-papi:xt-shmem:xt-totalview</env>
+    <env key="PAT_REPORT_PRUNE_NAME">_cray$mt_execute_,_cray$mt_start_,__cray_hwpc_,f_cray_hwpc_,cstart,__pat_,pat_region_,PAT_,OMP.slave_loop,slave_entry,_new_slave_entry,_thread_pool_slave_entry,THREAD_POOL_join,__libc_start_main,_start,__start,start_thread,__wrap_,UPC_ADIO_,_upc_,upc_,__caf_,__pgas_,syscall,__device_stub</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_interlagos">86</env>
+    <env key="LDMSD_PLUGIN_LIBPATH">/opt/ovis/lib64/ovis-ldms</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_GNU_sandybridge">8.2 7.1</env>
+    <env key="PE_MPICH_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/mpt/7.7.6/gni/mpich-@PRGENV@@PE_MPICH_DIR_DEFAULT64@/@PE_MPICH_GENCOMPS@/lib/pkgconfig</env>
+    <env key="LOADEDMODULES">modules/3.2.11.1:nsg/1.2.0:intel/19.0.3.199:craype-network-aries:craype/2.5.18:cray-libsci/19.02.1:udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari:ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari:pmi/5.0.14:dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari:gni-headers/5.0.12.0-7.0.0.1_7.46__g3b1768f.ari:xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari:job/2.2.4-7.0.0.1_3.36__g36b56f4.ari:dvs/2.11_2.2.140-7.0.0.1_13.5__gdf9ebba2:alps/6.6.50-7.0.0.1_3.44__g962f7108.ari:rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari:atp/2.1.3:PrgEnv-intel/6.0.5:craype-haswell:cray-mpich/7.7.6:craype-hugepages2M:datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari:dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari:altd/2.0:Base-opts/2.4.139-7.0.0.1_4.26__gbb799dd.ari:perftools-base/7.0.6:perftools</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="CRAYPE_NETWORK_TARGET">aries</env>
+    <env key="PE_GA_DEFAULT_FIXED_PRGENV">CRAY INTEL</env>
+    <env key="CRAY_ALPS_INCLUDE_OPTS">-I/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/include</env>
+    <env key="CRAY_UGNI_INCLUDE_OPTS">-I/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/include</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_haswell">160</env>
+    <env key="SCRATCH">/global/cscratch1/sd/lpottier</env>
+    <env key="RCLOCAL_BASEOPTS">true</env>
+    <env key="LIBRARYMODULES">acml:alps:cray-dwarf:cray-fftw:cray-ga:cray-hdf5:cray-hdf5-parallel:cray-libsci:cray-libsci_acc:cray-mpich:cray-mpich-abi:cray-mpich2:cray-netcdf:cray-netcdf-hdf5parallel:cray-parallel-netcdf:cray-petsc:cray-petsc-complex:cray-shmem:cray-tpsl:cray-trilinos:cudatoolkit:fftw:ga:hdf5:hdf5-parallel:iobuf:libfast:netcdf:netcdf-hdf5parallel:ntk:onesided:papi:petsc:petsc-complex:pmi:tpsl:trilinos:xt-libsci:xt-mpich2:xt-mpt:xt-papi</env>
+    <env key="INTEL_LICENSE_FILE">28518@crayintel.licenses.nersc.gov:28518@intel.licenses.nersc.gov</env>
+    <env key="PE_MPICH_ALTERNATE_LIBS_dpm">_dpm</env>
+    <env key="SLURM_JOB_QOS">debug_hsw</env>
+    <env key="SLURM_TOPOLOGY_ADDR_PATTERN">switch.switch.node</env>
+    <env key="PE_FFTW_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/fftw/3.3.8.2/@PE_FFTW_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="SSH_TTY">/dev/pts/168</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_x86_64">86</env>
+    <env key="PE_PAPI_DEFAULT_PKGCONFIG_VARIABLES">PE_PAPI_ACCEL_LIBS_@accelerator@ PE_PAPI_ACCEL_FAMILY_LIBS_@accelerator_family@</env>
+    <env key="MPICH_ABORT_ON_ERROR">1</env>
+    <env key="ATP_POST_LINK_OPTS">-Wl,-L/opt/cray/pe/atp/2.1.3/libApp/ </env>
+    <env key="PE_LIBSCI_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPILERS_INTEL_x86_64">16.0</env>
+    <env key="FROM_HEADER"></env>
+    <env key="CRAY_MPICH_ROOTDIR">/opt/cray/pe/mpt/7.7.6</env>
+    <env key="ALPS_APP_PE">0</env>
+    <env key="MAIL">/var/mail/lpottier</env>
+    <env key="PE_HDF5_PARALLEL_DEFAULT_FIXED_PRGENV">GNU CRAY INTEL</env>
+    <env key="PE_MPICH_VOLATILE_PRGENV">GNU CRAY</env>
+    <env key="PE_INTEL_FIXED_PKGCONFIG_PATH">/opt/cray/pe/mpt/7.7.6/gni/mpich-INTEL/16.0/lib/pkgconfig</env>
+    <env key="SLURM_CPUS_ON_NODE">64</env>
+    <env key="DW_JOB_STRIPED">/var/opt/cray/dws/mounts/batch/25388855_striped_scratch/</env>
+    <env key="PE_HDF5_DEFAULT_FIXED_PRGENV">GNU CRAY INTEL</env>
+    <env key="PE_MPICH_ALTERNATE_LIBS_multithreaded">_mt</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_INTEL_interlagos">16.0</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_sandybridge">160</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_interlagos">86</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_GNU_x86_64">82</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_sandybridge">8.6</env>
+    <env key="SLURM_JOB_NUM_NODES">1</env>
+    <env key="CONTROL_FILE">/global/cscratch1/sd/lpottier/control_file.txt</env>
+    <env key="SLURM_MEM_PER_NODE">120832</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_haswell">16.0</env>
+    <env key="PE_GA_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/ga/5.3.0.10/@PRGENV@/@PE_GA_DEFAULT_GENCOMPS@/lib/pkgconfig</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_haswell">haswell</env>
+    <env key="LESSKEY">/etc/lesskey.bin</env>
+    <env key="CRAY_SITE_LIST_DIR">/etc/opt/cray/pe/modules</env>
+    <env key="TERM">xterm-256color</env>
+    <env key="SHELL">/bin/bash</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_sandybridge">8.6</env>
+    <env key="CSCRATCH">/global/cscratch1/sd/lpottier</env>
+    <env key="PE_MPICH_FIXED_PRGENV">INTEL</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPS_CRAY_x86_64">86</env>
+    <env key="PE_FFTW_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH</env>
+    <env key="OS_DATAWARP_MODULE_NAME">datawarp</env>
+    <env key="OS_DATAWARP_PKGCONFIG_LIBS">cray-datawarp</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_GNU_x86_64">82</env>
+    <env key="PMI_NO_FORK">1</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_mic_knl">8.6</env>
+    <env key="SLURM_JOB_UID">79874</env>
+    <env key="CRAY_LIBSCI_VERSION">19.02.1</env>
+    <env key="ALTD_PATH">/global/common/cori/software/altd/2.0</env>
+    <env key="PE_TPSL_DEFAULT_VOLATILE_PRGENV">CRAY CRAY64 GNU GNU64 INTEL INTEL64</env>
+    <env key="LS_OPTIONS">-N --color=none -T 0</env>
+    <env key="XCURSOR_THEME">DMZ</env>
+    <env key="SLURM_JOB_PARTITION">debug</env>
+    <env key="PE_MPICH_DEFAULT_GENCOMPS_GNU">82 71</env>
+    <env key="PE_LIBSCI_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/libsci/19.02.1/@PRGENV@/@PE_LIBSCI_DEFAULT_GENCOMPS@/@PE_LIBSCI_DEFAULT_TARGET@/lib/pkgconfig</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_mic_knl">160</env>
+    <env key="PE_LIBSCI_DEFAULT_PKGCONFIG_VARIABLES">PE_LIBSCI_DEFAULT_OMP_REQUIRES_@openmp@:PE_SCI_EXT_LIBPATH:PE_SCI_EXT_LIBNAME</env>
+    <env key="__INTEL_PRE_CFLAGS">-Qlocation,ld,/global/common/cori/software/altd/2.0/bin</env>
+    <env key="PE_SMA_DEFAULT_COMPFLAG_GNU">-fcray-pointer</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_x86_skylake">86</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_GNU_haswell">82 71</env>
+    <env key="CRAY_XPMEM_POST_LINK_OPTS">-L/opt/cray/xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari/lib64</env>
+    <env key="ALTD_SELECT_OFF_USERS"></env>
+    <env key="PE_SMA_DEFAULT_VOLATILE_PKGCONFIG_PATH">/opt/cray/pe/mpt/7.7.6/gni/sma@PE_SMA_DEFAULT_DIR_DEFAULT64@/lib64/pkgconfig</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_mic_knl">16.0</env>
+    <env key="PE_GNU_DEFAULT_FIXED_PKGCONFIG_PATH">/opt/cray/pe/parallel-netcdf/1.8.1.4/GNU/8.2/lib/pkgconfig:/opt/cray/pe/netcdf-hdf5parallel/4.6.1.3/GNU/8.2/lib/pkgconfig:/opt/cray/pe/netcdf/4.6.1.3/GNU/8.2/lib/pkgconfig:/opt/cray/pe/hdf5-parallel/1.10.2.0/GNU/8.2/lib/pkgconfig:/opt/cray/pe/hdf5/1.10.2.0/GNU/8.2/lib/pkgconfig</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_interlagos">160</env>
+    <env key="ALTD_ON">1</env>
+    <env key="LIBPFM_DISABLED_PMUS">knl</env>
+    <env key="PE_MPICH_GENCOMPILERS_GNU">8.2 7.1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_x86_skylake">8.6</env>
+    <env key="SLURM_JOB_USER">lpottier</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPILERS_CRAY_interlagos">8.6</env>
+    <env key="PYTHONSTARTUP">/etc/pythonstart</env>
+    <env key="NSG_HOME">/usr/syscom/nsg</env>
+    <env key="CRAY_DMAPP_POST_LINK_OPTS">-L/opt/cray/dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari/lib64</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_CRAY_mic_knl">86</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="CRAY_MPICH2_VER">7.7.6</env>
+    <env key="__INTEL_PRE_FFLAGS">-Qlocation,ld,/global/common/cori/software/altd/2.0/bin</env>
+    <env key="PE_GA_DEFAULT_GENCOMPILERS_GNU">8.2 7.3</env>
+    <env key="SHLVL">3</env>
+    <env key="HUGETLB_FORCE_ELFMAP">yes+</env>
+    <env key="SLURM_SUBMIT_HOST">nid00691</env>
+    <env key="ALTD_SELECT_USERS"></env>
+    <env key="PE_TRILINOS_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH:PE_HDF5_PARALLEL:PE_NETCDF_HDF5PARALLEL:PE_LIBSCI:PE_TPSL</env>
+    <env key="CRAY_LIBSCI_PREFIX_DIR">/opt/cray/pe/libsci/19.02.1/INTEL/16.0/x86_64</env>
+    <env key="PYTHONPATH">/opt/ovis/lib/python2.7/site-packages</env>
+    <env key="SLURM_JOB_ACCOUNT">m2187</env>
+    <env key="PE_PAPI_DEFAULT_ACCELL_FAMILY_LIBS"></env>
+    <env key="MANPATH">/opt/cray/pe/perftools/7.0.6/man:/opt/cray/pe/papi/5.6.0.6/share/pdoc/man:/usr/common/software/man:/usr/common/mss/man:/usr/common/nsg/man:/usr/common/software/man:/usr/common/mss/man:/usr/common/nsg/man:/opt/cray/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari/man:/opt/cray/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari/man:/opt/cray/pe/mpt/7.7.6/gni/man/mpich:/opt/cray/pe/atp/2.1.3/man:/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/man:/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/man:/opt/cray/pe/pmi/5.0.14/man:/opt/cray/pe/libsci/19.02.1/man:/opt/cray/pe/man/csmlversion:/opt/cray/pe/craype/2.5.18/man:/opt/intel/compilers_and_libraries_2019.3.199/linux/man/common:/usr/syscom/nsg/man:/opt/cray/pe/modules/3.2.11.1/share/man:/usr/local/man:/usr/share/man:/usr/man:/opt/cray/share/man:/opt/cray/pe/man:/opt/cray/share/man:/opt/cray/share/man</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_mic_knl">16.0</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_mic_knl">mic_knl</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_haswell">160</env>
+    <env key="ALTD_SELECT_ON">0</env>
+    <env key="INTEL_PATH">/opt/intel/compilers_and_libraries_2019.3.199</env>
+    <env key="ALPS_APP_ID">4320356151</env>
+    <env key="MPICH_DIR">/opt/cray/pe/mpt/7.7.6/gni/mpich-intel/16.0</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_haswell">8.6</env>
+    <env key="INTEL_VERSION">19.0.3.199</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_sandybridge">16.0</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_sandybridge">sandybridge</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_CRAY_haswell">86</env>
+    <env key="HUGETLB_ELFMAP">W</env>
+    <env key="MODULEPATH">/opt/cray/pe/perftools/7.0.6/modulefiles:/opt/cray/ari/modulefiles:/opt/cray/pe/craype/2.5.18/modulefiles:/opt/cray/pe/modulefiles:/opt/cray/modulefiles:/opt/modulefiles:/usr/common/software/modulefiles:/usr/syscom/nsg/modulefiles:/usr/syscom/nsg/opt/modulefiles:/usr/common/ftg/modulefiles:/opt/cray/craype/default/modulefiles</env>
+    <env key="CRAY_MPICH_DIR">/opt/cray/pe/mpt/7.7.6/gni/mpich-intel/16.0</env>
+    <env key="PE_PKGCONFIG_PRODUCTS_DEFAULT">PE_PAPI</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_CRAY_interlagos">8.6</env>
+    <env key="SLURM_GTIDS">0</env>
+    <env key="LOGNAME">lpottier</env>
+    <env key="PE_MPICH_DEFAULT_FIXED_PRGENV">INTEL</env>
+    <env key="PE_MPICH_NV_LIBS_nvidia60">-lcudart</env>
+    <env key="CRAY_PRE_COMPILE_OPTS">-hnetwork=aries</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="MKLROOT">/opt/intel/compilers_and_libraries_2019.3.199/linux/mkl</env>
+    <env key="MODULE_VERSION_STACK">3.2.11.1</env>
+    <env key="PE_TPSL_DEFAULT_GENCOMPS_INTEL_x86_skylake">160</env>
+    <env key="ALLINEA_QUEUE_DLL">/opt/cray/pe/mpt/7.7.6/gni/mpich-intel/16.0/lib/libtvmpich.so.3.0.1</env>
+    <env key="JRE_HOME">/usr/lib64/jvm/java</env>
+    <env key="PE_LIBSCI_PKGCONFIG_VARIABLES">PE_LIBSCI_OMP_REQUIRES_@openmp@:PE_SCI_EXT_LIBPATH:PE_SCI_EXT_LIBNAME</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_skylake">16.0</env>
+    <env key="MPICH_MPIIO_DVS_MAXNODES">32</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_CRAY_haswell">8.6</env>
+    <env key="PE_MPICH_TARGET_VAR_nvidia20">-lcudart</env>
+    <env key="PE_MPICH_DEFAULT_VOLATILE_PRGENV">GNU CRAY</env>
+    <env key="PE_LIBSCI_GENCOMPS_CRAY_x86_64">86</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPILERS_CRAY_x86_64">8.6</env>
+    <env key="XDG_CONFIG_DIRS">/etc/xdg</env>
+    <env key="PATH">/opt/cray/pe/perftools/7.0.6/bin:/opt/cray/pe/papi/5.6.0.6/bin:/usr/common/software/bin:/usr/common/mss/bin:/usr/common/nsg/bin:/global/common/cori/software/altd/2.0/bin:/usr/common/software/bin:/usr/common/mss/bin:/usr/common/nsg/bin:/opt/cray/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari/bin:/opt/cray/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari/sbin:/opt/cray/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari/bin:/opt/cray/pe/mpt/7.7.6/gni/bin:/opt/cray/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari/bin:/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/sbin:/opt/cray/alps/default/bin:/opt/cray/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari/bin:/opt/cray/pe/craype/2.5.18/bin:/opt/intel/compilers_and_libraries_2019.3.199/linux/bin/intel64:/opt/ovis/bin:/opt/ovis/sbin:/usr/syscom/nsg/sbin:/usr/syscom/nsg/bin:/opt/cray/pe/modules/3.2.11.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/lib/mit/bin:/usr/lib/mit/sbin:/opt/cray/pe/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin:/global/common/software/m2187/pegasus/development/bin</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_mic_knl">86</env>
+    <env key="SLURM_JOB_ID">25388855</env>
+    <env key="JAVA_BINDIR">/usr/lib64/jvm/java/bin</env>
+    <env key="PE_TPSL_64_DEFAULT_VOLATILE_PRGENV">CRAY CRAY64 GNU GNU64 INTEL INTEL64</env>
+    <env key="_LMFILES_">/opt/cray/pe/modulefiles/modules/3.2.11.1:/usr/syscom/nsg/modulefiles/nsg/1.2.0:/opt/modulefiles/intel/19.0.3.199:/opt/cray/pe/craype/2.5.18/modulefiles/craype-network-aries:/opt/cray/pe/modulefiles/craype/2.5.18:/opt/cray/pe/modulefiles/cray-libsci/19.02.1:/opt/cray/ari/modulefiles/udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari:/opt/cray/ari/modulefiles/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari:/opt/cray/pe/modulefiles/pmi/5.0.14:/opt/cray/ari/modulefiles/dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari:/opt/cray/ari/modulefiles/gni-headers/5.0.12.0-7.0.0.1_7.46__g3b1768f.ari:/opt/cray/ari/modulefiles/xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari:/opt/cray/ari/modulefiles/job/2.2.4-7.0.0.1_3.36__g36b56f4.ari:/opt/cray/ari/modulefiles/dvs/2.11_2.2.140-7.0.0.1_13.5__gdf9ebba2:/opt/cray/ari/modulefiles/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari:/opt/cray/ari/modulefiles/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari:/opt/cray/pe/modulefiles/atp/2.1.3:/opt/cray/pe/modulefiles/PrgEnv-intel/6.0.5:/opt/cray/pe/craype/2.5.18/modulefiles/craype-haswell:/opt/cray/pe/modulefiles/cray-mpich/7.7.6:/opt/cray/pe/craype/2.5.18/modulefiles/craype-hugepages2M:/opt/cray/ari/modulefiles/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari:/opt/cray/ari/modulefiles/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari:/usr/common/software/modulefiles/altd/2.0:/opt/modulefiles/Base-opts/2.4.139-7.0.0.1_4.26__gbb799dd.ari:/opt/cray/pe/modulefiles/perftools-base/7.0.6:/opt/cray/pe/perftools/7.0.6/modulefiles/perftools</env>
+    <env key="PE_NETCDF_DEFAULT_FIXED_PRGENV">GNU CRAY INTEL</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_GNU_haswell">8.2 7.1</env>
+    <env key="DMAPP_ABORT_ON_ERROR">1</env>
+    <env key="MODULESHOME">/opt/cray/pe/modules/3.2.11.1</env>
+    <env key="PKG_CONFIG_PATH">/opt/cray/dws/3.0.26-7.0.0.1_6.1__gf5fbca1.ari/lib64/pkgconfig:/opt/cray/datawarp/3.0.9-7.0.0.1_4.38__geb06de2.ari/lib64/pkgconfig:/opt/cray/rca/2.2.20-7.0.0.1_4.42__g8e3fb5b.ari/lib64/pkgconfig:/opt/cray/alps/6.6.50-7.0.0.1_3.44__g962f7108.ari/lib64/pkgconfig:/opt/cray/xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari/lib64/pkgconfig:/opt/cray/gni-headers/5.0.12.0-7.0.0.1_7.46__g3b1768f.ari/lib64/pkgconfig:/opt/cray/dmapp/7.1.1-7.0.0.1_5.29__g25e5077.ari/lib64/pkgconfig:/opt/cray/pe/pmi/5.0.14/lib64/pkgconfig:/opt/cray/ugni/6.0.14.0-7.0.0.1_7.35__ge78e5b0.ari/lib64/pkgconfig:/opt/cray/udreg/2.3.2-7.0.0.1_4.31__g8175d3d.ari/lib64/pkgconfig:/opt/cray/pe/craype/2.5.18/pkg-config:/opt/cray/pe/iobuf/2.0.8/lib/pkgconfig:/opt/cray/pe/fftw/2.1.5.9/lib/pkgconfig:/opt/cray/pe/atp/2.1.3/lib/pkgconfig</env>
+    <env key="LIBSCI_BASE_DIR">/opt/cray/pe/libsci/19.02.1</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_GNU_interlagos">8.2 7.1</env>
+    <env key="G_BROKEN_FILENAMES">1</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_sandybridge">86</env>
+    <env key="HISTSIZE">1000</env>
+    <env key="CRAYPE_DIR">/opt/cray/pe/craype/2.5.18</env>
+    <env key="PE_GA_DEFAULT_VOLATILE_PRGENV">GNU</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_CRAY_x86_64">86</env>
+    <env key="PE_TRILINOS_DEFAULT_GENCOMPILERS_GNU_x86_64">8.2</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_INTEL_interlagos">16.0</env>
+    <env key="PE_FFTW_DEFAULT_TARGET_interlagos">interlagos</env>
+    <env key="PE_HDF5_PARALLEL_DEFAULT_REQUIRED_PRODUCTS">PE_MPICH</env>
+    <env key="OFFLOAD_INIT">on_start</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPILERS_GNU_x86_64">8.2 7.1</env>
+    <env key="PE_PETSC_DEFAULT_GENCOMPS_GNU_skylake">82 71</env>
+    <env key="PE_PKGCONFIG_DEFAULT_PRODUCTS">PE_TRILINOS:PE_TPSL_64:PE_TPSL:PE_PETSC:PE_PARALLEL_NETCDF:PE_NETCDF_HDF5PARALLEL:PE_NETCDF:PE_MPICH:PE_LIBSCI:PE_HDF5_PARALLEL:PE_HDF5:PE_GA:PE_FFTW2:PE_FFTW</env>
+    <env key="CPU">x86_64</env>
+    <env key="CRAYPE_VERSION">2.5.18</env>
+    <env key="CRAY_PMI_POST_LINK_OPTS">-L/opt/cray/pe/pmi/5.0.14/lib64</env>
+    <env key="SLURM_LOCALID">0</env>
+    <env key="CRAY_GNI_HEADERS_INCLUDE_OPTS">-I/opt/cray/gni-headers/5.0.12.0-7.0.0.1_7.46__g3b1768f.ari/include</env>
+    <env key="CVS_RSH">ssh</env>
+    <env key="LESSOPEN">lessopen.sh %s</env>
+    <env key="CRAYPAT_OPTS_EXECUTABLE">sbin/pat-opts</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPS_INTEL_x86_64">160</env>
+    <env key="CRAY_XPMEM_INCLUDE_OPTS">-I/opt/cray/xpmem/2.2.17-7.0.0.1_3.28__g7acee3a.ari/include</env>
+    <env key="PE_LIBSCI_GENCOMPS_GNU_x86_64">81 71</env>
+    <env key="PE_LIBSCI_DEFAULT_GENCOMPILERS_GNU_x86_64">8.1 7.1</env>
+    <env key="PE_TPSL_64_DEFAULT_GENCOMPILERS_INTEL_x86_skylake">16.0</env>
+    <env key="BASH_FUNC_module%%">() {  eval `/opt/cray/pe/modules/3.2.11.1/bin/modulecmd bash $*`
+}</env>
+    <env key="_">/usr/bin/srun</env>
+    <env key="SRUN_DEBUG">3</env>
+    <env key="SLURM_UMASK">0007</env>
+    <env key="SLURM_NTASKS">1</env>
+    <env key="SLURM_NPROCS">1</env>
+    <env key="SLURM_CPUS_PER_TASK">1</env>
+    <env key="SLURM_DISTRIBUTION">cyclic</env>
+    <env key="SLURM_STEP_ID">1</env>
+    <env key="SLURM_STEPID">1</env>
+    <env key="SLURM_SRUN_COMM_PORT">41595</env>
+    <env key="SLURM_STEP_NODELIST">nid00691</env>
+    <env key="SLURM_STEP_NUM_NODES">1</env>
+    <env key="SLURM_STEP_NUM_TASKS">1</env>
+    <env key="SLURM_STEP_TASKS_PER_NODE">1</env>
+    <env key="SLURM_STEP_LAUNCHER_PORT">41595</env>
+    <env key="SLURM_STEP_RESV_PORTS">63475</env>
+    <env key="SLURM_SRUN_COMM_HOST">10.128.2.184</env>
+    <env key="CRAY_IAA_INFO_FILE">/tmp/cray_iaa_info.4320356151</env>
+    <env key="CRAY_NUM_COOKIES">2</env>
+    <env key="CRAY_COOKIES">445841408,810221568</env>
+    <env key="PMI_CONTROL_PORT">63475</env>
+    <env key="PMI_CRAY_NO_SMP_ORDER">0</env>
+    <env key="SLURM_CPU_BIND">quiet,mask_cpu:0xFFFFFFFFFFFFFFFF</env>
+    <env key="SLURM_CPU_BIND_LIST">0xFFFFFFFFFFFFFFFF</env>
+    <env key="SLURM_CPU_BIND_TYPE">mask_cpu:</env>
+    <env key="SLURM_CPU_BIND_VERBOSE">quiet</env>
+    <env key="SLURM_LAUNCH_NODE_IPADDR">10.128.2.184</env>
+    <env key="KICKSTART_INTEGRITY_DATA">/tmp/ks.integrity.qXkbVR</env>
+    <env key="KICKSTART_METADATA">/tmp/ks.meta.iF5ABv</env>
+  </environment>
+  <resource>
+    <soft id="RLIMIT_CPU">unlimited</soft>
+    <hard id="RLIMIT_CPU">unlimited</hard>
+    <soft id="RLIMIT_FSIZE">unlimited</soft>
+    <hard id="RLIMIT_FSIZE">unlimited</hard>
+    <soft id="RLIMIT_DATA">unlimited</soft>
+    <hard id="RLIMIT_DATA">unlimited</hard>
+    <soft id="RLIMIT_STACK">unlimited</soft>
+    <hard id="RLIMIT_STACK">unlimited</hard>
+    <soft id="RLIMIT_CORE">0</soft>
+    <hard id="RLIMIT_CORE">unlimited</hard>
+    <soft id="RESOURCE_5">126701535232</soft>
+    <hard id="RESOURCE_5">126701535232</hard>
+    <soft id="RLIMIT_NPROC">2048</soft>
+    <hard id="RLIMIT_NPROC">513209</hard>
+    <soft id="RLIMIT_NOFILE">4096</soft>
+    <hard id="RLIMIT_NOFILE">131072</hard>
+    <soft id="RLIMIT_MEMLOCK">unlimited</soft>
+    <hard id="RLIMIT_MEMLOCK">unlimited</hard>
+    <soft id="RLIMIT_AS">unlimited</soft>
+    <hard id="RLIMIT_AS">unlimited</hard>
+    <soft id="RLIMIT_LOCKS">unlimited</soft>
+    <hard id="RLIMIT_LOCKS">unlimited</hard>
+    <soft id="RLIMIT_SIGPENDING">513209</soft>
+    <hard id="RLIMIT_SIGPENDING">513209</hard>
+    <soft id="RLIMIT_MSGQUEUE">819200</soft>
+    <hard id="RLIMIT_MSGQUEUE">819200</hard>
+    <soft id="RLIMIT_NICE">0</soft>
+    <hard id="RLIMIT_NICE">0</hard>
+    <soft id="RLIMIT_RTPRIO">0</soft>
+    <hard id="RLIMIT_RTPRIO">0</hard>
+    <soft id="RESOURCE_15">unlimited</soft>
+    <hard id="RESOURCE_15">unlimited</hard>
+  </resource>
+</invocation>
