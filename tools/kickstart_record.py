@@ -87,6 +87,12 @@ class KickstartRecord(object):
         tree = xml.ElementTree()
         tree.parse(self._path)
         root = tree.getroot()
+        for elem in root:
+            if elem.tag == XML_PREFIX+"usage":
+                self._job = elem.attrib
+            # print(" tag=",elem.tag, " \ntext=", elem.text ," \ntail=", elem.tail, " \nattrib=", elem.attrib)
+            # print("==========================================================================================")
+
         for elem in root.iter():
             if elem.tag == XML_PREFIX+"file" and elem.attrib['name'] != None:
                 self._exec["files"].append(elem.attrib['name'])
@@ -99,42 +105,11 @@ class KickstartRecord(object):
             if elem.tag == XML_PREFIX+"data":
                 self._stdout += [elem.text]
 
-        print (root.findall('.//usage...'))
-
-                #self._job.(Job(file, pid, hashmap)
-
-            # print(" tag=",elem.tag, " \ntext=", elem.text ," \ntail=", elem.tail, " \nattrib=", elem.attrib)
-            # print("==========================================================================================")
-
-        # 'usage' nodes that are children of nodes with name='invocation' (the root node)
-        #root.findall(".//*[@name='invocation']/usage")
-        print(tree.getroot().findall("invocation"))
-        for elem in root.findall("invocation/usage"):
-            print(" tag=",elem.tag, " \ntext=", elem.text ," \ntail=", elem.tail, " \nattrib=", elem.attrib)
-            print("==========================================================================================")
-
-
-        # # Store information about the machine
-        # KickstartRecord.findall_and_store(root, "machine",  self._attr, "uname")
-        # KickstartRecord.findall_and_store(root, "cwd",  self._attr, "cwd")
-
-        # print("===")
-
-        # for data in root.findall(XML_PREFIX+"data"):
-        #     #for elem in data.iter():
-        #     print(data.tag, " ", data.tail, " ", data.attrib)
-        #         #self._attr["data"] = (elem.tail, elem.attrib)
-
-        # # for statcall in root.findall("{http://pegasus.isi.edu/schema/invocation}machine"):
-        # #     for child in statcall:
-        # #         print(child.tag, " ", elem.text, " ", child.attrib)
-
-        #print(self._attr)
 
         print(self._exec)
         print(self._uname)
         print(self._stdout)
-        #print(self._job)
+        print(self._job)
 
 
 if __name__ == "__main__":
