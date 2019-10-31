@@ -58,22 +58,35 @@ class Machine:
 
         for elem in machine_element_tree:
             if elem.tag == XML_PREFIX+self.system:
-                self.ram = elem.attrib
-                self.swap = elem.attrib
-                self.cpu = elem.attrib
-                self.load = elem.attrib
-                self.procs = elem.attrib
-                self.task = elem.attrib
-            
+                for subelem in elem:
+                    if subelem.tag == XML_PREFIX+"ram":
+                        self.ram = subelem.attrib
+                    if subelem.tag == XML_PREFIX+"swap":
+                        self.swap = subelem.attrib
+                    if subelem.tag == XML_PREFIX+"cpu":
+                        self.cpu = subelem.attrib
+                    if subelem.tag == XML_PREFIX+"load":
+                        self.load = subelem.attrib
+                    if subelem.tag == XML_PREFIX+"procs":
+                        self.procs = subelem.attrib
+                    if subelem.tag == XML_PREFIX+"task":
+                        self.task = subelem.attrib
 
     def __str__(self):
         s = ''
         for name,val in vars(self).items():
             if val == {}:
                 val = "Not found"
-            s = s + '{:<8} -> {:>40}\n'.format(name, val)
+            s = s + '{:<8} -> {:<72}\n'.format(name, str(val))
         return s
 
+    def __repr__(self):
+        s = ''
+        for name,val in vars(self).items():
+            if val == {}:
+                val = "Not found"
+            s = s + '{:<8} -> {:<72}\n'.format(name, str(val))
+        return s
 
 class File:
     """
@@ -94,6 +107,18 @@ class File:
         self.nwrite     =       hashmap["nwrite"]
         self.bseek      =       hashmap["bseek"]
         self.nseek      =       hashmap["nseek"]
+
+    def __str__(self):
+        s = ''
+        for name,val in vars(self).items():
+            s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
+        return s
+
+    def __repr__(self):
+        s = ''
+        for name,val in vars(self).items():
+            s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
+        return s
 
 
 class Processus:
@@ -145,6 +170,17 @@ class Usage:
         self.nvcsw      =       hashmap["nvcsw"]
         self.nivcsw     =       hashmap["nivcsw"]
 
+    def __str__(self):
+        s = ''
+        for name,val in vars(self).items():
+            s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
+        return s
+
+    def __repr__(self):
+        s = ''
+        for name,val in vars(self).items():
+            s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
+        return s
 
 class KickstartRecord(object):
     """
@@ -168,14 +204,22 @@ class KickstartRecord(object):
         self._tree.parse(self._path)
         self._root = self._tree.getroot()
 
-        self._exec = {}
-        self._exec["files"] = []
-        self._statcalls = {}
-        self._jobs = []                  #Multiple jobs?
+        # Parse machine
         self.machine = Machine(self._get_elem("machine"))
         print(self.machine)
 
+        # Usage (global, not mainjob)
+        self.global_usage = Usage(self._get_elem("usage").attrib)
+        print(self.global_usage)
+
+        # Parse I/O, stdin, stdout, stderr and metadata
+        self._statcalls = {}
         self._get_statcalls_data()
+
+        #Store all processes involved
+        self.processes = []
+
+
 
     def path(self):
         return self._path
@@ -213,34 +257,33 @@ class KickstartRecord(object):
                 return elem
         return None
 
-    def parse(self):
-        tree = xml.ElementTree()
-        tree.parse(self._path)
-        root = tree.getroot()
-        for elem in root:
-            if elem.tag == XML_PREFIX+"usage":
-                self._job = elem.attrib
-            # print(" tag=",elem.tag, " \ntext=", elem.text ," \ntail=", elem.tail, " \nattrib=", elem.attrib)
-            # print("==========================================================================================")
+    # def parse(self):
+    #     tree = xml.ElementTree()
+    #     tree.parse(self._path)
+    #     root = tree.getroot()
+    #     for elem in root:
+    #         if elem.tag == XML_PREFIX+"usage":
+    #             self._job = elem.attrib
+    #         # print(" tag=",elem.tag, " \ntext=", elem.text ," \ntail=", elem.tail, " \nattrib=", elem.attrib)
+    #         # print("==========================================================================================")
 
-        for elem in root.iter():
-            if elem.tag == XML_PREFIX+"file" and elem.attrib['name'] != None:
-                self._exec["files"].append(elem.attrib['name'])
-            if elem.tag == XML_PREFIX+"cwd":
-                self._exec["cwd"] = elem.text
-            if elem.tag == XML_PREFIX+"uname":
-                self._uname = elem.attrib
-                self._uname['text']=elem.text
+    #     for elem in root.iter():
+    #         if elem.tag == XML_PREFIX+"file" and elem.attrib['name'] != None:
+    #             self._exec["files"].append(elem.attrib['name'])
+    #         if elem.tag == XML_PREFIX+"cwd":
+    #             self._exec["cwd"] = elem.text
+    #         if elem.tag == XML_PREFIX+"uname":
+    #             self._uname = elem.attrib
+    #             self._uname['text']=elem.text
 
-        #print(self._exec)
-        print(self._uname)
+    #     #print(self._exec)
+    #     print(self._uname)
         
-        print(self._statcalls.keys())
-        print(self._job)
+    #     print(self._statcalls.keys())
+    #     print(self._job)
 
 
 if __name__ == "__main__":
     test_record = KickstartRecord("stat.resample.xml")
     print(test_record.path())
-    test_record.parse()
 
