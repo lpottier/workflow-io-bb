@@ -535,15 +535,15 @@ if __name__ == '__main__':
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if args.input_sharing:
-        output_dir = "build_shared-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
+        output_dir = "build_shared-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads, args.workflows, args.bbsize)
     else:
-        output_dir = "build-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
+        output_dir = "build-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads, args.workflows, args.bbsize)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {}/ created.\n".format(output_dir))
 
     old_path = os.getcwd()
-    os.chdir(old_path+"/build/")
+    os.chdir(old_path+output_dir)
     sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
     resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='.')
@@ -563,7 +563,7 @@ if __name__ == '__main__':
                 )
 
 
-    instance1core = SwarpInstance(script_dir="build",
+    instance1core = SwarpInstance(script_dir=output_dir,
                                 resample_config=resample_config, 
                                 combine_config=combine_config, 
                                 sched_config=sched_config, 
