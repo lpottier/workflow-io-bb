@@ -506,16 +506,18 @@ class SwarpRun:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
-    parser.add_argument('--threads', '-P', type=int, nargs='?', default=1,
-                        help='Number of POSIX threads per tasks')
+    parser.add_argument('--threads', '-C', type=int, nargs='?', default=1,
+                        help='Number of POSIX threads per workflow tasks')
     parser.add_argument('--nodes', '-N', type=int, nargs='?', default=1,
                         help='Number of compute nodes requested')
-    parser.add_argument('--bbsize', '-B', type=int, nargs='?', default=20,
+    parser.add_argument('--bbsize', '-B', type=int, nargs='?', default=50,
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
     parser.add_argument('--workflows', '-W', type=int, nargs='?', default=1,
                         help='Number of identical SWarp workflows running in parallel')
-    parser.add_argument('--input-sharing', '-S', action='store_true',
+    parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
+    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
+                        help='Number of runs to average on')
 
     args = parser.parse_args()
     print(args)
@@ -532,9 +534,13 @@ if __name__ == '__main__':
     sys.stderr.write(" === Machine: {}.\n".format(platform.platform()))
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
+    if args.input_sharing:
+        output_dir = "build_shared-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
+    else:
+        output_dir = "build-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
     if not os.path.exists("build"):
         os.mkdir("build")
-        sys.stderr.write(" === Directory {}/ created.\n".format("build"))
+        sys.stderr.write(" === Directory {}/ created.\n".format(output_dir))
 
     old_path = os.getcwd()
     os.chdir(old_path+"/build/")
