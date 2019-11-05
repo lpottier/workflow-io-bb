@@ -78,7 +78,7 @@ class Machine:
             if val == {}:
                 val = "Not found"
             s = s + '{:<10} -> {:<72}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
     def __repr__(self):
         s = ''
@@ -86,7 +86,7 @@ class Machine:
             if val == {}:
                 val = "Not found"
             s = s + '{:<10} -> {:<72}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
 class File:
     """
@@ -112,13 +112,13 @@ class File:
         s = ''
         for name,val in vars(self).items():
             s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
     def __repr__(self):
         s = ''
         for name,val in vars(self).items():
             s = s + '{:<8} -> {:>10}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
 
 class Processus:
@@ -180,7 +180,7 @@ class Processus:
             if name == "files":
                 continue
             s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
     def __repr__(self):
         s = ''
@@ -188,32 +188,39 @@ class Processus:
             if name == "files":
                 continue
             s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
-        return s
+        return s[:-2] # To remove the last \n
 
 class Usage:
     """
     Usage statistics from KickStart record 
     """
     def __init__(self, xml_tree):
-        # Hashmap must be the attrib from <usage> elem
-        self.utime      =       xml_tree.attrib["utime"]
-        self.stime      =       xml_tree.attrib["stime"]
-        self.maxrss     =       xml_tree.attrib["maxrss"]
-        self.minflt     =       xml_tree.attrib["minflt"]
-        self.majflt     =       xml_tree.attrib["majflt"]
-        self.nswap      =       xml_tree.attrib["nswap"]
-        self.inblock    =       xml_tree.attrib["inblock"]
-        self.outblock   =       xml_tree.attrib["outblock"]
-        self.msgsnd     =       xml_tree.attrib["msgsnd"]
-        self.msgrcv     =       xml_tree.attrib["msgrcv"]
-        self.nsignals   =       xml_tree.attrib["nsignals"] 
-        self.nvcsw      =       xml_tree.attrib["nvcsw"]
-        self.nivcsw     =       xml_tree.attrib["nivcsw"]
+        # Hashmap must be the attrib from <mainjob> or the real root elem
+        # Must be the parent of <usage> and <statcall>
+        usage_tree = None
+        for elem in xml_tree:
+            if elem.tag == XML_PREFIX+"usage":
+                usage_tree = elem
+                break
+
+        self.utime      =       usage_tree.attrib["utime"]
+        self.stime      =       usage_tree.attrib["stime"]
+        self.maxrss     =       usage_tree.attrib["maxrss"]
+        self.minflt     =       usage_tree.attrib["minflt"]
+        self.majflt     =       usage_tree.attrib["majflt"]
+        self.nswap      =       usage_tree.attrib["nswap"]
+        self.inblock    =       usage_tree.attrib["inblock"]
+        self.outblock   =       usage_tree.attrib["outblock"]
+        self.msgsnd     =       usage_tree.attrib["msgsnd"]
+        self.msgrcv     =       usage_tree.attrib["msgrcv"]
+        self.nsignals   =       usage_tree.attrib["nsignals"] 
+        self.nvcsw      =       usage_tree.attrib["nvcsw"]
+        self.nivcsw     =       usage_tree.attrib["nivcsw"]
 
         # Data from statcall: stdin, stdout, stderr and metadata
         self.data = {}
         for elem in xml_tree:
-            if elem.tag == XML_PREFIX+"statcall":
+            if elem.tag == XML_PREFIX+"statcall" and "id" in elem.attrib:
                 self.data[elem.attrib["id"]] = None
                 for data in elem:
                     if data.tag == XML_PREFIX+"data":
@@ -221,15 +228,33 @@ class Usage:
 
     def __str__(self):
         s = ''
+        short_data = {}
+        for u,v in self.data.items():
+            if v:
+                short_data[u] = len(v)
+            else:
+                short_data[u] = v
         for name,val in vars(self).items():
-            s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
-        return s
+            if type(val) is dict:
+                s = s + '{:<10} -> {:<10}\n'.format(name, str(short_data))
+            else:
+                s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
+        return s[:-2] # To remove the last \n
 
     def __repr__(self):
         s = ''
+        short_data = {}
+        for u,v in self.data.items():
+            if v:
+                short_data[u] = len(v)
+            else:
+                short_data[u] = v
         for name,val in vars(self).items():
-            s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
-        return s
+            if type(val) is dict:
+                s = s + '{:<10} -> {:<10}\n'.format(name, str(short_data))
+            else:
+                s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
+        return s[:-2] # To remove the last \n
 
 class KickstartRecord(object):
     """
@@ -255,11 +280,9 @@ class KickstartRecord(object):
 
         # Parse machine
         self.machine = Machine(self._get_elem("machine"))
-        print(self.machine)
 
         # Usage (global, not mainjob)
-        self.usage = Usage(self._get_elem("usage"))
-        print(self.usage)
+        self.usage = Usage(self._root)
 
         #Store all processes involved
         # key is pid and value a Processus object
@@ -291,4 +314,6 @@ class KickstartRecord(object):
 if __name__ == "__main__":
     test_record = KickstartRecord("stat.resample.xml")
     print(test_record.path())
+    print(test_record.machine)
+    print(test_record.usage)
 
