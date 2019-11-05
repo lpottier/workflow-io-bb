@@ -7,6 +7,7 @@ import platform
 import time
 import tempfile
 import subprocess as sb
+import argparse
 
 from enum import Enum,unique,auto
 
@@ -14,7 +15,6 @@ SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
-NTHREADS = 1
 # Cori fragment size -> 20.14GiB
 
 INPUT_ONE_RUN = 769 #Input size in MB
@@ -29,7 +29,7 @@ class TaskType(Enum):
 class SwarpWorkflowConfig:
 
     def __init__(self, task_type, 
-                    nthreads=1, 
+                    nthreads, 
                     resample_dir='.', 
                     vmem_max=31744, 
                     mem_max=31744, 
@@ -504,6 +504,22 @@ class SwarpRun:
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
+    parser.add_argument('--threads', '-P', type=int, nargs='?', default=1,
+                        help='Number of POSIX threads per tasks')
+    parser.add_argument('--nodes', '-N', type=int, nargs='?', default=1,
+                        help='Number of compute nodes requested')
+    parser.add_argument('--bbsize', '-B', type=int, nargs='?', default=20,
+                        help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
+    parser.add_argument('--workflows', '-W', type=int, nargs='?', default=1,
+                        help='Number of identical SWarp workflows running in parallel')
+    parser.add_argument('--input-sharing', '-S', action='store_true',
+                        help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
+
+    args = parser.parse_args()
+    print(args)
+
     sys.stderr.write(" === Generate Slurm scripts for SWarp workflow\n")
     today = time.localtime()
     sys.stderr.write(" === Executed: {}-{}-{} at {}:{}:{}.\n".format(today.tm_mday,
@@ -524,15 +540,15 @@ if __name__ == '__main__':
     os.chdir(old_path+"/build/")
     sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
-    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=NTHREADS, resample_dir='.')
+    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='.')
     resample_config.write(overide=True) #Write out the resample.swarp
 
-    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=NTHREADS, resample_dir='.')
+    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='.')
     combine_config.write(overide=True) #Write out the combine.swarp
 
-    sched_config = SwarpSchedulerConfig(num_nodes=1, num_cores=NTHREADS)
+    sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, num_cores=args.threads)
     bb_config = SwarpBurstBufferConfig(
-                size_bb=100,
+                size_bb=args.bbsize,
                 stage_input_dirs=[
                     SWARP_DIR + "/input", 
                     SWARP_DIR + "/config"],

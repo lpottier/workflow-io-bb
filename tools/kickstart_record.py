@@ -311,6 +311,21 @@ class KickstartRecord(object):
                 return elem
         return None
 
+    def utime():
+        pass
+    def stime():
+        pass
+    def exectime():
+        pass
+    def efficiency():
+        pass
+    def data_read():
+        pass
+    def data_written():
+        pass 
+    def data_used():
+        pass
+
 if __name__ == "__main__":
     test_record = KickstartRecord("stat.resample.xml")
     print(test_record.path())
