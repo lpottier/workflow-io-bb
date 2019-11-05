@@ -538,8 +538,8 @@ if __name__ == '__main__':
         output_dir = "build_shared-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
     else:
         output_dir = "build-{}N-{}C-{}W-{}B".format(args.nodes, args.threads, args.threads,args.workflows, args.bbsize)
-    if not os.path.exists("build"):
-        os.mkdir("build")
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
         sys.stderr.write(" === Directory {}/ created.\n".format(output_dir))
 
     old_path = os.getcwd()
