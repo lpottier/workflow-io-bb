@@ -579,7 +579,7 @@ if __name__ == '__main__':
     run1.standalone(file="submit.sh", overide=True)
     
     os.chdir(old_path)
-    sys.stderr.write(" === Switch to initial directory {}\n".format(os.getcwd()))
+    sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
 
 
 
