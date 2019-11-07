@@ -276,9 +276,34 @@ class SwarpInstance:
         if self.standalone:
             string += "#@STAGE@\n"
         else:
-            string += "#DW stage_in source={}/input destination=$DW_JOB_STRIPED/input/ type=directory\n".format(SWARP_DIR)
-            string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
-            string += "#DW stage_out source=$DW_JOB_STRIPED/output/  destination={}/output type=directory\n".format(SWARP_DIR)
+            for directory in self.stage_input_dirs:                
+                if directory.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = directory.split('/')[-2]
+                else:
+                    target = directory.split('/')[-1]
+
+                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=directory\n".format(directory, target)
+
+            for file in self.stage_input_files:
+                if file.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = file.split('/')[-2]
+                else:
+                    target = file.split('/')[-1]
+
+                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=file\n".format(file, target)
+
+            # string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
+            for directory in self.stage_output_dirs:
+                if directory.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = directory.split('/')[-2]
+                else:
+                    target = directory.split('/')[-1]
+
+                string += "#DW stage_out source=$DW_JOB_STRIPED/{}/  destination={} type=directory\n".format(target, directory)
+
         string += "\n"
         return string
 
