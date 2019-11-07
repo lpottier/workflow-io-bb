@@ -34,7 +34,8 @@ class SwarpWorkflowConfig:
                     vmem_max=31744, 
                     mem_max=31744, 
                     combine_bufsize=24576, 
-                    existing_file=None
+                    existing_file=None,
+                    output_dir=None
                 ):
         self.task_type = task_type
         self.nthreads = nthreads
@@ -43,11 +44,15 @@ class SwarpWorkflowConfig:
         self.mem_max = mem_max
         self.combine_bufsize = combine_bufsize
         self.existing_file = existing_file
+        self.output_dir = output_dir
 
         if not isinstance(self.task_type, TaskType):
             raise ValueError("Bad task type: must be a TaskType")
 
-        self.file = self.task_type.name.lower() + ".swarp"
+        if self.output_dir:
+            self.file = self.output_dir + "/" + self.task_type.name.lower() + ".swarp"
+        else:
+            self.file = self.task_type.name.lower() + ".swarp"
 
     def output(self):
         string = "# Default configuration file for SWarp 2.17.1\n"
@@ -454,9 +459,10 @@ class SwarpInstance:
             pass
 
 class SwarpRun:
-    def __init__(self, pipelines=[1]):
+    def __init__(self, pipelines=[1], number_avg=1):
         self._pipelines = pipelines
         self._num_pipelines = len(pipelines)
+        self.nb_averages = number_avg
 
     def pipeline_to_str(self):
         res = "{}".format(str(self._pipelines[0]))
@@ -483,22 +489,24 @@ class SwarpRun:
             f.write("#!/bin/bash\n")
             f.write("#set -x\n")
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
+            f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+                f.write("        outdir=$(mktemp -d -t swarp-run-{k}-${i}N.XXXXXX)\n")
             else:
-                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
-            f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
-            f.write("    echo $outdir\n")
-            f.write("    echo $script\n")
-            f.write("    sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
-            f.write("    for j in $(seq ${i} -1 1); do\n")
-            f.write("       stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-            f.write("       sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+                f.write("        outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-{k}-${i}N.XXXXXX)\n")
+            f.write("        script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
+            f.write("        echo $outdir\n")
+            f.write("        echo $script\n")
+            f.write("        sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+            f.write("        for j in $(seq ${i} -1 1); do\n")
+            f.write("           stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+            f.write("           sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+            f.write("        done\n")
+            f.write("        cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
+            f.write("        cd \"${outdir}\"\n")
+            f.write("        sbatch ${script}\n")
+            f.write("        cd ..\n")
             f.write("    done\n")
-            f.write("    cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
-            f.write("    cd \"${outdir}\"\n")
-            f.write("    sbatch ${script}\n")
-            f.write("    cd ..\n")
             f.write("done\n")
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
@@ -506,6 +514,7 @@ class SwarpRun:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
+    
     parser.add_argument('--threads', '-C', type=int, nargs='?', default=1,
                         help='Number of POSIX threads per workflow tasks')
     parser.add_argument('--nodes', '-N', type=int, nargs='?', default=1,
@@ -516,7 +525,7 @@ if __name__ == '__main__':
                         help='Number of identical SWarp workflows running in parallel')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
-    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
+    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=10,
                         help='Number of runs to average on')
 
     args = parser.parse_args()
@@ -562,7 +571,6 @@ if __name__ == '__main__':
                     SWARP_DIR + "/output"]
                 )
 
-
     instance1core = SwarpInstance(script_dir=output_dir,
                                 resample_config=resample_config, 
                                 combine_config=combine_config, 
@@ -571,7 +579,8 @@ if __name__ == '__main__':
 
     instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
     
-    run1 = SwarpRun(pipelines=[1])
+    run1 = SwarpRun(pipelines=[1], number_avg=args.nb_run)
+
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
