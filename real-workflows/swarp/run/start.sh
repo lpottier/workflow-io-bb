@@ -9,7 +9,7 @@ IMAGE_PATTERN='PTF201111*.w.fits'
 IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'
 STAGE_FILE=files_to_stage.txt
 
-rm -f ${STAGE_FILES}
+rm -f $STAGE_FILE
 
 for f in $(ls ${INPUT_DIR}/${IMAGE_PATTERN}); do
     echo $f '$DW_JOB_STRIPED'/input/$(basename $f) >> $STAGE_FILE
