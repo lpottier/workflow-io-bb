@@ -555,7 +555,7 @@ if __name__ == '__main__':
                         help='Number of identical SWarp workflows running in parallel')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
-    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=4,
+    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
                         help='Number of runs to average on')
 
     args = parser.parse_args()
