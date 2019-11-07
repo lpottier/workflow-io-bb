@@ -215,18 +215,22 @@ class SwarpSchedulerConfig:
         return self.num_cores
 
 class SwarpBurstBufferConfig:
-    def __init__(self, size_bb, stage_input_dirs, stage_output_dirs, access_mode="striped", bbtype="scratch"):
+    def __init__(self, size_bb, stage_input_dirs, stage_input_files, stage_output_dirs, access_mode="striped", bbtype="scratch"):
         self.size_bb = size_bb
         self.stage_input_dirs = stage_input_dirs #List of input dirs
         self.stage_output_dirs = stage_output_dirs #List of output dirs (usually one)
         self.access_mode = access_mode
         self.bbtype = bbtype
+        self.stage_input_files = stage_input_files #List of files to stages
 
     def size(self):
         return self.size_bb
 
     def input_dirs(self):
         return self.stage_input_dirs
+
+    def input_dirs(self):
+        return self.stage_input_files
 
     def output_dirs(self):
         return self.stage_output_dirs
@@ -256,7 +260,7 @@ class SwarpInstance:
         else:
             string += "#SBATCH -N {}\n".format(self.sched_config.nodes())
         string += "#SBATCH -C haswell\n"
-        string += "#SBATCH -t 00:15:00\n"
+        string += "#SBATCH -t 00:30:00\n"
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
         string += "#SBATCH -e error.%j\n"
@@ -266,6 +270,7 @@ class SwarpInstance:
         string += "#SBATCH -d singleton\n"
         return string
 
+    #TODO: stage directory and files according self.stage_input_files and self.stage_input_dirs
     def dw_temporary(self):
         string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         if self.standalone:
@@ -322,25 +327,25 @@ class SwarpInstance:
     def script_run_resample(self):
         string = "cd ${rundir}\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
-        string += "echo \"STAMP RESAMPLE PREP $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching resample process ${process}\"\n"
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
+        string += "    srun -cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
         string += "    cd ..\n"
         string += "done\n"
-        string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "\n"
         # string += "sleep 10\n"
         # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
         # string += "rm $CONTROL_FILE\n"
         string += "t2=$(date +%s.%N)\n"
         string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME RESAMPLE $tdiff\"\n"
+        string += "echo \"TIME RESAMPLE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
         string += "\n"
         return string
@@ -354,23 +359,23 @@ class SwarpInstance:
         return string
 
     def script_run_combine(self):
-        string = "echo \"STAMP COMBINE PREP $(date --rfc-3339=ns)\"\n"
+        string = "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching coadd process ${process}\"\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
+        string += "    srun -cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
         # string += "sleep 10\n"
         # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP COMBINE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
         # string += "rm $CONTROL_FILE\n"
         string += "t2=$(date +%s.%N)\n"
         string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME COMBINE $tdiff\"\n"
+        string += "echo \"TIME COMBINE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
         string += "\n"
         return string
 
@@ -384,11 +389,11 @@ class SwarpInstance:
 
         string += "\n"
 
-        string += "echo \"STAMP CLEANUP $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP CLEANUP:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    rm -v ${process}/*.fits\n"
         string += "done\n"
-        string += "echo \"STAMP DONE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP DONE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         return string
 
     @staticmethod
@@ -567,6 +572,7 @@ if __name__ == '__main__':
                 stage_input_dirs=[
                     SWARP_DIR + "/input", 
                     SWARP_DIR + "/config"],
+                stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"]
                 )
