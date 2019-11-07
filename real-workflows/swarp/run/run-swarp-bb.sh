@@ -21,13 +21,13 @@ mkdir -p ${OUPUT_DIR}
 rm -f ${OUPUT_DIR}/* resample.xml combine.xml coadd.fits coadd.weight.fits PTF201111*.w.resamp*
 ls
 
-MONITORING="pegasus-kickstart -Z "
+MONITORING="pegasus-kickstart -z "
 
 srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
-     $MONITORING $EXE -l $OUPUT_DIR/stat-resample.yaml \
+     $MONITORING $EXE -l $OUPUT_DIR/stat-resample.xml \
      -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN}
 
 srun -n 1 -C "haswell" -c 10 --cpu-bind=cores \
-     $MONITORING $EXE -l $OUPUT_DIR/stat-combine.yaml \
+     $MONITORING $EXE -l $OUPUT_DIR/stat-combine.xml \
      -c $COMBINE_CONFIG ${OUPUT_DIR}/${RESAMPLE_PATTERN}
 
