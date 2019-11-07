@@ -491,9 +491,9 @@ class SwarpRun:
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
             f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("        outdir=$(mktemp -d -t swarp-run-{k}-${i}N.XXXXXX)\n")
+                f.write("        outdir=$(mktemp -d -t swarp-run-${k}-${i}N.XXXXXX)\n")
             else:
-                f.write("        outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-{k}-${i}N.XXXXXX)\n")
+                f.write("        outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${k}-${i}N.XXXXXX)\n")
             f.write("        script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("        echo $outdir\n")
             f.write("        echo $script\n")
@@ -525,7 +525,7 @@ if __name__ == '__main__':
                         help='Number of identical SWarp workflows running in parallel')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
-    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=10,
+    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=5,
                         help='Number of runs to average on')
 
     args = parser.parse_args()
