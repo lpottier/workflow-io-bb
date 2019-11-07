@@ -13,9 +13,10 @@ rm -f ${STAGE_FILES}
 
 for f in $(ls ${INPUT_DIR}/${IMAGE_PATTERN}); do
     echo $f '$DW_JOB_STRIPED'/input >> ${STAGE_FILES}
+done
 
 for f in $(ls ${INPUT_DIR}/${IMAGE_WEIGHT_PATTERN}); do
     echo $f '$DW_JOB_STRIPED'/input >> ${STAGE_FILES}
-
+done
 
 #salloc -N 1 -C haswell -q interactive -t 01:00:00 --bbf=bbf.conf

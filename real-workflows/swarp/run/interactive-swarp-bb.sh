@@ -26,15 +26,17 @@ chmod 777 ${RESAMP_DIR}
 
 MONITORING="pegasus-kickstart -z "
 
-STAGE_FILES=files_to_stage.txt
+# STAGE_FILES=files_to_stage.txt
 
-rm -f ${STAGE_FILES}
+# rm -f ${STAGE_FILES}
 
-for f in $(ls ${INPUT_DIR}/${IMAGE_PATTERN}); do
-    echo $(pwd)/$f ${DW_JOB_STRIPED}/input >> ${STAGE_FILES}
+# for f in $(ls ${INPUT_DIR}/${IMAGE_PATTERN}); do
+#     echo $(pwd)/$f ${DW_JOB_STRIPED}/input >> ${STAGE_FILES}
+# done
 
-for f in $(ls ${INPUT_DIR}/${IMAGE_WEIGHT_PATTERN}); do
-    echo $(pwd)/$f ${DW_JOB_STRIPED}/input >> ${STAGE_FILES}
+# for f in $(ls ${INPUT_DIR}/${IMAGE_WEIGHT_PATTERN}); do
+#     echo $(pwd)/$f ${DW_JOB_STRIPED}/input >> ${STAGE_FILES}
+# done
 
 # for f in ${CONFIG_FILES}; do
 #     echo $f ${DW_JOB_STRIPED}/config >> ${STAGE_FILES}
