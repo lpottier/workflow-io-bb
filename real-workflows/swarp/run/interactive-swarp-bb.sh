@@ -38,15 +38,30 @@ echo "fragments list:"
 echo "frag state instID capacity gran node"
 dwstat fragments | grep ${instID}
 
+echo "Starting STAGE_IN... $(date --rfc-3339=ns)"
+t1=$(date +%s.%N)
+cp -r $BASE/input ${DW_JOB_STRIPED}
+t2=$(date +%s.%N)
+tdiff1=$(echo "$t2 - $t1" | bc -l)
+echo "TIME STAGE_IN $tdiff1"
+
+
 du -sh $DW_JOB_STRIPED/
-echo "Started resample..."
+echo "Starting RESAMPLE... $(date --rfc-3339=ns)"
+t1=$(date +%s.%N)
 
 srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "output.resample" \
 	-e "error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
 	$EXE -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN}
-echo "Started combine..."
+
+t2=$(date +%s.%N)
+tdiff2=$(echo "$t2 - $t1" | bc -l)
+echo "TIME RESAMPLE $tdiff2"
+
+echo "Starting combine... $(date --rfc-3339=ns)"
+t1=$(date +%s.%N)
 
 srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "output.coadd" \
@@ -54,5 +69,20 @@ srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
     	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
 	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
 
+t2=$(date +%s.%N)
+tdiff3=$(echo "$t2 - $t1" | bc -l)
+echo "TIME COMBINE $tdiff3"
+
 du -sh $DW_JOB_STRIPED/
+
+echo "Starting STAGE_OUT... $(date --rfc-3339=ns)"
+t1=$(date +%s.%N)
+cp -r $OUTPUT_DIR $(pwd)
+t2=$(date +%s.%N)
+tdiff4=$(echo "$t2 - $t1" | bc -l)
+echo "TIME STAGE_OUT $tdiff4"
+
+echo "========"
+tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
+echo "TIME TOTAL $tdiff"
 
