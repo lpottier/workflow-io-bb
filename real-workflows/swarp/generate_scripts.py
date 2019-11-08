@@ -18,7 +18,7 @@ WRAPPER = "wrapper.sh"
 # Cori fragment size -> 20.14GiB
 
 INPUT_ONE_RUN = 769 #Input size in MB
-SIZE_ONE_PIPELINE = 1688 #Disk Usage for one run in MB
+SIZE_ONE_PIPELINE = 2048 #Disk Usage for one run in MiB -> 1688. We take 2GiB for safety
 
 @unique
 class TaskType(Enum):
