@@ -3,38 +3,134 @@
 import shutil
 import os
 import argparse
-
+import glob
 #read a file source dst
 
-def copy(args):
-    with open(args.input, 'r') as f:
+# remove the common part of both string
+def shorten_strings(s1, s2):
+    last_valid_slash = 0
+
+    for i in range(min(len(s1), len(s2))):
+        if s1[i] != s2[i]:
+            break
+        if s1[i] == '/':
+            last_valid_slash = i
+
+    return (s1[last_valid_slash+1:],s2[last_valid_slash+1:], s1[:last_valid_slash+1])
+
+
+
+def copy_fromlist(args):
+    if not os.path.isfile(args.file):
+        print("[error] IO: {} is not a valid file.".format(args.file))
+        exit(1)
+
+    size_files = []
+    time_files = []
+    with open(args.file, 'r') as f:
         for line in f:
-            src,dest = [e for e in line.split(args.sep) if len(e) > 0]
-            if os.path.isfile(src):
-                if os.path.basename(dest) == '' and os.path.isdir(dest):
-                    try:
-                        shutil.copy2(src, dest)
-                    except IOError as e:
-                        print(e)
-                
+            src, dest = [e for e in line.split(args.sep) if len(e) > 0]
+
+            file_src = os.path.basename(src)
+            dir_src = os.path.dirname(src)
+
+            file_dest = os.path.basename(dest)
+            dir_dest = os.path.dirname(dest)
+
+            if file_dest == '':
+                file_dest = file_src
+            
+            if not os.path.isfile(src):
+                raise IOError("[error] IO: {} is not a file".format(src))
+            
+            if not os.path.isdir(dir_dest):
+                raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
+            
+            try:
+                os.mkdir(dir_dest)
+            except FileExistsError as e:
+                pass
+
+            try:
+                shutil.copy(src, dir_dest)
+            except IOError as e:
+                print(e)
+            else:
+                size_files.append(os.path.getsize(src))
+                s,d,common = shorten_strings(dir_src, dir_dest)
+                print("{}/{:<50} ({:.3} MB) => {:<20}".format( 
+                    file_src,
+                    s,
+                    size_files[-1]/(1024.0**2),
+                    d)
+                )
+
+
+def copy_dir(args):
+
+    if not os.path.isdir(args.src):
+        print("[error] IO: {} is not a valid directory.".format(args.file))
+        exit(1)
+    size_files = []
+    time_files = []
+
+    #print(os.path.abspath(args.src))
+    files_to_copy = glob.glob(args.src+'/'+args.pattern)
+    # print (files_to_copy)
+    if not os.path.exists(args.dest):
+        try:
+            os.mkdir(args.dest)
+        except FileExistsError as e:
+            pass
+    for f in files_to_copy:
+        try:
+            shutil.copy(f, args.dest)
+        except IOError as e:
+            print(e)
+        else:
+            size_files.append(os.path.getsize(f))
+            print("{}/{:<50} ({:.3} MB) => {:<20}".format(
+                args.src, 
+                f,
+                size_files[-1]/(1024.0**2),
+                args.dest)
+            )
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Copy files')
-    
-    parser.add_argument('--input', '-I', type=str, nargs='?', required=True,
-                        help='Input file directory')
-    parser.add_argument('--sep', '-S', type=str, nargs='?', default=' ',
+
+    group = parser.add_mutually_exclusive_group(required=True)
+
+    group.add_argument('--src', '-i', type=str, nargs='?',
+                        help='Source directory')
+
+    group.add_argument('--file', '-f', type=str, nargs='?',
+                        help='File with src dest')
+
+    parser.add_argument('--dest', '-o', type=str, nargs='?',
+                        help='Destination directory')
+
+    parser.add_argument('--sep', type=str, nargs='?', default=' ',
                         help='Separator')
-    parser.add_argument('--output', '-O', type=str, nargs='?', required=True,
-            help='Output file (can be used as input to reverse the copy)')
-    parser.add_argument('--pattern', '-R', type=str, nargs='?', default='*',
-            help='Pattern to match only certain files (for ex. PTF201111*.w.fits ), all files matched by default')
+
+    parser.add_argument('--stats', '-s', type=str, nargs='?', default=' ',
+                        help='Separator')
+
+    parser.add_argument('--reversed', '-r', type=str, nargs='?', required=False,
+            help='Output reversed file (can be used as input to reverse the copy)')
+
+    parser.add_argument('--pattern', '-p', type=str, nargs='?', default='*',
+            help='Copy only files that match the pattern (for ex. PTF201111*.w.fits), all files matched by default.')
+
     args = parser.parse_args()
 
-    if not os.path.isfile(args.input):
-        print("error: {} is not a valid file.".format(args.input))
+    if args.src != None and args.dest == None:
+        print("[error] argument: --dest DIR is missing.".format(args.file))
         exit(1)
 
-    copy(args)
+    if args.file != None and args.src == None and args.dest == None:
+        copy_fromlist(args)
+    elif args.file == None and args.src != None and args.dest != None:
+         copy_dir(args)
 
