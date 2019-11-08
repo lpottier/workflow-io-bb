@@ -22,6 +22,8 @@ export OUTPUT_DIR=${DW_JOB_STRIPED}/output.$SLURM_JOB_ID.${CORE_COUNT}c/
 
 OUTPUT_FILE=$(pwd)/output.$SLURM_JOB_ID.${CORE_COUNT}c.out
 
+rm -rf $DW_JOB_STRIPED/*
+
 mkdir -p ${OUTPUT_DIR}
 chmod 777 ${OUTPUT_DIR}
 
@@ -56,6 +58,10 @@ echo "TIME STAGE_IN $tdiff1" | tee $OUTPUT_FILE
 #if we stge in executable
 EXE=$DW_JOB_STRIPED/swarp
 
+FILE_MAP=$BASE/build_filemap.py
+RESAMPLE_FILES="$BASE/run/file_loc.txt"
+$FILE_MAP -I $BASE/input -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee $OUTPUT_FILE
+
 du -sh $DW_JOB_STRIPED/ | tee $OUTPUT_FILE
 echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
 t1=$(date +%s.%N)
@@ -64,7 +70,8 @@ srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.resample" \
 	-e "$OUTPUT_DIR/error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
-	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
+	$EXE -c $DW_JOB_STRIPED/config/resample.swarp $(cat $RESAMPLE_FILES)
+#	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
 
 t2=$(date +%s.%N)
 tdiff2=$(echo "$t2 - $t1" | bc -l)
