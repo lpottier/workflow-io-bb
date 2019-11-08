@@ -226,13 +226,13 @@ class SwarpBurstBufferConfig:
     def size(self):
         return self.size_bb
 
-    def input_dirs(self):
+    def indirs(self):
         return self.stage_input_dirs
 
-    def input_dirs(self):
+    def infiles(self):
         return self.stage_input_files
 
-    def output_dirs(self):
+    def outdirs(self):
         return self.stage_output_dirs
 
     def mode(self):
@@ -242,8 +242,9 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True, no_stagein=True):
         self.standalone = standalone
+        self.no_stagein = no_stagein
 
         self.resample_config = resample_config
         self.combine_config = combine_config
@@ -270,13 +271,12 @@ class SwarpInstance:
         string += "#SBATCH -d singleton\n"
         return string
 
-    #TODO: stage directory and files according self.stage_input_files and self.stage_input_dirs
     def dw_temporary(self):
         string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
-        if self.standalone:
+        if self.standalone or self.no_stagein:
             string += "#@STAGE@\n"
         else:
-            for directory in self.stage_input_dirs:                
+            for directory in self.bb_config.indirs():                
                 if directory.split('/')[-1] == '':
                     #end with / so we should take the second last one
                     target = directory.split('/')[-2]
@@ -285,7 +285,7 @@ class SwarpInstance:
 
                 string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=directory\n".format(directory, target)
 
-            for file in self.stage_input_files:
+            for file in self.bb_config.infiles():
                 if file.split('/')[-1] == '':
                     #end with / so we should take the second last one
                     target = file.split('/')[-2]
@@ -295,7 +295,7 @@ class SwarpInstance:
                 string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=file\n".format(file, target)
 
             # string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
-            for directory in self.stage_output_dirs:
+            for directory in self.bb_config.outdirs():
                 if directory.split('/')[-1] == '':
                     #end with / so we should take the second last one
                     target = directory.split('/')[-2]
@@ -349,6 +349,47 @@ class SwarpInstance:
         string += "\n"
         return string
 
+    def stage_in_files(self):
+        string = "# Copy manually files in BB\n"
+        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        string += "    echo \"Copy files for process ${process}\"\n"
+        for directory in self.bb_config.indirs():
+            if directory.split('/')[-1] == '':
+                #end with / so we should take the second last one
+                target = directory.split('/')[-2]
+            else:
+                target = directory.split('/')[-1]
+
+            string = string + "    cp -r " + directory + " $DW_JOB_STRIPED/" + target + "/${process} &\n"
+        for file in self.bb_config.infiles():
+            string = string + "    cp " + file + " $DW_JOB_STRIPED/ &\n"
+        string += "done\n"
+        string += "t1=$(date +%s.%N)\n"
+        string += "wait\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+        string += "du -sh $DW_JOB_STRIPED/ > ${outdir}/size_staged_in.out\n"
+        string += "\n"
+        return string
+
+    def stage_out_files(self):
+        string = "# Copy manually files in PFS from BB\n"
+        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        string += "    echo \"Copy files for process ${process}\"\n"
+        string += "    cp -r ${rundir} ${outdir} &\n"
+        string += "done\n"
+        string += "t1=$(date +%s.%N)\n"
+        string += "wait\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+        string += "du -sh ${rundir} > ${outdir}/size_staged_out.out\n"
+        string += "\n"
+        return string
+
     def script_run_resample(self):
         string = "cd ${rundir}\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
@@ -357,7 +398,7 @@ class SwarpInstance:
         string += "    echo \"Launching resample process ${process}\"\n"
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
-        string += "    srun -cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
+        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
         string += "    cd ..\n"
         string += "done\n"
         string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
@@ -388,7 +429,7 @@ class SwarpInstance:
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching coadd process ${process}\"\n"
         string += "    cd ${process}\n"
-        string += "    srun -cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
+        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
@@ -457,7 +498,7 @@ class SwarpInstance:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-    def write(self, file, overide=False):
+    def write(self, file, manual_stage=True, overide=False):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -470,9 +511,15 @@ class SwarpInstance:
             f.write(self.script_modules())
             f.write(self.script_globalvars())
             f.write(self.create_output_dirs())
+            if manual_stage:
+                f.write(self.stage_in_files())
+
             f.write(self.script_run_resample())
             f.write(self.script_copy_resample())
             f.write(self.script_run_combine())
+            if manual_stage:
+                f.write(self.stage_out_files())
+
             f.write(self.script_ending())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
@@ -508,7 +555,7 @@ class SwarpRun:
     def num_pipelines(self):
         return self._num_pipelines
 
-    def standalone(self, file, overide=False):
+    def standalone(self, file, manual_stage=True, overide=False):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -528,10 +575,12 @@ class SwarpRun:
             f.write("        echo $outdir\n")
             f.write("        echo $script\n")
             f.write("        sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
-            f.write("        for j in $(seq ${i} -1 1); do\n")
-            f.write("           stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-            f.write("           sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
-            f.write("        done\n")
+            #If we want to use DW to stage file
+            if not manual_stage:
+                f.write("        for j in $(seq ${i} -1 1); do\n")
+                f.write("           stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+                f.write("           sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+                f.write("        done\n")
             f.write("        cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
             f.write("        cd \"${outdir}\"\n")
             f.write("        sbatch ${script}\n")
@@ -595,8 +644,7 @@ if __name__ == '__main__':
     bb_config = SwarpBurstBufferConfig(
                 size_bb=args.bbsize,
                 stage_input_dirs=[
-                    SWARP_DIR + "/input", 
-                    SWARP_DIR + "/config"],
+                    SWARP_DIR + "/input"],
                 stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"]
@@ -608,7 +656,7 @@ if __name__ == '__main__':
                                 sched_config=sched_config, 
                                 bb_config=bb_config)
 
-    instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
+    instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
     run1 = SwarpRun(pipelines=[1], number_avg=args.nb_run)
 
@@ -616,7 +664,7 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
-    run1.standalone(file="submit.sh", overide=True)
+    run1.standalone(file="submit.sh", manual_stage=True, overide=True)
     
     os.chdir(old_path)
     sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
