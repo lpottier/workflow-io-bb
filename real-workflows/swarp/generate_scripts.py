@@ -316,14 +316,15 @@ class SwarpInstance:
     def script_globalvars(self):
         string = "set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
         string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
         string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
         string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
-        string += "CONFIG_DIR=$SCRATCH/$SWARP_DIR/config\n"
-        string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample-orig.swarp\n"
-        string += "COMBINE_CONFIG=${CONFIG_DIR}/combine-orig.swarp\n"
+        string += "CONFIG_DIR=$BASE\n"
+        string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
+        string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
 
         string += "FILE_PATTERN='PTF201111*'\n"
         string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
