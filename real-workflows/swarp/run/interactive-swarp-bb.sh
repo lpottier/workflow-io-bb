@@ -27,6 +27,8 @@ export RESAMP_DIR=${DW_JOB_STRIPED}/resamp
 mkdir -p ${RESAMP_DIR}
 chmod 777 ${RESAMP_DIR}
 
+rm -rf {error,output}.*
+
 MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
 module load dws
@@ -51,8 +53,8 @@ echo "Starting RESAMPLE... $(date --rfc-3339=ns)"
 t1=$(date +%s.%N)
 
 srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
-	-o "output.resample" \
-	-e "error.resample" \
+	-o "$OUTPUT_DIR/output.resample" \
+	-e "$OUTPUT_DIR/error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
 	$EXE -c $RESAMPLE_CONFIG ${INPUT_DIR}/${IMAGE_PATTERN}
 
@@ -64,8 +66,8 @@ echo "Starting combine... $(date --rfc-3339=ns)"
 t1=$(date +%s.%N)
 
 srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
-	-o "output.coadd" \
-	-e "error.coadd" \
+	-o "$OUTPUT_DIR/output.coadd" \
+	-e "$OUTPUT_DIR/error.coadd" \
     	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
 	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
 
