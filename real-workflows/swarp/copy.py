@@ -4,6 +4,7 @@ import shutil
 import os
 import argparse
 import glob
+import fnmatch
 #read a file source dst
 
 # remove the common part of both string
@@ -37,15 +38,17 @@ def copy_fromlist(args):
             file_dest = os.path.basename(dest)
             dir_dest = os.path.dirname(dest)
 
+            if not fnmatch.fnmatch(file_src, args.pattern):
+                continue
+
             if file_dest == '':
                 file_dest = file_src
             
             if not os.path.isfile(src):
                 raise IOError("[error] IO: {} is not a file".format(src))
             
-            if not os.path.isdir(dir_dest):
-                raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
-            
+            #if not os.path.isdir(dir_dest):
+                # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
             try:
                 os.mkdir(dir_dest)
             except FileExistsError as e:
@@ -59,10 +62,10 @@ def copy_fromlist(args):
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
                 print("{}/{:<50} ({:.3} MB) => {:<20}".format( 
-                    file_src,
                     s,
+                    file_src,
                     size_files[-1]/(1024.0**2),
-                    d)
+                    d+'/')
                 )
 
 
@@ -75,7 +78,7 @@ def copy_dir(args):
     time_files = []
 
     #print(os.path.abspath(args.src))
-    files_to_copy = glob.glob(args.src+'/'+args.pattern)
+    files_to_copy = glob.glob(args.src+'/'+str(args.pattern))
     # print (files_to_copy)
     if not os.path.exists(args.dest):
         try:
@@ -121,7 +124,7 @@ if __name__ == '__main__':
             help='Output reversed file (can be used as input to reverse the copy)')
 
     parser.add_argument('--pattern', '-p', type=str, nargs='?', default='*',
-            help='Copy only files that match the pattern (for ex. PTF201111*.w.fits), all files matched by default.')
+            help='Copy only files that match the pattern (for ex. "PTF201111*.w.fits"), all files matched by default.')
 
     args = parser.parse_args()
 
