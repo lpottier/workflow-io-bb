@@ -16,10 +16,18 @@ NODE_COUNT=1		# Number of compute nodes requested by srun
 TASK_COUNT=1		# Number of tasks allocated by srun
 CORE_COUNT=1		# Number of cores used by both tasks
 
+FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
 STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
 
+#### To select file to stage
+## To modify the first line
+#sed -e '1s|\(\$DW_JOB_STRIPED\/\)|/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/|' $FILES_TO_STAGE
+
 CONFIG_DIR=$BASE/config
+if [ "$STAGE_CONFIG" = 1 ]; then
+	CONFIG_DIR=${DW_JOB_STRIPED}/config
+fi
 RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
 COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp
 
@@ -43,23 +51,27 @@ chmod 777 ${RESAMP_DIR}
 rm -rf {error,output}.*
 
 echo "NODE $NODE_COUNT" | tee $OUTPUT_FILE
-echo "TASK $TASK_COUNT" | tee $OUTPUT_FILE
-echo "CORE $CORE_COUNT" | tee $OUTPUT_FILE
+echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
+echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
 
 MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
 module load dws
 sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
-echo "session ID is: "${sessID} | tee $OUTPUT_FILE
+echo "session ID is: "${sessID} | tee -a $OUTPUT_FILE
 instID=$(dwstat instances | grep $sessID | awk '{print $1}')
-echo "instance ID is: "${instID} | tee $OUTPUT_FILE
-echo "fragments list:" | tee $OUTPUT_FILE
-echo "frag state instID capacity gran node" | tee $OUTPUT_FILE
-dwstat fragments | grep ${instID} | tee $OUTPUT_FILE
+echo "instance ID is: "${instID} | tee -a $OUTPUT_FILE
+echo "fragments list:" | tee -a $OUTPUT_FILE
+echo "frag state instID capacity gran node" | tee -a $OUTPUT_FILE
+dwstat fragments | grep ${instID} | tee -a $OUTPUT_FILE
 
-echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
+echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
-$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+if [ -f "$FILES_TO_STAGE" ]; then
+	$COPY -f $FILES_TO_STAGE
+else
+	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+fi
 if [ "$STAGE_EXEC" = 1 ]; then
 	cp -r $EXE $DW_JOB_STRIPED
 fi
@@ -68,7 +80,7 @@ if [ "$STAGE_CONFIG" = 1 ]; then
 fi
 t2=$(date +%s.%N)
 tdiff1=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_IN $tdiff1" | tee $OUTPUT_FILE
+echo "TIME STAGE_IN $tdiff1" | tee -a $OUTPUT_FILE
 
 #if we stge in executable
 if [ "$STAGE_EXEC" = 1 ]; then
@@ -76,49 +88,48 @@ if [ "$STAGE_EXEC" = 1 ]; then
 fi
 
 RESAMPLE_FILES="$BASE/run/resample_files.txt"
-$FILE_MAP -I $BASE/input -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee $OUTPUT_FILE
+$FILE_MAP -I $BASE/input -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE
 
-du -sh $DW_JOB_STRIPED/ | tee $OUTPUT_FILE
-echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
+du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
+echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
 srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.resample" \
 	-e "$OUTPUT_DIR/error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
-	$EXE -c $DW_JOB_STRIPED/config/resample.swarp $(cat $RESAMPLE_FILES)
+	$EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)
 #	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
 
 t2=$(date +%s.%N)
 tdiff2=$(echo "$t2 - $t1" | bc -l)
-echo "TIME RESAMPLE $tdiff2" | tee $OUTPUT_FILE
+echo "TIME RESAMPLE $tdiff2" | tee -a $OUTPUT_FILE
 
-echo "Starting combine... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
+echo "Starting combine... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
 srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.coadd" \
 	-e "$OUTPUT_DIR/error.coadd" \
     	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
-	$EXE -c $DW_JOB_STRIPED/config/combine.swarp ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
 
 t2=$(date +%s.%N)
 tdiff3=$(echo "$t2 - $t1" | bc -l)
-echo "TIME COMBINE $tdiff3" | tee $OUTPUT_FILE
+echo "TIME COMBINE $tdiff3" | tee -a $OUTPUT_FILE
 
-du -sh $DW_JOB_STRIPED/ | tee $OUTPUT_FILE
+du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
 
 env | grep SLURM > $OUTPUT_DIR/slurm.env
 
-echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
+echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 $COPY -i $OUTPUT_DIR -o $(pwd)/output.$SLURM_JOB_ID.${CORE_COUNT}c/
 t2=$(date +%s.%N)
 tdiff4=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_OUT $tdiff4" | tee $OUTPUT_FILE
+echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
 
-echo "========" | tee $OUTPUT_FILE
+echo "========" | tee -a $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
-echo "TIME TOTAL $tdiff" | tee $OUTPUT_FILE
-
+echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
 
