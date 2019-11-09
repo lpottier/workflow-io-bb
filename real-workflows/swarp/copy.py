@@ -30,8 +30,13 @@ def copy_fromlist(args):
     time_files = []
     with open(args.file, 'r') as f:
         for line in f:
-            src, dest = [e for e in line.split(args.sep) if len(e) > 0]
-
+            try:
+                src, dest = [e for e in line.split(args.sep) if len(e) > 0]
+            except ValueError as e:
+                print(e)
+                exit(1)
+            src = os.path.expandvars(src)
+            dest = os.path.expandvars(dest)
             file_src = os.path.basename(src)
             dir_src = os.path.dirname(src)
 
@@ -70,19 +75,20 @@ def copy_fromlist(args):
 
 
 def copy_dir(args):
-
-    if not os.path.isdir(args.src):
+    src = os.path.expandvars(args.src)
+    dest = os.path.expandvars(args.dest)
+    if not os.path.isdir(src):
         print("[error] IO: {} is not a valid directory.".format(args.file))
         exit(1)
     size_files = []
     time_files = []
 
     #print(os.path.abspath(args.src))
-    files_to_copy = glob.glob(args.src+'/'+str(args.pattern))
+    files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     # print (files_to_copy)
-    if not os.path.exists(args.dest):
+    if not os.path.exists(dest):
         try:
-            os.mkdir(args.dest)
+            os.mkdir(dest)
         except FileExistsError as e:
             pass
     for f in files_to_copy:
@@ -93,10 +99,10 @@ def copy_dir(args):
         else:
             size_files.append(os.path.getsize(f))
             print("{}/{:<50} ({:.3} MB) => {:<20}".format(
-                args.src, 
-                f,
+                os.path.basename(src), 
+                os.path.basename(f),
                 size_files[-1]/(1024.0**2),
-                args.dest)
+                os.path.dirname(dest))
             )
 
 if __name__ == '__main__':

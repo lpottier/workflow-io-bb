@@ -9,7 +9,15 @@ RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
 BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 
 EXE=$BASE/bin/swarp
-CORE_COUNT=1
+COPY=$BASE/copy.py
+FILE_MAP=$BASE/build_filemap.py
+
+NODE_COUNT=1		# Number of compute nodes requested by srun
+TASK_COUNT=1		# Number of tasks allocated by srun
+CORE_COUNT=1		# Number of cores used by both tasks
+
+STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
+STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
 
 CONFIG_DIR=$BASE/config
 RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp
@@ -17,6 +25,7 @@ COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp
 
 CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
+INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=${DW_JOB_STRIPED}/input
 export OUTPUT_DIR=${DW_JOB_STRIPED}/output.$SLURM_JOB_ID.${CORE_COUNT}c/
 
@@ -33,6 +42,8 @@ chmod 777 ${RESAMP_DIR}
 
 rm -rf {error,output}.*
 
+echo "NODE $NODE_COUNT" | tee $OUTPUT_FILE
+echo "TASK $TASK_COUNT" | tee $OUTPUT_FILE
 echo "CORE $CORE_COUNT" | tee $OUTPUT_FILE
 
 MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
@@ -48,25 +59,30 @@ dwstat fragments | grep ${instID} | tee $OUTPUT_FILE
 
 echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
 t1=$(date +%s.%N)
-cp -r $BASE/input $DW_JOB_STRIPED
-cp -r $EXE $DW_JOB_STRIPED
-cp -r $CONFIG_DIR $DW_JOB_STRIPED
+$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+if [ "$STAGE_EXEC" = 1 ]; then
+	cp -r $EXE $DW_JOB_STRIPED
+fi
+if [ "$STAGE_CONFIG" = 1 ]; then
+	cp -r $CONFIG_DIR $DW_JOB_STRIPED
+fi
 t2=$(date +%s.%N)
 tdiff1=$(echo "$t2 - $t1" | bc -l)
 echo "TIME STAGE_IN $tdiff1" | tee $OUTPUT_FILE
 
 #if we stge in executable
-EXE=$DW_JOB_STRIPED/swarp
+if [ "$STAGE_EXEC" = 1 ]; then
+	EXE=$DW_JOB_STRIPED/swarp
+fi
 
-FILE_MAP=$BASE/build_filemap.py
-RESAMPLE_FILES="$BASE/run/file_loc.txt"
+RESAMPLE_FILES="$BASE/run/resample_files.txt"
 $FILE_MAP -I $BASE/input -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee $OUTPUT_FILE
 
 du -sh $DW_JOB_STRIPED/ | tee $OUTPUT_FILE
 echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
 t1=$(date +%s.%N)
 
-srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.resample" \
 	-e "$OUTPUT_DIR/error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
@@ -80,7 +96,7 @@ echo "TIME RESAMPLE $tdiff2" | tee $OUTPUT_FILE
 echo "Starting combine... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
 t1=$(date +%s.%N)
 
-srun -N 1 -n 1 -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.coadd" \
 	-e "$OUTPUT_DIR/error.coadd" \
     	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
@@ -92,9 +108,11 @@ echo "TIME COMBINE $tdiff3" | tee $OUTPUT_FILE
 
 du -sh $DW_JOB_STRIPED/ | tee $OUTPUT_FILE
 
+env | grep SLURM > $OUTPUT_DIR/slurm.env
+
 echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee $OUTPUT_FILE
 t1=$(date +%s.%N)
-cp -r $OUTPUT_DIR $(pwd)
+$COPY -i $OUTPUT_DIR -o $(pwd)/output.$SLURM_JOB_ID.${CORE_COUNT}c/
 t2=$(date +%s.%N)
 tdiff4=$(echo "$t2 - $t1" | bc -l)
 echo "TIME STAGE_OUT $tdiff4" | tee $OUTPUT_FILE
@@ -103,5 +121,4 @@ echo "========" | tee $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
 echo "TIME TOTAL $tdiff" | tee $OUTPUT_FILE
 
-env | grep SLURM > $OUTPUT_DIR/slurm.env
 
