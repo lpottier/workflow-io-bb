@@ -2,6 +2,55 @@
 
 #set -x
 
+usage()
+{
+    echo "usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]"
+}
+
+
+##### Main
+
+FILES_TO_STAGE="files_to_stage.txt"
+COUNT=0
+
+for i in "$@"; do
+	case $i in
+    		-f=*|--file=*)
+    			FILES_TO_STAGE="${i#*=}"
+    			shift # past argument=value
+    		;;
+    		-c=*|--count=*)
+    			COUNT="${i#*=}"
+    			shift # past argument=value
+    			;;
+    		-h|--usage)
+    			usage
+    			exit
+    		;;
+    		*)
+          		# unknown option
+	  		usage
+			exit
+    		;;
+esac
+done
+
+# Test code to verify command line processing
+if [ -f "$FILES_TO_STAGE" ]; then
+	echo "File list used: $FILES_TO_STAGE"
+else
+	echo "$FILES_TO_STAGE does not seem to exist"
+	exit
+fi
+
+if [ "$COUNT" -lt 0 ]; then
+	COUNT=$(cat $FILES_TO_STAGE | wc -l)
+fi
+
+
+echo $FILES_TO_STAGE
+echo $COUNT
+
 IMAGE_PATTERN='PTF201111*.w.fits'
 IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'
 RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
@@ -20,9 +69,6 @@ FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
 STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
 
-#### To select file to stage
-## To modify the first line
-#sed -e '1s|\(\$DW_JOB_STRIPED\/\)|/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/|' $FILES_TO_STAGE
 
 CONFIG_DIR=$BASE/config
 if [ "$STAGE_CONFIG" = 1 ]; then
@@ -37,7 +83,7 @@ INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=${DW_JOB_STRIPED}/input
 export OUTPUT_DIR=${DW_JOB_STRIPED}/output.$SLURM_JOB_ID.${CORE_COUNT}c/
 
-OUTPUT_FILE=$(pwd)/output.$SLURM_JOB_ID.${CORE_COUNT}c.out
+OUTPUT_FILE=$OUTPUT_DIR/output.log
 
 rm -rf $DW_JOB_STRIPED/*
 
@@ -50,7 +96,19 @@ chmod 777 ${RESAMP_DIR}
 
 rm -rf {error,output}.*
 
-echo "NODE $NODE_COUNT" | tee $OUTPUT_FILE
+#### To select file to stage
+## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
+cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
+FILES_TO_STAGE=$OUTPUT_DIR/$FILES_TO_STAGE
+#sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|" $FILES_TO_STAGE
+sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
+
+cat $FILES_TO_STAGE
+
+exit
+
+echo "Number of files kept in PFS: $COUNT/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
+echo "NODE $NODE_COUNT" | tee -a $OUTPUT_FILE
 echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
 echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
 
