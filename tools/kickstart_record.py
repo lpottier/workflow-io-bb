@@ -4,6 +4,7 @@ import xml.etree.ElementTree as xml
 
 from enum import Enum,unique,auto
 from pathlib import Path
+import statistics
 
 XML_PREFIX="{http://pegasus.isi.edu/schema/invocation}"
 
@@ -256,12 +257,12 @@ class Usage:
                 s = s + '{:<10} -> {:<10}\n'.format(name, str(val))
         return s[:-2] # To remove the last \n
 
-class KickstartRecord(object):
+class KickstartEntry(object):
     """
-    KickstartRecord
+    KickstartEntry
     """
     def __init__(self, path, file_type=FileType.XML):
-        super(KickstartRecord, self).__init__()
+        super(KickstartEntry, self).__init__()
 
         if file_type != FileType.XML and file_type != FileType.YAML:
             raise ValueError("{} is not a regular Kickstart output format. Please use XML or YAML.".format(file_type.name))
@@ -311,24 +312,79 @@ class KickstartRecord(object):
                 return elem
         return None
 
-    def utime():
+    def utime(self):
+        return float(self.usage.utime)
+
+    def stime(self):
+        return float(self.usage.stime)
+
+    def time(self):
+        return self.stime() + self.utime()
+
+    def efficiency(self):
+        return self.stime() / (self.stime() + self.utime())
+
+    def cores(self):
         pass
-    def stime():
+
+    def data_read(self):
         pass
-    def exectime():
+
+    def data_written(self):
         pass
-    def efficiency():
+
+    def data_used(self):
         pass
-    def data_read():
+ 
+class KickstartRecord():
+    # Manage averaged runs of one experiments
+    # A list of KickstartEntry for the same experiments
+    def __init__(self,  kickstart_entries, file_type=FileType.XML):
+        self.records = []
+        self.nb_records = len(set(kickstart_entries))
+        for r in set(kickstart_entries):
+            self.records.append(KickstartEntry(r))
+
+    def paths(self):
+        return [e.path() for e in self.records]
+
+    def utime(self):
+        return statistics.mean([e.utime() for e in self.records])
+
+    def stime(self):
+        return statistics.mean([e.stime() for e in self.records])
+
+    def time(self):
+        return statistics.mean([e.time() for e in self.records])
+
+    def efficiency(self):
+        return statistics.mean([e.efficiency() for e in self.records])
+
+    def data_read(self):
         pass
-    def data_written():
-        pass 
-    def data_used():
+
+    def data_written(self):
+        pass
+
+    def data_used(self):
         pass
 
 if __name__ == "__main__":
-    test_record = KickstartRecord("stat.resample.xml")
+    test_record = KickstartEntry("stat.resample.xml")
     print(test_record.path())
-    print(test_record.machine)
-    print(test_record.usage)
+    print(test_record.time())
+    print(test_record.efficiency())
+
+    test_record2 = KickstartEntry("stat.combine.xml")
+    print(test_record2.path())
+    print(test_record2.time())
+    print(test_record2.efficiency())
+
+    exp1 = KickstartRecord(["stat.resample.xml", "stat.combine.xml"])
+
+    print(exp1.paths())
+    print(exp1.time())
+    print(exp1.efficiency())
+
+
 

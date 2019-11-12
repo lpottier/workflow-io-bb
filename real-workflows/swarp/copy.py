@@ -28,6 +28,7 @@ def copy_fromlist(args):
 
     size_files = []
     time_files = []
+    index = 0
     with open(args.file, 'r') as f:
         for line in f:
             try:
@@ -72,6 +73,9 @@ def copy_fromlist(args):
                     size_files[-1]/(1024.0**2),
                     d+'/')
                 )
+        index = index + 1
+        if index >= args.count:
+            break
 
 
 def copy_dir(args):
@@ -120,6 +124,9 @@ if __name__ == '__main__':
     parser.add_argument('--dest', '-o', type=str, nargs='?',
                         help='Destination directory')
 
+    parser.add_argument('--count', '-c', type=int, nargs='?', default=float('inf')
+                        help='Number of files copied')
+
     parser.add_argument('--sep', type=str, nargs='?', default=' ',
                         help='Separator')
 
@@ -133,6 +140,7 @@ if __name__ == '__main__':
             help='Copy only files that match the pattern (for ex. "PTF201111*.w.fits"), all files matched by default.')
 
     args = parser.parse_args()
+
 
     if args.src != None and args.dest == None:
         print("[error] argument: --dest DIR is missing.".format(args.file))
