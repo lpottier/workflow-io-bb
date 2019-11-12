@@ -1,16 +1,14 @@
 #!/bin/bash
-#SBATCH -p debug
+#SBATCH -p regular
 #SBATCH -C haswell
-#SBATCH -t 00:20:00
+#SBATCH -t 00:10:00
 #SBATCH -J swarp-bb
 #SBATCH -o output.%j
 #SBATCH -e error.%j
 #SBATCH --mail-user=lpottier@isi.edu
 #SBATCH --mail-type=FAIL
 #SBATCH --export=ALL
-#SBATCH -d singleton
-#SBATCH --exclusive
-#DW jobdw capacity=50GB access_mode=striped type=scratch
+#DW jobdw capacity=20GB access_mode=striped type=scratch
 
 #set -x
 

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-for i in $(seq 2 2 2); 
+for i in $(seq 0 2 16); 
 do
 	echo "Run $i"
-	./interactive-swarp-bb.sh -c=$i
+	sbatch batch-run-swar-bb -c=$i
 	#rm -rf $DW_JOB_STRIPED/*
 done
 
