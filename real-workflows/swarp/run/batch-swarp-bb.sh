@@ -1,4 +1,14 @@
 #!/bin/bash
+#SBATCH -p regular
+#SBATCH -C haswell
+#SBATCH -t 00:10:00
+#SBATCH -J swarp-bb
+#SBATCH -o output.%j
+#SBATCH -e error.%j
+#SBATCH --mail-user=lpottier@isi.edu
+#SBATCH --mail-type=FAIL
+#SBATCH --export=ALL
+#DW jobdw capacity=20GB access_mode=striped type=scratch
 
 #set -x
 
@@ -90,8 +100,6 @@ echo $OUTPUT_DIR
 
 OUTPUT_FILE=$OUTPUT_DIR/output.log
 
-rm -rf $DW_JOB_STRIPED/*
-
 mkdir -p $OUTPUT_DIR
 chmod 777 $OUTPUT_DIR
 
@@ -165,12 +173,11 @@ du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
 echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
-srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.resample" \
 	-e "$OUTPUT_DIR/error.resample" \
     	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
 	$EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)
-#	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
 
 t2=$(date +%s.%N)
 tdiff2=$(echo "$t2 - $t1" | bc -l)
@@ -183,7 +190,7 @@ t1=$(date +%s.%N)
 ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there
 ###
 
-srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
 	-o "$OUTPUT_DIR/output.coadd" \
 	-e "$OUTPUT_DIR/error.coadd" \
     	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \

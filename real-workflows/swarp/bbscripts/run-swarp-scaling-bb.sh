@@ -19,7 +19,7 @@ module unload darshan
 
 set -x
 SWARP_DIR=workflow-io-bb/real-workflows/swarp
-LAUNCH="$SCRATCH/$SWARP_DIR/burst_buffers_scripts/sync_launch.sh"
+LAUNCH="$SCRATCH/$SWARP_DIR/bbscripts/sync_launch.sh"
 export CONTROL_FILE="$SCRATCH/control_file.txt"
 
 #export | grep SLURM

@@ -18,7 +18,7 @@ WRAPPER = "wrapper.sh"
 # Cori fragment size -> 20.14GiB
 
 INPUT_ONE_RUN = 769 #Input size in MB
-SIZE_ONE_PIPELINE = 1688 #Disk Usage for one run in MB
+SIZE_ONE_PIPELINE = 2048 #Disk Usage for one run in MiB -> 1688. We take 2GiB for safety
 
 @unique
 class TaskType(Enum):
@@ -34,7 +34,8 @@ class SwarpWorkflowConfig:
                     vmem_max=31744, 
                     mem_max=31744, 
                     combine_bufsize=24576, 
-                    existing_file=None
+                    existing_file=None,
+                    output_dir=None
                 ):
         self.task_type = task_type
         self.nthreads = nthreads
@@ -43,11 +44,15 @@ class SwarpWorkflowConfig:
         self.mem_max = mem_max
         self.combine_bufsize = combine_bufsize
         self.existing_file = existing_file
+        self.output_dir = output_dir
 
         if not isinstance(self.task_type, TaskType):
             raise ValueError("Bad task type: must be a TaskType")
 
-        self.file = self.task_type.name.lower() + ".swarp"
+        if self.output_dir:
+            self.file = self.output_dir + "/" + self.task_type.name.lower() + ".swarp"
+        else:
+            self.file = self.task_type.name.lower() + ".swarp"
 
     def output(self):
         string = "# Default configuration file for SWarp 2.17.1\n"
@@ -210,20 +215,24 @@ class SwarpSchedulerConfig:
         return self.num_cores
 
 class SwarpBurstBufferConfig:
-    def __init__(self, size_bb, stage_input_dirs, stage_output_dirs, access_mode="striped", bbtype="scratch"):
+    def __init__(self, size_bb, stage_input_dirs, stage_input_files, stage_output_dirs, access_mode="striped", bbtype="scratch"):
         self.size_bb = size_bb
         self.stage_input_dirs = stage_input_dirs #List of input dirs
         self.stage_output_dirs = stage_output_dirs #List of output dirs (usually one)
         self.access_mode = access_mode
         self.bbtype = bbtype
+        self.stage_input_files = stage_input_files #List of files to stages
 
     def size(self):
         return self.size_bb
 
-    def input_dirs(self):
+    def indirs(self):
         return self.stage_input_dirs
 
-    def output_dirs(self):
+    def infiles(self):
+        return self.stage_input_files
+
+    def outdirs(self):
         return self.stage_output_dirs
 
     def mode(self):
@@ -233,8 +242,9 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True, no_stagein=True):
         self.standalone = standalone
+        self.no_stagein = no_stagein
 
         self.resample_config = resample_config
         self.combine_config = combine_config
@@ -251,7 +261,7 @@ class SwarpInstance:
         else:
             string += "#SBATCH -N {}\n".format(self.sched_config.nodes())
         string += "#SBATCH -C haswell\n"
-        string += "#SBATCH -t 00:15:00\n"
+        string += "#SBATCH -t 00:30:00\n"
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
         string += "#SBATCH -e error.%j\n"
@@ -263,12 +273,37 @@ class SwarpInstance:
 
     def dw_temporary(self):
         string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
-        if self.standalone:
+        if self.standalone or self.no_stagein:
             string += "#@STAGE@\n"
         else:
-            string += "#DW stage_in source={}/input destination=$DW_JOB_STRIPED/input/ type=directory\n".format(SWARP_DIR)
-            string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
-            string += "#DW stage_out source=$DW_JOB_STRIPED/output/  destination={}/output type=directory\n".format(SWARP_DIR)
+            for directory in self.bb_config.indirs():                
+                if directory.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = directory.split('/')[-2]
+                else:
+                    target = directory.split('/')[-1]
+
+                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=directory\n".format(directory, target)
+
+            for file in self.bb_config.infiles():
+                if file.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = file.split('/')[-2]
+                else:
+                    target = file.split('/')[-1]
+
+                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=file\n".format(file, target)
+
+            # string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
+            for directory in self.bb_config.outdirs():
+                if directory.split('/')[-1] == '':
+                    #end with / so we should take the second last one
+                    target = directory.split('/')[-2]
+                else:
+                    target = directory.split('/')[-1]
+
+                string += "#DW stage_out source=$DW_JOB_STRIPED/{}/  destination={} type=directory\n".format(target, directory)
+
         string += "\n"
         return string
 
@@ -281,14 +316,15 @@ class SwarpInstance:
     def script_globalvars(self):
         string = "set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
         string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
         string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
         string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
-        string += "CONFIG_DIR=$SCRATCH/$SWARP_DIR/config\n"
-        string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample-orig.swarp\n"
-        string += "COMBINE_CONFIG=${CONFIG_DIR}/combine-orig.swarp\n"
+        string += "CONFIG_DIR=$BASE\n"
+        string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
+        string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
 
         string += "FILE_PATTERN='PTF201111*'\n"
         string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
@@ -314,28 +350,69 @@ class SwarpInstance:
         string += "\n"
         return string
 
+    def stage_in_files(self):
+        string = "# Copy manually files in BB\n"
+        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        string += "    echo \"Copy files for process ${process}\"\n"
+        for directory in self.bb_config.indirs():
+            if directory.split('/')[-1] == '':
+                #end with / so we should take the second last one
+                target = directory.split('/')[-2]
+            else:
+                target = directory.split('/')[-1]
+
+            string = string + "    cp -r " + directory + " $DW_JOB_STRIPED/" + target + "/${process} &\n"
+        for file in self.bb_config.infiles():
+            string = string + "    cp " + file + " $DW_JOB_STRIPED/ &\n"
+        string += "done\n"
+        string += "t1=$(date +%s.%N)\n"
+        string += "wait\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+        string += "du -sh $DW_JOB_STRIPED/ > ${outdir}/size_staged_in.out\n"
+        string += "\n"
+        return string
+
+    def stage_out_files(self):
+        string = "# Copy manually files in PFS from BB\n"
+        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        string += "    echo \"Copy files for process ${process}\"\n"
+        string += "    cp -r ${rundir} ${outdir} &\n"
+        string += "done\n"
+        string += "t1=$(date +%s.%N)\n"
+        string += "wait\n"
+        string += "t2=$(date +%s.%N)\n"
+        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+        string += "du -sh ${rundir} > ${outdir}/size_staged_out.out\n"
+        string += "\n"
+        return string
+
     def script_run_resample(self):
         string = "cd ${rundir}\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
-        string += "echo \"STAMP RESAMPLE PREP $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching resample process ${process}\"\n"
         string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
+        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
         string += "    cd ..\n"
         string += "done\n"
-        string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "\n"
         # string += "sleep 10\n"
         # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP RESAMPLE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
         # string += "rm $CONTROL_FILE\n"
         string += "t2=$(date +%s.%N)\n"
         string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME RESAMPLE $tdiff\"\n"
+        string += "echo \"TIME RESAMPLE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
         string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
         string += "\n"
         return string
@@ -349,23 +426,23 @@ class SwarpInstance:
         return string
 
     def script_run_combine(self):
-        string = "echo \"STAMP COMBINE PREP $(date --rfc-3339=ns)\"\n"
+        string = "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    echo \"Launching coadd process ${process}\"\n"
         string += "    cd ${process}\n"
-        string += "    srun -N 1 -n 1 -c ${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
+        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
         string += "    cd ..\n"
         string += "done\n"
         string += "\n"
         # string += "sleep 10\n"
         # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP COMBINE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "t1=$(date +%s.%N)\n"
         string += "wait\n"
         # string += "rm $CONTROL_FILE\n"
         string += "t2=$(date +%s.%N)\n"
         string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME COMBINE $tdiff\"\n"
+        string += "echo \"TIME COMBINE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
         string += "\n"
         return string
 
@@ -379,11 +456,11 @@ class SwarpInstance:
 
         string += "\n"
 
-        string += "echo \"STAMP CLEANUP $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP CLEANUP:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         string += "    rm -v ${process}/*.fits\n"
         string += "done\n"
-        string += "echo \"STAMP DONE $(date --rfc-3339=ns)\"\n"
+        string += "echo \"STAMP DONE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
         return string
 
     @staticmethod
@@ -422,7 +499,7 @@ class SwarpInstance:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-    def write(self, file, overide=False):
+    def write(self, file, manual_stage=True, overide=False):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -435,9 +512,15 @@ class SwarpInstance:
             f.write(self.script_modules())
             f.write(self.script_globalvars())
             f.write(self.create_output_dirs())
+            if manual_stage:
+                f.write(self.stage_in_files())
+
             f.write(self.script_run_resample())
             f.write(self.script_copy_resample())
             f.write(self.script_run_combine())
+            if manual_stage:
+                f.write(self.stage_out_files())
+
             f.write(self.script_ending())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
@@ -454,9 +537,10 @@ class SwarpInstance:
             pass
 
 class SwarpRun:
-    def __init__(self, pipelines=[1]):
+    def __init__(self, pipelines=[1], number_avg=1):
         self._pipelines = pipelines
         self._num_pipelines = len(pipelines)
+        self.nb_averages = number_avg
 
     def pipeline_to_str(self):
         res = "{}".format(str(self._pipelines[0]))
@@ -472,7 +556,7 @@ class SwarpRun:
     def num_pipelines(self):
         return self._num_pipelines
 
-    def standalone(self, file, overide=False):
+    def standalone(self, file, manual_stage=True, overide=False):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -483,22 +567,26 @@ class SwarpRun:
             f.write("#!/bin/bash\n")
             f.write("#set -x\n")
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
+            f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+                f.write("        outdir=$(mktemp -d -t swarp-run-${k}-${i}N.XXXXXX)\n")
             else:
-                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
-            f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
-            f.write("    echo $outdir\n")
-            f.write("    echo $script\n")
-            f.write("    sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
-            f.write("    for j in $(seq ${i} -1 1); do\n")
-            f.write("       stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-            f.write("       sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+                f.write("        outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${k}-${i}N.XXXXXX)\n")
+            f.write("        script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
+            f.write("        echo $outdir\n")
+            f.write("        echo $script\n")
+            f.write("        sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+            #If we want to use DW to stage file
+            if not manual_stage:
+                f.write("        for j in $(seq ${i} -1 1); do\n")
+                f.write("           stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+                f.write("           sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+                f.write("        done\n")
+            f.write("        cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
+            f.write("        cd \"${outdir}\"\n")
+            f.write("        sbatch ${script}\n")
+            f.write("        cd ..\n")
             f.write("    done\n")
-            f.write("    cp \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
-            f.write("    cd \"${outdir}\"\n")
-            f.write("    sbatch ${script}\n")
-            f.write("    cd ..\n")
             f.write("done\n")
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
@@ -506,6 +594,7 @@ class SwarpRun:
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
+    
     parser.add_argument('--threads', '-C', type=int, nargs='?', default=1,
                         help='Number of POSIX threads per workflow tasks')
     parser.add_argument('--nodes', '-N', type=int, nargs='?', default=1,
@@ -556,12 +645,11 @@ if __name__ == '__main__':
     bb_config = SwarpBurstBufferConfig(
                 size_bb=args.bbsize,
                 stage_input_dirs=[
-                    SWARP_DIR + "/input", 
-                    SWARP_DIR + "/config"],
+                    SWARP_DIR + "/input"],
+                stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"]
                 )
-
 
     instance1core = SwarpInstance(script_dir=output_dir,
                                 resample_config=resample_config, 
@@ -569,14 +657,15 @@ if __name__ == '__main__':
                                 sched_config=sched_config, 
                                 bb_config=bb_config)
 
-    instance1core.write(file="run-swarp-scaling-bb.sh", overide=True)
+    instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
-    run1 = SwarpRun(pipelines=[1])
+    run1 = SwarpRun(pipelines=[1], number_avg=args.nb_run)
+
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
-    run1.standalone(file="submit.sh", overide=True)
+    run1.standalone(file="submit.sh", manual_stage=True, overide=True)
     
     os.chdir(old_path)
     sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
