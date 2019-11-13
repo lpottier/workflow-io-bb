@@ -99,7 +99,7 @@ export RESAMP_DIR=$DW_JOB_STRIPED/resamp
 mkdir -p $RESAMP_DIR
 chmod 777 $RESAMP_DIR
 
-rm -rf {error,output}.*
+rm -f {error,output}.*
 
 #### To select file to stage
 ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)

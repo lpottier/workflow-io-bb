@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p regular
+#SBATCH -p debug
 #SBATCH -C haswell
 #SBATCH -t 00:10:00
 #SBATCH -J swarp-bb
@@ -94,7 +94,7 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.$SLURM_JOB_ID.${CORE_COUNT}c.${COUNT}f/
+export OUTPUT_DIR=$DW_JOB_STRIPED/output.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
 
 echo $OUTPUT_DIR
 
@@ -107,7 +107,7 @@ export RESAMP_DIR=$DW_JOB_STRIPED/resamp
 mkdir -p $RESAMP_DIR
 chmod 777 $RESAMP_DIR
 
-rm -rf {error,output}.*
+#rm -f {error,output}.*
 
 #### To select file to stage
 ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
@@ -155,11 +155,14 @@ t2=$(date +%s.%N)
 tdiff1=$(echo "$t2 - $t1" | bc -l)
 echo "TIME STAGE_IN $tdiff1" | tee -a $OUTPUT_FILE
 
+mkdir -p $INPUT_DIR
+
 #If we did not stage nay input files
-if [[ ! -d "$INPUT_DIR" || -f "$(ls -A $INPUT_DIR)" ]]; then
+if [[ -f "$(ls -A $INPUT_DIR)" ]]; then
 	INPUT_DIR=$INPUT_DIR_PFS
-	echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
+		echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
 fi
+
 
 #if we stge in executable
 if [ "$STAGE_EXEC" = 1 ]; then
