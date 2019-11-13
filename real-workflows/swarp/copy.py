@@ -75,7 +75,10 @@ def copy_fromlist(args):
                 #shutil.copy(src, dir_dest)
                 usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
 
-                subprocess.run([*DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
+                if args.wrapper:
+                    subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
+                else:
+                    subprocess.run([*DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
 
                 usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
                 utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
@@ -123,7 +126,10 @@ def copy_dir(args):
         try:
             usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
             
-            subprocess.run([*DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
+            if args.wrapper:
+                subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
+            else:
+                subprocess.run([*DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
 
             usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
             utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
