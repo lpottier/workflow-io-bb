@@ -101,6 +101,17 @@ def copy_fromlist(args):
         #if index >= args.count:
         #    break
 
+    total_data = sum(size_files)/(1024.0**2)
+    total_utime = sum(utime_files)
+    total_stime = sum(stime_files)
+    total_time = float(total_utime+total_stime)
+    efficiency = total_stime / total_time
+    bandwith = total_data / total_time
+    print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
+    print("{:<20}: {:.5}".format("TIME (S)", total_time) )
+    print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
+    print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
+
 
 def copy_dir(args):
     src = os.path.expandvars(args.src)
@@ -146,6 +157,18 @@ def copy_dir(args):
                 size_files[-1]/(1024.0**2),
                 dest+'/')
             )
+
+    total_data = sum(size_files)/(1024.0**2)
+    total_utime = sum(utime_files)
+    total_stime = sum(stime_files)
+    total_time = float(total_utime+total_stime)
+    efficiency = total_stime / total_time
+    bandwith = total_data / total_time
+    print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
+    print("{:<20}: {:.5}".format("TIME (S)", total_time) )
+    print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
+    print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
+
 
 if __name__ == '__main__':
 
