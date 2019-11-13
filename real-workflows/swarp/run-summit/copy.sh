@@ -1,19 +1,24 @@
 #!/bin/bash
 
-WRAPPER="jsrun -n1"
+#set -x
 
-input="files_to_stage.txt"
+WRAPPER="jsrun -n 1 "
+BB_DIR="/mnt/bb/$USER"
+INPUT_FILE="files_to_stage.txt"
+
+$WRAPPER ls -alh $BB_DIR
+$WRAPPER mkdir -p $BB_DIR/input
 
 while IFS= read -r line
 do
 	src=$(echo $line | cut -d' ' -f1)
 	dst=$(echo $line | cut -d' ' -f2)
 	
-	#We expand variables
-	#src=$(echo $src)
-	#dst=$(echo $dst)
-	#echo "$dst"
-	echo "$(basename $src) ->  $(dirname  $dst)"
-	$WRAPPER cp -r "$(eval $src)" "$(eval $(dirname $dst) )" 
-done < "$input"
+	echo "$(basename $src) ->  $(dirname $dst)"
+	#$WRAPPER mkdir -p $(eval $(dirname $dst) )
+	#$WRAPPER cp "$src" "$dst"
+done < "$INPUT_FILE"
+
+$WRAPPER ls -alh $BB_DIR/input
+
 
