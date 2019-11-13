@@ -74,8 +74,8 @@ def copy_fromlist(args):
                     d+'/')
                 )
         index = index + 1
-        if index >= args.count:
-            break
+#        if index >= args.count:
+#            break
 
 
 def copy_dir(args):
@@ -124,8 +124,8 @@ if __name__ == '__main__':
     parser.add_argument('--dest', '-o', type=str, nargs='?',
                         help='Destination directory')
 
-    parser.add_argument('--count', '-c', type=int, nargs='?', default=float('inf')
-                        help='Number of files copied')
+#    parser.add_argument('--count', '-c', type=int, nargs='?', default=float('inf')
+#                        help='Number of files copied')
 
     parser.add_argument('--sep', type=str, nargs='?', default=' ',
                         help='Separator')

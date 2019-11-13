@@ -12,7 +12,7 @@ BASE="/ccs/home/lpottier/workflow-io-bb/real-workflows/swarp/"
 
 EXE=$BASE/bin/swarp
 INPUT_DIR=$BASE/input
-export OUTPUT_DIR=i$BASE/run-summit/output
+export OUTPUT_DIR=output
 CONFIG_DIR=$BASE/config
 RESAMPLE_CONFIG=$CONFIG_DIR/resample.swarp
 COMBINE_CONFIG=$CONFIG_DIR/combine.swarp

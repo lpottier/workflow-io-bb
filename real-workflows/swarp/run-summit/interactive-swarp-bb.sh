@@ -7,12 +7,18 @@ usage()
     echo "usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]"
 }
 
-if [ -z "$DW_JOB_STRIPED" ]; then
-	echo "Error: burst buffer allocation found. Run start_nostage.sh first"
-	exit
-fi
+#if [ -z "$DW_JOB_STRIPED" ]; then
+#	echo "Error: burst buffer allocation found. Run start_nostage.sh first"
+#	exit
+#fi
 
 ##### Main
+
+cd $MEMBERWORK/csc355/workflow-io-bb/real-workflows/swarp/run-summit
+
+DW_JOB_STRIPED="/mnt/bb/$USER/"
+CMD_BB="jsrun -n 1"
+JOB_ID=$LSB_JOBID
 
 FILES_TO_STAGE="files_to_stage.txt"
 COUNT=0
@@ -58,7 +64,7 @@ IMAGE_PATTERN='PTF201111*.w.fits'
 IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'
 RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'
 
-BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
+BASE="$MEMBERWORK/csc355/workflow-io-bb/real-workflows/swarp/"
 
 EXE=$BASE/bin/swarp
 COPY=$BASE/copy.py
@@ -84,71 +90,72 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.$SLURM_JOB_ID.${CORE_COUNT}c.${COUNT}f/
+export OUTPUT_DIR=$DW_JOB_STRIPED/output.$JOB_ID.${CORE_COUNT}c.${COUNT}f/
 
 echo $OUTPUT_DIR
 
 OUTPUT_FILE=$OUTPUT_DIR/output.log
 
-rm -rf $DW_JOB_STRIPED/*
-
-mkdir -p $OUTPUT_DIR
-chmod 777 $OUTPUT_DIR
+$CMD_BB mkdir -p $OUTPUT_DIR
+#chmod 777 $OUTPUT_DIR
 
 export RESAMP_DIR=$DW_JOB_STRIPED/resamp
-mkdir -p $RESAMP_DIR
-chmod 777 $RESAMP_DIR
+$CMD_BB mkdir -p $RESAMP_DIR
+#chmod 777 $RESAMP_DIR
 
-rm -rf {error,output}.*
+rm -f {error,output}.*
 
 #### To select file to stage
 ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
-cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
+$CMD_BB cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
 FILES_TO_STAGE=$OUTPUT_DIR/$FILES_TO_STAGE
 #sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|" $FILES_TO_STAGE
 #We want to unstage the w.fits and the corresponding w.weight.fits
 if (( "$COUNT" > 0 )); then
-	sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
+	$CMD_BB sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
 	## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....
 	x=$(echo "$COUNT+16" | bc)
-	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
+	$CMD_BB sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
 fi
 
-echo "Number of files kept in PFS: $(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
-echo "NODE $NODE_COUNT" | tee -a $OUTPUT_FILE
-echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
-echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
+echo "Number of files kept in PFS: $(echo "$COUNT*2" | bc)/$($CMD_BB cat $FILES_TO_STAGE | wc -l)" | $CMD_BB tee $OUTPUT_FILE
+echo "NODE $NODE_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
+echo "TASK $TASK_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
+echo "CORE $CORE_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
 
-MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
+#MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
+MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT"
 
-module load dws
-sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
-echo "session ID is: "${sessID} | tee -a $OUTPUT_FILE
-instID=$(dwstat instances | grep $sessID | awk '{print $1}')
-echo "instance ID is: "${instID} | tee -a $OUTPUT_FILE
-echo "fragments list:" | tee -a $OUTPUT_FILE
-echo "frag state instID capacity gran node" | tee -a $OUTPUT_FILE
-dwstat fragments | grep ${instID} | tee -a $OUTPUT_FILE
+#module load dws
+#sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
+#echo "session ID is: "${sessID} | tee -a $OUTPUT_FILE
+#instID=$(dwstat instances | grep $sessID | awk '{print $1}')
+#echo "instance ID is: "${instID} | tee -a $OUTPUT_FILE
+#echo "fragments list:" | tee -a $OUTPUT_FILE
+#echo "frag state instID capacity gran node" | tee -a $OUTPUT_FILE
+#dwstat fragments | grep ${instID} | tee -a $OUTPUT_FILE
 
-echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+$CMD_BB df -h $DW_JOB_STRIPED/ | $CMD_BB tee -a $OUTPUT_FILE
+
+echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | $CMD_BB tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 if [ -f "$FILES_TO_STAGE" ]; then
-	$COPY -f $FILES_TO_STAGE
+	$CMD_BB $COPY -f $FILES_TO_STAGE
 else
-	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+	$CMD_BB $COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
 fi
 if [ "$STAGE_EXEC" = 1 ]; then
-	cp -r $EXE $DW_JOB_STRIPED
+	$CMD_BB cp -r $EXE $DW_JOB_STRIPED
 fi
 if [ "$STAGE_CONFIG" = 1 ]; then
-	cp -r $CONFIG_DIR $DW_JOB_STRIPED
+	$CMD_BB cp -r $CONFIG_DIR $DW_JOB_STRIPED
 fi
 t2=$(date +%s.%N)
 tdiff1=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_IN $tdiff1" | tee -a $OUTPUT_FILE
+echo "TIME STAGE_IN $tdiff1" | $CMD_BB tee -a $OUTPUT_FILE
 
 #If we did not stage nay input files
-if [[ ! -d "$INPUT_DIR" || -f "$(ls -A $INPUT_DIR)" ]]; then
+if [[ ! -d "$INPUT_DIR" || -f "$($CMD_BB ls -A $INPUT_DIR)" ]]; then
 	INPUT_DIR=$INPUT_DIR_PFS
 	echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
 fi
@@ -159,7 +166,7 @@ if [ "$STAGE_EXEC" = 1 ]; then
 fi
 
 RESAMPLE_FILES="$OUTPUT_DIR/resample_files.txt"
-$FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE
+$CMD_BB $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | $CMD_BB tee -a $OUTPUT_FILE
 
 du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
 echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
