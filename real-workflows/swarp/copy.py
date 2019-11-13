@@ -5,7 +5,14 @@ import os
 import argparse
 import glob
 import fnmatch
+import subprocess
+import shlex                    # for shlex.split
+import resource                 # for resource.getrusage
+
 #read a file source dst
+
+DEF_COPY_CMD  = ["cp", "-f", "-p"]
+DEF_MKDIR_CMD = ["mkdir", "-p"]
 
 # remove the common part of both string
 def shorten_strings(s1, s2):
@@ -27,8 +34,11 @@ def copy_fromlist(args):
         exit(1)
 
     size_files = []
-    time_files = []
-    index = 0
+    utime_files = []
+    stime_files = []
+    #index = 0
+
+    global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     with open(args.file, 'r') as f:
         for line in f:
             try:
@@ -56,14 +66,29 @@ def copy_fromlist(args):
             #if not os.path.isdir(dir_dest):
                 # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
             try:
-                os.mkdir(dir_dest)
-            except FileExistsError as e:
-                pass
+                # os.mkdir(dir_dest)                
+                subprocess.run([*DEF_MKDIR_CMD, str(dir_dest)], check=True, capture_output=True)
+            except subprocess.CalledProcessError as e:
+                print(e)
+                raise IOError(e)
 
             try:
-                shutil.copy(src, dir_dest)
-            except IOError as e:
+                #shutil.copy(src, dir_dest)
+                usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
+
+                if args.wrapper:
+                    subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
+                else:
+                    subprocess.run([*DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
+
+                usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+                utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
+                stime_files.append(usage_end.ru_stime - usage_start.ru_stime)
+            # except IOError as e:
+            #     print(e)
+            except subprocess.CalledProcessError as e:
                 print(e)
+                raise IOError(e)
             else:
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
@@ -73,9 +98,24 @@ def copy_fromlist(args):
                     size_files[-1]/(1024.0**2),
                     d+'/')
                 )
-        index = index + 1
-        if index >= args.count:
-            break
+        #index = index + 1
+        #if index >= args.count:
+        #    break
+
+    global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    global_utime = global_end.ru_utime - global_start.ru_utime
+    global_stime = global_end.ru_stime - global_start.ru_stime
+
+    total_data = sum(size_files)/(1024.0**2)
+    total_utime = sum(utime_files)
+    total_stime = sum(stime_files)
+    total_time = float(total_utime+total_stime)
+    efficiency = total_stime / total_time
+    bandwith = total_data / total_time
+    print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
+    print("{:<20}: {:.5} {:.5}".format("TIME (S)", total_time, global_utime+global_stime) )
+    print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
+    print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
 
 def copy_dir(args):
@@ -85,29 +125,60 @@ def copy_dir(args):
         print("[error] IO: {} is not a valid directory.".format(args.file))
         exit(1)
     size_files = []
-    time_files = []
+    utime_files = []
+    stime_files = []
 
     #print(os.path.abspath(args.src))
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     # print (files_to_copy)
-    if not os.path.exists(dest):
-        try:
-            os.mkdir(dest)
-        except FileExistsError as e:
-            pass
+    try:
+        # os.mkdir(dir_dest)
+        subprocess.run([*DEF_MKDIR_CMD, str(dest)], check=True, capture_output=True)
+    except subprocess.CalledProcessError as e:
+        print(e)
+        raise IOError(e)
+
+    global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     for f in files_to_copy:
         try:
-            shutil.copy(f, args.dest)
-        except IOError as e:
+            usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
+            
+            if args.wrapper:
+                subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
+            else:
+                subprocess.run([*DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
+
+            usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+            utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
+            stime_files.append(usage_end.ru_stime - usage_start.ru_stime)
+            # shutil.copy(f, args.dest)
+        # except IOError as e:
+        #     print(e)
+        except subprocess.CalledProcessError as e:
             print(e)
         else:
             size_files.append(os.path.getsize(f))
-            print("{}/{:<50} ({:.3} MB) => {:<20}".format(
-                os.path.basename(src), 
+            print("{:<50} ({:.3} MB) => {:<20}".format(
                 os.path.basename(f),
                 size_files[-1]/(1024.0**2),
-                os.path.dirname(dest))
+                dest+'/')
             )
+
+    global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    global_utime = global_end.ru_utime - global_start.ru_utime
+    global_stime = global_end.ru_stime - global_start.ru_stime
+
+    total_data = sum(size_files)/(1024.0**2)
+    total_utime = sum(utime_files)
+    total_stime = sum(stime_files)
+    total_time = float(total_utime+total_stime)
+    efficiency = total_stime / total_time
+    bandwith = total_data / total_time
+    print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
+    print("{:<20}: {:.5} {:.5}".format("TIME (S)", total_time, global_utime+global_stime) )
+    print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
+    print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
+
 
 if __name__ == '__main__':
 
@@ -124,11 +195,14 @@ if __name__ == '__main__':
     parser.add_argument('--dest', '-o', type=str, nargs='?',
                         help='Destination directory')
 
-    parser.add_argument('--count', '-c', type=int, nargs='?', default=float('inf')
-                        help='Number of files copied')
+    #parser.add_argument('--count', '-c', type=int, nargs='?', default=float('inf'),
+    #                    help='Number of files copied')
 
     parser.add_argument('--sep', type=str, nargs='?', default=' ',
                         help='Separator')
+
+    parser.add_argument('--wrapper', '-w', type=str, nargs='?', default=None,
+                        help='Wrapper command (for ex. "jsrun -n1" on Summit')
 
     parser.add_argument('--stats', '-s', type=str, nargs='?', default=' ',
                         help='Separator')
@@ -145,6 +219,12 @@ if __name__ == '__main__':
     if args.src != None and args.dest == None:
         print("[error] argument: --dest DIR is missing.".format(args.file))
         exit(1)
+
+    # shlex.split is similar to s.split(' ') but follow POSIX argument and handles complex cases
+    # shlex.split is better to split arguments from POSIX-like comments
+    if args.wrapper != None and shutil.which(shlex.split(args.wrapper)[0]) == None:
+        print("Warning: wrapper -> {} does not seem to exist, no wrapper will be used.".format(shlex.split(args.wrapper)[0]))
+        args.wrapper = None
 
     if args.file != None and args.src == None and args.dest == None:
         copy_fromlist(args)
