@@ -38,6 +38,7 @@ def copy_fromlist(args):
     stime_files = []
     #index = 0
 
+    global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     with open(args.file, 'r') as f:
         for line in f:
             try:
@@ -101,6 +102,10 @@ def copy_fromlist(args):
         #if index >= args.count:
         #    break
 
+    global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    global_utime = global_end.ru_utime - global_start.ru_utime
+    global_stime = global_end.ru_stime - global_start.ru_stime
+
     total_data = sum(size_files)/(1024.0**2)
     total_utime = sum(utime_files)
     total_stime = sum(stime_files)
@@ -108,7 +113,7 @@ def copy_fromlist(args):
     efficiency = total_stime / total_time
     bandwith = total_data / total_time
     print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
-    print("{:<20}: {:.5}".format("TIME (S)", total_time) )
+    print("{:<20}: {:.5} {:.5}".format("TIME (S)", total_time, global_utime+global_stime) )
     print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
     print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
@@ -133,6 +138,7 @@ def copy_dir(args):
         print(e)
         raise IOError(e)
 
+    global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     for f in files_to_copy:
         try:
             usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -158,6 +164,10 @@ def copy_dir(args):
                 dest+'/')
             )
 
+    global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    global_utime = global_end.ru_utime - global_start.ru_utime
+    global_stime = global_end.ru_stime - global_start.ru_stime
+
     total_data = sum(size_files)/(1024.0**2)
     total_utime = sum(utime_files)
     total_stime = sum(stime_files)
@@ -165,7 +175,7 @@ def copy_dir(args):
     efficiency = total_stime / total_time
     bandwith = total_data / total_time
     print("{:<20}: {:.5}".format("SIZE (MB)", total_data) )
-    print("{:<20}: {:.5}".format("TIME (S)", total_time) )
+    print("{:<20}: {:.5} {:.5}".format("TIME (S)", total_time, global_utime+global_stime) )
     print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
     print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
