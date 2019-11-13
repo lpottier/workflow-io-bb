@@ -9,8 +9,8 @@ usage()
 
 WHO=$(whoami)
 EXEC="batch-swarp-bb.sh"
-LOCAL=8 # if debug (only 5 jobs max so 0 -> 8 with a step=2 -> 5 jobs)
-TOTAL=16
+LOCAL=6 # if debug (only 5 jobs max so 0 -> 8 with a step=2 -> 5 jobs)
+TOTAL=2
 MAX_JOBS=5
 SEC=30
 
@@ -37,6 +37,7 @@ done
 if [[ "$QUEUE" == "regular" ]]; then
 	MAX_JOBS=10
 fi
+echo "Queue: $QUEUE"
 
 for i in $(seq 0 2 $LOCAL); do
 	echo "Run $i"
@@ -51,10 +52,8 @@ done
 
 LOCAL=$(echo "$LOCAL + 2" | bc -l)
 
-echo $QUEUE
-
 for i in $(seq $LOCAL 2 $TOTAL); do
 	echo "Run $i"
-        sbatch --partition="QUEUE" "$EXEC" -f="files_to_stage.txt" -c="$i"
+        sbatch --partition="$QUEUE" "$EXEC" -f="files_to_stage.txt" -c="$i"
 done
 
