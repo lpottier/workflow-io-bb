@@ -29,19 +29,19 @@ def shorten_strings(s1, s2):
 
 def dir_exists(path):
     try:
-        subprocess.run(["test", "-d", str(path)], check=True)
+        subprocess.check_call(["test", "-d", str(path)])
     except subprocess.CalledProcessError as e:
-        return True
-    else:
         return False
+    else:
+        return True
 
 def file_exists(path):
     try:
-        subprocess.run(["test", "-f", str(path)], check=True)
+        subprocess.check_call(["test", "-f", str(path)])
     except subprocess.CalledProcessError as e:
-        return True
-    else:
         return False
+    else:
+        return True
 
 def copy_fromlist(args):
     if not os.path.isfile(args.file):
@@ -90,7 +90,7 @@ def copy_fromlist(args):
                     subprocess.run(cmdline, check=True)
                 except subprocess.CalledProcessError as e:
                     print(e)
-
+            
             try:
                 #shutil.copy(src, dir_dest)
                 cmdline = [*DEF_COPY_CMD, str(src), str(dir_dest)]
