@@ -150,7 +150,7 @@ def copy_dir(args):
     #print(os.path.abspath(args.src))
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     # print (files_to_copy)
-    if not dir_exists(dir_dest):
+    if not dir_exists(dest):
         try:
             # os.mkdir(dir_dest)
             cmdline = [*DEF_MKDIR_CMD, str(dest)]
