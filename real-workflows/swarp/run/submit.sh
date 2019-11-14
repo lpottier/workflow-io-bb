@@ -9,8 +9,8 @@ usage()
 
 WHO=$(whoami)
 EXEC="batch-swarp-bb.sh"
-LOCAL=6 # if debug (only 5 jobs max so 0 -> 8 with a step=2 -> 5 jobs)
-TOTAL=2
+LOCAL=8 # if debug (only 5 jobs max so 0 -> 8 with a step=2 -> 5 jobs)
+TOTAL=0
 MAX_JOBS=5
 SEC=30
 
@@ -46,7 +46,7 @@ done
 
 echo "Jobs launched..."
 
-until (( $(echo $(squeue -p $QUEUE -u $WHO -o "%A" -h) | wc -l) > 0  )); do
+until (( $(squeue -p $QUEUE -u $WHO -o "%A" -h | wc -l) > 0  )); do
 	sleep $SEC
 done
 
