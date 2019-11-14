@@ -14,6 +14,7 @@ import resource                 # for resource.getrusage
 DEF_COPY_CMD  = ["cp", "-f", "-p"]
 DEF_MKDIR_CMD = ["mkdir", "-p"]
 
+
 # remove the common part of both string
 def shorten_strings(s1, s2):
     last_valid_slash = 0
@@ -26,7 +27,21 @@ def shorten_strings(s1, s2):
 
     return (s1[last_valid_slash+1:],s2[last_valid_slash+1:], s1[:last_valid_slash+1])
 
+def dir_exists(path):
+    try:
+        subprocess.check_call(["test", "-d", str(path)])
+    except subprocess.CalledProcessError as e:
+        return False
+    else:
+        return True
 
+def file_exists(path):
+    try:
+        subprocess.check_call(["test", "-f", str(path)])
+    except subprocess.CalledProcessError as e:
+        return False
+    else:
+        return True
 
 def copy_fromlist(args):
     if not os.path.isfile(args.file):
@@ -65,21 +80,26 @@ def copy_fromlist(args):
             
             #if not os.path.isdir(dir_dest):
                 # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
-            try:
-                # os.mkdir(dir_dest)                
-                subprocess.run([*DEF_MKDIR_CMD, str(dir_dest)], check=True, capture_output=True)
-            except subprocess.CalledProcessError as e:
-                print(e)
-                raise IOError(e)
+            if not dir_exists(dir_dest):
+                try:
+                    # os.mkdir(dir_dest)
+                    cmdline = [*DEF_MKDIR_CMD, str(dir_dest)]     
+                    if args.wrapper:
+                        cmdline = shlex.split(args.wrapper) + cmdline
 
+                    subprocess.run(cmdline, check=True)
+                except subprocess.CalledProcessError as e:
+                    print(e)
+            
             try:
                 #shutil.copy(src, dir_dest)
+                cmdline = [*DEF_COPY_CMD, str(src), str(dir_dest)]
+                if args.wrapper:
+                    cmdline = shlex.split(args.wrapper) + cmdline
+
                 usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
 
-                if args.wrapper:
-                    subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
-                else:
-                    subprocess.run([*DEF_COPY_CMD, str(src), str(dir_dest)], check=True, capture_output=True)
+                subprocess.run(cmdline, check=True)
 
                 usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
                 utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
@@ -88,7 +108,6 @@ def copy_fromlist(args):
             #     print(e)
             except subprocess.CalledProcessError as e:
                 print(e)
-                raise IOError(e)
             else:
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
@@ -131,22 +150,27 @@ def copy_dir(args):
     #print(os.path.abspath(args.src))
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     # print (files_to_copy)
-    try:
-        # os.mkdir(dir_dest)
-        subprocess.run([*DEF_MKDIR_CMD, str(dest)], check=True, capture_output=True)
-    except subprocess.CalledProcessError as e:
-        print(e)
-        raise IOError(e)
+    if not dir_exists(dest):
+        try:
+            # os.mkdir(dir_dest)
+            cmdline = [*DEF_MKDIR_CMD, str(dest)]
+            if args.wrapper:
+                cmdline = shlex.split(args.wrapper) + cmdline
+            subprocess.run(cmdline, check=True)
+
+        except subprocess.CalledProcessError as e:
+            print(e)
 
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     for f in files_to_copy:
         try:
-            usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-            
+            cmdline = [*DEF_COPY_CMD, str(f), str(args.dest)]
             if args.wrapper:
-                subprocess.run([str(args.wrapper), *DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
-            else:
-                subprocess.run([*DEF_COPY_CMD, str(f), str(args.dest)], check=True, capture_output=True)
+                cmdline = shlex.split(args.wrapper) + cmdline
+
+            usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
+
+            subprocess.run(cmdline, check=True)
 
             usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
             utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
