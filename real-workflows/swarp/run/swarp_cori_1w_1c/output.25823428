@@ -1,0 +1,95 @@
+File list used: files_to_stage.txt
+files_to_stage.txt
+4
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch//output.batch.1c.4f.25823428/
+Number of files kept in PFS: 8/32
+NODE 1
+TASK 1
+CORE 1
+session ID is: 25923
+instance ID is: 17710
+fragments list:
+frag state instID capacity gran node
+1411131  CA-- 17710  20.14GiB nid06093 
+Starting STAGE_IN... 2019-11-14 15:44:10.085798627-08:00
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111274755_2_o_38996_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111284696_2_o_39396_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111294943_2_o_39822_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111304878_2_o_40204_06.w.fits                (32.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.weight.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.weight.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.weight.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+Command '['cp', '-f', '-p', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.weight.fits', '/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input']' returned non-zero exit status 1.
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111274755_2_o_38996_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111284696_2_o_39396_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111294943_2_o_39822_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111304878_2_o_40204_06.w.weight.fits         (16.0 MB) => var/opt/cray/dws/mounts/batch/25823428_striped_scratch//input/
+SIZE (MB)           : 576.39
+TIME (S)            : 0.4795 0.53833
+EFFICIENCY          : 1.0
+BANDWITH (MB/S)     : 1202.1
+TIME STAGE_IN 5.170537104
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111274755_2_o_38996_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111234857_2_o_37754_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111095206_2_o_34706_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111184953_2_o_36749_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111294943_2_o_39822_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111184953_2_o_36749_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111284696_2_o_39396_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits                                                      32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.weight.fits                                    16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.fits                                           32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111155050_2_o_35570_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111224851_2_o_37387_06.w.fits                                                      32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.weight.fits                                    16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111265053_2_o_38612_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111095206_2_o_34706_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111085228_2_o_34301_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111234857_2_o_37754_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits                                                      32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.weight.fits                                    16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.fits                                           32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.fits                                           32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111085228_2_o_34301_06.w.fits                                                      32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.weight.fits                                    16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111165032_2_o_35994_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111155050_2_o_35570_06.w.fits                                                      32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111224851_2_o_37387_06.w.weight.fits                                               16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.fits                                           32.02789306640625 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111265053_2_o_38612_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111304878_2_o_40204_06.w.weight.fits                                               16.00433349609375 MB
+/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/input/PTF201111165032_2_o_35994_06.w.weight.fits                                               16.00433349609375 MB
+
+ON BURST BUFFERS                                                                                                                                       75.0% (576.39 MB)
+577M	/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/
+Starting RESAMPLE... 2019-11-14 15:44:15.389786652-08:00
+TIME RESAMPLE 123.548191601
+Starting combine... 2019-11-14 15:46:18.990090017-08:00
+TIME COMBINE 81.813218950
+1.6G	/var/opt/cray/dws/mounts/batch/25823428_striped_scratch/
+Starting STAGE_OUT... 2019-11-14 15:47:40.884116631-08:00
+TIME STAGE_OUT .205465584
+========
+TIME TOTAL 210.737413239
