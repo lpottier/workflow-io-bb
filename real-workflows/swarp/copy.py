@@ -147,9 +147,9 @@ def copy_fromlist(args):
         print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
-    if args.no_stats:
+    if args.stats != None:
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
-        with open("files-pfs.csv", 'w', newline='') as pfs_file, open("files-bb.csv", 'w', newline='') as bb_file:
+        with open(str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer_bb = csv.writer(bb_file, delimiter=' ',
@@ -252,9 +252,9 @@ def copy_dir(args):
         print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
-    if args.no_stats:
+    if args.stats != None:
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
-        with open("files-pfs.csv", 'w', newline='') as pfs_file, open("files-bb.csv", 'w', newline='') as bb_file:
+        with open(str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer_bb = csv.writer(bb_file, delimiter=' ',
@@ -311,8 +311,8 @@ if __name__ == '__main__':
     parser.add_argument('--wrapper', '-w', type=str, nargs='?', default=None,
                         help='Wrapper command (for ex. "jsrun -n1" on Summit')
 
-    parser.add_argument('--no-stats', '-a', action='store_false',
-                        help='Output file allocations in files-bb.csv and files-pfs.csv')
+    parser.add_argument('--stats', '-a', type=str, nargs='?', default='stagein',
+                        help='Output file allocations in stagein-bb.csv and stagein-pfs.csv')
 
     parser.add_argument('--reversed', '-r', type=str, nargs='?', required=False,
             help='Output reversed file (can be used as input to reverse the copy)')
