@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH -p debug
 #SBATCH -C haswell
-#SBATCH -t 00:10:00
+#SBATCH -t 00:20:00
 #SBATCH -J swarp-bb
 #SBATCH -o output.%j
 #SBATCH -e error.%j
 #SBATCH --mail-user=lpottier@isi.edu
 #SBATCH --mail-type=FAIL
 #SBATCH --export=ALL
-#DW jobdw capacity=20GB access_mode=striped type=scratch
+#DW jobdw capacity=50GB access_mode=striped type=scratch
 
 #set -x
 
@@ -94,7 +94,7 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
+export OUTPUT_DIR=$DW_JOB_STRIPED/output.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
 
 echo $OUTPUT_DIR
 
@@ -217,4 +217,6 @@ echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
 echo "========" | tee -a $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
 echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
+
+rm -rf $(pwd)/$OUTPUT_DIR/*.fits
 

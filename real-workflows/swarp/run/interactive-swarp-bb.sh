@@ -84,7 +84,7 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.$SLURM_JOB_ID.${CORE_COUNT}c.${COUNT}f/
+export OUTPUT_DIR=$DW_JOB_STRIPED/output.interactive.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
 
 echo $OUTPUT_DIR
 
@@ -207,4 +207,6 @@ echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
 echo "========" | tee -a $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
 echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
+
+rm -rf $(pwd)/$OUTPUT_DIR/*.fits
 
