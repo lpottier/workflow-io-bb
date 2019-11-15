@@ -17,7 +17,7 @@ usage()
 cd $MEMBERWORK/csc355/workflow-io-bb/real-workflows/swarp/run-summit
 
 DW_JOB_STRIPED="/mnt/bb/$USER/"
-CMD_BB="jsrun -n 1"
+CMD_BB="jsrun -n 1 -c 1 -a 1"
 JOB_ID=$LSB_JOBID
 
 FILES_TO_STAGE="files_to_stage.txt"
@@ -72,7 +72,7 @@ FILE_MAP=$BASE/build_filemap.py
 
 NODE_COUNT=1		# Number of compute nodes requested by srun
 TASK_COUNT=1		# Number of tasks allocated by srun
-CORE_COUNT=1		# Number of cores used by both tasks
+export CORE_COUNT=1		# Number of cores used by both tasks
 
 FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
@@ -155,63 +155,66 @@ tdiff1=$(echo "$t2 - $t1" | bc -l)
 echo "TIME STAGE_IN $tdiff1" | $CMD_BB tee -a $OUTPUT_FILE
 
 #If we did not stage nay input files
-if [[ ! -d "$INPUT_DIR" || -f "$($CMD_BB ls -A $INPUT_DIR)" ]]; then
+if ( ! $CMD_BB test -d "$INPUT_DIR" || test -f "$($CMD_BB ls -A $INPUT_DIR)" ); then
 	INPUT_DIR=$INPUT_DIR_PFS
 	echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
 fi
 
 #if we stge in executable
-if [ "$STAGE_EXEC" = 1 ]; then
+if (( "$STAGE_EXEC" == 1 )); then
 	EXE=$DW_JOB_STRIPED/swarp
 fi
 
 RESAMPLE_FILES="$OUTPUT_DIR/resample_files.txt"
 $CMD_BB $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | $CMD_BB tee -a $OUTPUT_FILE
+RFILES=$($CMD_BB cat $RESAMPLE_FILES)
+$CMD_BB du -sh $DW_JOB_STRIPED/ | $CMD_BB tee -a $OUTPUT_FILE
 
-du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
-echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | $CMD_BB tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
-srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+jsrun -n $NODE_COUNT -a $TASK_COUNT -c $CORE_COUNT \
 	-o "$OUTPUT_DIR/output.resample" \
-	-e "$OUTPUT_DIR/error.resample" \
-    	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
-	$EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)
+	-k "$OUTPUT_DIR/error.resample" \
+    $EXE -c $RESAMPLE_CONFIG $RFILES
 #	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
+#    $MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
 
 t2=$(date +%s.%N)
 tdiff2=$(echo "$t2 - $t1" | bc -l)
-echo "TIME RESAMPLE $tdiff2" | tee -a $OUTPUT_FILE
+echo "TIME RESAMPLE $tdiff2" | $CMD_BB tee -a $OUTPUT_FILE
 
-echo "Starting combine... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+echo "Starting COMBINE... $(date --rfc-3339=ns)" | $CMD_BB tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
 ###
 ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there
 ###
 
-srun -N $NODE_COUNT -n $TASK_COUNT -C "haswell" -c $CORE_COUNT --cpu-bind=cores \
+jsrun -n $NODE_COUNT -a $TASK_COUNT -c $CORE_COUNT \
 	-o "$OUTPUT_DIR/output.coadd" \
-	-e "$OUTPUT_DIR/error.coadd" \
-    	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
-	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+	-k "$OUTPUT_DIR/error.coadd" \
+    $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+#    	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
 
 t2=$(date +%s.%N)
 tdiff3=$(echo "$t2 - $t1" | bc -l)
-echo "TIME COMBINE $tdiff3" | tee -a $OUTPUT_FILE
+echo "TIME COMBINE $tdiff3" | $CMD_BB tee -a $OUTPUT_FILE
 
-du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
+$CMD_BB du -sh $DW_JOB_STRIPED/ | $CMD_BB tee -a $OUTPUT_FILE
 
-env | grep SLURM > $OUTPUT_DIR/slurm.env
+#env | grep LSF > $OUTPUT_DIR/lsf.env
 
-echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | $CMD_BB tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
-cp -r $OUTPUT_DIR $(pwd)
+$CMD_BB cp -r $OUTPUT_DIR $(pwd)
 t2=$(date +%s.%N)
 tdiff4=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
+echo "TIME STAGE_OUT $tdiff4" | $CMD_BB tee -a $OUTPUT_FILE
 
-echo "========" | tee -a $OUTPUT_FILE
+echo "========" | $CMD_BB tee -a $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
-echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
+echo "TIME TOTAL $tdiff" | $CMD_BB tee -a $OUTPUT_FILE
+
+rm -rf i$(pwd)/$OUTPUT_DIR/*.fits
 
