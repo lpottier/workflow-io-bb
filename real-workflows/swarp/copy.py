@@ -8,6 +8,7 @@ import fnmatch
 import subprocess
 import shlex                    # for shlex.split
 import resource                 # for resource.getrusage
+import csv
 
 #read a file source dst
 
@@ -48,6 +49,8 @@ def copy_fromlist(args):
         print("[error] IO: {} is not a valid file.".format(args.file))
         exit(1)
 
+    files_notransfered = []
+    files_transfered = []
     size_files = []
     utime_files = []
     stime_files = []
@@ -69,15 +72,17 @@ def copy_fromlist(args):
             file_dest = os.path.basename(dest)
             dir_dest = os.path.dirname(dest)
 
-            if not fnmatch.fnmatch(file_src, args.pattern):
-                continue
-
             if file_dest == '':
                 file_dest = file_src
             
             if not os.path.isfile(src):
                 raise IOError("[error] IO: {} is not a file".format(src))
-            
+
+
+            if not fnmatch.fnmatch(file_src, args.pattern) or src == dest:
+                files_notransfered.append((dir_src, dir_dest, file_src))
+                continue
+
             #if not os.path.isdir(dir_dest):
                 # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
             if not dir_exists(dir_dest):
@@ -117,6 +122,7 @@ def copy_fromlist(args):
                     size_files[-1]/(1024.0**2),
                     d+'/')
                 )
+                files_transfered.append((dir_src, dir_dest, file_src))
         #index = index + 1
         #if index >= args.count:
         #    break
@@ -141,6 +147,38 @@ def copy_fromlist(args):
         print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
+    if args.no_stats:
+        header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
+        with open("files-pfs.csv", 'w', newline='') as pfs_file, open("files-bb.csv", 'w', newline='') as bb_file:
+            writer_pfs = csv.writer(pfs_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_bb = csv.writer(bb_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_pfs.writerow(header)
+            writer_bb.writerow(header)
+
+            for i in range(len(files_notransfered)):
+                writer_pfs.writerow([
+                    files_notransfered[i][0],
+                    files_notransfered[i][1],
+                    files_notransfered[i][2], 
+                    os.path.getsize(files_notransfered[i])/(1024.0**2),
+                    0.0,
+                    0.0,
+                    0.0
+                    ]
+                )
+            for i in range(len(files_transfered)):
+                writer_bb.writerow([
+                    files_transfered[i][0],
+                    files_transfered[i][1],
+                    files_transfered[i][2],
+                    size_files[i]/(1024.0**2), 
+                    utime_files[i]+stime_files[i],
+                    utime_files[i],
+                    stime_files[i]
+                    ]
+                )
 
 def copy_dir(args):
     src = os.path.expandvars(args.src)
@@ -153,6 +191,7 @@ def copy_dir(args):
     stime_files = []
 
     #print(os.path.abspath(args.src))
+    all_files = glob.glob(src)
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     # print (files_to_copy)
     if not dir_exists(dest):
@@ -213,6 +252,40 @@ def copy_dir(args):
         print("{:<20}: {:.5}".format("EFFICIENCY", efficiency) )
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
+    if args.no_stats:
+        header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
+        with open("files-pfs.csv", 'w', newline='') as pfs_file, open("files-bb.csv", 'w', newline='') as bb_file:
+            writer_pfs = csv.writer(pfs_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_bb = csv.writer(bb_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_pfs.writerow(header)
+            writer_bb.writerow(header)
+            for i in range(len(all_files)):
+                if not all_files[i] in files_to_copy:
+                    writer_pfs.writerow([
+                        src,
+                        src,
+                        all_files[i], 
+                        os.path.getsize(all_files[i])/(1024.0**2),
+                        0.0,
+                        0.0,
+                        0.0
+                        ]
+                    )
+                else:
+                    writer_bb.writerow([
+                        src,
+                        dest,
+                        all_files[i], 
+                        size_files[i]/(1024.0**2), 
+                        utime_files[i]+stime_files[i],
+                        utime_files[i],
+                        stime_files[i]
+                        ]
+                    )
+
+
 
 if __name__ == '__main__':
 
@@ -238,8 +311,8 @@ if __name__ == '__main__':
     parser.add_argument('--wrapper', '-w', type=str, nargs='?', default=None,
                         help='Wrapper command (for ex. "jsrun -n1" on Summit')
 
-    parser.add_argument('--stats', '-s', type=str, nargs='?', default=' ',
-                        help='Separator')
+    parser.add_argument('--no-stats', '-a', action='store_false',
+                        help='Output file allocations in files-bb.csv and files-pfs.csv')
 
     parser.add_argument('--reversed', '-r', type=str, nargs='?', required=False,
             help='Output reversed file (can be used as input to reverse the copy)')
@@ -248,7 +321,6 @@ if __name__ == '__main__':
             help='Copy only files that match the pattern (for ex. "PTF201111*.w.fits"), all files matched by default.')
 
     args = parser.parse_args()
-
 
     if args.src != None and args.dest == None:
         print("[error] argument: --dest DIR is missing.".format(args.file))
