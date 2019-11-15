@@ -57,7 +57,6 @@ if (( "$COUNT" < 0 )); then
 	COUNT=$(cat $FILES_TO_STAGE | wc -l)
 fi
 
-echo $FILES_TO_STAGE
 echo $COUNT
 
 IMAGE_PATTERN='PTF201111*.w.fits'
@@ -90,7 +89,7 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.$JOB_ID.${CORE_COUNT}c.${COUNT}f/
+export OUTPUT_DIR=$DW_JOB_STRIPED/output.interactive.${CORE_COUNT}c.${COUNT}f.$JOB_ID/
 
 echo $OUTPUT_DIR
 
@@ -123,17 +122,7 @@ echo "NODE $NODE_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
 echo "TASK $TASK_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
 echo "CORE $CORE_COUNT" | $CMD_BB tee -a $OUTPUT_FILE
 
-#MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
-MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT"
-
-#module load dws
-#sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
-#echo "session ID is: "${sessID} | tee -a $OUTPUT_FILE
-#instID=$(dwstat instances | grep $sessID | awk '{print $1}')
-#echo "instance ID is: "${instID} | tee -a $OUTPUT_FILE
-#echo "fragments list:" | tee -a $OUTPUT_FILE
-#echo "frag state instID capacity gran node" | tee -a $OUTPUT_FILE
-#dwstat fragments | grep ${instID} | tee -a $OUTPUT_FILE
+MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
 $CMD_BB df -h $DW_JOB_STRIPED/ | $CMD_BB tee -a $OUTPUT_FILE
 
@@ -154,13 +143,13 @@ t2=$(date +%s.%N)
 tdiff1=$(echo "$t2 - $t1" | bc -l)
 echo "TIME STAGE_IN $tdiff1" | $CMD_BB tee -a $OUTPUT_FILE
 
-#If we did not stage nay input files
+#If we did not stage any input files
 if ( ! $CMD_BB test -d "$INPUT_DIR" || test -f "$($CMD_BB ls -A $INPUT_DIR)" ); then
 	INPUT_DIR=$INPUT_DIR_PFS
 	echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
 fi
 
-#if we stge in executable
+#if we stage in executable
 if (( "$STAGE_EXEC" == 1 )); then
 	EXE=$DW_JOB_STRIPED/swarp
 fi
@@ -174,9 +163,9 @@ echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | $CMD_BB tee -a $OUTPUT_FILE
 t1=$(date +%s.%N)
 
 jsrun -n $NODE_COUNT -a $TASK_COUNT -c $CORE_COUNT \
-	-o "$OUTPUT_DIR/output.resample" \
-	-k "$OUTPUT_DIR/error.resample" \
-    $EXE -c $RESAMPLE_CONFIG $RFILES
+	-o "output.resample" \
+	-k "error.resample" \
+    $MONITORING -l "$OUTPUT_DIR/stat.resample.xml"  $EXE -c $RESAMPLE_CONFIG $RFILES
 #	$EXE -c $DW_JOB_STRIPED/config/resample.swarp ${INPUT_DIR}/${IMAGE_PATTERN}
 #    $MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
 
@@ -191,10 +180,12 @@ t1=$(date +%s.%N)
 ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there
 ###
 
+RESAMPLE_FITS=$($CMD_BB bash -c "ls ${RESAMP_DIR}/${RESAMPLE_PATTERN}")
+
 jsrun -n $NODE_COUNT -a $TASK_COUNT -c $CORE_COUNT \
-	-o "$OUTPUT_DIR/output.coadd" \
-	-k "$OUTPUT_DIR/error.coadd" \
-    $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+	-o "output.coadd" \
+	-k "error.coadd" \
+    $MONITORING -l "$OUTPUT_DIR/stat.combine.xml" $EXE -c $COMBINE_CONFIG ${RESAMPLE_FITS}
 #    	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
 
 t2=$(date +%s.%N)
@@ -216,5 +207,5 @@ echo "========" | $CMD_BB tee -a $OUTPUT_FILE
 tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
 echo "TIME TOTAL $tdiff" | $CMD_BB tee -a $OUTPUT_FILE
 
-rm -rf i$(pwd)/$OUTPUT_DIR/*.fits
+rm -rf $(pwd)/$OUTPUT_DIR/*.fits
 
