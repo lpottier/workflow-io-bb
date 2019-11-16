@@ -114,7 +114,7 @@ for k in $(seq 1 1 $NB_AVG); do
     OUTPUT_FILE=$OUTPUT_DIR/output.log
     BB_INFO=$OUTPUT_DIR/bb.log
     DU_RES=$OUTPUT_DIR/data-stagedin.log
-
+    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log
 
     mkdir -p $OUTPUT_DIR
     chmod 777 $OUTPUT_DIR
@@ -158,6 +158,9 @@ for k in $(seq 1 1 $NB_AVG); do
     echo "fragments list:" | tee -a $BB_INFO
     echo "frag state instID capacity gran node" | tee -a $BB_INFO
     dwstat fragments | grep ${instID} | tee -a $BB_INFO
+
+    bballoc=$(dwstat fragments | grep ${instID} | awk '{print $4}')
+    echo "$bballoc" > $BB_ALLOC
 
     echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
