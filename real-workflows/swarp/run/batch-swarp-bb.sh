@@ -96,9 +96,12 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
 
-export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/output.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
+OUTPUT_DIR_NAME=output.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
+export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/$OUTPUT_DIR_NAME
 mkdir -p $GLOBAL_OUTPUT_DIR
 chmod 777 $GLOBAL_OUTPUT_DIR
+
+mkdir -p $OUTPUT_DIR_NAME
 
 for k in $(seq 1 1 $NB_AVG); do
 
@@ -140,10 +143,10 @@ for k in $(seq 1 1 $NB_AVG); do
     	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
     fi
 
-    echo "Number of files kept in PFS: $(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
-    echo "NODE $NODE_COUNT" | tee -a $OUTPUT_FILE
-    echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
-    echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
+    echo "Number of files kept in PFS:$(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
+    echo "NODE=$NODE_COUNT" | tee -a $OUTPUT_FILE
+    echo "TASK=$TASK_COUNT" | tee -a $OUTPUT_FILE
+    echo "CORE=$CORE_COUNT" | tee -a $OUTPUT_FILE
 
     MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
@@ -207,7 +210,7 @@ for k in $(seq 1 1 $NB_AVG); do
     tdiff2=$(echo "$t2 - $t1" | bc -l)
     echo "TIME RESAMPLE $tdiff2" | tee -a $OUTPUT_FILE
 
-    echo "Starting combine... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+    echo "Starting COMBINE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
 
     ###
@@ -228,9 +231,10 @@ for k in $(seq 1 1 $NB_AVG); do
 
     env | grep SLURM > $OUTPUT_DIR/slurm.env
 
+
     echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
-    cp -r $OUTPUT_DIR $(pwd)
+    cp -r $OUTPUT_DIR $OUTPUT_DIR_NAME
     t2=$(date +%s.%N)
     tdiff4=$(echo "$t2 - $t1" | bc -l)
     echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
@@ -239,7 +243,7 @@ for k in $(seq 1 1 $NB_AVG); do
     tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
     echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
 
-    rm -rf $(pwd)/$OUTPUT_DIR/*.fits
+    rm -rf $OUTPUT_DIR_NAME/$OUTPUT_DIR/*.fits
 
     echo "#### Ending run $k... $(date --rfc-3339=ns)"
 done
