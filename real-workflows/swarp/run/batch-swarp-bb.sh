@@ -108,6 +108,8 @@ for k in $(seq 1 1 $NB_AVG); do
     echo "#### Starting run $k... $(date --rfc-3339=ns)"
 
     export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}
+    #The local version
+    mkdir -p $OUTPUT_DIR_NAME/${k}
 
     echo $OUTPUT_DIR
 
@@ -237,16 +239,18 @@ for k in $(seq 1 1 $NB_AVG); do
 
     echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
-    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME -a "stage-out" -d $OUTPUT_DIR
+    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a "stage-out" -d $OUTPUT_DIR
     t2=$(date +%s.%N)
     tdiff4=$(echo "$t2 - $t1" | bc -l)
+
+    OUTPUT_FILE=$OUTPUT_DIR_NAME/${k}/output.log
     echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
 
     echo "========" | tee -a $OUTPUT_FILE
     tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
     echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
 
-    rm -rf $OUTPUT_DIR_NAME/$OUTPUT_DIR/*.fits
+    rm -rf "$OUTPUT_DIR_NAME/${k}/*.fits"
 
     echo "#### Ending run $k... $(date --rfc-3339=ns)"
 done
