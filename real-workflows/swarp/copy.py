@@ -309,10 +309,10 @@ if __name__ == '__main__':
                         help='Separator')
 
     parser.add_argument('--wrapper', '-w', type=str, nargs='?', default=None,
-                        help='Wrapper command (for ex. "jsrun -n1" on Summit')
+                       help='Wrapper command (for ex. "jsrun -n1" on Summit')
 
     parser.add_argument('--stats', '-a', type=str, nargs='?', default='stagein',
-                        help='Output file allocations in stagein-bb.csv and stagein-pfs.csv')
+                       help='Output file allocations in stagein-bb.csv and stagein-pfs.csv')
 
     parser.add_argument('--reversed', '-r', type=str, nargs='?', required=False,
             help='Output reversed file (can be used as input to reverse the copy)')

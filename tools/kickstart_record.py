@@ -5,6 +5,8 @@ import xml.etree.ElementTree as xml
 from enum import Enum,unique,auto
 from pathlib import Path
 import statistics
+import os
+import csv
 
 XML_PREFIX="{http://pegasus.isi.edu/schema/invocation}"
 
@@ -336,29 +338,34 @@ class KickstartEntry(object):
     def data_used(self):
         pass
  
-class KickstartRecord():
+class KickstartRecord:
     # Manage averaged runs of one experiments
     # A list of KickstartEntry for the same experiments
     def __init__(self,  kickstart_entries, file_type=FileType.XML):
         self.records = []
-        self.nb_records = len(set(kickstart_entries))
         for r in set(kickstart_entries):
             self.records.append(KickstartEntry(r))
+
+        self.nb_records = len(self.records)
 
     def paths(self):
         return [e.path() for e in self.records]
 
     def utime(self):
-        return statistics.mean([e.utime() for e in self.records])
+        sample = [e.utime() for e in self.records]
+        return (statistics.mean(sample),statistics.stdev(sample))
 
     def stime(self):
-        return statistics.mean([e.stime() for e in self.records])
+        sample = [e.stime() for e in self.records]
+        return (statistics.mean(sample),statistics.stdev(sample))
 
     def time(self):
-        return statistics.mean([e.time() for e in self.records])
+        sample = [e.time() for e in self.records]
+        return (statistics.mean(sample),statistics.stdev(sample))
 
     def efficiency(self):
-        return statistics.mean([e.efficiency() for e in self.records])
+        sample = [e.efficiency() for e in self.records]
+        return (statistics.mean(sample),statistics.stdev(sample))
 
     def data_read(self):
         pass
@@ -368,6 +375,121 @@ class KickstartRecord():
 
     def data_used(self):
         pass
+
+class OutputLog:
+    def __init__(self, file):
+        self.file = file
+        self.nodes = 0
+        self.tasks = 0
+        self.cores = 0
+        self.files_staged = 0
+        self.total_number_files = 0
+        self.data_staged = 0 #In MB
+
+        #From the scheduler perspective
+        self.time_stage_in = 0
+        self.time_resample = 0
+        self.time_coadd = 0
+        self.time_stage_out = 0
+
+        with open(self.file, 'r') as f:
+            for line in f:
+                if line.startswith("Number of files kept in PFS: "):
+                    start = len("Number of files kept in PFS: ")
+                    end = line.index('/')
+                    self.files_staged = int(line[start:end])
+                    self.total_number_files = int(line[end+1:])
+                if line.startswith("NODE"):
+                    self.nodes = int(line.split(' ')[1])
+                elif line.startswith("TASK"):
+                    self.tasks = int(line.split(' ')[1])
+                elif line.startswith("CORE"):
+                    self.cores = int(line.split(' ')[1])
+                elif line.startswith("TIME STAGE_IN"):
+                    start = len("TIME STAGE_IN ")
+                    self.time_stage_in = float(line[start:])
+                elif line.startswith("TIME RESAMPLE"):
+                    start = len("TIME RESAMPLE ")
+                    self.time_resample = float(line[start:])
+                elif line.startswith("TIME COMBINE"):
+                    start = len("TIME COMBINE ")
+                    self.time_coadd = float(line[start:])
+                elif line.startswith("TIME STAGE_OUT"):
+                    #TODO
+                    self.time_stage_out = 0
+
+
+class KickstartDirectory:
+    """
+        Directory must follow this kind of pattern:
+        self.dir = swarp_cori_1w_1c
+            swarp_cori_1w_1c
+            ├── output.25823425
+            ├── output.25823427
+            ├── output.25823428
+            ├── output.25823430
+            ├── output.25823433
+            ├── output.25823579
+            ├── output.25823580
+            ├── output.25823581
+            ├── output.25823583
+            ├── output.batch.1c.0f.25823425
+                ├── combine.xml
+                ├── error.coadd
+                ├── error.resample
+                ├── files_to_stage.txt
+                ├── output.coadd
+                ├── output.log
+                ├── output.resample
+                ├── resample.xml
+                ├── resample_files.txt
+                ├── slurm.env
+                ├── stat.combine.xml
+                └── stat.resample.xml
+            ├── output.batch.1c.10f.25823579
+            ├── output.batch.1c.12f.25823580
+            ├── output.batch.1c.14f.25823581
+            ├── output.batch.1c.16f.25823583
+            ├── output.batch.1c.2f.25823427
+            ├── output.batch.1c.4f.25823428
+            ├── output.batch.1c.6f.25823430
+            └── output.batch.1c.8f.25823433
+
+    """
+    def __init__(self,  directory, file_type=FileType.XML):
+        self.dir = directory
+        if not os.path.isdir(self.dir):
+            raise ValueError("error: {} is not a valid directory.".format(self.dir))
+
+        self.dir_exp = os.listdir(self.dir)
+        self.log = []
+        self.resample = []
+        self.coadd = []
+        self.log = "output.log"
+
+        for d in self.dir_exp:
+            print(d)
+            #No average yet
+            self.resample.append(KickstartRecord([d+'/'+"stat.resample.xml"]))
+            self.coadd.append(KickstartRecord([d+'/'+"stat.coadd.xml"]))
+
+    def root_dir(self):
+        return self.dir
+
+    def dirs(self):
+        return self.dir_exp
+
+    def parse_outputlog():
+        for d in self.dir_exp:
+
+
+    # def write(csv_file):
+    #     with open(csv_file, 'w', newline='') as f:
+    #         write = csv.writer(f, delimiter=' ',
+    #                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    #         write.writerow([])
+
+
 
 if __name__ == "__main__":
     test_record = KickstartEntry("stat.resample.xml")
@@ -386,5 +508,6 @@ if __name__ == "__main__":
     print(exp1.time())
     print(exp1.efficiency())
 
+    test = KickstartDirectory("swarp_cori_1w_1c/")
 
 
