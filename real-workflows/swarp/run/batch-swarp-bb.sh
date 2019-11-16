@@ -81,6 +81,7 @@ CORE_COUNT=1		# Number of cores used by both tasks
 FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
 STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
+NB_AVG=1            # Number of identical runs
 
 
 CONFIG_DIR=$BASE/config
@@ -94,129 +95,151 @@ CONFIG_FILES="${RESAMPLE_CONFIG} ${COMBINE_CONFIG}"
 
 INPUT_DIR_PFS=$BASE/input
 INPUT_DIR=$DW_JOB_STRIPED/input
-export OUTPUT_DIR=$DW_JOB_STRIPED/output.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
 
-echo $OUTPUT_DIR
+export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/output.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/
+mkdir -p $GLOBAL_OUTPUT_DIR
+chmod 777 $GLOBAL_OUTPUT_DIR
 
-OUTPUT_FILE=$OUTPUT_DIR/output.log
+for k in $(seq 1 1 $NB_AVG); do
 
-mkdir -p $OUTPUT_DIR
-chmod 777 $OUTPUT_DIR
+    echo "#### Starting run $k... $(date --rfc-3339=ns)"
 
-export RESAMP_DIR=$DW_JOB_STRIPED/resamp
-mkdir -p $RESAMP_DIR
-chmod 777 $RESAMP_DIR
+    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}
 
-#rm -f {error,output}.*
+    echo $OUTPUT_DIR
 
-#### To select file to stage
-## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
-cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
-FILES_TO_STAGE=$OUTPUT_DIR/$FILES_TO_STAGE
-#sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|" $FILES_TO_STAGE
-#We want to unstage the w.fits and the corresponding w.weight.fits
-if (( "$COUNT" > 0 )); then
-	sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
-	## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....
-	x=$(echo "$COUNT+16" | bc)
-	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
-fi
-
-echo "Number of files kept in PFS: $(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
-echo "NODE $NODE_COUNT" | tee -a $OUTPUT_FILE
-echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
-echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
-
-MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
-
-module load dws
-sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
-echo "session ID is: "${sessID} | tee -a $OUTPUT_FILE
-instID=$(dwstat instances | grep $sessID | awk '{print $1}')
-echo "instance ID is: "${instID} | tee -a $OUTPUT_FILE
-echo "fragments list:" | tee -a $OUTPUT_FILE
-echo "frag state instID capacity gran node" | tee -a $OUTPUT_FILE
-dwstat fragments | grep ${instID} | tee -a $OUTPUT_FILE
-
-echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
-t1=$(date +%s.%N)
-if [ -f "$FILES_TO_STAGE" ]; then
-	$COPY -f $FILES_TO_STAGE
-else
-	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
-fi
-if [ "$STAGE_EXEC" = 1 ]; then
-	cp -r $EXE $DW_JOB_STRIPED
-fi
-if [ "$STAGE_CONFIG" = 1 ]; then
-	cp -r $CONFIG_DIR $DW_JOB_STRIPED
-fi
-t2=$(date +%s.%N)
-tdiff1=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_IN $tdiff1" | tee -a $OUTPUT_FILE
-
-mkdir -p $INPUT_DIR
-
-#If we did not stage nay input files
-if [[ -f "$(ls -A $INPUT_DIR)" ]]; then
-	INPUT_DIR=$INPUT_DIR_PFS
-		echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
-fi
+    OUTPUT_FILE=$OUTPUT_DIR/output.log
+    BB_INFO=$OUTPUT_DIR/bb.log
+    DU_RES=$OUTPUT_DIR/data-stagedin.log
 
 
-#if we stge in executable
-if [ "$STAGE_EXEC" = 1 ]; then
-	EXE=$DW_JOB_STRIPED/swarp
-fi
+    mkdir -p $OUTPUT_DIR
+    chmod 777 $OUTPUT_DIR
 
-RESAMPLE_FILES="$OUTPUT_DIR/resample_files.txt"
-$FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE
+    export RESAMP_DIR=$DW_JOB_STRIPED/resamp
 
-du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
-echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
-t1=$(date +%s.%N)
+    #cleanup
+    rm -rf $RESAMP_DIR
+    rm -rf $INPUT_DIR
 
-srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
-	-o "$OUTPUT_DIR/output.resample" \
-	-e "$OUTPUT_DIR/error.resample" \
-    	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
-	$EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)
+    mkdir -p $RESAMP_DIR
+    chmod 777 $RESAMP_DIR
 
-t2=$(date +%s.%N)
-tdiff2=$(echo "$t2 - $t1" | bc -l)
-echo "TIME RESAMPLE $tdiff2" | tee -a $OUTPUT_FILE
+    #rm -f {error,output}.*
 
-echo "Starting combine... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
-t1=$(date +%s.%N)
+    #### To select file to stage
+    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
+    cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
+    FILES_TO_STAGE=$OUTPUT_DIR/$FILES_TO_STAGE
+    #sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|" $FILES_TO_STAGE
+    #We want to unstage the w.fits and the corresponding w.weight.fits
+    if (( "$COUNT" > 0 )); then
+    	sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
+    	## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....
+    	x=$(echo "$COUNT+16" | bc)
+    	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
+    fi
 
-###
-## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there
-###
+    echo "Number of files kept in PFS: $(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
+    echo "NODE $NODE_COUNT" | tee -a $OUTPUT_FILE
+    echo "TASK $TASK_COUNT" | tee -a $OUTPUT_FILE
+    echo "CORE $CORE_COUNT" | tee -a $OUTPUT_FILE
 
-srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
-	-o "$OUTPUT_DIR/output.coadd" \
-	-e "$OUTPUT_DIR/error.coadd" \
-    	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
-	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+    MONITORING="env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z"
 
-t2=$(date +%s.%N)
-tdiff3=$(echo "$t2 - $t1" | bc -l)
-echo "TIME COMBINE $tdiff3" | tee -a $OUTPUT_FILE
+    module load dws
+    sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')
+    echo "session ID is: "${sessID} | tee $BB_INFO
+    instID=$(dwstat instances | grep $sessID | awk '{print $1}')
+    echo "instance ID is: "${instID} | tee -a $BB_INFO
+    echo "fragments list:" | tee -a $BB_INFO
+    echo "frag state instID capacity gran node" | tee -a $BB_INFO
+    dwstat fragments | grep ${instID} | tee -a $BB_INFO
 
-du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
+    echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+    t1=$(date +%s.%N)
+    if [ -f "$FILES_TO_STAGE" ]; then
+    	$COPY -f $FILES_TO_STAGE
+    else
+    	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+    fi
+    if [ "$STAGE_EXEC" = 1 ]; then
+    	cp -r $EXE $DW_JOB_STRIPED
+    fi
+    if [ "$STAGE_CONFIG" = 1 ]; then
+    	cp -r $CONFIG_DIR $DW_JOB_STRIPED
+    fi
+    t2=$(date +%s.%N)
+    tdiff1=$(echo "$t2 - $t1" | bc -l)
+    echo "TIME STAGE_IN $tdiff1" | tee -a $OUTPUT_FILE
 
-env | grep SLURM > $OUTPUT_DIR/slurm.env
+    mkdir -p $INPUT_DIR
 
-echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
-t1=$(date +%s.%N)
-cp -r $OUTPUT_DIR $(pwd)
-t2=$(date +%s.%N)
-tdiff4=$(echo "$t2 - $t1" | bc -l)
-echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
+    #If we did not stage nay input files
+    if [[ -f "$(ls -A $INPUT_DIR)" ]]; then
+    	INPUT_DIR=$INPUT_DIR_PFS
+    		echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
+    fi
 
-echo "========" | tee -a $OUTPUT_FILE
-tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
-echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
 
-rm -rf $(pwd)/$OUTPUT_DIR/*.fits
+    #if we stge in executable
+    if [ "$STAGE_EXEC" = 1 ]; then
+    	EXE=$DW_JOB_STRIPED/swarp
+    fi
 
+    RESAMPLE_FILES="$OUTPUT_DIR/resample_files.txt"
+    $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE
+
+    dsize=$(du -sh $INPUT_DIR | awk '{print $1}')
+    nbfiles=$(ls -al $INPUT_DIR | grep '^-' | wc -l)
+    echo "$nbfiles $dsize" | tee $DU_RES
+
+    echo "Starting RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+    t1=$(date +%s.%N)
+
+    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
+    	-o "$OUTPUT_DIR/output.resample" \
+    	-e "$OUTPUT_DIR/error.resample" \
+        	$MONITORING -l "$OUTPUT_DIR/stat.resample.xml" \
+    	$EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)
+
+    t2=$(date +%s.%N)
+    tdiff2=$(echo "$t2 - $t1" | bc -l)
+    echo "TIME RESAMPLE $tdiff2" | tee -a $OUTPUT_FILE
+
+    echo "Starting combine... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+    t1=$(date +%s.%N)
+
+    ###
+    ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there
+    ###
+
+    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \
+    	-o "$OUTPUT_DIR/output.coadd" \
+    	-e "$OUTPUT_DIR/error.coadd" \
+        	$MONITORING -l "$OUTPUT_DIR/stat.combine.xml" \
+    	$EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}
+
+    t2=$(date +%s.%N)
+    tdiff3=$(echo "$t2 - $t1" | bc -l)
+    echo "TIME COMBINE $tdiff3" | tee -a $OUTPUT_FILE
+
+    du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE
+
+    env | grep SLURM > $OUTPUT_DIR/slurm.env
+
+    echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+    t1=$(date +%s.%N)
+    cp -r $OUTPUT_DIR $(pwd)
+    t2=$(date +%s.%N)
+    tdiff4=$(echo "$t2 - $t1" | bc -l)
+    echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE
+
+    echo "========" | tee -a $OUTPUT_FILE
+    tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
+    echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
+
+    rm -rf $(pwd)/$OUTPUT_DIR/*.fits
+
+    echo "#### Ending run $k... $(date --rfc-3339=ns)"
+done
