@@ -165,9 +165,9 @@ for k in $(seq 1 1 $NB_AVG); do
     echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
     if [ -f "$FILES_TO_STAGE" ]; then
-    	$COPY -f $FILES_TO_STAGE
+    	$COPY -f $FILES_TO_STAGE -d $OUTPUT_DIR
     else
-    	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR
+    	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR
     fi
     if [ "$STAGE_EXEC" = 1 ]; then
     	cp -r $EXE $DW_JOB_STRIPED
@@ -237,7 +237,7 @@ for k in $(seq 1 1 $NB_AVG); do
 
     echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
-    cp -r $OUTPUT_DIR $OUTPUT_DIR_NAME
+    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME -a "stage-out" -d $OUTPUT_DIR
     t2=$(date +%s.%N)
     tdiff4=$(echo "$t2 - $t1" | bc -l)
     echo "TIME STAGE_OUT $tdiff4" | tee -a $OUTPUT_FILE

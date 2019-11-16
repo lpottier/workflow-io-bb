@@ -161,7 +161,7 @@ def copy_fromlist(args):
                     print(e)
         else:
             args.dir = ''
-        
+
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
         with open(str(args.dir)+'/'+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+'/'+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
@@ -342,8 +342,8 @@ if __name__ == '__main__':
     parser.add_argument('--dir', '-d', type=str, nargs='?', default='',
                        help='Set the directory to output files')
 
-    parser.add_argument('--stats', '-a', type=str, nargs='?', default='stagein',
-                       help='Output file allocations in stagein-bb.csv and stagein-pfs.csv')
+    parser.add_argument('--stats', '-a', type=str, nargs='?', default='stage-in',
+                       help='Output file allocations in stage-in-bb.csv and stage-in-pfs.csv')
 
     parser.add_argument('--reversed', '-r', type=str, nargs='?', required=False,
             help='Output reversed file (can be used as input to reverse the copy)')
