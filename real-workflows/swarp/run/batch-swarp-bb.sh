@@ -134,18 +134,18 @@ for k in $(seq 1 1 $NB_AVG); do
 
     #### To select file to stage
     ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)
-    cp $FILES_TO_STAGE $OUTPUT_DIR/$FILES_TO_STAGE
-    FILES_TO_STAGE=$OUTPUT_DIR/$FILES_TO_STAGE
+    cp $FILES_TO_STAGE $OUTPUT_DIR/
+    LOC_FILES_TO_STAGE="$OUTPUT_DIR/$FILES_TO_STAGE"
     #sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|" $FILES_TO_STAGE
     #We want to unstage the w.fits and the corresponding w.weight.fits
     if (( "$COUNT" > 0 )); then
-    	sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $FILES_TO_STAGE
+    	sed -i -e "1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|" $LOC_FILES_TO_STAGE
     	## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....
     	x=$(echo "$COUNT+16" | bc)
-    	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $FILES_TO_STAGE
+    	sed -i -e "16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|" $LOC_FILES_TO_STAGE
     fi
 
-    echo "Number of files kept in PFS:$(echo "$COUNT*2" | bc)/$(cat $FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
+    echo "Number of files kept in PFS:$(echo "$COUNT*2" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)" | tee $OUTPUT_FILE
     echo "NODE=$NODE_COUNT" | tee -a $OUTPUT_FILE
     echo "TASK=$TASK_COUNT" | tee -a $OUTPUT_FILE
     echo "CORE=$CORE_COUNT" | tee -a $OUTPUT_FILE
@@ -166,8 +166,8 @@ for k in $(seq 1 1 $NB_AVG); do
 
     echo "Starting STAGE_IN... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
-    if [ -f "$FILES_TO_STAGE" ]; then
-    	$COPY -f $FILES_TO_STAGE -d $OUTPUT_DIR
+    if [ -f "$LOC_FILES_TO_STAGE" ]; then
+    	$COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR
     else
     	$COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR
     fi
@@ -183,14 +183,14 @@ for k in $(seq 1 1 $NB_AVG); do
 
     mkdir -p $INPUT_DIR
 
-    #If we did not stage nay input files
+    #If we did not stage any input files
     if [[ -f "$(ls -A $INPUT_DIR)" ]]; then
     	INPUT_DIR=$INPUT_DIR_PFS
-    		echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
+    	echo "INPUT_DIR set as $INPUT_DIR (no input in the BB)"
     fi
 
 
-    #if we stge in executable
+    #if we stage in executable
     if [ "$STAGE_EXEC" = 1 ]; then
     	EXE=$DW_JOB_STRIPED/swarp
     fi
