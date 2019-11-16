@@ -81,7 +81,7 @@ CORE_COUNT=1		# Number of cores used by both tasks
 FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
 STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
-NB_AVG=1            # Number of identical runs
+NB_AVG=10            # Number of identical runs
 
 
 CONFIG_DIR=$BASE/config
@@ -239,7 +239,7 @@ for k in $(seq 1 1 $NB_AVG); do
 
     echo "Starting STAGE_OUT... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
     t1=$(date +%s.%N)
-    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a "stage-out" -d $OUTPUT_DIR
+    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a "stage-out" -d $OUTPUT_DIR_NAME/${k}
     t2=$(date +%s.%N)
     tdiff4=$(echo "$t2 - $t1" | bc -l)
 
