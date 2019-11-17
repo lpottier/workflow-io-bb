@@ -79,7 +79,8 @@ def copy_fromlist(args):
                 raise IOError("[error] IO: {} is not a file".format(src))
 
 
-            if not fnmatch.fnmatch(file_src, args.pattern) or src == dest:
+            if not fnmatch.fnmatch(file_src, args.pattern) or (dir_src == dir_dest and file_src == file_dest):
+                print("{} skipped.".format(file_src))
                 files_notransfered.append((dir_src, dir_dest, file_src))
                 continue
 
@@ -103,9 +104,8 @@ def copy_fromlist(args):
                     cmdline = shlex.split(args.wrapper) + cmdline
 
                 usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-
                 subprocess.run(cmdline, check=True)
-
+                
                 usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
                 utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
                 stime_files.append(usage_end.ru_stime - usage_start.ru_stime)
@@ -148,7 +148,7 @@ def copy_fromlist(args):
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
     if args.stats != None:
-        if args.dir != None:
+        if args.dir != '':
             if not dir_exists(args.dir):
                 try:
                     # os.mkdir(dir_dest)
@@ -159,11 +159,10 @@ def copy_fromlist(args):
 
                 except subprocess.CalledProcessError as e:
                     print(e)
-        else:
-            args.dir = ''
+            args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
-        with open(str(args.dir)+'/'+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+'/'+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
+        with open(str(args.dir)+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer_bb = csv.writer(bb_file, delimiter=' ',
@@ -197,6 +196,8 @@ def copy_fromlist(args):
 def copy_dir(args):
     src = os.path.expandvars(args.src)
     dest = os.path.expandvars(args.dest)
+    if src == dest:
+        return
     if not os.path.isdir(src):
         print("[error] IO: {} is not a valid directory.".format(args.file))
         exit(1)
@@ -226,8 +227,7 @@ def copy_dir(args):
             if args.wrapper:
                 cmdline = shlex.split(args.wrapper) + cmdline
 
-            usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-
+            usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)                
             subprocess.run(cmdline, check=True)
 
             usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -267,7 +267,7 @@ def copy_dir(args):
         print("{:<20}: {:.5}".format("BANDWITH (MB/S)", bandwith) )
 
     if args.stats != None:
-        if args.dir != None:
+        if args.dir != '':
             if not dir_exists(args.dir):
                 try:
                     # os.mkdir(dir_dest)
@@ -278,11 +278,10 @@ def copy_dir(args):
 
                 except subprocess.CalledProcessError as e:
                     print(e)
-        else:
-            args.dir = ''
+            args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
-        with open(str(args.dir)+'/'+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+'/'+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
+        with open(str(args.dir)+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer_bb = csv.writer(bb_file, delimiter=' ',
