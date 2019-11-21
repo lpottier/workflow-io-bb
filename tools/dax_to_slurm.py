@@ -39,12 +39,12 @@ def build_adag_from_parentlist(hashmap, data_jobs):
     root = AbstractDag("init", None, None, roots)
     seen = {}
 
-    for node in roots:
-        current = AbstractDag(node, data_jobs[node], root, adjency_list[node])
-        for child in H[node]:
-            if not child in seen:
-                seen.add(child)
-                # new_node = AbstractDag(new_node, data_jobs[node], _rec(adjency_list[node], data_jobs) )
+    # for node in roots:
+    #     current = AbstractDag(node, data_jobs[node], root, adjency_list[node])
+    #     for child in H[node]:
+    #         if not child in seen:
+    #             seen.add(child)
+    #             # new_node = AbstractDag(new_node, data_jobs[node], _rec(adjency_list[node], data_jobs) )
 
 class AbstractWorkflow:
     def __init__(self, dax_file, scheduler):
@@ -83,6 +83,51 @@ class AbstractWorkflow:
         #     self.scheduler_interface["alloc_bb"] = "#DW jobdw capacity=50GB access_mode=striped type=scratch"
         #     self.scheduler_interface["queue"] =  
 
+class ResultParsing:
+    def __init__(self, schema, executables, jobs, dependencies):
+        self._schema = schema
+        self._executables = executables
+        self._jobs = jobs
+        self._dependencies = dependencies
+
+class Job:
+    def __init__(self, xml_job, schema):
+        self._raw_data = xml_job
+        self._schema = schema
+        self._id = None 
+        self._name = None
+        self._namespace = None
+        self._node_label = None
+        self._argument = None
+        self._input_files = []
+        self._output_files = []
+
+        self.parse()
+
+    def parse(self):
+        if "id" in self._raw_data.attrib:
+            self._id = self._raw_data.attrib["id"]
+        if "name" in self._raw_data.attrib:
+            self._namespace = self._raw_data.attrib["name"]
+        if "namespace" in self._raw_data.attrib:
+            self._name = self._raw_data.attrib["namespace"]
+        if "node-label" in self._raw_data.attrib:
+            self._node_label = self._raw_data.attrib["node-label"]
+
+        for elem in self._raw_data:
+            if elem.tag == self._schema+"argument":
+                self._argument = str(elem.text)
+                for file in elem:
+                    #parse files
+                    if file.tag == self._schema+"file":
+                        self._argument = self._argument + ' ' + str(file.attrib["name"])
+
+            if elem.tag == self._schema+"uses":
+                if elem.attrib["link"] == "input":
+                    self._input_files.append(elem.attrib["name"])
+                if elem.attrib["link"] == "output":
+                    self._output_files.append(elem.attrib["name"])
+
 
 
 def parse_dax_xml(dax_xml_file):
@@ -110,15 +155,34 @@ def parse_dax_xml(dax_xml_file):
             for p in elem:
                 parents[elem.attrib["ref"]].append(p.attrib["ref"])
 
-    print(executables)
-    print(jobs)
-    #print(parents)
-    l = adjency_list(parents)
-    print(l)
+    # print(executables)
+    # print(jobs)
+    # #print(parents)
+    # l = adjency_list(parents)
+    # print(l)
+    return ResultParsing(schema, executables, jobs, adjency_list(parents))
+
+# take as input a ResultParsing
+def create_slurm_workflow(parsing_result):
+    job_wrapper = "#SBATCH -p debug \
+                #SBATCH -C haswell \
+                #SBATCH -t 00:20:00 \
+                #SBATCH -J swarp-bb \
+                #SBATCH -o output.%j \
+                #SBATCH -e error.%j \
+                #SBATCH --mail-user=lpottier@isi.edu \
+                #SBATCH --mail-type=FAIL \
+                #SBATCH --export=ALL"
+
+    dep = "--dependency=afterok:"
+
+    for 
+
 
 if __name__ == '__main__':
     print("Generate Slurm compatible workflow from DAX files")
 
-    parse_dax_xml("dax.xml");
+    result = parse_dax_xml("dax.xml")
+    create_slurm_workflow(result)
     
     #Extend the pegasus API instead of reparsing this?
