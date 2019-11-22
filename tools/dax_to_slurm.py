@@ -2,26 +2,33 @@
 
 import os
 import xml.etree.ElementTree as ET
+from collections import deque
+import networkx as nx
+# import matplotlib.pyplot as plt
 
-class AbstractDag:
-    def __init__(self, id_node, xml_data, father, childs):
-        self._id = id_node             # the id of the node ID000000X
-        self._xml_data = xml_data      # Element object describing the node
-        self._father = father          # Pointer on childs
-        self._childs = childs          # Pointer on childs
+class AbstractDag(nx.DiGraph):
+    """ docstring for AbstractDag """
+    def __init__(self, adjacency_list):
+        super(AbstractDag, self).__init__()
+        
+        for father,childs in adjacency_list.items():
+            self.add_node(father)
+            for c in childs:
+                self.add_node(c)
+                self.add_edge(father, c)
 
-def adjency_list(original):
+def adjacency_list(original):
     #{'ID0000003': ['ID0000002'], 'ID0000004': ['ID0000003'], 'ID0000005': ['ID0000001', 'ID0000004'], 'ID0000006': ['ID0000001', 'ID0000003']}
     #reverse the parent list from child -> parent to parent -> child
-    adjency_list = {}
+    res = {}
     for child in original:
-        adjency_list[child] = []
+        res[child] = []
         for parent in original[child]:
-            if parent in adjency_list:
-                adjency_list[parent].append(child)
+            if parent in res:
+                res[parent].append(child)
             else:
-                adjency_list[parent] = [child]
-    return adjency_list
+                res[parent] = [child]
+    return res
 
 # def build_adag_from_parentlist(hashmap, data_jobs):
 #     def _rec(L):
@@ -31,12 +38,12 @@ def adjency_list(original):
 #     return _rec(adjency_list(hashmap), data_jobs)
 
 def build_adag_from_parentlist(hashmap, data_jobs):
-    H = adjency_list(hashmap)
+    H = adjacency_list(hashmap)
     a = set([y for x in hashmap.values() for y in x])
     b = set([x for x in hashmap])
     #find roots
     roots = list(a - (a & b)) # node which are parent but not child of any nodes
-    root = AbstractDag("init", None, None, roots)
+    # root = AbstractDag("init", None, None, roots)
     seen = {}
 
     # for node in roots:
@@ -186,7 +193,7 @@ def parse_dax_xml(dax_xml_file):
             for p in elem:
                 parents[elem.attrib["ref"]].append(p.attrib["ref"])
 
-    return ResultParsing(schema, executables, jobs, parents, adjency_list(parents))
+    return ResultParsing(schema, executables, jobs, parents, adjacency_list(parents))
 
 # take as input a ResultParsing
 def create_slurm_workflow(parsing_result):
@@ -202,7 +209,7 @@ def create_slurm_workflow(parsing_result):
 
     dep = "--dependency=afterok:"
 
-    H = adjency_list(parsing_result._childs_to_father)
+    H = adjacency_list(parsing_result._childs_to_father)
     a = set([y for x in parsing_result._childs_to_father.values() for y in x])
     b = set([x for x in parsing_result._childs_to_father])
     #find roots
@@ -215,10 +222,21 @@ def create_slurm_workflow(parsing_result):
             for grand_child in parsing_result._dependencies[child]:
                 print("\t\t" + parsing_result._jobs[grand_child]._id)
 
+    steps = deque()
+    for i,(father,child) in enumerate(parsing_result._dependencies.items()):
+        print(i,father,child)
+
+
+    dag = AbstractDag(H)
+
+    return dag
+
+
+
 if __name__ == '__main__':
     print("Generate Slurm compatible workflow from DAX files")
 
     result = parse_dax_xml("dax.xml")
-    create_slurm_workflow(result)
+    G = create_slurm_workflow(result)
     
     #Extend the pegasus API instead of reparsing this?
