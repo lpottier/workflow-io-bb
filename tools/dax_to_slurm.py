@@ -84,10 +84,11 @@ class AbstractWorkflow:
         #     self.scheduler_interface["queue"] =  
 
 class ResultParsing:
-    def __init__(self, schema, executables, jobs, dependencies):
+    def __init__(self, schema, executables, jobs, parents, dependencies):
         self._schema = schema
         self._executables = executables
         self._jobs = jobs
+        self._childs_to_father = parents
         self._dependencies = dependencies
 
 class Job:
@@ -98,7 +99,7 @@ class Job:
         self._name = None
         self._namespace = None
         self._node_label = None
-        self._argument = None
+        self._argument = ''
         self._input_files = []
         self._output_files = []
 
@@ -116,11 +117,12 @@ class Job:
 
         for elem in self._raw_data:
             if elem.tag == self._schema+"argument":
-                self._argument = str(elem.text)
+                if elem.text:
+                    self._argument = str(elem.text)
                 for file in elem:
                     #parse files
                     if file.tag == self._schema+"file":
-                        self._argument = self._argument + ' ' + str(file.attrib["name"])
+                        self._argument = self._argument + str(file.attrib["name"])
 
             if elem.tag == self._schema+"uses":
                 if elem.attrib["link"] == "input":
@@ -128,7 +130,36 @@ class Job:
                 if elem.attrib["link"] == "output":
                     self._output_files.append(elem.attrib["name"])
 
+class Executable:
+    def __init__(self, xml_job, schema):
+        self._raw_data = xml_job
+        self._schema = schema
+        self._name = None
+        self._namespace = None
+        self._arch = None
+        self._os = None
+        self._installed = None
+        self._pfn = ''
 
+        self.parse()
+
+    def parse(self):
+        if "name" in self._raw_data.attrib:
+            self._namespace = self._raw_data.attrib["name"]
+        if "namespace" in self._raw_data.attrib:
+            self._name = self._raw_data.attrib["namespace"]
+        if "arch" in self._raw_data.attrib:
+            self._node_label = self._raw_data.attrib["arch"]
+        if "os" in self._raw_data.attrib:
+            self._node_label = self._raw_data.attrib["os"]
+        if "installed" in self._raw_data.attrib:
+            if self._raw_data.attrib["installed"] == "true":
+                self._installed = True
+            else:
+                self._installed = False
+        for elem in self._raw_data:
+            if elem.tag == self._schema+"pfn":
+                self._pfn = elem.attrib["url"]
 
 def parse_dax_xml(dax_xml_file):
     # create element tree object 
@@ -147,20 +178,15 @@ def parse_dax_xml(dax_xml_file):
 
     for elem in root:
         if elem.tag == schema+"executable":
-            executables[elem.attrib["name"]] = elem
+            executables[elem.attrib["name"]] = Executable(elem, schema)
         if elem.tag == schema+"job":
-            jobs[elem.attrib["id"]] = elem
+            jobs[elem.attrib["id"]] = Job(elem, schema)
         if elem.tag == schema+"child":
             parents[elem.attrib["ref"]] = []
             for p in elem:
                 parents[elem.attrib["ref"]].append(p.attrib["ref"])
 
-    # print(executables)
-    # print(jobs)
-    # #print(parents)
-    # l = adjency_list(parents)
-    # print(l)
-    return ResultParsing(schema, executables, jobs, adjency_list(parents))
+    return ResultParsing(schema, executables, jobs, parents, adjency_list(parents))
 
 # take as input a ResultParsing
 def create_slurm_workflow(parsing_result):
@@ -176,8 +202,18 @@ def create_slurm_workflow(parsing_result):
 
     dep = "--dependency=afterok:"
 
-    for 
+    H = adjency_list(parsing_result._childs_to_father)
+    a = set([y for x in parsing_result._childs_to_father.values() for y in x])
+    b = set([x for x in parsing_result._childs_to_father])
+    #find roots
+    roots = list(a - (a & b)) # node which are parent but not child of any nodes
 
+    for j in roots:
+        print(parsing_result._jobs[j]._id)
+        for child in parsing_result._dependencies[j]:
+            print("\t" + parsing_result._jobs[child]._id)
+            for grand_child in parsing_result._dependencies[child]:
+                print("\t\t" + parsing_result._jobs[grand_child]._id)
 
 if __name__ == '__main__':
     print("Generate Slurm compatible workflow from DAX files")
