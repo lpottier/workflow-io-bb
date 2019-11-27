@@ -4,6 +4,8 @@ import os
 import pwd
 import sys
 import time
+import stat
+import argparse
 import xml.etree.ElementTree as ET
 from collections import deque
 import networkx as nx
@@ -106,12 +108,13 @@ class ResultParsing:
 class AbstractDag(nx.DiGraph):
     """ docstring for AbstractDag """
     def __init__(self, dax):
-        super().__init__(name=dax)
+        short = os.path.basename(dax).split('.')[0]
+        super().__init__(id=short,name=dax)
         self._n = 0
         self._order = None
 
         # create element tree object 
-        tree = ET.parse(self.graph["name"]) 
+        tree = ET.parse(dax) 
       
         # get root element 
         root = tree.getroot()
@@ -179,6 +182,20 @@ class AbstractDag(nx.DiGraph):
 
     def roots(self):
         return [n for n,d in self.in_degree() if d == 0]
+
+    def write(self, dot_file=None):
+        A = nx.nx_agraph.to_agraph(self)
+        if not dot_file:
+            dot_file = self.graph["id"]+".dot"
+        nx.nx_agraph.write_dot(self, dot_file)
+
+    def draw(self, output_file=None):
+        A = nx.nx_agraph.to_agraph(self)
+        pos = nx.nx_pydot.graphviz_layout(self, prog='dot')
+        nx.draw(G, pos=pos, with_labels=True)
+        if not output_file:
+            output_file = self.graph["id"]+".pdf"
+        plt.savefig(output_file)
 
 # def _adjacency_list(self):
 #     #{'ID0000003': ['ID0000002'], 'ID0000004': ['ID0000003'], 'ID0000005': ['ID0000001', 'ID0000004'], 'ID0000006': ['ID0000001', 'ID0000003']}
@@ -289,16 +306,21 @@ def build_adag_from_parentlist(hashmap, data_jobs):
 #     return AbstractDag(H)
 
 # take as input a ADAG
-def create_slurm_workflow(adag, output):
-    job_wrapper = "#SBATCH -p debug \
-                #SBATCH -C haswell \
-                #SBATCH -t 00:20:00 \
-                #SBATCH -J swarp-bb \
-                #SBATCH -o output.%j \
-                #SBATCH -e error.%j \
-                #SBATCH --mail-user=lpottier@isi.edu \
-                #SBATCH --mail-type=FAIL \
-                #SBATCH --export=ALL"
+def create_slurm_workflow(adag, output, queue="debug"):
+    job_wrapper = [
+        "#SBATCH -p debug".format(queue),
+        "#SBATCH -C haswell",
+        "#SBATCH -t 00:20:00",
+        "#SBATCH -o output.%j",
+        "#SBATCH -e error.%j",
+        "#SBATCH --mail-user=lpottier@isi.edu",
+        "#SBATCH --mail-type=FAIL",
+        "#SBATCH --export=ALL"
+    ]
+
+    # burst_buffer = [
+    #     "#DW jobdw capacity={}GB access_mode={} type={}",
+    # ]
 
     dep = "--dependency=afterok:"
     cmd = "sbatch --parsable"
@@ -307,6 +329,21 @@ def create_slurm_workflow(adag, output):
 
     USER = pwd.getpwuid(os.getuid())[0]
 
+    for u in G:
+        with open(u+".sh", 'w') as f:
+            f.write("#!/bin/bash\n\n")
+            for l in job_wrapper:
+                f.write(l+"\n")
+            f.write("\n")
+            f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
+            f.write("#{} {}\n\n".format("created", time.ctime()))
+
+            f.write("echo \"Task {}\"\n".format(u))
+            f.write("srun {}\n".format("hostname"))
+            f.write(l+"\n")
+
+        os.chmod(u+".sh", stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+
     with open(output, 'w') as f:
         f.write("#!/bin/bash\n\n")
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
@@ -314,11 +351,12 @@ def create_slurm_workflow(adag, output):
 
         #jid2=$(sbatch --dependency=afterany:$jid1  job2.sh)
         roots = G.roots()
+        f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
         for u in G:
-            cmd = "{} {}".format(G.nodes[u]["exe"], G.nodes[u]["args"])
+            cmd = "{} {}.sh".format(G.nodes[u]["exe"], G.nodes[u]["args"])
 
             if u in roots:
-                f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, u, cmd))
+                f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
             else:
                 pred = ''
                 for v in G.pred[u]:
@@ -327,21 +365,27 @@ def create_slurm_workflow(adag, output):
                     else:
                         pred = pred + ":${}".format(v)
 
-                f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, u, pred, cmd))
+                f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, adag.graph["id"]+"-"+u, pred, cmd))
 
+            f.write("echo \"== Job ${} scheduled\"\n\n".format(u))
+
+    os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
 if __name__ == '__main__':
     print("Generate Slurm compatible workflow from DAX files")
 
     #G = parse_dax_xml("dax.xml")
     G = AbstractDag("dax.xml")
-    create_slurm_workflow(G, "slurm-dax.xml.sh")
+    create_slurm_workflow(G, "slurm-dax.sh")
 
     print(G.graph, len(G))
 
     for u in G:
         print(u, G[u], G.nodes[u])
     print(G.roots())
+
+    G.write()
+    G.draw()
 
     #nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
 
