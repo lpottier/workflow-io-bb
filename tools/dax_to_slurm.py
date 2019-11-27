@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+import pwd
+import sys
+import time
 import xml.etree.ElementTree as ET
 from collections import deque
 import networkx as nx
@@ -148,7 +151,8 @@ class AbstractDag(nx.DiGraph):
             
             name_exec = jobs[father]._name
 
-            self.add_node(father, 
+            self.add_node(father,
+                label=jobs[father]._node_label,
                 args=jobs[father]._argument, 
                 input=jobs[father]._input_files,
                 output=jobs[father]._output_files,
@@ -172,6 +176,9 @@ class AbstractDag(nx.DiGraph):
             return val
         else:
             raise StopIteration
+
+    def roots(self):
+        return [n for n,d in self.in_degree() if d == 0]
 
 # def _adjacency_list(self):
 #     #{'ID0000003': ['ID0000002'], 'ID0000004': ['ID0000003'], 'ID0000005': ['ID0000001', 'ID0000004'], 'ID0000006': ['ID0000001', 'ID0000003']}
@@ -281,8 +288,8 @@ def build_adag_from_parentlist(hashmap, data_jobs):
 
 #     return AbstractDag(H)
 
-# take as input a ResultParsing
-def create_slurm_workflow(adag):
+# take as input a ADAG
+def create_slurm_workflow(adag, output):
     job_wrapper = "#SBATCH -p debug \
                 #SBATCH -C haswell \
                 #SBATCH -t 00:20:00 \
@@ -294,7 +301,33 @@ def create_slurm_workflow(adag):
                 #SBATCH --export=ALL"
 
     dep = "--dependency=afterok:"
+    cmd = "sbatch --parsable"
+    job_name = "--job-name="
+    #opt = "--ntasks=1 --ntasks-per-core=1"
 
+    USER = pwd.getpwuid(os.getuid())[0]
+
+    with open(output, 'w') as f:
+        f.write("#!/bin/bash\n\n")
+        f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
+        f.write("#{} {}\n\n".format("created", time.ctime()))
+
+        #jid2=$(sbatch --dependency=afterany:$jid1  job2.sh)
+        roots = G.roots()
+        for u in G:
+            cmd = "{} {}".format(G.nodes[u]["exe"], G.nodes[u]["args"])
+
+            if u in roots:
+                f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, u, cmd))
+            else:
+                pred = ''
+                for v in G.pred[u]:
+                    if pred == '':
+                        pred = pred + "${}".format(v)
+                    else:
+                        pred = pred + ":${}".format(v)
+
+                f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, u, pred, cmd))
 
 
 if __name__ == '__main__':
@@ -302,12 +335,13 @@ if __name__ == '__main__':
 
     #G = parse_dax_xml("dax.xml")
     G = AbstractDag("dax.xml")
-    create_slurm_workflow(G)
+    create_slurm_workflow(G, "slurm-dax.xml.sh")
 
     print(G.graph, len(G))
-    
+
     for u in G:
-        print(u)
+        print(u, G[u], G.nodes[u])
+    print(G.roots())
 
     #nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
 
