@@ -13,11 +13,11 @@ import networkx.drawing.nx_pydot as pydot
 
 import matplotlib.pyplot as plt
 limits = plt.axis('off')
-options = {
-    'node_color': 'black',
-    'node_size': 100,
-    'width': 2,
-}
+# options = {
+#     'node_color': 'black',
+#     'node_size': 100,
+#     'width': 2,
+# }
 
 class Job:
     def __init__(self, xml_job, schema):
@@ -305,6 +305,15 @@ def build_adag_from_parentlist(hashmap, data_jobs):
 
 #     return AbstractDag(H)
 
+
+# TODO:
+# echo -n "waiting for an empty queue"
+# until (( $(squeue -p $QUEUE -u $WHO -o "%A" -h | wc -l) == 0  )); do
+#     sleep $SEC
+#     echo -n "."
+# done
+# echo " $QUEUE queue is empty, start new batch of jobs"
+
 # take as input a ADAG
 def create_slurm_workflow(adag, output, queue="debug"):
     job_wrapper = [
@@ -372,21 +381,54 @@ def create_slurm_workflow(adag, output, queue="debug"):
     os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
 if __name__ == '__main__':
-    print("Generate Slurm compatible workflow from DAX files")
+    parser = argparse.ArgumentParser(description='Generate Slurm/LSF compatible workflow from DAX files')
+    
+    parser.add_argument('--dax', '-d', type=str, nargs='?',
+                        help='DAX file')
+    parser.add_argument('--scheduler', '-s', type=str, nargs='?', default="slurm",
+                        help='Scheduler (slurm or lsf)')
+
+    args = parser.parse_args()
+    dax_id = os.path.basename(args.dax).split('.')[0]
+
+    sys.stderr.write(" === Generate Slurm compatible workflow from DAX files\n")
+    today = time.localtime()
+    sys.stderr.write(" === Executed: {}-{}-{} at {}:{}:{}\n".format(today.tm_mday,
+                                                    today.tm_mon, 
+                                                    today.tm_year, 
+                                                    today.tm_hour, 
+                                                    today.tm_min, 
+                                                    today.tm_sec)
+                                                )
+    sys.stderr.write(" === DAX file  : {}\n".format(args.dax))
+    sys.stderr.write("     Scheduler : {}\n".format(args.scheduler))
+
+
+    output_dir = "{}-{}/".format(dax_id, args.scheduler)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+        sys.stderr.write(" === Directory {} created\n".format(output_dir))
 
     #G = parse_dax_xml("dax.xml")
-    G = AbstractDag("dax.xml")
-    create_slurm_workflow(G, "slurm-dax.sh")
+    G = AbstractDag(args.dax)
 
-    print(G.graph, len(G))
+    old_path = os.getcwd()+'/'
+    os.chdir(old_path+output_dir)
+    sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
-    for u in G:
-        print(u, G[u], G.nodes[u])
-    print(G.roots())
+
+    create_slurm_workflow(G, "submit.sh")
+
+    # print(G.graph, len(G))
+
+    # for u in G:
+    #     print(u, G[u], G.nodes[u])
+    # print(G.roots()))
 
     G.write()
     G.draw()
 
+    
     #nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
 
     # pos = nx.nx_agraph.graphviz_layout(G)
@@ -395,4 +437,9 @@ if __name__ == '__main__':
     # write_dot(G, 'file.dot')
 
     #TODO: Extend the pegasus API instead of reparsing this?
+
+    os.chdir(old_path)
+    sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
+
+
 
