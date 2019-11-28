@@ -7,6 +7,7 @@ import time
 import stat
 import argparse
 import importlib
+import shlex # for shlex.split
 import xml.etree.ElementTree as ET
 from collections import deque
 import networkx as nx
@@ -327,7 +328,7 @@ def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     return s
 
 # take as input a ADAG
-def create_slurm_workflow(adag, output, queue=("debug",5)):
+def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_dir=None):
     job_wrapper = [
         "#SBATCH -p debug".format(queue[0]),
         "#SBATCH -C haswell",
@@ -350,6 +351,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5)):
 
     USER = pwd.getpwuid(os.getuid())[0]
 
+    sys.stderr.write(" === Generate wrappers for each job\n")
     for u in G:
         with open(u+".sh", 'w') as f:
             f.write("#!/bin/bash\n\n")
@@ -360,7 +362,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5)):
             f.write("#{} {}\n\n".format("created", time.ctime()))
 
             f.write("echo \"Task {}\"\n".format(u))
-            cmd = "{} {}".format(os.basemame(G.nodes[u]["exe"]), G.nodes[u]["args"])
+            cmd = "{} {}".format(G.nodes[u]["exe"], G.nodes[u]["args"])
             f.write("srun {}\n".format(cmd))
             f.write(l+"\n")
 
@@ -376,13 +378,13 @@ def create_slurm_workflow(adag, output, queue=("debug",5)):
         f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
         for i,u in enumerate(G):
             if i >= queue[1]:
-                #We have reach the max job submission
-                # queue[1]-1 means here that we wait for one free slot available
-                # queue[1]-queue[1] would mean that we wait the queue is empty before re-submitting jobs
+                # We have reach the max job submission
+                # "queue[1]-1 means here that we wait for one free slot available
+                # "queue[1]-queue[1]=0 would mean that we wait the queue is empty before re-submitting jobs
                 f.write(slurm_sync(queue[0], queue[1], queue[1]-1, 10))
                 f.write("\n")
-            #cmd = "{} {}".format(os.basemame(G.nodes[u]["exe"]), G.nodes[u]["args"])
-            cmd = "{}.sh".format(u)
+
+                cmd = "{}.sh".format(u)
 
             if u in roots:
                 f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
@@ -429,7 +431,6 @@ if __name__ == '__main__':
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {} created\n".format(output_dir))
 
-    #G = parse_dax_xml("dax.xml")
     G = AbstractDag(args.dax)
 
     old_path = os.getcwd()+'/'
