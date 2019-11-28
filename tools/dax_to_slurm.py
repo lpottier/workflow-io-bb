@@ -6,6 +6,7 @@ import sys
 import time
 import stat
 import argparse
+import importlib
 import xml.etree.ElementTree as ET
 from collections import deque
 import networkx as nx
@@ -362,7 +363,8 @@ def create_slurm_workflow(adag, output, queue="debug"):
         roots = G.roots()
         f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
         for u in G:
-            cmd = "{} {}.sh".format(G.nodes[u]["exe"], G.nodes[u]["args"])
+            #cmd = "{} {}".format(os.basemame(G.nodes[u]["exe"]), G.nodes[u]["args"])
+            cmd = "{}.sh".format(u)
 
             if u in roots:
                 f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
@@ -425,8 +427,11 @@ if __name__ == '__main__':
     #     print(u, G[u], G.nodes[u])
     # print(G.roots()))
 
-    G.write()
-    G.draw()
+    graphviz_found = importlib.util.find_spec('pygraphviz')
+
+    if graphviz_found is not None:
+        G.write()
+        G.draw()
 
     
     #nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
