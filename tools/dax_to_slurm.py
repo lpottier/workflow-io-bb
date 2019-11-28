@@ -361,7 +361,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
             f.write("#{} {}\n\n".format("created", time.ctime()))
 
             f.write("echo \"Task {}\"\n".format(u))
-            cmd = "{} {}".format(G.nodes[u]["exe"], G.nodes[u]["args"])
+            cmd = "{} {}".format(os.path.basename(G.nodes[u]["exe"]), G.nodes[u]["args"])
             f.write("srun {}\n".format(cmd))
             f.write("\n")
 
@@ -383,7 +383,8 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
                 f.write(slurm_sync(queue[0], queue[1], queue[1]-1, 10))
                 f.write("\n")
 
-                cmd = "{}.sh".format(u)
+            
+            cmd = "{}.sh".format(u)
 
             if u in roots:
                 f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
