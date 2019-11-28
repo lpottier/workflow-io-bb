@@ -318,12 +318,12 @@ def build_adag_from_parentlist(hashmap, data_jobs):
 def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     if max_jobs < nb_jobs:
         return ''
-    s = "echo -n \"waiting for an empty queue\"\n"
+    s = "echo -n \"== waiting for an empty queue\"\n"
     s += "until (( $(squeue -p {} -u $(whoami) -o \"%A\" -h | wc -l) == {} )); do\n".format(queue, nb_jobs)
     s += "    sleep {}\n".format(freq_sec)
     s += "    echo -n \".\"\n"
     s += "done\n"
-    s += "echo \" {} queue contains {}/{} jobs, starting up to {} new jobs\"\n".format(queue,nb_jobs,max_jobs, max_jobs-nb_jobs)
+    s += "echo \"== {} queue contains {}/{} jobs, starting up to {} new jobs\"\n".format(queue,nb_jobs,max_jobs, max_jobs-nb_jobs)
     return s
 
 # take as input a ADAG
@@ -360,7 +360,8 @@ def create_slurm_workflow(adag, output, queue=("debug",5)):
             f.write("#{} {}\n\n".format("created", time.ctime()))
 
             f.write("echo \"Task {}\"\n".format(u))
-            f.write("srun {}\n".format("hostname"))
+            cmd = "{} {}".format(os.basemame(G.nodes[u]["exe"]), G.nodes[u]["args"])
+            f.write("srun {}\n".format(cmd))
             f.write(l+"\n")
 
         os.chmod(u+".sh", stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
@@ -395,7 +396,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5)):
 
                 f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, adag.graph["id"]+"-"+u, pred, cmd))
 
-            f.write("echo \"== Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(u,queue[0]))
+            f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue[0]))
 
     os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
