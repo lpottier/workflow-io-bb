@@ -28,11 +28,11 @@
 		<profile namespace="pegasus" key="exitcode.successmsg">End of program</profile>
 		<pfn url="/global/homes/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" site="nersc"/>
 	</executable>
-	<executable name="tar" arch="x86_64" os="linux" installed="true">
+<!-- 	<executable name="tar" arch="x86_64" os="linux" installed="true">
 		<profile namespace="pegasus" key="queue">@escori</profile>
 		<profile namespace="pegasus" key="glite.arguments">--qos xfer --licenses=SCRATCH</profile>
 		<pfn url="/bin/tar" site="nersc"/>
-	</executable>
+	</executable> -->
 	<executable name="ptraj" namespace="amber" arch="x86_64" os="linux" installed="true">
 		<profile namespace="pegasus" key="glite.arguments">--qos debug --constraint=haswell --licenses=SCRATCH</profile>
 		<profile namespace="pegasus" key="gridstart.arguments">-z</profile>
@@ -44,15 +44,15 @@
 		<profile namespace="pegasus" key="runtime">300</profile>
 		<pfn url="$PEGASUS_HOME/bin/pegasus-transfer" site="nersc"/>
 	</executable>
-	<job id="ID0000001" name="tar" node-label="untar">
+<!-- 	<job id="ID0000001" name="tar" node-label="untar">
 		<argument>-xzvf <file name="sassena_db.tar.gz"/></argument>
 		<profile namespace="pegasus" key="cores">1</profile>
 		<profile namespace="pegasus" key="runtime">60</profile>
 		<uses name="sassena_db.tar.gz" link="input"/>
 		<uses name="database/db-neutron-incoherent.xml" link="output" transfer="false"/>
 		<uses name="database/db-neutron-coherent.xml" link="output" transfer="false"/>
-	</job>
-	<job id="ID0000002" name="namd" node-label="namd_eq_200">
+	</job> -->
+	<job id="ID0000001" name="namd" node-label="namd_eq_200">
 		<argument><file name="equilibrate_200.conf"/></argument>
 		<profile namespace="pegasus" key="cores">12</profile>
 		<profile namespace="pegasus" key="runtime">1800</profile>
@@ -65,7 +65,7 @@
 		<uses name="equilibrate_200.restart.vel" link="output" transfer="false"/>
 		<uses name="equilibrate_200.restart.xsc" link="output" transfer="false"/>
 	</job>
-	<job id="ID0000003" name="namd" node-label="namd_prod_200">
+	<job id="ID0000002" name="namd" node-label="namd_prod_200">
 		<argument><file name="production_200.conf"/></argument>
 		<profile namespace="pegasus" key="cores">12</profile>
 		<profile namespace="pegasus" key="runtime">1800</profile>
@@ -78,7 +78,7 @@
 		<uses name="crd.md18_vmd_autopsf.pdb" link="input"/>
 		<uses name="production_200.dcd" link="output" transfer="true"/>
 	</job>
-	<job id="ID0000004" namespace="amber" name="ptraj" node-label="amber_ptraj_200">
+	<job id="ID0000003" namespace="amber" name="ptraj" node-label="amber_ptraj_200">
 		<argument><file name="b30.top"/></argument>
 		<profile namespace="pegasus" key="cores">1</profile>
 		<profile namespace="pegasus" key="runtime">1800</profile>
@@ -89,7 +89,7 @@
 		<uses name="ptraj_200.dcd" link="output" transfer="true"/>
 		<uses name="ptraj_200.fit" link="output" transfer="true"/>
 	</job>
-	<job id="ID0000005" name="sassena" node-label="sassena_inc_200">
+	<job id="ID0000004" name="sassena" node-label="sassena_inc_200">
 		<argument>--config <file name="sassenaInc_200.xml"/></argument>
 		<profile namespace="pegasus" key="cores">12</profile>
 		<profile namespace="pegasus" key="runtime">1800</profile>
@@ -99,7 +99,7 @@
 		<uses name="sassenaInc_200.xml" link="input"/>
 		<uses name="fqt_inc_200.hd5" link="output" transfer="true"/>
 	</job>
-	<job id="ID0000006" name="sassena" node-label="sassena_coh_200">
+	<job id="ID0000005" name="sassena" node-label="sassena_coh_200">
 		<argument>--config <file name="sassenaCoh_200.xml"/></argument>
 		<profile namespace="pegasus" key="cores">12</profile>
 		<profile namespace="pegasus" key="runtime">1800</profile>
@@ -109,6 +109,9 @@
 		<uses name="ptraj_200.dcd" link="input"/>
 		<uses name="fqt_coh_200.hd5" link="output" transfer="true"/>
 	</job>
+	<child ref="ID0000002">
+		<parent ref="ID0000001"/>
+	</child>
 	<child ref="ID0000003">
 		<parent ref="ID0000002"/>
 	</child>
@@ -116,11 +119,6 @@
 		<parent ref="ID0000003"/>
 	</child>
 	<child ref="ID0000005">
-		<parent ref="ID0000001"/>
-		<parent ref="ID0000004"/>
-	</child>
-	<child ref="ID0000006">
-		<parent ref="ID0000001"/>
-		<parent ref="ID0000003"/>
+		<parent ref="ID0000002"/>
 	</child>
 </adag>
