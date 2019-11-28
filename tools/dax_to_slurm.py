@@ -336,8 +336,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
         "#SBATCH -o output.%j",
         "#SBATCH -e error.%j",
         "#SBATCH --mail-user=lpottier@isi.edu",
-        "#SBATCH --mail-type=FAIL",
-        "#SBATCH --export=ALL"
+        "#SBATCH --mail-type=FAIL"
     ]
 
     # burst_buffer = [
