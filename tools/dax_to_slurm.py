@@ -315,10 +315,21 @@ def build_adag_from_parentlist(hashmap, data_jobs):
 # done
 # echo " $QUEUE queue is empty, start new batch of jobs"
 
+def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
+    if max_jobs < nb_jobs:
+        return ''
+    s = "echo -n \"waiting for an empty queue\"\n"
+    s += "until (( $(squeue -p {} -u $(whoami) -o \"%A\" -h | wc -l) == {} )); do\n".format(queue, nb_jobs)
+    s += "    sleep {}\n".format(freq_sec)
+    s += "    echo -n \".\"\n"
+    s += "done\n"
+    s += "echo \" {} queue contains {}/{} jobs, starting up to {} new jobs\"\n".format(queue,nb_jobs,max_jobs, max_jobs-nb_jobs)
+    return s
+
 # take as input a ADAG
-def create_slurm_workflow(adag, output, queue="debug"):
+def create_slurm_workflow(adag, output, queue=("debug",5)):
     job_wrapper = [
-        "#SBATCH -p debug".format(queue),
+        "#SBATCH -p debug".format(queue[0]),
         "#SBATCH -C haswell",
         "#SBATCH -t 00:20:00",
         "#SBATCH -o output.%j",
@@ -362,7 +373,13 @@ def create_slurm_workflow(adag, output, queue="debug"):
         #jid2=$(sbatch --dependency=afterany:$jid1  job2.sh)
         roots = G.roots()
         f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
-        for u in G:
+        for i,u in enumerate(G):
+            if i >= queue[1]:
+                #We have reach the max job submission
+                # queue[1]-1 means here that we wait for one free slot available
+                # queue[1]-queue[1] would mean that we wait the queue is empty before re-submitting jobs
+                f.write(slurm_sync(queue[0], queue[1], queue[1]-1, 10))
+                f.write("\n")
             #cmd = "{} {}".format(os.basemame(G.nodes[u]["exe"]), G.nodes[u]["args"])
             cmd = "{}.sh".format(u)
 
@@ -378,7 +395,7 @@ def create_slurm_workflow(adag, output, queue="debug"):
 
                 f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, adag.graph["id"]+"-"+u, pred, cmd))
 
-            f.write("echo \"== Job ${} scheduled\"\n\n".format(u))
+            f.write("echo \"== Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(u,queue[0]))
 
     os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
