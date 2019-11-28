@@ -364,7 +364,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
             f.write("echo \"Task {}\"\n".format(u))
             cmd = "{} {}".format(G.nodes[u]["exe"], G.nodes[u]["args"])
             f.write("srun {}\n".format(cmd))
-            f.write(l+"\n")
+            f.write("\n")
 
         os.chmod(u+".sh", stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
