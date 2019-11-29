@@ -355,9 +355,9 @@ class SwarpInstance:
         s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
         s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         s += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
-        s += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
-        s += "COPY=$BASE/copy.py\n"
-        s += "FILE_MAP=$BASE/build_filemap.py\n"
+        s += "EXE={}/bin/swarp\n".format(SWARP_DIR)
+        s += "COPY={}/copy.py\n".format(SWARP_DIR)
+        s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
         s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by srun\n"
