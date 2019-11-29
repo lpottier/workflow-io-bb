@@ -362,7 +362,7 @@ class SwarpInstance:
 
         s += "NODE_COUNT=1        # Number of compute nodes requested by srun\n"
         s += "TASK_COUNT=1        # Number of tasks allocated by srun\n"
-        s += "CORE_COUNT=1        # Number of cores used by both tasks\n"
+        s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
@@ -370,13 +370,12 @@ class SwarpInstance:
         s += "NB_AVG=5            # Number of identical runs\n"
         s += "\n"
 
-
-        s += "CONFIG_DIR=$BASE/config\n"
+        s += "CONFIG_DIR=$BASE\n"
         s += "if (( \"$STAGE_CONFIG\" == 1 )); then\n"
         s += "    CONFIG_DIR=$DW_JOB_STRIPED/config\n"
         s += "fi\n"
-        s += "RESAMPLE_CONFIG=$CONFIG_DIR/resample.swarp\n"
-        s += "COMBINE_CONFIG=$CONFIG_DIR/combine.swarp\n"
+        s += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
+        s += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
         s += "\n"
 
         s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
@@ -522,7 +521,7 @@ class SwarpInstance:
         s += "    t1=$(date +%s.%N)\n"
         s += "\n"
 
-        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \\ \n"
+        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpus-per-task=$CORE_COUNT --cpu-bind=cores \\ \n"
         s += "        -o \"$OUTPUT_DIR/output.resample\" \\ \n"
         s += "        -e \"$OUTPUT_DIR/error.resample\" \\ \n"
         s += "            $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" \\ \n"
@@ -543,7 +542,7 @@ class SwarpInstance:
         s += "    ###\n"
         s += "\n"
 
-        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \\ \n"
+        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpus-per-task=$CORE_COUNT --cpu-bind=cores \\ \n"
         s += "        -o \"$OUTPUT_DIR/output.coadd\" \\ \n"
         s += "        -e \"$OUTPUT_DIR/error.coadd\" \\ \n"
         s += "            $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" \\ \n"
