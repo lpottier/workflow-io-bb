@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p debug
 #SBATCH -C haswell
-#SBATCH -t 00:20:00
+#SBATCH -t 00:30:00
 #SBATCH -J swarp-bb
 #SBATCH -o output.%j
 #SBATCH -e error.%j
@@ -81,11 +81,11 @@ CORE_COUNT=1		# Number of cores used by both tasks
 FILES_TO_STAGE="files_to_stage.txt"
 STAGE_EXEC=0 		#0 no stage. 1 -> stage exec in BB
 STAGE_CONFIG=0 		#0 no stage. 1 -> stage config dir in BB
-NB_AVG=10            # Number of identical runs
+NB_AVG=5            # Number of identical runs
 
 
 CONFIG_DIR=$BASE/config
-if [ "$STAGE_CONFIG" = 1 ]; then
+if (( "$STAGE_CONFIG" == 1 )); then
 	CONFIG_DIR=$DW_JOB_STRIPED/config
 fi
 RESAMPLE_CONFIG=$CONFIG_DIR/resample.swarp
@@ -106,6 +106,7 @@ mkdir -p $OUTPUT_DIR_NAME
 for k in $(seq 1 1 $NB_AVG); do
 
     echo "#### Starting run $k... $(date --rfc-3339=ns)"
+    rm -rf $DW_JOB_STRIPED/*
 
     export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}
     #The local version
@@ -122,10 +123,6 @@ for k in $(seq 1 1 $NB_AVG); do
     chmod 777 $OUTPUT_DIR
 
     export RESAMP_DIR=$DW_JOB_STRIPED/resamp
-
-    #cleanup
-    rm -rf $RESAMP_DIR
-    rm -rf $INPUT_DIR
 
     mkdir -p $RESAMP_DIR
     chmod 777 $RESAMP_DIR
@@ -250,7 +247,9 @@ for k in $(seq 1 1 $NB_AVG); do
     tdiff=$(echo "$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4" | bc -l)
     echo "TIME TOTAL $tdiff" | tee -a $OUTPUT_FILE
 
+    set -x
     rm -rf "$OUTPUT_DIR_NAME/${k}/*.fits"
+    set +x
 
     echo "#### Ending run $k... $(date --rfc-3339=ns)"
 done
