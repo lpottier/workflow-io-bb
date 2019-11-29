@@ -331,7 +331,7 @@ class SwarpInstance:
         s += "# Test code to verify command line processing"
         s += "if [ -f \"$FILES_TO_STAGE\" ]; then\n"
         s += "    echo \"File list used: $FILES_TO_STAGE\"\n"
-        s += "else"
+        s += "else\n"
         s += "    echo \"$FILES_TO_STAGE does not seem to exist\"\n"
         s += "    exit\n"
         s += "fi\n"
@@ -360,14 +360,14 @@ class SwarpInstance:
         s += "FILE_MAP=$BASE/build_filemap.py\n"
         s += "\n"
 
-        s += "NODE_COUNT=1        # Number of compute nodes requested by srun\n"
-        s += "TASK_COUNT=1        # Number of tasks allocated by srun\n"
+        s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by srun\n"
+        s += "TASK_COUNT=@NODES@   # Number of tasks allocated by srun\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
-        s += "NB_AVG=5            # Number of identical runs\n"
+        s += "NB_AVG={}            # Number of identical runs\n".format("5")
         s += "\n"
 
         s += "CONFIG_DIR=$BASE\n"
@@ -395,6 +395,41 @@ class SwarpInstance:
         s += "\n"
         return s
 
+    def file_to_stage(self):
+        s = ''
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits".format(SWARP_DIR)
+        return s
 
     def average_loop(self):
         s = ''
@@ -824,6 +859,10 @@ class SwarpInstance:
 
             # f.write(self.script_ending())
 
+        # TODO: fix this temporary thing
+        with open("files_to_stage.txt", 'w') as f:
+            f.write(self.file_to_stage())
+
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
         try:
@@ -876,7 +915,7 @@ class SwarpRun:
             f.write("        script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("        echo $outdir\n")
             f.write("        echo $script\n")
-            f.write("        sed \"s/@NODES@/${i}/\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+            f.write("        sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             #If we want to use DW to stage file
             if not manual_stage:
                 f.write("        for j in $(seq ${i} -1 1); do\n")
