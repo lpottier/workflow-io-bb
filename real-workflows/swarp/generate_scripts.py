@@ -328,7 +328,7 @@ class SwarpInstance:
         s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
         s += "COUNT=0\n"
         s += "\n"
-        s += "# Test code to verify command line processing"
+        s += "# Test code to verify command line processing\n\n"
         s += "if [ -f \"$FILES_TO_STAGE\" ]; then\n"
         s += "    echo \"File list used: $FILES_TO_STAGE\"\n"
         s += "else\n"
@@ -398,37 +398,37 @@ class SwarpInstance:
     def file_to_stage(self):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits".format(SWARP_DIR)
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR)
         return s
 
     def average_loop(self):
