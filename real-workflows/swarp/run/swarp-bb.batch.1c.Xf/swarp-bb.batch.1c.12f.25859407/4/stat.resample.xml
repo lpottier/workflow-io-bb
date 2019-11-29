@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-11-16T00:51:50.304-08:00" duration="111.143" interface="ipogif0" hostaddr="10.128.2.56" hostname="nid00563" pid="38694" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-11-16T00:51:50.344-08:00" duration="111.103" pid="38695">
+    <usage utime="83.792" stime="2.751" maxrss="73748" minflt="275774" majflt="0" nswap="0" inblock="1182008" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="475847" nivcsw="88"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="738336" inode="144191976101662615" nlink="1" blksize="4194304" blocks="1448" mtime="2019-10-23T11:09:31-07:00" atime="2019-11-16T00:50:52-08:00" ctime="2019-10-23T11:09:31-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//config/resample.swarp</arg>
+      <arg nr="3">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.fits</arg>
+      <arg nr="4">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits</arg>
+      <arg nr="6">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits</arg>
+      <arg nr="8">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.fits</arg>
+      <arg nr="9">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.fits</arg>
+      <arg nr="10">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits</arg>
+      <arg nr="12">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.fits</arg>
+      <arg nr="13">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.fits</arg>
+      <arg nr="14">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.fits</arg>
+      <arg nr="15">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits</arg>
+      <arg nr="17">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.fits</arg>
+      <arg nr="18">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.fits</arg>
+    </argument-vector>
+    <proc ppid="38694" pid="38695" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894310.358303" stop="1573894421.441495" utime="83.790" stime="2.750" iowait="0.000" finthreads="1" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1611656905" wchar="962547332" rbytes="605188096" wbytes="0" cwbytes="0" syscr="1629" syscw="117802">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="15529" nwrite="287" bseek="0" nseek="0" size="15529"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/config/resample.swarp" bread="4943" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4943"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.fits" bread="67154752" nread="55" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.weight.fits" bread="33572928" nread="44" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="0" nread="0" bwrite="4800" nwrite="1" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="4800" nwrite="1" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="0" nread="0" bwrite="3008" nwrite="1" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="3008" nwrite="1" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="0" nread="0" bwrite="3648" nwrite="1" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="3648" nwrite="1" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="0" nread="0" bwrite="9216" nwrite="2" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="9216" nwrite="2" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="0" nread="0" bwrite="4800" nwrite="1" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="4800" nwrite="1" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="0" nread="0" bwrite="8960" nwrite="2" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="8960" nwrite="2" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="0" nread="0" bwrite="8768" nwrite="2" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="8768" nwrite="2" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="0" nread="0" bwrite="4160" nwrite="1" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="4160" nwrite="1" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="0" nread="0" bwrite="2176" nwrite="1" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="2176" nwrite="1" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="0" nread="0" bwrite="3456" nwrite="1" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="3456" nwrite="1" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="0" nread="0" bwrite="3648" nwrite="1" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="3648" nwrite="1" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="0" nread="0" bwrite="4992" nwrite="1" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="4992" nwrite="1" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="0" nread="0" bwrite="3008" nwrite="1" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="3008" nwrite="1" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="0" nread="0" bwrite="5248" nwrite="1" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="5248" nwrite="1" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="0" nread="0" bwrite="6080" nwrite="1" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="6080" nwrite="1" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="0" nread="0" bwrite="4288" nwrite="1" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="4288" nwrite="1" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/swarp-bb.batch.1c.12f.25859407/4/resample.xml" bread="0" nread="0" bwrite="24283" nwrite="3" bseek="0" nseek="0" size="24283"/>
+    </proc>
+    <proc ppid="38694" pid="38698" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894312.986646" stop="1573894318.909482" utime="5.260" stime="0.200" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73652" rchar="101356105" wchar="60214221" rbytes="97406976" wbytes="0" cwbytes="0" syscr="219" syscw="7409">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="3021"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="0" nread="0" bwrite="30105600" nwrite="3675" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30105600" nwrite="3675" bseek="0" nseek="0" size="30105600"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="305206"/>
+      <file name="/lib64/libgcc_s.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="96680"/>
+    </proc>
+    <proc ppid="38694" pid="38702" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894320.268630" stop="1573894326.168511" utime="10.520" stime="0.360" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="202042825" wchar="120370325" rbytes="143568896" wbytes="0" cwbytes="0" syscr="313" syscw="14768">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="3861"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30072832"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38707" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894326.854663" stop="1573894332.741124" utime="15.780" stime="0.510" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="302729545" wchar="180440891" rbytes="143568896" wbytes="0" cwbytes="0" syscr="407" syscw="22117">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4667"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="0" nread="0" bwrite="30031872" nwrite="3666" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30031872" nwrite="3666" bseek="0" nseek="0" size="30031872"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38711" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894333.648005" stop="1573894339.448307" utime="20.920" stime="0.760" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="403416265" wchar="240611075" rbytes="189730816" wbytes="0" cwbytes="0" syscr="501" syscw="29478">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="5507"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="0" nread="0" bwrite="30081024" nwrite="3672" bseek="0" nseek="0" size="30089216"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30081024" nwrite="3672" bseek="0" nseek="0" size="30081024"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38715" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894340.118581" stop="1573894346.083987" utime="26.220" stime="0.870" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="504102985" wchar="300841514" rbytes="189730816" wbytes="0" cwbytes="0" syscr="595" syscw="36847">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="6314"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="0" nread="0" bwrite="30105600" nwrite="3675" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30105600" nwrite="3675" bseek="0" nseek="0" size="30105600"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38720" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894347.005602" stop="1573894352.949341" utime="31.470" stime="1.040" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="604789705" wchar="360899314" rbytes="235892736" wbytes="0" cwbytes="0" syscr="689" syscw="44194">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7154"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="0" nread="0" bwrite="30023680" nwrite="3665" bseek="0" nseek="0" size="30031872"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30023680" nwrite="3665" bseek="0" nseek="0" size="30023680"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38724" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894353.846301" stop="1573894359.844768" utime="36.730" stime="1.190" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="705476425" wchar="421063738" rbytes="282054656" wbytes="0" cwbytes="0" syscr="783" syscw="51555">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7994"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30081024"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30072832"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38730" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894360.844123" stop="1573894366.799783" utime="41.970" stime="1.380" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="806163145" wchar="481375232" rbytes="328216576" wbytes="0" cwbytes="0" syscr="877" syscw="58934">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="8832"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="0" nread="0" bwrite="30146560" nwrite="3680" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30146560" nwrite="3680" bseek="0" nseek="0" size="30146560"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38735" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894368.758438" stop="1573894374.757617" utime="47.190" stime="1.540" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="906849865" wchar="541710247" rbytes="328216576" wbytes="0" cwbytes="0" syscr="971" syscw="66315">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="9639"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="0" nread="0" bwrite="30162944" nwrite="3682" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30162944" nwrite="3682" bseek="0" nseek="0" size="30162944"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38739" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894375.593127" stop="1573894381.502323" utime="52.370" stime="1.740" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1007536585" wchar="601877487" rbytes="374378496" wbytes="0" cwbytes="0" syscr="1065" syscw="73676">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="10479"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="0" nread="0" bwrite="30081024" nwrite="3672" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30081024" nwrite="3672" bseek="0" nseek="0" size="30081024"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38743" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894382.416105" stop="1573894388.263076" utime="57.620" stime="1.920" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1108223305" wchar="661948983" rbytes="420540416" wbytes="0" cwbytes="0" syscr="1159" syscw="81025">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="11319"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="0" nread="0" bwrite="30031872" nwrite="3666" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30031872" nwrite="3666" bseek="0" nseek="0" size="30031872"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38748" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894389.121399" stop="1573894394.895150" utime="62.890" stime="2.070" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1208910025" wchar="722070015" rbytes="466702336" wbytes="0" cwbytes="0" syscr="1253" syscw="88380">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="12159"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="0" nread="0" bwrite="30056448" nwrite="3669" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30056448" nwrite="3669" bseek="0" nseek="0" size="30056448"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38752" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894395.731695" stop="1573894401.550845" utime="68.100" stime="2.230" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1309596745" wchar="782226503" rbytes="512864256" wbytes="0" cwbytes="0" syscr="1347" syscw="95739">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="12999"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30072832" nwrite="3671" bseek="0" nseek="0" size="30072832"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38756" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894402.224103" stop="1573894408.049787" utime="73.330" stime="2.410" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1410283465" wchar="842460910" rbytes="512864256" wbytes="0" cwbytes="0" syscr="1441" syscw="103108">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="13806"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="0" nread="0" bwrite="30113792" nwrite="3676" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30113792" nwrite="3676" bseek="0" nseek="0" size="30113792"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38761" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894408.902831" stop="1573894414.726171" utime="78.550" stime="2.570" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1510970185" wchar="902519606" rbytes="559026176" wbytes="0" cwbytes="0" syscr="1535" syscw="110455">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="14646"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="0" nread="0" bwrite="30023680" nwrite="3665" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="30023680" nwrite="3665" bseek="0" nseek="0" size="30023680"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="38694" pid="38765" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1573894415.579598" stop="1573894421.435145" utime="83.780" stime="2.750" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="271312" rsspeak="73748" rchar="1611656905" wchar="962514430" rbytes="605188096" wbytes="0" cwbytes="0" syscr="1629" syscw="117794">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.R6M9ma" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.QO71EL" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="15486"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="33583680"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="16781760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="0" nread="0" bwrite="29990912" nwrite="3661" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/25859407_striped_scratch/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="0" nread="0" bwrite="29990912" nwrite="3661" bseek="0" nseek="0" size="29990912"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="25859407" lrmtype="slurm"/>
+  <cwd>/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/run</cwd>
+  <usage utime="0.266" stime="0.983" maxrss="6932" minflt="500" majflt="1" nswap="0" inblock="48" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="241512" nivcsw="25"/>
+  <machine page-size="4096">
+    <stamp>2019-11-16T00:51:50.305-08:00</stamp>
+    <uname system="linux" nodename="nid00563" release="4.12.14-25.22_5.0.79-cray_ari_c" machine="x86_64">#1 SMP Fri Aug 9 16:20:09 UTC 2019 (d32c384)</uname>
+    <linux>
+      <ram total="131895024" free="128689236" shared="406860" buffer="8140"/>
+      <swap total="0" free="0"/>
+      <boot idle="61836994.490">2019-10-29T13:03:44.836-07:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.77" min5="3.54" min15="10.65"/>
+      <procs total="826" running="1" sleeping="825" vmsize="10987224" rss="372528"/>
+      <task total="899" running="1" sleeping="898"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-11-11T16:42:39-08:00" atime="2019-11-11T16:42:39-08:00" ctime="2019-11-11T16:42:39-08:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.R6M9ma" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="9078095" nlink="1" blksize="4096" blocks="0" mtime="2019-11-16T00:51:50-08:00" atime="2019-11-16T00:51:50-08:00" ctime="2019-11-16T00:51:50-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.QO71EL" descriptor="4"/>
+    <statinfo mode="0100600" size="15529" inode="9078096" nlink="1" blksize="4096" blocks="32" mtime="2019-11-16T00:53:41-08:00" atime="2019-11-16T00:51:50-08:00" ctime="2019-11-16T00:53:41-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+----- SWarp 2.38.0 started on 2019-11-16 at 00:51:50 with 1 thread
+
+Examining input data ...
+Looking for PTF201111234857_2_o_37754_06.w.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.weight.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.weight.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.weight.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.weight.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.weight.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.weight.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.weight.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.weight.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.weight.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.weight.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.weight.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.weight.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.weight.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.weight.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.weight.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.weight.fits ...
+Creating NEW output image ...
+Creating NEW weight-map ...
+
+------- Output File coadd.fits:
+    &quot;no ident&quot;  WEIGHTED  no ext. header  3600x3600  32 bits (floats)
+    Center: 14:01:00.00 +54:15:00.0   60&apos;x60&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 0 e-/ADU   Flux scaling (astrom/photom): 1 X / 1 X
+
+Loading input data ...
+
+-------------- File PTF201111234857_2_o_37754_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.51 +54:06:11.1   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9784 X / 100.7 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 211.0174   RMS: 14.14532   Weight scale: 14.14532
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111234857_2_o_37754_06.w.fits ...
+
+-------------- File PTF201111095206_2_o_34706_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.56 +54:06:07.5   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9785 X / 63.52 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 187.8299   RMS: 15.61611   Weight scale: 15.61611
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111095206_2_o_34706_06.w.fits ...
+
+-------------- File PTF201111294943_2_o_39822_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.78 +54:06:16.9   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9776 X / 4394 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 133.9372   RMS: 12.16309   Weight scale: 12.16309
+
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.weight.fits ...
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits
+Resampling /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111294943_2_o_39822_06.w.fits ...
+
+-------------- File PTF201111184953_2_o_36749_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.96 +54:06:10.4   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9787 X / 91.81 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 123.4559   RMS: 13.26932   Weight scale: 13.26932
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111184953_2_o_36749_06.w.fits ...
+
+-------------- File PTF201111284696_2_o_39396_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.28 +54:06:14.5   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9786 X / 76.36 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 90.83966   RMS: 12.20279   Weight scale: 12.20279
+
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.weight.fits ...
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits
+Resampling /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111284696_2_o_39396_06.w.fits ...
+
+-------------- File PTF201111025412_2_o_33288_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.98 +54:06:03.7   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9784 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 112.7262   RMS: 11.63997   Weight scale: 11.63997
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025412_2_o_33288_06.w.fits ...
+
+-------------- File PTF201111224851_2_o_37387_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.44 +54:06:09.1   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9787 X / 63.52 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 67.21902   RMS: 14.37426   Weight scale: 14.37426
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111224851_2_o_37387_06.w.fits ...
+
+-------------- File PTF201111265053_2_o_38612_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.63 +54:06:18.9   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9784 X / 63.52 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 51.73596   RMS: 13.3143   Weight scale: 13.3143
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111265053_2_o_38612_06.w.fits ...
+
+-------------- File PTF201111274755_2_o_38996_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.87 +54:06:16.9   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9784 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 76.98306   RMS: 12.11695   Weight scale: 12.11695
+
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.weight.fits ...
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits
+Resampling /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111274755_2_o_38996_06.w.fits ...
+
+-------------- File PTF201111035427_2_o_33741_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.85 +54:06:07.9   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9786 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 119.0405   RMS: 13.24671   Weight scale: 13.24671
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111035427_2_o_33741_06.w.fits ...
+
+-------------- File PTF201111015420_2_o_32874_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.21 +54:06:04.2   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9786 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 121.8833   RMS: 11.88712   Weight scale: 11.88712
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111015420_2_o_32874_06.w.fits ...
+
+-------------- File PTF201111085228_2_o_34301_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:50.14 +54:06:07.3   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9785 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 76.29383   RMS: 13.49002   Weight scale: 13.49002
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111085228_2_o_34301_06.w.fits ...
+
+-------------- File PTF201111165032_2_o_35994_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.65 +54:06:07.2   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9789 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 101.7449   RMS: 12.57064   Weight scale: 12.57064
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111165032_2_o_35994_06.w.fits ...
+
+-------------- File PTF201111304878_2_o_40204_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.60 +54:06:15.1   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9789 X / 63.52 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 61.36985   RMS: 12.15761   Weight scale: 12.15761
+
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.weight.fits ...
+Reading /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits
+Resampling /var/opt/cray/dws/mounts/batch/25859407_striped_scratch/input/PTF201111304878_2_o_40204_06.w.fits ...
+
+-------------- File PTF201111155050_2_o_35570_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:49.65 +54:06:05.0   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9784 X / 69.64 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 116.7499   RMS: 13.08914   Weight scale: 13.08914
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111155050_2_o_35570_06.w.fits ...
+
+-------------- File PTF201111025428_2_o_33289_06.w.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2048x4096  32 bits (floats)
+    Center: 14:01:48.99 +54:06:03.6   34.5&apos;x69&apos;  Scale: 1.011 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 0.9783 X / 63.52 X
+
+Setting up background maps ...
+Filtering background map(s) ...
+Computing backgound d-map ...
+Computing backgound-noise d-map ...
+
+    Background: 140.9088   RMS: 12.39661   Weight scale: 12.39661
+
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.weight.fits ...
+Reading /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.fits
+Resampling /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input/PTF201111025428_2_o_33289_06.w.fits ...
+Closing files ...
+
+&gt; All done (in 110.9 s)
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.DYzUWm" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="9078097" nlink="1" blksize="4096" blocks="0" mtime="2019-11-16T00:51:50-08:00" atime="2019-11-16T00:51:50-08:00" ctime="2019-11-16T00:51:50-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>
