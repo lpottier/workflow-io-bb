@@ -313,18 +313,317 @@ class SwarpInstance:
         string += "\n"
         return string
 
+    def script_header(self):
+        s = ''
+        s += "usage()\n"
+        s += "{\n"
+        s += "    echo \"usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]\"\n"
+        s += "}"
+        s += "\n"
+        s += "if [ -z \"$DW_JOB_STRIPED\" ]; then\n"
+        s += "    echo \"Error: burst buffer allocation found. Run start_nostage.sh first\"\n"
+        s += "    exit\n"
+        s += "fi\n"
+        s += "\n"
+        s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
+        s += "COUNT=0\n"
+        s += "\n"
+        s += "# Test code to verify command line processing"
+        s += "if [ -f \"$FILES_TO_STAGE\" ]; then\n"
+        s += "    echo \"File list used: $FILES_TO_STAGE\"\n"
+        s += "else"
+        s += "    echo \"$FILES_TO_STAGE does not seem to exist\"\n"
+        s += "    exit\n"
+        s += "fi\n"
+        s += "\n"
+
+        s += "if (( \"$COUNT\" < 0 )); then\n"
+        s += "    COUNT=$(cat $FILES_TO_STAGE | wc -l)\n"
+        s += "fi\n"
+        s += "\n"
+
+        s += "echo $FILES_TO_STAGE\n"
+        s += "echo $COUNT\n"
+        s += "\n"
+
+        s += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
+        s += "IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'\n"
+        s += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
+        s += "\n"
+
+        #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
+        s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
+        s += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
+        s += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
+        s += "COPY=$BASE/copy.py\n"
+        s += "FILE_MAP=$BASE/build_filemap.py\n"
+        s += "\n"
+
+        s += "NODE_COUNT=1        # Number of compute nodes requested by srun\n"
+        s += "TASK_COUNT=1        # Number of tasks allocated by srun\n"
+        s += "CORE_COUNT=1        # Number of cores used by both tasks\n"
+        s += "\n"
+
+        s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
+        s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
+        s += "NB_AVG=5            # Number of identical runs\n"
+        s += "\n"
+
+
+        s += "CONFIG_DIR=$BASE/config\n"
+        s += "if (( \"$STAGE_CONFIG\" == 1 )); then\n"
+        s += "    CONFIG_DIR=$DW_JOB_STRIPED/config\n"
+        s += "fi\n"
+        s += "RESAMPLE_CONFIG=$CONFIG_DIR/resample.swarp\n"
+        s += "COMBINE_CONFIG=$CONFIG_DIR/combine.swarp\n"
+        s += "\n"
+
+        s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
+        s += "\n"
+
+        s += "INPUT_DIR_PFS=$BASE/input\n"
+        s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
+        s += "\n"
+
+        s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
+        s += "export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/$OUTPUT_DIR_NAME\n"
+        s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
+        s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
+        s += "\n"
+
+        s += "mkdir -p $OUTPUT_DIR_NAME\n"
+        s += "\n"
+        return s
+
+
+    def average_loop(self):
+        s = ''
+        s += "for k in $(seq 1 1 $NB_AVG); do\n"
+        s += "    echo \"#### Starting run $k... $(date --rfc-3339=ns)\"\n"
+        s += "    rm -rf $DW_JOB_STRIPED/*\n"
+        s += "\n"
+
+        s += "    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}\n"
+        s += "    #The local version\n"
+        s += "    mkdir -p $OUTPUT_DIR_NAME/${k}\n"
+        s += "\n"
+
+        s += "    echo $OUTPUT_DIR\n"
+        s += "\n"
+
+        s += "    OUTPUT_FILE=$OUTPUT_DIR/output.log\n"
+        s += "    BB_INFO=$OUTPUT_DIR/bb.log\n"
+        s += "    DU_RES=$OUTPUT_DIR/data-stagedin.log\n"
+        s += "    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log\n"
+        s += "\n"
+
+        s += "    mkdir -p $OUTPUT_DIR\n"
+        s += "    chmod 777 $OUTPUT_DIR\n"
+        s += "\n"
+
+        s += "    export RESAMP_DIR=$DW_JOB_STRIPED/resamp\n"
+        s += "\n"
+
+        s += "    mkdir -p $RESAMP_DIR\n"
+        s += "    chmod 777 $RESAMP_DIR\n"
+        s += "\n"
+
+        s += "    #rm -f {error,output}.*\n"
+        s += "\n"
+
+        s += "    #### To select file to stage\n"
+        s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
+        s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
+        s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
+        s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $FILES_TO_STAGE\n"
+        s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
+        s += "    if (( \"$COUNT\" > 0 )); then\n"
+        s += "        sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
+        s += "        ## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....\n"
+        s += "        x=$(echo \"$COUNT+16\" | bc)\n"
+        s += "        sed -i -e \"16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
+        s += "    fi\n"
+        s += "\n"
+
+        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT*2\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
+        s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+
+        s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
+        s += "\n"
+
+        s += "    module load dws\n"
+        s += "    sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')\n"
+        s += "    echo \"session ID is: \"${sessID} | tee $BB_INFO\n"
+        s += "    instID=$(dwstat instances | grep $sessID | awk '{print $1}')\n"
+        s += "    echo \"instance ID is: \"${instID} | tee -a $BB_INFO\n"
+        s += "    echo \"fragments list:\" | tee -a $BB_INFO\n"
+        s += "    echo \"frag state instID capacity gran node\" | tee -a $BB_INFO\n"
+        s += "    dwstat fragments | grep ${instID} | tee -a $BB_INFO\n"
+        s += "\n"
+
+        s += "    bballoc=$(dwstat fragments | grep ${instID} | awk '{print $4}')\n"
+        s += "    echo \"$bballoc\" > $BB_ALLOC\n"
+        s += "\n"
+
+        s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    t1=$(date +%s.%N)\n"
+        s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
+        s += "        $COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
+        s += "    else\n"
+        s += "        $COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
+        s += "    fi\n"
+        s += "\n"
+
+        s += "    if (( \"$STAGE_EXEC\" = 1 )); then\n"
+        s += "        cp -r $EXE $DW_JOB_STRIPED\n"
+        s += "    fi\n"
+        s += "\n"
+
+        s += "    if (( \"$STAGE_CONFIG\" = 1 )); then\n"
+        s += "        cp -r $CONFIG_DIR $DW_JOB_STRIPED\n"
+        s += "    fi\n"
+        s += "\n"
+
+        s += "    t2=$(date +%s.%N)\n"
+        s += "    tdiff1=$(echo \"$t2 - $t1\" | bc -l)\n"
+        s += "    echo \"TIME STAGE_IN $tdiff1\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+
+        s += "    mkdir -p $INPUT_DIR\n"
+        s += "\n"
+
+        s += "    #If we did not stage any input files\n"
+        s += "    if [[ -f \"$(ls -A $INPUT_DIR)\" ]]; then\n"
+        s += "        INPUT_DIR=$INPUT_DIR_PFS\n"
+        s += "        echo \"INPUT_DIR set as $INPUT_DIR (no input in the BB)\"\n"
+        s += "    fi\n"
+        s += "\n"
+
+        #if we stage in executable
+        s += "    if [ \"$STAGE_EXEC\" = 1 ]; then\n"
+        s += "        EXE=$DW_JOB_STRIPED/swarp\n"
+        s += "    fi\n"
+        s += "\n"
+
+        s += "    RESAMPLE_FILES=\"$OUTPUT_DIR/resample_files.txt\"\n"
+        s += "    $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+
+        s += "    dsize=$(du -sh $INPUT_DIR | awk '{print $1}')\n"
+        s += "    nbfiles=$(ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
+        s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
+        s += "\n"
+
+        s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    t1=$(date +%s.%N)\n"
+        s += "\n"
+
+        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \\ \n"
+        s += "        -o \"$OUTPUT_DIR/output.resample\" \\ \n"
+        s += "        -e \"$OUTPUT_DIR/error.resample\" \\ \n"
+        s += "            $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" \\ \n"
+        s += "        $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)\n"
+        s += "\n"
+
+        s += "    t2=$(date +%s.%N)\n"
+        s += "    tdiff2=$(echo \"$t2 - $t1\" | bc -l)\n"
+        s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+
+        s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    t1=$(date +%s.%N)\n"
+        s += "\n"
+
+        s += "    ###\n"
+        s += "    ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there\n"
+        s += "    ###\n"
+        s += "\n"
+
+        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpu-bind=cores \\ \n"
+        s += "        -o \"$OUTPUT_DIR/output.coadd\" \\ \n"
+        s += "        -e \"$OUTPUT_DIR/error.coadd\" \\ \n"
+        s += "            $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" \\ \n"
+        s += "        $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
+        s += "\n"
+
+        s += "    t2=$(date +%s.%N)\n"
+        s += "    tdiff3=$(echo \"$t2 - $t1\" | bc -l)\n"
+        s += "    echo \"TIME COMBINE $tdiff3\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+        s += "    du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+        s += "    env | grep SLURM > $OUTPUT_DIR/slurm.env\n"
+        s += "\n"
+
+        s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    t1=$(date +%s.%N)\n"
+        s += "    $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
+        s += "    t2=$(date +%s.%N)\n"
+        s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
+        s += "\n"
+        s += "    OUTPUT_FILE=$OUTPUT_DIR_NAME/${k}/output.log\n"
+        s += "    echo \"TIME STAGE_OUT $tdiff4\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+        s += "    echo \"========\" | tee -a $OUTPUT_FILE\n"
+        s += "    tdiff=$(echo \"$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4\" | bc -l)\n"
+        s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
+        s += "\n"
+        s += "    set -x\n"
+        s += "    rm -rf \"$OUTPUT_DIR_NAME/${k}/*.fits\"\n"
+        s += "    set +x\n"
+        s += "\n"
+        s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
+        s += "done\n"
+        return s
+
     def script_globalvars(self):
-        string = "set -x\n"
+
+        # FILES_TO_STAGE="files_to_stage.txt"
+        # COUNT=0
+
+        # # Test code to verify command line processing
+        # if [ -f "$FILES_TO_STAGE" ]; then
+        #     echo "File list used: $FILES_TO_STAGE"
+        # else
+        #     echo "$FILES_TO_STAGE does not seem to exist"
+        #     exit
+        # fi
+
+        # if (( "$COUNT" < 0 )); then
+        #     COUNT=$(cat $FILES_TO_STAGE | wc -l)
+        # fi
+
+        # echo $FILES_TO_STAGE
+        # echo $COUNT
+
+        string = "#set -x\n"
         string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
         string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
         string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
-        string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
+        #string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
+
+        # COPY=$BASE/copy.py
+        # FILE_MAP=$BASE/build_filemap.py
+
+        # NODE_COUNT=1        # Number of compute nodes requested by srun
+        # TASK_COUNT=1        # Number of tasks allocated by srun
+        # CORE_COUNT=1        # Number of cores used by both tasks
+
 
         string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
         string += "CONFIG_DIR=$BASE\n"
         string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
         string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
+
+        # CONFIG_DIR=$BASE/config
+        # if (( "$STAGE_CONFIG" == 1 )); then
+        #     CONFIG_DIR=$DW_JOB_STRIPED/config
+        # fi
 
         string += "FILE_PATTERN='PTF201111*'\n"
         string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
@@ -510,18 +809,21 @@ class SwarpInstance:
             f.write(self.slurm_header())
             f.write(self.dw_temporary())
             f.write(self.script_modules())
-            f.write(self.script_globalvars())
-            f.write(self.create_output_dirs())
-            if manual_stage:
-                f.write(self.stage_in_files())
+            f.write(self.script_header())
+            f.write(self.average_loop())
 
-            f.write(self.script_run_resample())
-            f.write(self.script_copy_resample())
-            f.write(self.script_run_combine())
-            if manual_stage:
-                f.write(self.stage_out_files())
+            # f.write(self.script_globalvars())
+            # f.write(self.create_output_dirs())
+            # if manual_stage:
+            #     f.write(self.stage_in_files())
 
-            f.write(self.script_ending())
+            # f.write(self.script_run_resample())
+            # f.write(self.script_copy_resample())
+            # f.write(self.script_run_combine())
+            # if manual_stage:
+            #     f.write(self.stage_out_files())
+
+            # f.write(self.script_ending())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
