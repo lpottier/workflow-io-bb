@@ -471,25 +471,30 @@ class KickstartDirectory:
 
     """
     def __init__(self,  directory, file_type=FileType.XML):
-        self.dir = directory
-        if not os.path.isdir(self.dir):
+        self.dir = Path(os.path.abspath(directory))
+        if not self.dir.is_dir():
             raise ValueError("error: {} is not a valid directory.".format(self.dir))
 
-        self.dir_exp = os.listdir(self.dir)
+        print(self.dir)
+        self.dir_exp = [Path(x) for x in self.dir.iterdir() if x.is_dir()]
         self.log = []
-        self.resample = []
-        self.coadd = []
+        self.resample = {}
+        self.combine = {}
         self.log = "output.log"
         self.number_avg = 0
 
         print(self.dir_exp)
         for d in self.dir_exp:
-            print(d)
-            for avg in os.listdir(d):
-                print(avg)
-                #No average yet
-                self.resample.append(KickstartRecord([avg+'/'+"stat.resample.xml"]))
-                self.coadd.append(KickstartRecord([avg+'/'+"stat.coadd.xml"]))
+            dir_at_this_level = [Path(x) for x in d.iterdir() if x.is_dir()]
+            for avg in dir_at_this_level:
+                #print(avg)
+                if not avg in self.resample:
+                    self.resample[avg] = []
+                if not avg in self.combine:
+                    self.combine[avg] = []
+
+                self.resample[avg].append(KickstartRecord([avg / 'stat.resample.xml']))
+                self.combine[avg].append(KickstartRecord([avg / 'stat.combine.xml']))
 
     def root_dir(self):
         return self.dir

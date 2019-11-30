@@ -397,7 +397,7 @@ class SwarpInstance:
 
     def file_to_stage(self):
         s = ''
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits".format(SWARP_DIR)
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR)
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR)
         s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR)
         s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR)
