@@ -204,13 +204,17 @@ class SwarpWorkflowConfig:
 
 
 class SwarpSchedulerConfig:
-    def __init__(self, num_nodes, num_cores, queue, slurm_options=None):
+    def __init__(self, num_nodes, num_cores, queue, timeout, slurm_options=None):
         self.num_nodes = num_nodes #Number of nodes requested
         self.num_cores = num_cores #Cores per nodes
-        self._queue = queue #Cores per nodes
+        self._queue = queue #Execution queue
+        self._timeout = timeout #Timeout HH:MM:SS
 
     def nodes(self):
         return self.num_nodes
+    
+    def timeout(self):
+        return self._timeout
     
     def queue(self):
         return self._queue
@@ -265,7 +269,7 @@ class SwarpInstance:
         else:
             string += "#SBATCH -N {}\n".format(self.sched_config.nodes())
         string += "#SBATCH -C haswell\n"
-        string += "#SBATCH -t 00:30:00\n"
+        string += "#SBATCH -t {}\n".format(self.sched_config.timeout())
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
         string += "#SBATCH -e error.%j\n"
@@ -948,6 +952,8 @@ if __name__ == '__main__':
                         help='Number of runs to average on')
     parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
                         help='Queue to execute the workflow')
+    parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
+                        help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
 
     args = parser.parse_args()
     print(args)
@@ -982,7 +988,7 @@ if __name__ == '__main__':
     combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='${RESAMP_DIR}')
     combine_config.write(overide=True) #Write out the combine.swarp
 
-    sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, queue=args.queue, num_cores=args.threads)
+    sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, queue=args.queue, timeout=args.timeout, num_cores=args.threads)
     bb_config = SwarpBurstBufferConfig(
                 size_bb=args.bbsize,
                 stage_input_dirs=[
