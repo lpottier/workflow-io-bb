@@ -381,7 +381,7 @@ class SwarpInstance:
         s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
         s += "\n"
 
-        s += "INPUT_DIR_PFS=$BASE/input\n"
+        s += "INPUT_DIR_PFS=$SCRATCH/$SWARP_DIR/input\n"
         s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
         s += "\n"
 
