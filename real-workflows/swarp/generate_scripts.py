@@ -174,7 +174,7 @@ class SwarpWorkflowConfig:
         else:
             string += "XML_NAME               both.xml        # Filename for XML output\n"
 
-        string += "VERBOSE_TYPE           FULL            # QUIET,NORMAL or FULL\n"
+        string += "VERBOSE_TYPE           QUIET            # QUIET,NORMAL or FULL\n"
 
         string += "NTHREADS               {}               # No. threads\n".format(self.nthreads)
         return string
@@ -946,7 +946,7 @@ if __name__ == '__main__':
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
     parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
                         help='Number of runs to average on')
-    parser.add_argument('--queue', '-q', type=int, nargs='?', default="debug",
+    parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
                         help='Queue to execute the workflow')
 
     args = parser.parse_args()
