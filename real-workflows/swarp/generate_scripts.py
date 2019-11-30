@@ -965,9 +965,9 @@ if __name__ == '__main__':
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if args.input_sharing:
-        output_dir = "build_shared-{}N-{}C-{}W-{}B/".format(args.nodes, args.threads, args.workflows, args.bbsize)
+        output_dir = "swarp_shared-{}-{}N-{}C-{}W-{}B/".format(args.queue, args.nodes, args.threads, args.workflows, args.bbsize)
     else:
-        output_dir = "build-{}N-{}C-{}W-{}B/".format(args.nodes, args.threads, args.workflows, args.bbsize)
+        output_dir = "swarp-{}-{}N-{}C-{}W-{}B/".format(args.queue, args.nodes, args.threads, args.workflows, args.bbsize)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {} created.\n".format(output_dir))
