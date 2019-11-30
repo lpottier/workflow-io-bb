@@ -556,11 +556,7 @@ class SwarpInstance:
         s += "    t1=$(date +%s.%N)\n"
         s += "\n"
 
-        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpus-per-task=$CORE_COUNT --cpu-bind=cores \\ \n"
-        s += "        -o \"$OUTPUT_DIR/output.resample\" \\ \n"
-        s += "        -e \"$OUTPUT_DIR/error.resample\" \\ \n"
-        s += "            $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" \\ \n"
-        s += "        $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)\n"
+        s += "    srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES)\n"
         s += "\n"
 
         s += "    t2=$(date +%s.%N)\n"
@@ -577,11 +573,7 @@ class SwarpInstance:
         s += "    ###\n"
         s += "\n"
 
-        s += "    srun -N $NODE_COUNT -n $TASK_COUNT -c $CORE_COUNT --cpus-per-task=$CORE_COUNT --cpu-bind=cores \\ \n"
-        s += "        -o \"$OUTPUT_DIR/output.coadd\" \\ \n"
-        s += "        -e \"$OUTPUT_DIR/error.coadd\" \\ \n"
-        s += "            $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" \\ \n"
-        s += "        $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
+        s += "    srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
         s += "\n"
 
         s += "    t2=$(date +%s.%N)\n"
