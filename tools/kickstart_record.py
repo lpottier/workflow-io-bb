@@ -422,8 +422,8 @@ class OutputLog:
 class KickstartDirectory:
     """
         Directory must follow this kind of pattern:
-        self.dir = swarp_cori_1w_1c
-            swarp_cori_1w_1c
+        self.dir = swarp-bb.batch.1c.0f.25856221
+            swarp-bb.batch.1c.0f.25856221
             ├── output.25823425
             ├── output.25823427
             ├── output.25823428
@@ -434,18 +434,32 @@ class KickstartDirectory:
             ├── output.25823581
             ├── output.25823583
             ├── output.batch.1c.0f.25823425
-                ├── combine.xml
-                ├── error.coadd
-                ├── error.resample
-                ├── files_to_stage.txt
-                ├── output.coadd
-                ├── output.log
-                ├── output.resample
-                ├── resample.xml
-                ├── resample_files.txt
-                ├── slurm.env
-                ├── stat.combine.xml
-                └── stat.resample.xml
+                ├──1/
+                    ├── combine.xml
+                    ├── error.coadd
+                    ├── error.resample
+                    ├── files_to_stage.txt
+                    ├── output.coadd
+                    ├── output.log
+                    ├── output.resample
+                    ├── resample.xml
+                    ├── resample_files.txt
+                    ├── slurm.env
+                    ├── stat.combine.xml
+                    └── stat.resample.xml
+                ├──X/
+                    ├── combine.xml
+                    ├── error.coadd
+                    ├── error.resample
+                    ├── files_to_stage.txt
+                    ├── output.coadd
+                    ├── output.log
+                    ├── output.resample
+                    ├── resample.xml
+                    ├── resample_files.txt
+                    ├── slurm.env
+                    ├── stat.combine.xml
+                    └── stat.resample.xml
             ├── output.batch.1c.10f.25823579
             ├── output.batch.1c.12f.25823580
             ├── output.batch.1c.14f.25823581
@@ -466,12 +480,16 @@ class KickstartDirectory:
         self.resample = []
         self.coadd = []
         self.log = "output.log"
+        self.number_avg = 0
 
+        print(self.dir_exp)
         for d in self.dir_exp:
             print(d)
-            #No average yet
-            self.resample.append(KickstartRecord([d+'/'+"stat.resample.xml"]))
-            self.coadd.append(KickstartRecord([d+'/'+"stat.coadd.xml"]))
+            for avg in os.listdir(d):
+                print(avg)
+                #No average yet
+                self.resample.append(KickstartRecord([avg+'/'+"stat.resample.xml"]))
+                self.coadd.append(KickstartRecord([avg+'/'+"stat.coadd.xml"]))
 
     def root_dir(self):
         return self.dir
@@ -481,6 +499,7 @@ class KickstartDirectory:
 
     def parse_outputlog():
         for d in self.dir_exp:
+            pass
 
 
     # def write(csv_file):
@@ -488,7 +507,6 @@ class KickstartDirectory:
     #         write = csv.writer(f, delimiter=' ',
     #                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
     #         write.writerow([])
-
 
 
 if __name__ == "__main__":
@@ -508,6 +526,6 @@ if __name__ == "__main__":
     print(exp1.time())
     print(exp1.efficiency())
 
-    test = KickstartDirectory("swarp_cori_1w_1c/")
+    test = KickstartDirectory("test_exp/")
 
 

@@ -466,6 +466,7 @@ class SwarpInstance:
         s += "    #rm -f {error,output}.*\n"
         s += "\n"
 
+        # FIX THIS
         s += "    #### To select file to stage\n"
         s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
         s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
@@ -512,12 +513,12 @@ class SwarpInstance:
         s += "    fi\n"
         s += "\n"
 
-        s += "    if (( \"$STAGE_EXEC\" = 1 )); then\n"
+        s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
         s += "        cp -r $EXE $DW_JOB_STRIPED\n"
         s += "    fi\n"
         s += "\n"
 
-        s += "    if (( \"$STAGE_CONFIG\" = 1 )); then\n"
+        s += "    if (( \"$STAGE_CONFIG\" == 1 )); then\n"
         s += "        cp -r $CONFIG_DIR $DW_JOB_STRIPED\n"
         s += "    fi\n"
         s += "\n"
@@ -538,7 +539,7 @@ class SwarpInstance:
         s += "\n"
 
         #if we stage in executable
-        s += "    if [ \"$STAGE_EXEC\" = 1 ]; then\n"
+        s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
         s += "        EXE=$DW_JOB_STRIPED/swarp\n"
         s += "    fi\n"
         s += "\n"
