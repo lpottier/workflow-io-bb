@@ -204,12 +204,16 @@ class SwarpWorkflowConfig:
 
 
 class SwarpSchedulerConfig:
-    def __init__(self, num_nodes, num_cores, slurm_options=None):
+    def __init__(self, num_nodes, num_cores, queue, slurm_options=None):
         self.num_nodes = num_nodes #Number of nodes requested
         self.num_cores = num_cores #Cores per nodes
+        self._queue = queue #Cores per nodes
 
     def nodes(self):
         return self.num_nodes
+    
+    def queue(self):
+        return self._queue
 
     def cores(self):
         return self.num_cores
@@ -255,7 +259,7 @@ class SwarpInstance:
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
-        string += "#SBATCH -p debug\n"
+        string += "#SBATCH -p {}\n".format(self.sched_config.queue())
         if self.standalone:
             string += "#SBATCH -N @NODES@\n"
         else:
@@ -919,6 +923,7 @@ class SwarpRun:
             f.write("        cp ../copy.py ../build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
             f.write("        cd \"${outdir}\"\n")
             f.write("        sbatch ${script}\n")
+            #TODO ADD waiting time debug queue
             f.write("        cd ..\n")
             f.write("    done\n")
             f.write("done\n")
@@ -929,18 +934,20 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
     
-    parser.add_argument('--threads', '-C', type=int, nargs='?', default=1,
+    parser.add_argument('--threads', '-c', type=int, nargs='?', default=1,
                         help='Number of POSIX threads per workflow tasks')
-    parser.add_argument('--nodes', '-N', type=int, nargs='?', default=1,
+    parser.add_argument('--nodes', '-n', type=int, nargs='?', default=1,
                         help='Number of compute nodes requested')
-    parser.add_argument('--bbsize', '-B', type=int, nargs='?', default=50,
+    parser.add_argument('--bbsize', '-b', type=int, nargs='?', default=50,
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
-    parser.add_argument('--workflows', '-W', type=int, nargs='?', default=1,
+    parser.add_argument('--workflows', '-w', type=int, nargs='?', default=1,
                         help='Number of identical SWarp workflows running in parallel')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
     parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
                         help='Number of runs to average on')
+    parser.add_argument('--queue', '-q', type=int, nargs='?', default="debug",
+                        help='Queue to execute the workflow')
 
     args = parser.parse_args()
     print(args)
@@ -969,13 +976,13 @@ if __name__ == '__main__':
     os.chdir(old_path+output_dir)
     sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
-    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='.')
+    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='${RESAMP_DIR}')
     resample_config.write(overide=True) #Write out the resample.swarp
 
-    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='.')
+    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='${RESAMP_DIR}')
     combine_config.write(overide=True) #Write out the combine.swarp
 
-    sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, num_cores=args.threads)
+    sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, queue=args.queue, num_cores=args.threads)
     bb_config = SwarpBurstBufferConfig(
                 size_bb=args.bbsize,
                 stage_input_dirs=[
@@ -998,6 +1005,7 @@ if __name__ == '__main__':
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
+
 
     run1.standalone(file="submit.sh", manual_stage=True, overide=True)
     
