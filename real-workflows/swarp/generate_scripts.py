@@ -580,7 +580,7 @@ class SwarpInstance:
         s += "        cd ..\n"
         s += "    done\n"
         s += "\n"
-        s += "    
+
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
         s += "    t2=$(date +%s.%N)\n"
