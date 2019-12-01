@@ -443,15 +443,17 @@ class SwarpInstance:
         s = ''
         s += "for k in $(seq 1 1 $NB_AVG); do\n"
         s += "    echo \"#### Starting run $k... $(date --rfc-3339=ns)\"\n"
-        s += "    rm -rf $DW_JOB_STRIPED/*\n"
+        s += "    rm -rf $INPUT_DIR\n"
         s += "\n"
 
         s += "    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}\n"
-        s += "    #The local version\n"
-        s += "    mkdir -p $OUTPUT_DIR_NAME/${k}\n"
+        s += "    mkdir -p $OUTPUT_DIR\n"
+        s += "    echo \"OUTPUT_DIR -> $OUTPUT_DIR\"\n"
         s += "\n"
 
-        s += "    echo $OUTPUT_DIR\n"
+        s += "    #The local version\n"
+        s += "    mkdir -p $OUTPUT_DIR_NAME/${k}\n"
+        s += "    echo \"LOCAL_OUTPUT_DIR -> $OUTPUT_DIR_NAME/${k}\"\n"
         s += "\n"
 
         s += "    OUTPUT_FILE=$OUTPUT_DIR/output.log\n"
@@ -623,7 +625,9 @@ class SwarpInstance:
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
-        s += "        $COPY -i $OUTPUT_DIR/${process} -o $OUTPUT_DIR_NAME/${k}/${process} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}/${process} & \n"
+        # s += "        cd ${OUTPUT_DIR}/${process}\n"
+        s += "        $COPY -i \"$OUTPUT_DIR/${process}\" -o \"$OUTPUT_DIR_NAME/${k}/${process}\" -a \"stage-out\" -d \"$OUTPUT_DIR_NAME/${k}/${process}\" & \n"
+        # s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
         s += "    done\n"
         s += "    t1=$(date +%s.%N)\n"
