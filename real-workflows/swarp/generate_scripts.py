@@ -572,12 +572,13 @@ class SwarpInstance:
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "        echo -n \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.%j.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
+        s += "        echo -n \"done\"\n"
         s += "    done\n"
         s += "\n"
 
@@ -597,12 +598,13 @@ class SwarpInstance:
         s += "\n"
 
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        echo \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "        echo -n \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
         s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
+        s += "        echo -n \"done\"\n"
         s += "    done\n"
         s += "\n"
 
@@ -619,8 +621,10 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         s += "        $COPY -i $OUTPUT_DIR/${process} -o $OUTPUT_DIR_NAME/${k}/${process} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}/${process} & \n"
+        s += "        echo -n \"done\"\n"
         s += "    done\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
