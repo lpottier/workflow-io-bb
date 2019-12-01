@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, standalone=True, no_stagein=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, standalone=True, no_stagein=True):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -260,6 +260,7 @@ class SwarpInstance:
         self.bb_config = bb_config
         self.sched_config = sched_config
         self.script_dir = script_dir
+        self.nb_avg = nb_avg
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -375,7 +376,7 @@ class SwarpInstance:
 
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
-        s += "NB_AVG={}            # Number of identical runs\n".format("5")
+        s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
 
         s += "CONFIG_DIR=$BASE\n"
@@ -1036,7 +1037,8 @@ if __name__ == '__main__':
                                 resample_config=resample_config, 
                                 combine_config=combine_config, 
                                 sched_config=sched_config, 
-                                bb_config=bb_config)
+                                bb_config=bb_config,
+                                nb_avg=args.nb_run)
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
