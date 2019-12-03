@@ -413,38 +413,38 @@ class SwarpInstance:
     # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
     def file_to_stage(self, pairs=True):
         s = ''
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/input/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/input/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/input/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/input/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/input/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/input/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/input/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/input/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/input/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/input/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/input/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/input/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/input/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/input/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits {}/input/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits {}/input/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits {}/input/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits {}/input/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits {}/input/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits {}/input/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits {}/input/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits {}/input/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits {}/input/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits {}/input/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits {}/input/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits {}/input/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits {}/input/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits {}/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits {}/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits {}/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits {}/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits {}/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits {}/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits {}/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits {}/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits {}/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits {}/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits {}/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits {}/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits {}/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         
 
         # TODO: implement the pairs option
@@ -510,7 +510,7 @@ class SwarpInstance:
         s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
         s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
         s += "    sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
-        s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
+        #s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
         # s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $LOC_FILES_TO_STAGE\n"
         # s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
         # s += "    if (( \"$COUNT\" > 0 )); then\n"
@@ -653,7 +653,7 @@ class SwarpInstance:
         s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
-        # s += "        tree $DW_JOB_STRIPED/\n"
+        s += "        tree $DW_JOB_STRIPED/\n"
         s += "        $COPY -i \"${process}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" &\n"
         #s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
@@ -680,187 +680,187 @@ class SwarpInstance:
         s += "done\n"
         return s
 
-    def script_globalvars(self):
+    # def script_globalvars(self):
 
-        # FILES_TO_STAGE="files_to_stage.txt"
-        # COUNT=0
+    #     # FILES_TO_STAGE="files_to_stage.txt"
+    #     # COUNT=0
 
-        # # Test code to verify command line processing
-        # if [ -f "$FILES_TO_STAGE" ]; then
-        #     echo "File list used: $FILES_TO_STAGE"
-        # else
-        #     echo "$FILES_TO_STAGE does not seem to exist"
-        #     exit
-        # fi
+    #     # # Test code to verify command line processing
+    #     # if [ -f "$FILES_TO_STAGE" ]; then
+    #     #     echo "File list used: $FILES_TO_STAGE"
+    #     # else
+    #     #     echo "$FILES_TO_STAGE does not seem to exist"
+    #     #     exit
+    #     # fi
 
-        # if (( "$COUNT" < 0 )); then
-        #     COUNT=$(cat $FILES_TO_STAGE | wc -l)
-        # fi
+    #     # if (( "$COUNT" < 0 )); then
+    #     #     COUNT=$(cat $FILES_TO_STAGE | wc -l)
+    #     # fi
 
-        # echo $FILES_TO_STAGE
-        # echo $COUNT
+    #     # echo $FILES_TO_STAGE
+    #     # echo $COUNT
 
-        string = "#set -x\n"
-        string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
-        string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
-        string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
-        string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
-        #string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
+    #     string = "#set -x\n"
+    #     string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+    #     string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
+    #     string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
+    #     string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
+    #     #string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
 
-        # COPY=$BASE/copy.py
-        # FILE_MAP=$BASE/build_filemap.py
+    #     # COPY=$BASE/copy.py
+    #     # FILE_MAP=$BASE/build_filemap.py
 
-        # NODE_COUNT=1        # Number of compute nodes requested by srun
-        # TASK_COUNT=1        # Number of tasks allocated by srun
-        # CORE_COUNT=1        # Number of cores used by both tasks
-
-
-        string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
-        string += "CONFIG_DIR=$BASE\n"
-        string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
-        string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
-
-        # CONFIG_DIR=$BASE/config
-        # if (( "$STAGE_CONFIG" == 1 )); then
-        #     CONFIG_DIR=$DW_JOB_STRIPED/config
-        # fi
-
-        string += "FILE_PATTERN='PTF201111*'\n"
-        string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
-        string += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
-
-        string += "echo \"NUM NODES ${SLURM_JOB_NUM_NODES}\"\n"
-        string += "echo \"STAMP PREPARATION $(date --rfc-3339=ns)\"\n"
-        string += "\n"
-        return string
+    #     # NODE_COUNT=1        # Number of compute nodes requested by srun
+    #     # TASK_COUNT=1        # Number of tasks allocated by srun
+    #     # CORE_COUNT=1        # Number of cores used by both tasks
 
 
-    def create_output_dirs(self):
-        string = "# Create the final output directory and run directory\n"
-        string += "outdir=\"$(pwd)/output\"; mkdir ${outdir}\n"
-        string +=  "sh {}\n".format(BBINFO)
-        string +=  "rundir=$DW_JOB_STRIPED/swarp-run\n"
-        string +=  "mkdir $rundir\n"
-        string += "# Create a output and run directory for each SWarp process\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    mkdir -p ${rundir}/${process}\n"
-        string += "    mkdir -p ${outdir}/${process}\n"
-        string += "done\n"
-        string += "\n"
-        return string
+    #     string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
+    #     string += "CONFIG_DIR=$BASE\n"
+    #     string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
+    #     string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
 
-    def stage_in_files(self):
-        string = "# Copy manually files in BB\n"
-        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    echo \"Copy files for process ${process}\"\n"
-        for directory in self.bb_config.indirs():
-            if directory.split('/')[-1] == '':
-                #end with / so we should take the second last one
-                target = directory.split('/')[-2]
-            else:
-                target = directory.split('/')[-1]
+    #     # CONFIG_DIR=$BASE/config
+    #     # if (( "$STAGE_CONFIG" == 1 )); then
+    #     #     CONFIG_DIR=$DW_JOB_STRIPED/config
+    #     # fi
 
-            string = string + "    cp -r " + directory + " $DW_JOB_STRIPED/" + target + "/${process} &\n"
-        for file in self.bb_config.infiles():
-            string = string + "    cp " + file + " $DW_JOB_STRIPED/ &\n"
-        string += "done\n"
-        string += "t1=$(date +%s.%N)\n"
-        string += "wait\n"
-        string += "t2=$(date +%s.%N)\n"
-        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-        string += "du -sh $DW_JOB_STRIPED/ > ${outdir}/size_staged_in.out\n"
-        string += "\n"
-        return string
+    #     string += "FILE_PATTERN='PTF201111*'\n"
+    #     string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
+    #     string += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
 
-    def stage_out_files(self):
-        string = "# Copy manually files in PFS from BB\n"
-        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    echo \"Copy files for process ${process}\"\n"
-        string += "    cp -r ${rundir} ${outdir} &\n"
-        string += "done\n"
-        string += "t1=$(date +%s.%N)\n"
-        string += "wait\n"
-        string += "t2=$(date +%s.%N)\n"
-        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-        string += "du -sh ${rundir} > ${outdir}/size_staged_out.out\n"
-        string += "\n"
-        return string
+    #     string += "echo \"NUM NODES ${SLURM_JOB_NUM_NODES}\"\n"
+    #     string += "echo \"STAMP PREPARATION $(date --rfc-3339=ns)\"\n"
+    #     string += "\n"
+    #     return string
 
-    def script_run_resample(self):
-        string = "cd ${rundir}\n"
-        string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
-        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    echo \"Launching resample process ${process}\"\n"
-        string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
-        string += "    cd ${process}\n"
-        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
-        string += "    cd ..\n"
-        string += "done\n"
-        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "\n"
-        # string += "sleep 10\n"
-        # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "t1=$(date +%s.%N)\n"
-        string += "wait\n"
-        # string += "rm $CONTROL_FILE\n"
-        string += "t2=$(date +%s.%N)\n"
-        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME RESAMPLE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-        string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
-        string += "\n"
-        return string
 
-    def script_copy_resample(self):
-        string = "# Copy the stdout, stderr, SWarp XML files\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
-        string += "done\n"
-        string += "\n"
-        return string
+    # def create_output_dirs(self):
+    #     string = "# Create the final output directory and run directory\n"
+    #     string += "outdir=\"$(pwd)/output\"; mkdir ${outdir}\n"
+    #     string +=  "sh {}\n".format(BBINFO)
+    #     string +=  "rundir=$DW_JOB_STRIPED/swarp-run\n"
+    #     string +=  "mkdir $rundir\n"
+    #     string += "# Create a output and run directory for each SWarp process\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    mkdir -p ${rundir}/${process}\n"
+    #     string += "    mkdir -p ${outdir}/${process}\n"
+    #     string += "done\n"
+    #     string += "\n"
+    #     return string
 
-    def script_run_combine(self):
-        string = "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    echo \"Launching coadd process ${process}\"\n"
-        string += "    cd ${process}\n"
-        string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
-        string += "    cd ..\n"
-        string += "done\n"
-        string += "\n"
-        # string += "sleep 10\n"
-        # string += "touch $CONTROL_FILE\n"
-        string += "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "t1=$(date +%s.%N)\n"
-        string += "wait\n"
-        # string += "rm $CONTROL_FILE\n"
-        string += "t2=$(date +%s.%N)\n"
-        string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-        string += "echo \"TIME COMBINE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-        string += "\n"
-        return string
+    # def stage_in_files(self):
+    #     string = "# Copy manually files in BB\n"
+    #     string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    echo \"Copy files for process ${process}\"\n"
+    #     for directory in self.bb_config.indirs():
+    #         if directory.split('/')[-1] == '':
+    #             #end with / so we should take the second last one
+    #             target = directory.split('/')[-2]
+    #         else:
+    #             target = directory.split('/')[-1]
 
-    def script_ending(self):
-        string = "# Copy the stdout, stderr, SWarp XML files and IPM XML file\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    ls -lh ${rundir}/${process}/*.fits $DW_JOB_STRIPED/input/${process}/*.fits > ${outdir}/${process}/list_of_files.out\n"
-        string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
-        string += "done\n"
-        string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/disk_usage.out\n"
+    #         string = string + "    cp -r " + directory + " $DW_JOB_STRIPED/" + target + "/${process} &\n"
+    #     for file in self.bb_config.infiles():
+    #         string = string + "    cp " + file + " $DW_JOB_STRIPED/ &\n"
+    #     string += "done\n"
+    #     string += "t1=$(date +%s.%N)\n"
+    #     string += "wait\n"
+    #     string += "t2=$(date +%s.%N)\n"
+    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+    #     string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+    #     string += "du -sh $DW_JOB_STRIPED/ > ${outdir}/size_staged_in.out\n"
+    #     string += "\n"
+    #     return string
 
-        string += "\n"
+    # def stage_out_files(self):
+    #     string = "# Copy manually files in PFS from BB\n"
+    #     string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    echo \"Copy files for process ${process}\"\n"
+    #     string += "    cp -r ${rundir} ${outdir} &\n"
+    #     string += "done\n"
+    #     string += "t1=$(date +%s.%N)\n"
+    #     string += "wait\n"
+    #     string += "t2=$(date +%s.%N)\n"
+    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+    #     string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+    #     string += "du -sh ${rundir} > ${outdir}/size_staged_out.out\n"
+    #     string += "\n"
+    #     return string
 
-        string += "echo \"STAMP CLEANUP:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        string += "    rm -v ${process}/*.fits\n"
-        string += "done\n"
-        string += "echo \"STAMP DONE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-        return string
+    # def script_run_resample(self):
+    #     string = "cd ${rundir}\n"
+    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
+    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    echo \"Launching resample process ${process}\"\n"
+    #     string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
+    #     string += "    cd ${process}\n"
+    #     string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
+    #     string += "    cd ..\n"
+    #     string += "done\n"
+    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "\n"
+    #     # string += "sleep 10\n"
+    #     # string += "touch $CONTROL_FILE\n"
+    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "t1=$(date +%s.%N)\n"
+    #     string += "wait\n"
+    #     # string += "rm $CONTROL_FILE\n"
+    #     string += "t2=$(date +%s.%N)\n"
+    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+    #     string += "echo \"TIME RESAMPLE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
+    #     string += "\n"
+    #     return string
+
+    # def script_copy_resample(self):
+    #     string = "# Copy the stdout, stderr, SWarp XML files\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
+    #     string += "done\n"
+    #     string += "\n"
+    #     return string
+
+    # def script_run_combine(self):
+    #     string = "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    echo \"Launching coadd process ${process}\"\n"
+    #     string += "    cd ${process}\n"
+    #     string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
+    #     string += "    cd ..\n"
+    #     string += "done\n"
+    #     string += "\n"
+    #     # string += "sleep 10\n"
+    #     # string += "touch $CONTROL_FILE\n"
+    #     string += "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "t1=$(date +%s.%N)\n"
+    #     string += "wait\n"
+    #     # string += "rm $CONTROL_FILE\n"
+    #     string += "t2=$(date +%s.%N)\n"
+    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
+    #     string += "echo \"TIME COMBINE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
+    #     string += "\n"
+    #     return string
+
+    # def script_ending(self):
+    #     string = "# Copy the stdout, stderr, SWarp XML files and IPM XML file\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    ls -lh ${rundir}/${process}/*.fits $DW_JOB_STRIPED/input/${process}/*.fits > ${outdir}/${process}/list_of_files.out\n"
+    #     string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
+    #     string += "done\n"
+    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/disk_usage.out\n"
+
+    #     string += "\n"
+
+    #     string += "echo \"STAMP CLEANUP:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+    #     string += "    rm -v ${process}/*.fits\n"
+    #     string += "done\n"
+    #     string += "echo \"STAMP DONE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
+    #     return string
 
     @staticmethod
     def bbinfo():
