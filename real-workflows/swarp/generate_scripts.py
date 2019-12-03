@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, shared_input=True, standalone=True, no_stagein=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -261,7 +261,7 @@ class SwarpInstance:
         self.sched_config = sched_config
         self.script_dir = script_dir
         self.nb_avg = nb_avg
-        self.shared_input = shared_input
+        self.input_sharing = input_sharing
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -494,15 +494,15 @@ class SwarpInstance:
         s += "    sed \"s/@INPUT@/$INPUT_DIR/g\" \"$FILES_TO_STAGE\" > \"$LOC_FILES_TO_STAGE\"\n"
         # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
         s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
-        s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $FILES_TO_STAGE\n"
-        s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
-        s += "    if (( \"$COUNT\" > 0 )); then\n"
-        s += "        sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
-        s += "        ## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....\n"
-        s += "        x=$(echo \"$COUNT+16\" | bc)\n"
-        s += "        sed -i -e \"16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
-        s += "    fi\n"
-        s += "\n"
+        # s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $LOC_FILES_TO_STAGE\n"
+        # s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
+        # s += "    if (( \"$COUNT\" > 0 )); then\n"
+        # s += "        sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
+        # s += "        ## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....\n"
+        # s += "        x=$(echo \"$COUNT+16\" | bc)\n"
+        # s += "        sed -i -e \"16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
+        # s += "    fi\n"
+        # s += "\n"
 
         s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT*2\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
         s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
@@ -631,6 +631,8 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "        rm -rf \"$RESAMP_DIR\"\n"
         s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
@@ -924,10 +926,9 @@ class SwarpInstance:
             pass
 
 class SwarpRun:
-    def __init__(self, pipelines=[1], number_avg=1):
+    def __init__(self, pipelines=[1]):
         self._pipelines = pipelines
         self._num_pipelines = len(pipelines)
-        self.nb_averages = number_avg
 
     def pipeline_to_str(self):
         res = "{}".format(str(self._pipelines[0]))
@@ -1048,11 +1049,12 @@ if __name__ == '__main__':
                                 combine_config=combine_config, 
                                 sched_config=sched_config, 
                                 bb_config=bb_config,
-                                nb_avg=args.nb_run)
+                                nb_avg=args.nb_run,
+                                input_sharing=args.input_sharing)
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
-    run1 = SwarpRun(pipelines=[1], number_avg=args.nb_run)
+    run1 = SwarpRun(pipelines=[1])
 
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
