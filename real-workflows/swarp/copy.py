@@ -74,10 +74,10 @@ def copy_fromlist(args):
 
             if file_dest == '':
                 file_dest = file_src
-            
-            if not os.path.isfile(src):
-                raise IOError("[error] IO: {} is not a file".format(src))
 
+            if not os.path.isfile(src):
+                #raise IOError("[error] IO: {} is not a file".format(src))
+                print("[warning] directory {} skipped".format(src))
 
             if not fnmatch.fnmatch(file_src, args.pattern) or (dir_src == dir_dest and file_src == file_dest):
                 print("{} skipped.".format(file_src))
@@ -208,6 +208,7 @@ def copy_dir(args):
     #print(os.path.abspath(args.src))
     all_files = glob.glob(src)
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
+    files_to_copy = [f for f in files_to_copy if os.path.isfile(f)]
     # print (files_to_copy)
     if not dir_exists(dest):
         try:
