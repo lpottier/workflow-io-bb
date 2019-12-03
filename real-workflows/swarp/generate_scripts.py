@@ -174,7 +174,7 @@ class SwarpWorkflowConfig:
         else:
             string += "XML_NAME               both.xml        # Filename for XML output\n"
 
-        string += "VERBOSE_TYPE           QUIET            # QUIET,NORMAL or FULL\n"
+        string += "VERBOSE_TYPE           NORMAL            # QUIET,NORMAL or FULL\n"
 
         string += "NTHREADS               {}               # No. threads\n".format(self.nthreads)
         return string
@@ -601,7 +601,7 @@ class SwarpInstance:
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+        s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
         s += "        echo \"\"\n"
@@ -628,7 +628,7 @@ class SwarpInstance:
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
-        s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+        s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
         s += "        echo \"\"\n"
