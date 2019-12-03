@@ -677,6 +677,7 @@ class SwarpInstance:
         s += "    done\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
+        s += "    $COPY -i \"${OUTPUT_DIR}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/\"\n"
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "\n"
