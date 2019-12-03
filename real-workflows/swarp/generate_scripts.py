@@ -631,8 +631,8 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        s += "        rm -rf \"$RESAMP_DIR\"\n"
+        # s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        # s += "        rm -rf \"$RESAMP_DIR\"\n"
         s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
