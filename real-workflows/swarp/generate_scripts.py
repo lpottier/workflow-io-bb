@@ -337,7 +337,7 @@ class SwarpInstance:
         s += "fi\n"
         s += "\n"
         s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
-        s += "COUNT=0\n"
+        s += "COUNT={}\n".format(self.nb_files_on_bb)
         s += "CURRENT_DIR=$(pwd)\n"
         s += "\n"
         s += "# Test code to verify command line processing\n\n"
@@ -354,8 +354,8 @@ class SwarpInstance:
         s += "fi\n"
         s += "\n"
 
-        s += "echo $FILES_TO_STAGE\n"
-        s += "echo $COUNT\n"
+        s += "echo \"List of files used: $FILES_TO_STAGE\"\n"
+        s += "echo \"Number of files staged in BB: $COUNT\"\n"
         s += "\n"
 
         s += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
@@ -446,6 +446,8 @@ class SwarpInstance:
         s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         
+
+        # TODO: implement the pairs option
         arr = [x+"\n" for x in s.split('\n')[:-1]]
         short_s = ''
         if self.nb_files_on_bb < 0:
@@ -903,6 +905,10 @@ class SwarpInstance:
         if os.path.exists(file):
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(file))
 
+        # TODO: fix this temporary thing
+        with open("files_to_stage.txt", 'w') as f:
+            f.write(self.file_to_stage())
+
         with open(file, 'w') as f:
             f.write(self.slurm_header())
             f.write(self.dw_temporary())
@@ -922,10 +928,6 @@ class SwarpInstance:
             #     f.write(self.stage_out_files())
 
             # f.write(self.script_ending())
-
-        # TODO: fix this temporary thing
-        with open("files_to_stage.txt", 'w') as f:
-            f.write(self.file_to_stage())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
