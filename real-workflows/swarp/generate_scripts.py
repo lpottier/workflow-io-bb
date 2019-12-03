@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, standalone=True, no_stagein=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, shared_input=True, standalone=True, no_stagein=True):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -261,6 +261,7 @@ class SwarpInstance:
         self.sched_config = sched_config
         self.script_dir = script_dir
         self.nb_avg = nb_avg
+        self.shared_input = shared_input
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -468,7 +469,7 @@ class SwarpInstance:
         s += "    chmod 777 $OUTPUT_DIR\n"
         s += "\n"
 
-        s += "    export RESAMP_DIR=$DW_JOB_STRIPED/resamp\n"
+        s += "    export RESAMP_DIR=$OUTPUT_DIR/resamp\n"
         s += "\n"
 
         s += "    mkdir -p $RESAMP_DIR\n"
@@ -509,7 +510,6 @@ class SwarpInstance:
         s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
         s += "\n"
 
-        s += "    echo bbinfo is deactivated TEMPORARILY\n"
         s += "    module unload python3\n"
         s += "    module load dws\n"
         s += "    sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')\n"
@@ -631,11 +631,7 @@ class SwarpInstance:
         s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
-        s += "        tree $DW_JOB_STRIPED/\n"
-        s += "        echo \"src -> $OUTPUT_DIR/${process}/\"\n"
-        s += "        echo \"dest -> $OUTPUT_DIR_NAME/${k}/${process}/\"\n"
-        s += "        pwd\n"
-        s += "        echo CURRENT_DIR = $CURRENT_DIR\n"
+        # s += "        tree $DW_JOB_STRIPED/\n"
         s += "        $COPY -i \"${process}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" \n"
         #s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
@@ -646,7 +642,7 @@ class SwarpInstance:
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "\n"
-        s += "    OUTPUT_FILE=$OUTPUT_DIR_NAME/${k}/output.log\n"
+        s += "    OUTPUT_FILE=$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/output.log\n"
         s += "    echo \"TIME STAGE_OUT $tdiff4\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"========\" | tee -a $OUTPUT_FILE\n"
