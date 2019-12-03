@@ -406,7 +406,7 @@ class SwarpInstance:
         s += "\n"
         return s
 
-    def file_to_stage(self, count, take_two_files=True):
+    def file_to_stage(self, count=0, take_two_files=True):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
