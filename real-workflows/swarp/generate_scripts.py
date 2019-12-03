@@ -406,40 +406,76 @@ class SwarpInstance:
         s += "\n"
         return s
 
+    # def file_to_stage(self):
+    #     s = ''
+    #     s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR)
+    #     s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR)
+    #     return s
+
     def file_to_stage(self):
         s = ''
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR)
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR)
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111015420_2_o_32874_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025412_2_o_33288_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111025428_2_o_33289_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111035427_2_o_33741_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111085228_2_o_34301_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111095206_2_o_34706_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111155050_2_o_35570_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111165032_2_o_35994_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111184953_2_o_36749_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111224851_2_o_37387_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111234857_2_o_37754_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111265053_2_o_38612_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111274755_2_o_38996_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format("@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits $DW_JOB_STRIPED/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format("@INPUT@")
         return s
 
     def average_loop(self):
@@ -489,8 +525,10 @@ class SwarpInstance:
         # FIX THIS
         s += "    #### To select file to stage\n"
         s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
-        s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
         s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
+        s += "    sed \"s/@INPUT@/$INPUT_DIR/g\" \"$FILES_TO_STAGE\" > $LOC_FILES_TO_STAGE\""
+        # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
+        s += "    cat \"$LOC_FILES_TO_STAGE\""
         s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $FILES_TO_STAGE\n"
         s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
         s += "    if (( \"$COUNT\" > 0 )); then\n"
@@ -632,13 +670,13 @@ class SwarpInstance:
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
         # s += "        tree $DW_JOB_STRIPED/\n"
-        s += "        $COPY -i \"${process}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" \n"
+        s += "        $COPY -i \"${process}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" &\n"
         #s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
         s += "        echo \"\"\n"
         s += "    done\n"
         s += "    t1=$(date +%s.%N)\n"
-        #s += "    wait\n"
+        s += "    wait\n"
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "\n"
