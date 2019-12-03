@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -262,6 +262,7 @@ class SwarpInstance:
         self.script_dir = script_dir
         self.nb_avg = nb_avg
         self.input_sharing = input_sharing
+        self.nb_files_on_bb = nb_files_on_bb
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -406,7 +407,11 @@ class SwarpInstance:
         s += "\n"
         return s
 
-    def file_to_stage(self, count=0, take_two_files=True):
+    # If nb_files_on_bb = 0 -> no files on BB
+    # If nb_files_on_bb = 32 -> all files on BB
+    # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
+    # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
+    def file_to_stage(self, pairs=True):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
@@ -440,7 +445,17 @@ class SwarpInstance:
         s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/input/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/input/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/input/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        return s
+        
+        arr = [x+"\n" for x in s.split('\n')[:-1]]
+        short_s = ''
+        if self.nb_files_on_bb < 0:
+            self.nb_files_on_bb = len(arr)
+        self.nb_files_on_bb = min(self.nb_files_on_bb, len(arr))
+
+        for i in range(self.nb_files_on_bb):
+            short_s += arr[i]
+
+        return short_s
 
 
     def average_loop(self):
@@ -983,7 +998,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
     
-    parser.add_argument('--threads', '-c', type=int, nargs='?', default=1,
+    parser.add_argument('--threads', '-p', type=int, nargs='?', default=1,
                         help='Number of POSIX threads per workflow tasks')
     parser.add_argument('--nodes', '-n', type=int, nargs='?', default=1,
                         help='Number of compute nodes requested')
@@ -999,6 +1014,8 @@ if __name__ == '__main__':
                         help='Queue to execute the workflow')
     parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
                         help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
+    parser.add_argument('--count', '-c', type=int, nargs='?', default=-1,
+                        help='Number of files staged in BB (-1 means all)')
 
     args = parser.parse_args()
     print(args)
@@ -1046,10 +1063,12 @@ if __name__ == '__main__':
     instance1core = SwarpInstance(script_dir=output_dir,
                                 resample_config=resample_config, 
                                 combine_config=combine_config, 
-                                sched_config=sched_config, 
+                                sched_config=sched_config,
+                                nb_files_on_bb=args.count,
                                 bb_config=bb_config,
                                 nb_avg=args.nb_run,
-                                input_sharing=args.input_sharing)
+                                input_sharing=args.input_sharing,
+                                )
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
