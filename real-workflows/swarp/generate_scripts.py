@@ -406,7 +406,7 @@ class SwarpInstance:
         s += "\n"
         return s
 
-    def file_to_stage(self):
+    def file_to_stage(self, count, take_two_files=True):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/input/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/input/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
@@ -955,27 +955,26 @@ class SwarpRun:
             f.write("#!/bin/bash\n")
             f.write("#set -x\n")
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
-            f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
+            # f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("        outdir=$(mktemp -d -t swarp-run-${k}-${i}N.XXXXXX)\n")
+                f.write("    outdir=$(mktemp -d -t swarp-run-${k}-${i}N.XXXXXX)\n")
             else:
-                f.write("        outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${k}-${i}N.XXXXXX)\n")
-            f.write("        script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
-            f.write("        echo $outdir\n")
-            f.write("        echo $script\n")
-            f.write("        sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
+            f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
+            f.write("    echo $outdir\n")
+            f.write("    echo $script\n")
+            f.write("    sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             #If we want to use DW to stage file
             if not manual_stage:
-                f.write("        for j in $(seq ${i} -1 1); do\n")
-                f.write("           stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
-                f.write("           sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
-                f.write("        done\n")
-            f.write("        cp ../copy.py ../build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
-            f.write("        cd \"${outdir}\"\n")
-            f.write("        sbatch ${script}\n")
+                f.write("    for j in $(seq ${i} -1 1); do\n")
+                f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+                f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+                f.write("    done\n")
+            f.write("    cp ../copy.py ../build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
+            f.write("    cd \"${outdir}\"\n")
+            f.write("    sbatch ${script}\n")
             #TODO ADD waiting time debug queue
-            f.write("        cd ..\n")
-            f.write("    done\n")
+            f.write("    cd ..\n")
             f.write("done\n")
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
