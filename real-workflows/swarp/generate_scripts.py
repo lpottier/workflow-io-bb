@@ -507,9 +507,9 @@ class SwarpInstance:
         # FIX THIS
         s += "    #### To select file to stage\n"
         s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
+        s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
         s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        s += "    sed \"s/@INPUT@/$INPUT_DIR/g\" \"$FILES_TO_STAGE\" > \"$LOC_FILES_TO_STAGE\"\n"
-        # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
+        s += "    sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
         # s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $LOC_FILES_TO_STAGE\n"
         # s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
