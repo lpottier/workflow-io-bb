@@ -526,7 +526,7 @@ class SwarpInstance:
         s += "    #### To select file to stage\n"
         s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
         s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        s += "    sed \"s/@INPUT@/$INPUT_DIR/g\" \"$FILES_TO_STAGE\" > $LOC_FILES_TO_STAGE\"\n"
+        s += "    sed \"s/@INPUT@/$INPUT_DIR/g\" \"$FILES_TO_STAGE\" > \"$LOC_FILES_TO_STAGE\"\n"
         # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
         s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
         s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $FILES_TO_STAGE\n"
