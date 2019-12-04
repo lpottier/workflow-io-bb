@@ -452,7 +452,6 @@ class SwarpInstance:
         s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
         
 
-        # TODO: implement the pairs option
         arr = [x+"\n" for x in s.split('\n')[:-1]]
         short_s = ''
         if self.nb_files_on_bb < 0:
