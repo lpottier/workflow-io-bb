@@ -468,6 +468,7 @@ class SwarpInstance:
 
             for i in range(self.nb_files_on_bb):
                 short_s += arr[i]
+                short_s += arr[i+16]
 
         else:
             for i in range(self.nb_files_on_bb):
