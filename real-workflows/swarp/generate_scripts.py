@@ -454,8 +454,19 @@ class SwarpInstance:
             self.nb_files_on_bb = len(arr)
         self.nb_files_on_bb = min(self.nb_files_on_bb, len(arr))
 
-        for i in range(self.nb_files_on_bb):
-            short_s += arr[i]
+        if pairs:
+            if self.nb_files_on_bb % 2 != 0:
+                self.nb_files_on_bb += 1
+
+            self.nb_files_on_bb = min(self.nb_files_on_bb, len(arr)//2)
+
+
+            for i in range(self.nb_files_on_bb):
+                short_s += arr[i]
+
+        else:
+            for i in range(self.nb_files_on_bb):
+                short_s += arr[i]
 
         return short_s
 
@@ -597,6 +608,7 @@ class SwarpInstance:
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "        lstopo $OUTPUT_DIR/topo.$SLURM_JOB_ID-${SLURM_JOB_NUM_NODES}.pdf"
         s += "        echo -n \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
