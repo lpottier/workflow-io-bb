@@ -542,7 +542,7 @@ class SwarpInstance:
         s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
-        s += "    echo \"Compute nodes: $(srun hostname) \" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
 
         s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
         s += "\n"

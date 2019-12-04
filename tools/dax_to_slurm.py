@@ -219,14 +219,14 @@ class AbstractDag(nx.DiGraph):
 #         return new_node
 #     return _rec(adjency_list(hashmap), data_jobs)
 
-def build_adag_from_parentlist(hashmap, data_jobs):
-    H = adjacency_list(hashmap)
-    a = set([y for x in hashmap.values() for y in x])
-    b = set([x for x in hashmap])
-    #find roots
-    roots = list(a - (a & b)) # node which are parent but not child of any nodes
-    # root = AbstractDag("init", None, None, roots)
-    seen = {}
+# def build_adag_from_parentlist(hashmap, data_jobs):
+#     H = adjacency_list(hashmap)
+#     a = set([y for x in hashmap.values() for y in x])
+#     b = set([x for x in hashmap])
+#     #find roots
+#     roots = list(a - (a & b)) # node which are parent but not child of any nodes
+#     # root = AbstractDag("init", None, None, roots)
+#     seen = {}
 
     # for node in roots:
     #     current = AbstractDag(node, data_jobs[node], root, adjency_list[node])
@@ -328,9 +328,9 @@ def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     return s
 
 # take as input a ADAG
-def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_dir=None):
+def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir, input_dir, wrapper=False):
     job_wrapper = [
-        "#SBATCH -p debug".format(queue[0]),
+        "#SBATCH -p {}".format(queue[0]),
         "#SBATCH -C haswell",
         "#SBATCH -t 00:20:00",
         "#SBATCH -o output.%j",
@@ -350,25 +350,45 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
 
     USER = pwd.getpwuid(os.getuid())[0]
 
-    sys.stderr.write(" === Generate wrappers for each job\n")
-    for u in G:
-        with open(u+".sh", 'w') as f:
-            f.write("#!/bin/bash\n\n")
-            for l in job_wrapper:
-                f.write(l+"\n")
-            f.write("\n")
-            f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
-            f.write("#{} {}\n\n".format("created", time.ctime()))
+    if wrapper:
+        sys.stderr.write(" === Generate wrappers for each job\n")
+        for u in G:
+            with open(u+".sh", 'w') as f:
+                f.write("#!/bin/bash\n\n")
+                for l in job_wrapper:
+                    f.write(l+"\n")
+                f.write("\n")
+                f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
+                f.write("#{} {}\n\n".format("created", time.ctime()))
 
-            f.write("echo \"Task {}\"\n".format(u))
-            cmd = "{} {}".format(os.path.basename(G.nodes[u]["exe"]), G.nodes[u]["args"])
-            f.write("srun {}\n".format(cmd))
-            f.write("\n")
+                f.write("echo \"Task {}\"\n".format(u))
+                input_args = G.nodes[u]["args"]
+                if input_dir:
+                    input_args = input_dir +'/' + G.nodes[u]["args"]
 
-        os.chmod(u+".sh", stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                if bin_dir:
+                    bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
+                else:
+                    bin_args = G.nodes[u]["exe"]
+
+                cmd = "{} {}".format(bin_args, input_args)
+                f.write("srun {}\n".format(cmd))
+                f.write("\n")
+
+            os.chmod(u+".sh", stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+    else:
+        if bin_dir:
+            sys.stderr.write(" === Use wrapper from {}\n".format(bin_dir))
+        else:
+            sys.stderr.write(" === Use PFN defined in {}\n".format(adag["name"]))
+
+    if input_dir:
+        sys.stderr.write(" === Prefix all input files with {}\n".format(input_dir))
+    else:
+        sys.stderr.write(" === Use input files as defined in {}\n".format(adag["name"]))
 
     with open(output, 'w') as f:
-        f.write("#!/bin/bash\n\n")
+        f.write("#!/bin/bash\n")
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
         f.write("#{} {}\n\n".format("created", time.ctime()))
 
@@ -386,6 +406,7 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir=None, input_d
             
             cmd = "{}.sh".format(u)
 
+            #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
             if u in roots:
                 f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
             else:
@@ -419,7 +440,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     dax_id = os.path.basename(args.dax).split('.')[0]
 
-    sys.stderr.write(" === Generate Slurm compatible workflow from DAX files\n")
+    sys.stderr.write(" === Generate compatible workflow for HPC schedulers from DAX files\n")
     today = time.localtime()
     sys.stderr.write(" === Executed: {}-{}-{} at {}:{}:{}\n".format(today.tm_mday,
                                                     today.tm_mon, 
@@ -446,7 +467,7 @@ if __name__ == '__main__':
     # sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
 
-    create_slurm_workflow(G, "submit.sh")
+    create_slurm_workflow(G, "submit.sh", bin_dir=args.bin, input_dir=args.input)
 
     sys.stderr.write(" === submit.sh written in current directory {}\n".format(os.getcwd()))
 
