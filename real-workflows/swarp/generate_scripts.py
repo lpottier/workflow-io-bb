@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True, slurm_profile=False):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -264,6 +264,7 @@ class SwarpInstance:
         self.input_sharing = input_sharing
         # TODO: Fix this
         self.nb_files_on_bb = nb_files_on_bb[0]
+        self.slurm_profile = slurm_profile
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -286,7 +287,8 @@ class SwarpInstance:
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
         string += "#SBATCH --mail-type=FAIL\n"
         string += "#SBATCH --export=ALL\n"
-        string += "#SBATCH --profile=ALL\n"
+        if self.slurm_profile:
+            string += "#SBATCH --profile=ALL\n"
         # string += "#SBATCH -d singleton\n"
         return string
 
@@ -549,7 +551,11 @@ class SwarpInstance:
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
         s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
 
-        s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
+        if self.slurm_profile:
+            s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT\"\n"
+        else:
+            s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
+
         s += "\n"
 
         s += "    module unload python3\n"
@@ -623,7 +629,10 @@ class SwarpInstance:
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+        if self.slurm_profile:
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+        else:
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -650,7 +659,10 @@ class SwarpInstance:
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
-        s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+        if self.slurm_profile:
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+        else:
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -895,6 +907,10 @@ if __name__ == '__main__':
     parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
                         help='Number of files staged in BB (-1 means all). List of values (-1 by default)')
 
+    parser.add_argument('--slurm-profile', '-z', action="store_true",
+                        help='Deactivate kickstart monitoring and activate slurm-based profiling')
+
+
     args = parser.parse_args()
     print(args)
 
@@ -963,6 +979,7 @@ if __name__ == '__main__':
                                 bb_config=bb_config,
                                 nb_avg=args.nb_run,
                                 input_sharing=args.input_sharing,
+                                slurm_profile=args.slurm_profile,
                                 )
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
