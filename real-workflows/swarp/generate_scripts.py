@@ -379,11 +379,12 @@ class SwarpInstance:
         s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
-        s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by srun\n"
-        s += "TASK_COUNT=@NODES@   # Number of tasks allocated by srun\n"
+        s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by sbatch\n"
+        s += "TASK_COUNT=$(echo \"$NODE_COUNT*2\" | bc)   # Number of tasks allocated\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
+        #s += echo "SLURM NODES: ${SLURM_JOB_NUM_NODES}"
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
@@ -514,7 +515,7 @@ class SwarpInstance:
         s += "    #rm -f {error,output}.*\n"
         s += "\n"
 
-        s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         #s += "        mkdir -p ${rundir}/${process}\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
@@ -615,7 +616,7 @@ class SwarpInstance:
 
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
@@ -642,7 +643,7 @@ class SwarpInstance:
         s += "    ###\n"
         s += "\n"
 
-        s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        echo \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
@@ -666,7 +667,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         # s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         # s += "        rm -rf \"$RESAMP_DIR\"\n"
         s += "        echo \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
