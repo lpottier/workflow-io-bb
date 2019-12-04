@@ -269,7 +269,7 @@ class SwarpInstance:
         string = "#!/bin/bash -l\n"
         string += "#SBATCH -p {}\n".format(self.sched_config.queue())
         if self.standalone:
-            string += "#SBATCH --nodes=@NODES@\n"
+            # string += "#SBATCH --nodes=@NODES@\n"
             string += "#SBATCH --ntasks=@NODES@\n"
         else:
             string += "#SBATCH --nodes {}\n".format(self.sched_config.nodes())
@@ -380,7 +380,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by sbatch\n"
-        s += "TASK_COUNT=$(echo \"$NODE_COUNT*2\" | bc)   # Number of tasks allocated\n"
+        s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
@@ -543,6 +543,7 @@ class SwarpInstance:
         s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
         s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
