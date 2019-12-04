@@ -268,10 +268,15 @@ class SwarpInstance:
         string = "#!/bin/bash -l\n"
         string += "#SBATCH -p {}\n".format(self.sched_config.queue())
         if self.standalone:
-            string += "#SBATCH -N @NODES@\n"
+            string += "#SBATCH --nodes=@NODES@\n"
+            string += "#SBATCH --ntasks=@NODES@\n"
         else:
-            string += "#SBATCH -N {}\n".format(self.sched_config.nodes())
+            string += "#SBATCH --nodes {}\n".format(self.sched_config.nodes())
+            string += "#SBATCH --ntasks={}\n".format(self.sched_config.nodes())
+
         string += "#SBATCH -C haswell\n"
+
+        string += "#SBATCH --ntasks-per-node=1\n"
         string += "#SBATCH -t {}\n".format(self.sched_config.timeout())
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
@@ -608,11 +613,12 @@ class SwarpInstance:
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        lstopo $OUTPUT_DIR/topo.$SLURM_JOB_ID-${SLURM_JOB_NUM_NODES}.pdf"
+        s += "        srun lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID-${SLURM_JOB_NUM_NODES}.pdf\"\n"
         s += "        echo -n \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+        s += "        echo \" Hostname for node ${SLURM_JOB_NUM_NODES} : $(srun hostname) \" | tee -a $OUTPUT_FILE\n"
         s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo -n \"done\"\n"
@@ -986,7 +992,7 @@ class SwarpRun:
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
             # f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("    outdir=$(mktemp -d -t swarp-run-${k}-${i}N.XXXXXX)\n")
+                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
             else:
                 f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
