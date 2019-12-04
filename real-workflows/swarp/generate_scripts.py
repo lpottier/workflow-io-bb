@@ -174,7 +174,7 @@ class SwarpWorkflowConfig:
         else:
             string += "XML_NAME               both.xml        # Filename for XML output\n"
 
-        string += "VERBOSE_TYPE           NORMAL            # QUIET,NORMAL or FULL\n"
+        string += "VERBOSE_TYPE           QUIET            # QUIET,NORMAL or FULL\n"
 
         string += "NTHREADS               {}               # No. threads\n".format(self.nthreads)
         return string
@@ -286,6 +286,7 @@ class SwarpInstance:
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
         string += "#SBATCH --mail-type=FAIL\n"
         string += "#SBATCH --export=ALL\n"
+        string += "#SBATCH --profile=ALL\n"
         # string += "#SBATCH -d singleton\n"
         return string
 
