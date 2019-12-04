@@ -417,7 +417,7 @@ class SwarpInstance:
     # If nb_files_on_bb = 32 -> all files on BB
     # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
     # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
-    def file_to_stage(self, count, pairs=False):
+    def file_to_stage(self, count, pairs=True):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
@@ -966,7 +966,7 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
 
-    run1.standalone(file="submit.sh", count=args.count, manual_stage=True, overide=True)
+    run1.standalone(file="submit.sh", count=args.count[0], manual_stage=True, overide=True)
     #run1.standalone_count(file="submit_files.sh", manual_stage=True, overide=True)
 
     os.chdir(old_path)

@@ -410,6 +410,12 @@ if __name__ == '__main__':
     parser.add_argument('--scheduler', '-s', type=str, nargs='?', default="slurm",
                         help='Scheduler (slurm or lsf)')
 
+    parser.add_argument('--bin', '-b', type=str, nargs='?', default=None,
+                        help='Bin directory  (erase bin directory provided by DAX)')
+
+    parser.add_argument('--input', '-i', type=str, nargs='?', default=None,
+                        help='Input directory (erase input directory provided by DAX)')
+
     args = parser.parse_args()
     dax_id = os.path.basename(args.dax).split('.')[0]
 
@@ -422,23 +428,27 @@ if __name__ == '__main__':
                                                     today.tm_min, 
                                                     today.tm_sec)
                                                 )
-    sys.stderr.write(" === DAX file  : {}\n".format(args.dax))
-    sys.stderr.write("     Scheduler : {}\n".format(args.scheduler))
+    sys.stderr.write(" === DAX file        : {}\n".format(args.dax))
+    sys.stderr.write("     Scheduler       : {}\n".format(args.scheduler))
+    sys.stderr.write("     Bin directory   : {}\n".format(args.bin))
+    sys.stderr.write("     Input directory : {}\n".format(args.input))
 
 
-    output_dir = "{}-{}/".format(dax_id, args.scheduler)
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-        sys.stderr.write(" === Directory {} created\n".format(output_dir))
+    # output_dir = "{}-{}/".format(dax_id, args.scheduler)
+    # if not os.path.exists(output_dir):
+    #     os.mkdir(output_dir)
+    #     sys.stderr.write(" === Directory {} created\n".format(output_dir))
 
     G = AbstractDag(args.dax)
 
-    old_path = os.getcwd()+'/'
-    os.chdir(old_path+output_dir)
-    sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
+    # old_path = os.getcwd()+'/'
+    # os.chdir(old_path+output_dir)
+    # sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
 
     create_slurm_workflow(G, "submit.sh")
+
+    sys.stderr.write(" === submit.sh written in current directory {}\n".format(os.getcwd()))
 
     # print(G.graph, len(G))
 
@@ -451,7 +461,6 @@ if __name__ == '__main__':
     if graphviz_found is not None:
         G.write()
         G.draw()
-
     
     #nx.draw(G, pos=nx.spring_layout(G), with_labels=True)
 
@@ -462,8 +471,8 @@ if __name__ == '__main__':
 
     #TODO: Extend the pegasus API instead of reparsing this?
 
-    os.chdir(old_path)
-    sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
+    # os.chdir(old_path)
+    # sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
 
 
 
