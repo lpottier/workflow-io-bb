@@ -906,6 +906,7 @@ if __name__ == '__main__':
     sys.stderr.write(" === Machine: {}.\n".format(platform.platform()))
 
     args.workflows = list(set(args.workflows))
+    args.workflows = sorted([int(x) for x in args.workflows])
     if len(args.workflows) == 1:
         short_workflow = str(args.workflows[0])
     else:
@@ -913,6 +914,7 @@ if __name__ == '__main__':
 
 
     args.count = list(set(args.count))
+    args.count = sorted([int(x) for x in args.count])
     if len(args.count) == 1:
         short_count = str(args.count[0])
     else:
