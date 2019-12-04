@@ -1006,7 +1006,7 @@ if __name__ == '__main__':
                         help='Number of compute nodes requested')
     parser.add_argument('--bbsize', '-b', type=int, nargs='?', default=50,
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
-    parser.add_argument('--workflows', '-w', type=int, nargs='?', default=1,
+    parser.add_argument('--workflows', '-w', type=int, nargs='+', default=[1],
                         help='Number of identical SWarp workflows running in parallel')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
@@ -1033,11 +1033,17 @@ if __name__ == '__main__':
                                                 )
     sys.stderr.write(" === Machine: {}.\n".format(platform.platform()))
 
+    args.workflows = list(set(args.workflows))
+    if len(args.workflows) == 1:
+        short_workflow = str(args.workflows[0])
+    else:
+        short_workflow = str(min(args.workflows))+'_'+str(max(args.workflows))
+
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if args.input_sharing:
-        output_dir = "swarp_shared-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, args.workflows, args.bbsize, today.tm_mday, today.tm_mon)
+        output_dir = "swarp_shared-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, short_workflow, args.bbsize, today.tm_mday, today.tm_mon)
     else:
-        output_dir = "swarp-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, args.workflows, args.bbsize, today.tm_mday, today.tm_mon)
+        output_dir = "swarp-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, short_workflow, args.bbsize, today.tm_mday, today.tm_mon)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {} created.\n".format(output_dir))
@@ -1074,7 +1080,7 @@ if __name__ == '__main__':
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
     
-    run1 = SwarpRun(pipelines=[1])
+    run1 = SwarpRun(pipelines=args.workflows)
 
     if bb_config.size() < run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0:
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
