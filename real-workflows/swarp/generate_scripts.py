@@ -290,6 +290,8 @@ class SwarpInstance:
         if self.slurm_profile:
             string += "#SBATCH --profile=ALL\n"
         # string += "#SBATCH -d singleton\n"
+        # string += "#SBATCH --hint=nomultithread\n"
+
         return string
 
     def dw_temporary(self):
