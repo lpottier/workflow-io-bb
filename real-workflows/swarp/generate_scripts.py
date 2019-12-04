@@ -285,7 +285,7 @@ class SwarpInstance:
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
         string += "#SBATCH --mail-type=FAIL\n"
         string += "#SBATCH --export=ALL\n"
-        string += "#SBATCH -d singleton\n"
+        # string += "#SBATCH -d singleton\n"
         return string
 
     def dw_temporary(self):
@@ -543,7 +543,7 @@ class SwarpInstance:
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
-        s += "    srun lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
+        s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
 
         s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
         s += "\n"
@@ -873,23 +873,23 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
     
     parser.add_argument('--threads', '-p', type=int, nargs='?', default=1,
-                        help='Number of POSIX threads per workflow tasks')
+                        help='Number of POSIX threads per workflow tasks (1 by default)')
     parser.add_argument('--nodes', '-n', type=int, nargs='?', default=1,
                         help='Number of compute nodes requested')
     parser.add_argument('--bbsize', '-b', type=int, nargs='?', default=50,
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
     parser.add_argument('--workflows', '-w', type=int, nargs='+', default=[1],
-                        help='Number of identical SWarp workflows running in parallel. List of values')
+                        help='Number of identical SWarp workflows running in parallel. List of values (1 by default)')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
-    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
-                        help='Number of runs to average on')
+    parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=5,
+                        help='Number of runs to average on (5 by default)')
     parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
                         help='Queue to execute the workflow')
     parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
                         help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
     parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
-                        help='Number of files staged in BB (-1 means all). List of values')
+                        help='Number of files staged in BB (-1 means all). List of values (-1 by default)')
 
     args = parser.parse_args()
     print(args)
@@ -922,9 +922,9 @@ if __name__ == '__main__':
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if args.input_sharing:
-        output_dir = "swarp_shared-{}-{}N-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.nodes, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        output_dir = "swarp_shared-{}-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
     else:
-        output_dir = "swarp-{}-{}N-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.nodes, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {} created.\n".format(output_dir))
