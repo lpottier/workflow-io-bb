@@ -966,7 +966,7 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
 
-    run1.standalone(file="submit.sh", count=args.count, manual_stage=True, overide=True)
+    run1.standalone(file="submit.sh", count=args.count[0], manual_stage=True, overide=True)
     #run1.standalone_count(file="submit_files.sh", manual_stage=True, overide=True)
 
     os.chdir(old_path)
