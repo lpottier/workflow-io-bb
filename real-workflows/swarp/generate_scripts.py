@@ -979,7 +979,7 @@ class SwarpRun:
     def num_pipelines(self):
         return self._num_pipelines
 
-    def standalone(self, file, manual_stage=True, overide=False):
+    def standalone(self, file, count, manual_stage=True, overide=False, ):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -992,9 +992,9 @@ class SwarpRun:
             f.write("for i in {}; do\n".format(self.pipeline_to_str()))
             # f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
             if platform.system() == "Darwin":
-                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N.XXXXXX)\n")
+                f.write("    outdir=$(mktemp -d -t swarp-run-${i}N-"+str(count)+"F.XXXXXX)\n")
             else:
-                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N.XXXXXX)\n")
+                f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N-"+str(self.nb_files_on_bb)+"F.XXXXXX)\n")
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
@@ -1013,6 +1013,42 @@ class SwarpRun:
             f.write("done\n")
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
+
+    # def standalone_count(self, file, manual_stage=True, overide=False):
+    #     if not overide and os.path.exists(file):
+    #         raise FileNotFoundError("file {} already exists".format(file))
+
+    #     if os.path.exists(file):
+    #         sys.stderr.write(" === Submit script: file {} already exists and will be re-written.\n".format(file))
+
+    #     with open(file, 'w') as f:
+    #         f.write("#!/bin/bash\n")
+    #         f.write("#set -x\n")
+    #         f.write("for i in {}; do\n".format(self.pipeline_to_str()))
+    #         # f.write("    for k in $(seq 1 {}); do\n".format(self.nb_averages))
+    #         if platform.system() == "Darwin":
+    #             f.write("    outdir=$(mktemp -d -t swarp-run-"+str(self.sched_config.nodes())+"N-${i}F.XXXXXX)\n")
+    #         else:
+    #             f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-"+str(self.sched_config.nodes())+"N-${i}F.XXXXXX)\n")
+    #         f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
+    #         f.write("    echo $outdir\n")
+    #         f.write("    echo $script\n")
+    #         f.write("    sed \"s/@COUNT@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+    #         #If we want to use DW to stage file
+    #         if not manual_stage:
+    #             f.write("    for j in $(seq ${i} -1 1); do\n")
+    #             f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+    #             f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
+    #             f.write("    done\n")
+    #         f.write("    cp ../copy.py ../build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
+    #         f.write("    cd \"${outdir}\"\n")
+    #         f.write("    sbatch ${script}\n")
+    #         #TODO ADD waiting time debug queue
+    #         f.write("    cd ..\n")
+    #         f.write("done\n")
+
+    #     os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
+
 
 if __name__ == '__main__':
 
@@ -1105,8 +1141,9 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
 
-    run1.standalone(file="submit.sh", manual_stage=True, overide=True)
-    
+    run1.standalone(file="submit.sh", count=args.count, manual_stage=True, overide=True)
+    #run1.standalone_count(file="submit_files.sh", manual_stage=True, overide=True)
+
     os.chdir(old_path)
     sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
 
