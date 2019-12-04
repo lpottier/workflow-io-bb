@@ -262,7 +262,8 @@ class SwarpInstance:
         self.script_dir = script_dir
         self.nb_avg = nb_avg
         self.input_sharing = input_sharing
-        self.nb_files_on_bb = nb_files_on_bb
+        # TODO: Fix this
+        self.nb_files_on_bb = nb_files_on_bb[0]
 
     def slurm_header(self):
         string = "#!/bin/bash -l\n"
@@ -416,7 +417,7 @@ class SwarpInstance:
     # If nb_files_on_bb = 32 -> all files on BB
     # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
     # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
-    def file_to_stage(self, pairs=True):
+    def file_to_stage(self, count, pairs=False):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
@@ -454,23 +455,22 @@ class SwarpInstance:
 
         arr = [x+"\n" for x in s.split('\n')[:-1]]
         short_s = ''
-        if self.nb_files_on_bb < 0:
-            self.nb_files_on_bb = len(arr)
-        self.nb_files_on_bb = min(self.nb_files_on_bb, len(arr))
+        if count < 0:
+            count = len(arr)
+        count = min(count, len(arr))
 
         if pairs:
-            if self.nb_files_on_bb % 2 != 0:
-                self.nb_files_on_bb += 1
+            if count % 2 != 0:
+                count += 1
 
-            self.nb_files_on_bb = min(self.nb_files_on_bb, len(arr)//2)
-
-
-            for i in range(self.nb_files_on_bb):
+            count = min(count, len(arr)//2)
+            
+            for i in range(count):
                 short_s += arr[i]
                 short_s += arr[i+16]
 
         else:
-            for i in range(self.nb_files_on_bb):
+            for i in range(count):
                 short_s += arr[i]
 
         return short_s
@@ -542,6 +542,7 @@ class SwarpInstance:
         s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
+        s += "    echo \"Compute nodes: $(srun hostname) \" | tee -a $OUTPUT_FILE\n"
 
         s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
         s += "\n"
@@ -614,14 +615,13 @@ class SwarpInstance:
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         s += "        srun lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID-${SLURM_JOB_NUM_NODES}.pdf\"\n"
-        s += "        echo -n \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        s += "        echo \" Hostname for node ${SLURM_JOB_NUM_NODES} : $(srun hostname) \" | tee -a $OUTPUT_FILE\n"
         s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
-        s += "        echo -n \"done\"\n"
+        s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
         s += "    done\n"
         s += "\n"
@@ -642,13 +642,13 @@ class SwarpInstance:
         s += "\n"
 
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        echo -n \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "        echo \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
         s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
-        s += "        echo -n \"done\"\n"
+        s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
         s += "    done\n"
         s += "\n"
@@ -668,13 +668,13 @@ class SwarpInstance:
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
         # s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         # s += "        rm -rf \"$RESAMP_DIR\"\n"
-        s += "        echo -n \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "        echo \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
         s += "        tree $DW_JOB_STRIPED/\n"
         s += "        $COPY -i \"${process}/\" -o \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" -a \"stage-out\" -d \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/${process}/\" &\n"
         #s += "        cd ..\n"
-        s += "        echo -n \"done\"\n"
+        s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
         s += "    done\n"
         s += "    t1=$(date +%s.%N)\n"
@@ -697,188 +697,6 @@ class SwarpInstance:
         s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
         s += "done\n"
         return s
-
-    # def script_globalvars(self):
-
-    #     # FILES_TO_STAGE="files_to_stage.txt"
-    #     # COUNT=0
-
-    #     # # Test code to verify command line processing
-    #     # if [ -f "$FILES_TO_STAGE" ]; then
-    #     #     echo "File list used: $FILES_TO_STAGE"
-    #     # else
-    #     #     echo "$FILES_TO_STAGE does not seem to exist"
-    #     #     exit
-    #     # fi
-
-    #     # if (( "$COUNT" < 0 )); then
-    #     #     COUNT=$(cat $FILES_TO_STAGE | wc -l)
-    #     # fi
-
-    #     # echo $FILES_TO_STAGE
-    #     # echo $COUNT
-
-    #     string = "#set -x\n"
-    #     string += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
-    #     string += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
-    #     string += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
-    #     string += "EXE=$SCRATCH/$SWARP_DIR/bin/swarp\n"
-    #     #string += "export CONTROL_FILE=\"$SCRATCH/control_file.txt\"\n\n"
-
-    #     # COPY=$BASE/copy.py
-    #     # FILE_MAP=$BASE/build_filemap.py
-
-    #     # NODE_COUNT=1        # Number of compute nodes requested by srun
-    #     # TASK_COUNT=1        # Number of tasks allocated by srun
-    #     # CORE_COUNT=1        # Number of cores used by both tasks
-
-
-    #     string += "CORES_PER_PROCESS={}\n".format(self.sched_config.cores())
-    #     string += "CONFIG_DIR=$BASE\n"
-    #     string += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
-    #     string += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
-
-    #     # CONFIG_DIR=$BASE/config
-    #     # if (( "$STAGE_CONFIG" == 1 )); then
-    #     #     CONFIG_DIR=$DW_JOB_STRIPED/config
-    #     # fi
-
-    #     string += "FILE_PATTERN='PTF201111*'\n"
-    #     string += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
-    #     string += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
-
-    #     string += "echo \"NUM NODES ${SLURM_JOB_NUM_NODES}\"\n"
-    #     string += "echo \"STAMP PREPARATION $(date --rfc-3339=ns)\"\n"
-    #     string += "\n"
-    #     return string
-
-
-    # def create_output_dirs(self):
-    #     string = "# Create the final output directory and run directory\n"
-    #     string += "outdir=\"$(pwd)/output\"; mkdir ${outdir}\n"
-    #     string +=  "sh {}\n".format(BBINFO)
-    #     string +=  "rundir=$DW_JOB_STRIPED/swarp-run\n"
-    #     string +=  "mkdir $rundir\n"
-    #     string += "# Create a output and run directory for each SWarp process\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    mkdir -p ${rundir}/${process}\n"
-    #     string += "    mkdir -p ${outdir}/${process}\n"
-    #     string += "done\n"
-    #     string += "\n"
-    #     return string
-
-    # def stage_in_files(self):
-    #     string = "# Copy manually files in BB\n"
-    #     string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    echo \"Copy files for process ${process}\"\n"
-    #     for directory in self.bb_config.indirs():
-    #         if directory.split('/')[-1] == '':
-    #             #end with / so we should take the second last one
-    #             target = directory.split('/')[-2]
-    #         else:
-    #             target = directory.split('/')[-1]
-
-    #         string = string + "    cp -r " + directory + " $DW_JOB_STRIPED/" + target + "/${process} &\n"
-    #     for file in self.bb_config.infiles():
-    #         string = string + "    cp " + file + " $DW_JOB_STRIPED/ &\n"
-    #     string += "done\n"
-    #     string += "t1=$(date +%s.%N)\n"
-    #     string += "wait\n"
-    #     string += "t2=$(date +%s.%N)\n"
-    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-    #     string += "echo \"TIME STAGE_IN:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-    #     string += "du -sh $DW_JOB_STRIPED/ > ${outdir}/size_staged_in.out\n"
-    #     string += "\n"
-    #     return string
-
-    # def stage_out_files(self):
-    #     string = "# Copy manually files in PFS from BB\n"
-    #     string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    echo \"Copy files for process ${process}\"\n"
-    #     string += "    cp -r ${rundir} ${outdir} &\n"
-    #     string += "done\n"
-    #     string += "t1=$(date +%s.%N)\n"
-    #     string += "wait\n"
-    #     string += "t2=$(date +%s.%N)\n"
-    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-    #     string += "echo \"TIME STAGE_OUT:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-    #     string += "du -sh ${rundir} > ${outdir}/size_staged_out.out\n"
-    #     string += "\n"
-    #     return string
-
-    # def script_run_resample(self):
-    #     string = "cd ${rundir}\n"
-    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_init.out\n"
-    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    echo \"Launching resample process ${process}\"\n"
-    #     string += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
-    #     string += "    cd ${process}\n"
-    #     string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" pegasus-kickstart -z -l stat.resample.xml $LAUNCH $EXE -c $RESAMPLE_CONFIG ${indir}/${IMAGE_PATTERN} & \n"
-    #     string += "    cd ..\n"
-    #     string += "done\n"
-    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "\n"
-    #     # string += "sleep 10\n"
-    #     # string += "touch $CONTROL_FILE\n"
-    #     string += "echo \"STAMP RESAMPLE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "t1=$(date +%s.%N)\n"
-    #     string += "wait\n"
-    #     # string += "rm $CONTROL_FILE\n"
-    #     string += "t2=$(date +%s.%N)\n"
-    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-    #     string += "echo \"TIME RESAMPLE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/du_resample.out\n"
-    #     string += "\n"
-    #     return string
-
-    # def script_copy_resample(self):
-    #     string = "# Copy the stdout, stderr, SWarp XML files\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
-    #     string += "done\n"
-    #     string += "\n"
-    #     return string
-
-    # def script_run_combine(self):
-    #     string = "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} PREP $(date --rfc-3339=ns)\"\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    echo \"Launching coadd process ${process}\"\n"
-    #     string += "    cd ${process}\n"
-    #     string += "    srun --cpus-per-task=${CORES_PER_PROCESS} -o \"output.coadd.%j.${process}\" -e \"error.coadd.%j.${process}\" pegasus-kickstart -z -l stat.combine.xml $LAUNCH $EXE -c -c $COMBINE_CONFIG ${RESAMPLE_PATTERN} &\n"
-    #     string += "    cd ..\n"
-    #     string += "done\n"
-    #     string += "\n"
-    #     # string += "sleep 10\n"
-    #     # string += "touch $CONTROL_FILE\n"
-    #     string += "echo \"STAMP COMBINE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "t1=$(date +%s.%N)\n"
-    #     string += "wait\n"
-    #     # string += "rm $CONTROL_FILE\n"
-    #     string += "t2=$(date +%s.%N)\n"
-    #     string += "tdiff=$(echo \"$t2 - $t1\" | bc -l)\n"
-    #     string += "echo \"TIME COMBINE:${SLURM_JOB_NUM_NODES} $tdiff\"\n"
-    #     string += "\n"
-    #     return string
-
-    # def script_ending(self):
-    #     string = "# Copy the stdout, stderr, SWarp XML files and IPM XML file\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    ls -lh ${rundir}/${process}/*.fits $DW_JOB_STRIPED/input/${process}/*.fits > ${outdir}/${process}/list_of_files.out\n"
-    #     string += "    cp -n -v ${process}/{output*,error*,*.xml} ${outdir}/${process}\n"
-    #     string += "done\n"
-    #     string += "du -sh $DW_JOB_STRIPED/input ${rundir} > ${outdir}/disk_usage.out\n"
-
-    #     string += "\n"
-
-    #     string += "echo \"STAMP CLEANUP:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     string += "for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-    #     string += "    rm -v ${process}/*.fits\n"
-    #     string += "done\n"
-    #     string += "echo \"STAMP DONE:${SLURM_JOB_NUM_NODES} $(date --rfc-3339=ns)\"\n"
-    #     return string
 
     @staticmethod
     def bbinfo():
@@ -925,7 +743,7 @@ class SwarpInstance:
 
         # TODO: fix this temporary thing
         with open("files_to_stage.txt", 'w') as f:
-            f.write(self.file_to_stage())
+            f.write(self.file_to_stage(count=self.nb_files_on_bb))
 
         with open(file, 'w') as f:
             f.write(self.slurm_header())
@@ -1061,7 +879,7 @@ if __name__ == '__main__':
     parser.add_argument('--bbsize', '-b', type=int, nargs='?', default=50,
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
     parser.add_argument('--workflows', '-w', type=int, nargs='+', default=[1],
-                        help='Number of identical SWarp workflows running in parallel')
+                        help='Number of identical SWarp workflows running in parallel. List of values')
     parser.add_argument('--input-sharing', '-s', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
     parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=1,
@@ -1070,8 +888,8 @@ if __name__ == '__main__':
                         help='Queue to execute the workflow')
     parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
                         help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
-    parser.add_argument('--count', '-c', type=int, nargs='?', default=-1,
-                        help='Number of files staged in BB (-1 means all)')
+    parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
+                        help='Number of files staged in BB (-1 means all). List of values')
 
     args = parser.parse_args()
     print(args)
@@ -1093,11 +911,18 @@ if __name__ == '__main__':
     else:
         short_workflow = str(min(args.workflows))+'_'+str(max(args.workflows))
 
+
+    args.count = list(set(args.count))
+    if len(args.count) == 1:
+        short_count = str(args.count[0])
+    else:
+        short_count = str(min(args.count))+'_'+str(max(args.count))
+
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
     if args.input_sharing:
-        output_dir = "swarp_shared-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, short_workflow, args.bbsize, today.tm_mday, today.tm_mon)
+        output_dir = "swarp_shared-{}-{}N-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.nodes, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
     else:
-        output_dir = "swarp-{}-{}N-{}C-{}W-{}B-{}-{}/".format(args.queue, args.nodes, args.threads, short_workflow, args.bbsize, today.tm_mday, today.tm_mon)
+        output_dir = "swarp-{}-{}N-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.nodes, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
         sys.stderr.write(" === Directory {} created.\n".format(output_dir))
