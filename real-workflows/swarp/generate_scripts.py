@@ -920,6 +920,8 @@ if __name__ == '__main__':
     args.count = sorted([int(x) for x in args.count])
     if len(args.count) == 1:
         short_count = str(args.count[0])
+        if short_count == '-1':
+            short_count = '32'
     else:
         short_count = str(min(args.count))+'_'+str(max(args.count))
 
