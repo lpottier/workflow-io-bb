@@ -543,6 +543,7 @@ class SwarpInstance:
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
+        s += "    srun lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
 
         s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
         s += "\n"
@@ -614,7 +615,6 @@ class SwarpInstance:
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${SLURM_JOB_NUM_NODES}); do\n"
-        s += "        srun lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID-${SLURM_JOB_NUM_NODES}.pdf\"\n"
         s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"

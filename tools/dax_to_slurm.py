@@ -328,7 +328,7 @@ def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     return s
 
 # take as input a ADAG
-def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir, input_dir, wrapper=False):
+def create_slurm_workflow(adag, output, bin_dir, input_dir, queue=("debug",5), wrapper=False):
     job_wrapper = [
         "#SBATCH -p {}".format(queue[0]),
         "#SBATCH -C haswell",
@@ -403,8 +403,23 @@ def create_slurm_workflow(adag, output, queue=("debug",5), bin_dir, input_dir, w
                 f.write(slurm_sync(queue[0], queue[1], queue[1]-1, 10))
                 f.write("\n")
 
-            
-            cmd = "{}.sh".format(u)
+            if wrapper:
+                cmd = "{}.sh".format(u)
+            else:
+                input_args = G.nodes[u]["args"]
+                if input_dir:
+                    for elem in shlex.split(G.nodes[u]["args"]):
+                        if not (elem.startswith('--') and elem.startswith('-')):
+                            input_args = input_dir + '/' + G.nodes[u]["args"]
+                        else:
+                            input_args = input_dir + '/' + G.nodes[u]["args"]
+
+                if bin_dir:
+                    bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
+                else:
+                    bin_args = G.nodes[u]["exe"]
+
+                cmd = "{} {}".format(bin_args, input_args)
 
             #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
             if u in roots:
@@ -437,6 +452,9 @@ if __name__ == '__main__':
     parser.add_argument('--input', '-i', type=str, nargs='?', default=None,
                         help='Input directory (erase input directory provided by DAX)')
 
+    parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
+                        help='Queue to execute the workflow')
+
     args = parser.parse_args()
     dax_id = os.path.basename(args.dax).split('.')[0]
 
@@ -467,7 +485,7 @@ if __name__ == '__main__':
     # sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
 
-    create_slurm_workflow(G, "submit.sh", bin_dir=args.bin, input_dir=args.input)
+    create_slurm_workflow(adag=G, output="submit.sh", bin_dir=args.bin, input_dir=args.input)
 
     sys.stderr.write(" === submit.sh written in current directory {}\n".format(os.getcwd()))
 

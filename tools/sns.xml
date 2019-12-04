@@ -28,11 +28,6 @@
 		<profile namespace="pegasus" key="exitcode.successmsg">End of program</profile>
 		<pfn url="/global/homes/l/lpottier/workflow-io-bb/real-workflows/sns-workflow/bin/namd2.sh" site="nersc"/>
 	</executable>
-<!-- 	<executable name="tar" arch="x86_64" os="linux" installed="true">
-		<profile namespace="pegasus" key="queue">@escori</profile>
-		<profile namespace="pegasus" key="glite.arguments">--qos xfer --licenses=SCRATCH</profile>
-		<pfn url="/bin/tar" site="nersc"/>
-	</executable> -->
 	<executable name="ptraj" namespace="amber" arch="x86_64" os="linux" installed="true">
 		<profile namespace="pegasus" key="glite.arguments">--qos debug --constraint=haswell --licenses=SCRATCH</profile>
 		<profile namespace="pegasus" key="gridstart.arguments">-z</profile>
@@ -44,14 +39,6 @@
 		<profile namespace="pegasus" key="runtime">300</profile>
 		<pfn url="$PEGASUS_HOME/bin/pegasus-transfer" site="nersc"/>
 	</executable>
-<!-- 	<job id="ID0000001" name="tar" node-label="untar">
-		<argument>-xzvf <file name="sassena_db.tar.gz"/></argument>
-		<profile namespace="pegasus" key="cores">1</profile>
-		<profile namespace="pegasus" key="runtime">60</profile>
-		<uses name="sassena_db.tar.gz" link="input"/>
-		<uses name="database/db-neutron-incoherent.xml" link="output" transfer="false"/>
-		<uses name="database/db-neutron-coherent.xml" link="output" transfer="false"/>
-	</job> -->
 	<job id="ID0000001" name="namd" node-label="namd_eq_200">
 		<argument><file name="equilibrate_200.conf"/></argument>
 		<profile namespace="pegasus" key="cores">12</profile>
