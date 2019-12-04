@@ -406,13 +406,13 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue=("debug",5), w
             if wrapper:
                 cmd = "{}.sh".format(u)
             else:
-                input_args = G.nodes[u]["args"]
+                input_args = ' '
                 if input_dir:
                     for elem in shlex.split(G.nodes[u]["args"]):
-                        if not (elem.startswith('--') and elem.startswith('-')):
-                            input_args = input_dir + '/' + G.nodes[u]["args"]
+                        if elem.startswith('--') or elem.startswith('-'):
+                            input_args += elem + ' '
                         else:
-                            input_args = input_dir + '/' + G.nodes[u]["args"]
+                            input_args += input_dir + '/' + elem + ' '
 
                 if bin_dir:
                     bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
