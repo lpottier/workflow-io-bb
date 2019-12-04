@@ -277,7 +277,8 @@ class SwarpInstance:
 
         string += "#SBATCH -C haswell\n"
 
-        string += "#SBATCH --ntasks-per-node=1\n"
+        string += "#SBATCH --ntasks-per-node=2\n"
+        string += "#SBATCH --ntasks-per-socket=1\n"
         string += "#SBATCH -t {}\n".format(self.sched_config.timeout())
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
