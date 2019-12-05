@@ -9,6 +9,7 @@ import subprocess
 import shlex                    # for shlex.split
 import resource                 # for resource.getrusage
 import csv
+from timeit import default_timer as timer
 
 #read a file source dst
 
@@ -52,10 +53,12 @@ def copy_fromlist(args):
     files_notransfered = []
     files_transfered = []
     size_files = []
+    size_files_notransfer = []
     utime_files = []
     stime_files = []
     #index = 0
 
+    start_duration = timer()
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     with open(args.file, 'r') as f:
         for line in f:
@@ -82,6 +85,7 @@ def copy_fromlist(args):
             if not fnmatch.fnmatch(file_src, args.pattern) or (dir_src == dir_dest and file_src == file_dest):
                 print("{} skipped.".format(file_src))
                 files_notransfered.append((dir_src, dir_dest, file_src))
+                size_files_notransfer.append(os.path.getsize(src))
                 continue
 
             #if not os.path.isdir(dir_dest):
@@ -112,6 +116,7 @@ def copy_fromlist(args):
             # except IOError as e:
             #     print(e)
             except subprocess.CalledProcessError as e:
+                size_files_notransfer.append(os.path.getsize(src))
                 print(e)
             else:
                 size_files.append(os.path.getsize(src))
@@ -128,9 +133,11 @@ def copy_fromlist(args):
         #    break
 
     global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    total_duration = timer() - start_duration
     global_utime = global_end.ru_utime - global_start.ru_utime
     global_stime = global_end.ru_stime - global_start.ru_stime
 
+    total_data_notransfer = sum(size_files_notransfer)/(1024.0**2)
     total_data = sum(size_files)/(1024.0**2)
     total_utime = sum(utime_files)
     total_stime = sum(stime_files)
@@ -193,6 +200,49 @@ def copy_fromlist(args):
                     ]
                 )
 
+        header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)",  "TRANSFER_RATIO", "DURATION(S)",  "STIME(S)", "UTIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY"]
+        with open(str(args.dir)+str(args.stats)+"-pfs-global.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb-global.csv", 'w', newline='') as bb_file:
+            writer_pfs = csv.writer(pfs_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_bb = csv.writer(bb_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_pfs.writerow(header)
+            writer_bb.writerow(header)
+
+            try:
+                ratio = float(total_data - total_data_notransfer)/float(total_data)
+            except ZeroDivisionError as e:
+                ratio = 0
+
+            writer_pfs.writerow([
+                len(files_notransfered)+len(files_transfered),
+                total_data_notransfer+total_data,
+                0,
+                0.0,
+                1 - ratio,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ])
+
+
+            writer_bb.writerow([
+                len(files_notransfered)+len(files_transfered),
+                total_data_notransfer+total_data,
+                len(files_transfered),
+                total_data,
+                ratio,
+                global_utime,
+                global_stime,
+                total_duration,
+                total_data/total_duration,
+                (global_utime+global_stime)/total_duration
+            ])
+
+
+
 def copy_dir(args):
     src = os.path.expandvars(args.src)
     dest = os.path.expandvars(args.dest)
@@ -206,7 +256,7 @@ def copy_dir(args):
     stime_files = []
 
     #print(os.path.abspath(args.src))
-    all_files = glob.glob(src)
+    all_files = glob.glob(src+'/*')
     files_to_copy = glob.glob(src+'/'+str(os.path.expandvars(args.pattern)))
     files_to_copy = [f for f in files_to_copy if os.path.isfile(f)]
     # print (files_to_copy)
@@ -221,6 +271,7 @@ def copy_dir(args):
         except subprocess.CalledProcessError as e:
             print(e)
 
+    start_duration = timer()
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     for f in files_to_copy:
         try:
@@ -248,6 +299,7 @@ def copy_dir(args):
             )
 
     global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    total_duration = timer() - start_duration
     global_utime = global_end.ru_utime - global_start.ru_utime
     global_stime = global_end.ru_stime - global_start.ru_stime
 
@@ -301,11 +353,12 @@ def copy_dir(args):
                         0.0
                         ]
                     )
-                else:
+
+            for i in range(len(files_to_copy)):
                     writer_bb.writerow([
                         src,
                         dest,
-                        all_files[i], 
+                        all_files[i],
                         size_files[i]/(1024.0**2), 
                         utime_files[i]+stime_files[i],
                         utime_files[i],
@@ -313,6 +366,37 @@ def copy_dir(args):
                         ]
                     )
 
+        header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "DURATION(S)",  "STIME(S)", "UTIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY"]
+        with open(str(args.dir)+str(args.stats)+"-pfs-global.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb-global.csv", 'w', newline='') as bb_file:
+            writer_pfs = csv.writer(pfs_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_bb = csv.writer(bb_file, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer_pfs.writerow(header)
+            writer_bb.writerow(header)
+            writer_pfs.writerow([
+                len(all_files),
+                sum([os.path.getsize(x)/(1024.0**2) for x in all_files]),
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0
+            ])
+
+            writer_bb.writerow([
+                    len(all_files),
+                    sum([os.path.getsize(x)/(1024.0**2) for x in all_files]),
+                    len(size_files),
+                    total_data,
+                    global_utime,
+                    global_stime,
+                    total_duration,
+                    total_data/total_duration,
+                    (global_utime+global_stime)/total_duration
+            ])
 
 
 if __name__ == '__main__':

@@ -498,6 +498,27 @@ class OutputLog:
                     #TODO
                     self.time_stage_out = 0
 
+class StageInTask:
+    def __init__(self, csv_file, sep=' '):
+        self._csv = csv_file
+        self._sep = sep
+        self._data = None
+        self._data_transfered = 0 # In MB
+        self._tranfer_time = 0 # In S
+        self._bandwidth = 0 # In MB
+
+        with open(self._csv) as f:
+            self._data = csv.DictReader(f, delimiter=self._sep)
+            for row in self._data:
+                self._data_transfered += float(row['SIZE(MB)'])
+                self._tranfer_time += float(row['TOTAL(S)'])
+                print (row)
+
+        print(self._tranfer_time,self._data_transfered,self._data_transfered/self._tranfer_time)
+
+class AvgStageInTask:
+    def __init__(self, csv_files, sep=' '):
+        pass
 
 class KickstartDirectory:
     """
@@ -563,13 +584,18 @@ class KickstartDirectory:
         self.outputlog = {}
         self.stagein = {}
         self.log = 'output.log'
-        self.stage_in_log = 'stage-in-bb.csv.log' #CSV with SRC DEST FILE SIZE(MB) TOTAL(S) STIME(S) UTIME(S)
+        self.stage_in_log = 'stage-in-bb.csv' #CSV with SRC DEST FILE SIZE(MB) TOTAL(S) STIME(S) UTIME(S)
         self.size_in_bb = {}
         self.nb_files_stagein = {}
+        self.exp_char = {}
+        #parse folder
 
         #print(self.dir_exp)
         for i,d in enumerate(self.dir_exp):
             dir_at_this_level = [Path(x) for x in d.iterdir() if x.is_dir()]
+            # folder should be named like that: 
+            #   swarp-queue-xC-xB-x_yW-x_yF-day-month
+
             raw_resample = []
             raw_combine = []
             output_log = []
@@ -584,7 +610,8 @@ class KickstartDirectory:
                 
             self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
             self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
-            
+            self.stagein[d] = StageInTask(csv_file=stage_in[0])
+
 
         ## PRINTING TEST
         for run,d in self.resample.items():
