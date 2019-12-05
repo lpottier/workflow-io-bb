@@ -102,7 +102,7 @@ class File:
     """
     def __init__(self, hashmap):
         # Hashmap must be the attrib from <file> elem
-        self.file       =       hashmap["name"]
+        self.name       =       hashmap["name"]
         self.size       =       hashmap["size"]
         self.bread      =       hashmap["bread"]
         self.nread      =       hashmap["nread"]
@@ -144,7 +144,7 @@ class Processus:
     def __init__(self, xml_root):
 
         if xml_root.tag != XML_PREFIX+"proc":
-            raise ValueError("Nota {} ElementTree {}".format("proc",element_tree.tag))
+            raise ValueError("Not a {} ElementTree {}".format("proc",element_tree.tag))
        
         self.pid        =       xml_root.attrib["pid"]
         self.ppid       =       xml_root.attrib["ppid"]
@@ -284,8 +284,9 @@ class KickstartEntry(object):
         # Parse machine
         self.machine = Machine(self._get_elem("machine"))
 
-        # Usage (global, not mainjob)
-        self.usage = Usage(self._root)
+        self.usage = Usage(self._get_elem("mainjob"))
+        self.scheduler_usage = Usage(self._root)  # Usage (global, not mainjob)
+
 
         #Store all processes involved
         # key is pid and value a Processus object
@@ -294,6 +295,36 @@ class KickstartEntry(object):
         self.parse_proc(self._get_elem("mainjob"))
 
         # print(list(self.processes.values())[0])
+
+        self._duration = float(self._get_elem("mainjob").attrib["duration"])
+
+        self._files = {} 
+        self._files_in_bb = 0
+        self._size_in_bb = 0
+        for u,v in self.processes.items():
+            for name,e in v.files.items():
+                if not name in self._files:
+                    if name.startswith("/var/opt/"):
+                        self._files_in_bb += 1
+                        self._size_in_bb += int(e.size)
+                        self._files[name] = e
+                    elif name.startswith("/global/cscratch1/"):
+                        self._files[name] = e
+                    else:
+                        # We filter all the /tmp/, /dev/ library accesses
+                        continue
+
+        self._data_bread = 0 # Byte read
+        self._data_nread = 0 # Number of read
+        self._data_bwrite = 0 # Byte written
+        self._data_nwrite = 0 # Number of write
+        for _,v in self._files.items():
+            self._data_bread += int(v.bread)
+            self._data_nread += int(v.nread)
+            self._data_bwrite += int(v.bwrite)
+            self._data_nwrite += int(v.nwrite)
+            
+
 
 
     def parse_proc(self, xml_root):
@@ -314,29 +345,48 @@ class KickstartEntry(object):
                 return elem
         return None
 
+    def duration(self):
+        return float(self._duration)
+
     def utime(self):
         return float(self.usage.utime)
 
     def stime(self):
         return float(self.usage.stime)
 
-    def time(self):
+    def ttime(self):
         return self.stime() + self.utime()
 
     def efficiency(self):
-        return self.stime() / (self.stime() + self.utime())
+        return self.ttime() / self.duration()
+
+    def files():
+        return self._files
 
     def cores(self):
         pass
 
-    def data_read(self):
-        pass
+    def tot_bread(self):
+        return self._data_bread
 
-    def data_written(self):
-        pass
+    def tot_nread(self):
+        return self._data_nread
 
-    def data_used(self):
-        pass
+    def tot_bwrite(self):
+        return self._data_bwrite
+
+    def tot_nwrite(self):
+        return self._data_nwrite
+
+    def avg_read_size(self):
+        return float(self.tot_bread()) / self.tot_nread()
+
+    def avg_write_size(self):
+        return float(self.tot_bwrite()) / self.tot_nwrite()
+    
+    def avg_io_size(self):
+        return float(self.tot_bwrite()+self.tot_bread()) / (self.tot_nwrite()+self.tot_nread())
+
  
 class KickstartRecord:
     # Manage averaged runs of one experiments
@@ -351,6 +401,9 @@ class KickstartRecord:
     def paths(self):
         return [e.path() for e in self.records]
 
+    def data(self):
+        return {e.path():e for e in self.records}
+
     def utime(self):
         sample = [e.utime() for e in self.records]
         return (statistics.mean(sample),statistics.stdev(sample))
@@ -359,22 +412,49 @@ class KickstartRecord:
         sample = [e.stime() for e in self.records]
         return (statistics.mean(sample),statistics.stdev(sample))
 
-    def time(self):
-        sample = [e.time() for e in self.records]
+    def ttime(self):
+        sample = [e.ttime() for e in self.records]
+        return (statistics.mean(sample),statistics.stdev(sample))
+
+    def duration(self):
+        sample = [e.duration() for e in self.records]
         return (statistics.mean(sample),statistics.stdev(sample))
 
     def efficiency(self):
         sample = [e.efficiency() for e in self.records]
-        return (statistics.mean(sample),statistics.stdev(sample))
+        return (statistics.mean(sample), statistics.stdev(sample))
 
-    def data_read(self):
-        pass
+    def files(self):
+        return self.records[0].files()
 
-    def data_written(self):
-        pass
+    def tot_bread(self):
+        sample = [e.tot_bread() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
 
-    def data_used(self):
-        pass
+    def tot_nread(self):
+        sample = [e.tot_nread() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+
+    def tot_bwrite(self):
+        sample = [e.tot_bwrite() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+
+    def tot_nwrite(self):
+        sample = [e.tot_nwrite() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+
+    def avg_read_size(self):
+        sample = [e.avg_read_size() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+
+    def avg_write_size(self):
+        sample = [e.avg_write_size() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+    
+    def avg_io_size(self):
+        sample = [e.avg_io_size() for e in self.records]
+        return (statistics.mean(sample), statistics.stdev(sample))
+ 
 
 class OutputLog:
     def __init__(self, file):
@@ -475,26 +555,57 @@ class KickstartDirectory:
         if not self.dir.is_dir():
             raise ValueError("error: {} is not a valid directory.".format(self.dir))
 
-        print(self.dir)
+        #print(self.dir)
         self.dir_exp = [Path(x) for x in self.dir.iterdir() if x.is_dir()]
         self.log = []
         self.resample = {}
         self.combine = {}
-        self.log = "output.log"
-        self.number_avg = 0
+        self.outputlog = {}
+        self.stagein = {}
+        self.log = 'output.log'
+        self.stage_in_log = 'stage-in-bb.csv.log' #CSV with SRC DEST FILE SIZE(MB) TOTAL(S) STIME(S) UTIME(S)
+        self.size_in_bb = {}
+        self.nb_files_stagein = {}
 
-        print(self.dir_exp)
-        for d in self.dir_exp:
+        #print(self.dir_exp)
+        for i,d in enumerate(self.dir_exp):
             dir_at_this_level = [Path(x) for x in d.iterdir() if x.is_dir()]
+            raw_resample = []
+            raw_combine = []
+            output_log = []
+            stage_in = []
+            bb_info = []
             for avg in dir_at_this_level:
-                #print(avg)
-                if not avg in self.resample:
-                    self.resample[avg] = []
-                if not avg in self.combine:
-                    self.combine[avg] = []
+                raw_resample.append(avg / 'stat.resample.xml')
+                raw_combine.append(avg / 'stat.combine.xml')
+                output_log.append(avg / self.log)
+                stage_in.append(avg / self.stage_in_log)
+                bb_info.append(avg / 'data-stagedin.log')
+                
+            self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
+            self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
+            
 
-                self.resample[avg].append(KickstartRecord([avg / 'stat.resample.xml']))
-                self.combine[avg].append(KickstartRecord([avg / 'stat.combine.xml']))
+        ## PRINTING TEST
+        for run,d in self.resample.items():
+            data_run = d.data()
+            print("= Run {} averaged on {}:".format(run, len(data_run)))
+            # for u,v in data_run.items():
+            #     print("==> Run: {}".format(u))
+            #     print("        duration   : {:.3f}".format(v.duration()))
+            #     print("        ttime      : {:.3f}".format(v.ttime()))
+            #     print("        utime      : {:.3f}".format(v.utime()))
+            #     print("        stime      : {:.3f}".format(v.stime()))
+            #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
+            #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
+            #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
+            print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
+            print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
+            print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
+            print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
+            print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
+            print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
+            print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
 
     def root_dir(self):
         return self.dir
@@ -505,6 +616,7 @@ class KickstartDirectory:
     def parse_outputlog():
         for d in self.dir_exp:
             pass
+            #TODO:
 
 
     # def write(csv_file):
@@ -515,21 +627,21 @@ class KickstartDirectory:
 
 
 if __name__ == "__main__":
-    test_record = KickstartEntry("stat.resample.xml")
-    print(test_record.path())
-    print(test_record.time())
-    print(test_record.efficiency())
+    # test_record = KickstartEntry("stat.resample.xml")
+    # print(test_record.path())
+    # print(test_record.time())
+    # print(test_record.efficiency())
 
-    test_record2 = KickstartEntry("stat.combine.xml")
-    print(test_record2.path())
-    print(test_record2.time())
-    print(test_record2.efficiency())
+    # test_record2 = KickstartEntry("stat.combine.xml")
+    # print(test_record2.path())
+    # print(test_record2.time())
+    # print(test_record2.efficiency())
 
-    exp1 = KickstartRecord(["stat.resample.xml", "stat.combine.xml"])
+    # exp1 = KickstartRecord(["stat.resample.xml", "stat.combine.xml"])
 
-    print(exp1.paths())
-    print(exp1.time())
-    print(exp1.efficiency())
+    # print(exp1.paths())
+    # print(exp1.time())
+    # print(exp1.efficiency())
 
     test = KickstartDirectory("test_exp/")
 
