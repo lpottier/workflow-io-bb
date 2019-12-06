@@ -1,14 +1,22 @@
 #!/usr/bin/env python3
 
+import statistics
+import os
+import csv
 import xml.etree.ElementTree as xml
 
 from enum import Enum,unique,auto
 from pathlib import Path
-import statistics
-import os
-import csv
+from collections import OrderedDict
 
 XML_PREFIX="{http://pegasus.isi.edu/schema/invocation}"
+
+# import importlib
+# seaborn_found = importlib.util.find_spec('seaborn')
+# import seaborn as sns
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# sns.set(style="ticks", color_codes=True)
 
 @unique
 class FileType(Enum):
@@ -456,35 +464,33 @@ class KickstartRecord:
         return (statistics.mean(sample), statistics.stdev(sample))
  
 
+
+# Wall-clock time seen from the user perspective
 class OutputLog:
-    def __init__(self, file):
-        self.file = file
+    def __init__(self, log_file):
+        self.file = log_file
         self.nodes = 0
         self.tasks = 0
         self.cores = 0
-        self.files_staged = 0
-        self.total_number_files = 0
-        self.data_staged = 0 #In MB
+        # self.files_staged = 0
+        # self.total_number_files = 0
+        # self.data_staged = 0 #In MB
 
         #From the scheduler perspective
         self.time_stage_in = 0
         self.time_resample = 0
         self.time_coadd = 0
         self.time_stage_out = 0
+        self.time_total = 0
 
         with open(self.file, 'r') as f:
             for line in f:
-                if line.startswith("Number of files kept in PFS: "):
-                    start = len("Number of files kept in PFS: ")
-                    end = line.index('/')
-                    self.files_staged = int(line[start:end])
-                    self.total_number_files = int(line[end+1:])
                 if line.startswith("NODE"):
-                    self.nodes = int(line.split(' ')[1])
+                    self.nodes = int(line.split('=')[1])
                 elif line.startswith("TASK"):
-                    self.tasks = int(line.split(' ')[1])
+                    self.tasks = int(line.split('=')[1])
                 elif line.startswith("CORE"):
-                    self.cores = int(line.split(' ')[1])
+                    self.cores = int(line.split('=')[1])
                 elif line.startswith("TIME STAGE_IN"):
                     start = len("TIME STAGE_IN ")
                     self.time_stage_in = float(line[start:])
@@ -495,30 +501,113 @@ class OutputLog:
                     start = len("TIME COMBINE ")
                     self.time_coadd = float(line[start:])
                 elif line.startswith("TIME STAGE_OUT"):
-                    #TODO
-                    self.time_stage_out = 0
+                    start = len("TIME STAGE_OUT ")
+                    self.time_stage_out = float(line[start:])
+                elif line.startswith("TIME TOTAL"):
+                    start = len("TIME TOTAL ")
+                    self.time_total = float(line[start:])
 
+class AvgOutputLog:
+    def __init__(self, list_log_files):
+        self.nodes = 0
+        self.tasks = 0
+        self.cores = 0
+        # self.files_staged = 0
+        # self.total_number_files = 0
+        # self.data_staged = 0 #In MB
+
+        #From the scheduler perspective
+        tmp_stage_in = []
+        tmp_resample = []
+        tmp_coadd = []
+        tmp_stage_out = []
+        tmp_total = []
+
+        for f in list_log_files:
+            log = OutputLog(log_file=f)
+
+            tmp_stage_in.append(log.time_stage_in)
+            tmp_resample.append(log.time_resample)
+            tmp_coadd.append(log.time_coadd)
+            tmp_stage_out.append(log.time_stage_out)
+            tmp_total.append(log.time_total)
+
+            self.nodes = log.nodes
+            self.tasks = log.tasks
+            self.cores = log.cores
+
+
+        self.time_stage_in = (statistics.mean(tmp_stage_in), statistics.stdev(tmp_stage_in))
+        self.time_resample = (statistics.mean(tmp_resample), statistics.stdev(tmp_resample))
+        self.time_coadd = (statistics.mean(tmp_coadd), statistics.stdev(tmp_coadd))
+        self.time_stage_out = (statistics.mean(tmp_stage_out), statistics.stdev(tmp_stage_out))
+        self.time_total = (statistics.mean(tmp_total), statistics.stdev(tmp_total))
+
+        print("TIME STAGE_IN ", self.time_stage_in)
+        print("TIME RESAMPLE ", self.time_resample)
+        print("TIME COMBINE ", self.time_coadd)
+        print("TIME STAGE_OUT ", self.time_stage_out)
+        print("TIME  TOTAL ", self.time_total)
+
+
+## For stage-*-bb.csv and stage-*-pfs.csv
+# class DetailedStageInTask:
+#     def __init__(self, csv_file, sep=' '):
+#         self._csv = csv_file
+#         self._sep = sep
+#         self._data = []
+
+#         self._data_transfered   = 0       # In MB
+#         self._tranfer_time      = 0       # In S
+#         self._bandwidth         = 0       # In MB
+
+#         with open(self._csv) as f:
+#             for row in csv.DictReader(f, delimiter=self._sep):
+#                 self._data.append(OrderedDict(row))
+
+#         for row in self._data:
+#             self._data_transfered += float(row['SIZE(MB)'])
+#             self._tranfer_time += float(row['TOTAL(S)'])
+#             print (row)
+
+#         print(self._tranfer_time,self._data_transfered,self._data_transfered/self._tranfer_time)
+
+## For stage-*-bb-global.csv and stage-*-pfs-global.csv
+# NB_FILES TOTAL_SIZE(MB) NB_FILES_TRANSFERED TRANSFERED_SIZE(MB) TRANSFER_RATIO DURATION(S) STIME(S) UTIME(S) BANDWIDTH(MB/S) EFFICIENCY
+# 32 768.515625 32 768.515625 1.0 0.062945 0.704128 0.885696506 867.6963494761715 0.8660675466185027
 class StageInTask:
     def __init__(self, csv_file, sep=' '):
         self._csv = csv_file
         self._sep = sep
         self._data = None
-        self._data_transfered = 0 # In MB
-        self._tranfer_time = 0 # In S
-        self._bandwidth = 0 # In MB
 
         with open(self._csv) as f:
-            self._data = csv.DictReader(f, delimiter=self._sep)
-            for row in self._data:
-                self._data_transfered += float(row['SIZE(MB)'])
-                self._tranfer_time += float(row['TOTAL(S)'])
-                print (row)
+            for row in csv.DictReader(f, delimiter=self._sep):
+                self._data = OrderedDict(row) #WE NOW THERE ONLY ONE ROW (PLUS THE HEADER)
 
-        print(self._tranfer_time,self._data_transfered,self._data_transfered/self._tranfer_time)
+        for k in self._data:
+            self._data[k] = float(self._data[k])
+
+        # print(self._data) 
+
 
 class AvgStageInTask:
-    def __init__(self, csv_files, sep=' '):
-        pass
+    def __init__(self, list_csv_files, sep=' '):
+        self._csv_files = list_csv_files
+        self._data = OrderedDict()
+        for f in self._csv_files:
+            csv = StageInTask(csv_file=f, sep=sep)
+
+            for k in csv._data:
+                if not k in self._data:
+                    self._data[k] = []
+                self._data[k].append(csv._data[k])
+    
+        for k in self._data:
+            pair = (statistics.mean(self._data[k]), statistics.stdev(self._data[k]))
+            self._data[k] = pair
+
+
 
 class KickstartDirectory:
     """
@@ -583,12 +672,13 @@ class KickstartDirectory:
         self.combine = {}
         self.outputlog = {}
         self.stagein = {}
-        self.log = 'output.log'
-        self.stage_in_log = 'stage-in-bb.csv' #CSV with SRC DEST FILE SIZE(MB) TOTAL(S) STIME(S) UTIME(S)
+        self.log = 'output.log' #Contains wallclock time
+        self.stage_in_log = 'stage-in-bb-global.csv' #CSV 
         self.size_in_bb = {}
         self.nb_files_stagein = {}
-        self.exp_char = {}
-        #parse folder
+        self.nb_pipeline = {}
+
+        self.makespan = {}  # Addition of tasks' execution time
 
         #print(self.dir_exp)
         for i,d in enumerate(self.dir_exp):
@@ -610,13 +700,14 @@ class KickstartDirectory:
                 
             self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
             self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
-            self.stagein[d] = StageInTask(csv_file=stage_in[0])
+            self.stagein[d] = AvgStageInTask(list_csv_files=stage_in)
+            self.outputlog[d] = AvgOutputLog(list_log_files=output_log)
 
 
         ## PRINTING TEST
         for run,d in self.resample.items():
             data_run = d.data()
-            print("= Run {} averaged on {}:".format(run, len(data_run)))
+            print("= Run {} averaged on {} runs:".format(run, len(data_run)))
             # for u,v in data_run.items():
             #     print("==> Run: {}".format(u))
             #     print("        duration   : {:.3f}".format(v.duration()))
@@ -645,12 +736,17 @@ class KickstartDirectory:
             pass
             #TODO:
 
+    def write_csv_all_by_pipeline(csv_file, sep = ' '):
+        header="NB_PIPELINE BB_ALLOC_SIZE(MB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME".split(' ')
+        with open(csv_file, 'w', newline='') as f:
+            write = csv.writer(f, delimiter=sep, quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            write.writerow(header)
 
-    # def write(csv_file):
-    #     with open(csv_file, 'w', newline='') as f:
-    #         write = csv.writer(f, delimiter=' ',
-    #                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-    #         write.writerow([])
+
+    # def plot_makespan_by_pipeline():
+    #     if seaborn_found is None:
+    #         return
+
 
 
 if __name__ == "__main__":
