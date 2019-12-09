@@ -551,9 +551,9 @@ class SwarpInstance:
         s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
-        s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
-        s += "    xtdb2proc -f coritopo-$SLURM_JOB_ID.out\n"
-        s += "    srun meshcoords -j $SLURM_JOB_ID > job-$SLURM_JOB_ID.coord\n"
+        #s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
+        #s += "    xtdb2proc -f coritopo-$SLURM_JOB_ID.out\n"
+        #s += "    srun meshcoords -j $SLURM_JOB_ID > job-$SLURM_JOB_ID.coord\n"
         
         if self.slurm_profile:
             s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT\"\n"

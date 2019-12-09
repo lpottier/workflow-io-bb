@@ -676,7 +676,7 @@ class KickstartDirectory:
         self.stage_in_log = 'stage-in-bb-global.csv' #CSV 
         self.size_in_bb = {}
         self.nb_files_stagein = {}
-        self.nb_pipeline = {}
+        self.exp_setup = {} #swarp-bb.batch.1c.0f.25856221 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
 
@@ -731,16 +731,13 @@ class KickstartDirectory:
     def dirs(self):
         return self.dir_exp
 
-    def parse_outputlog():
-        for d in self.dir_exp:
-            pass
-            #TODO:
-
     def write_csv_all_by_pipeline(csv_file, sep = ' '):
-        header="NB_PIPELINE BB_ALLOC_SIZE(MB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME".split(' ')
+        header="ID NB_PIPELINE BB_ALLOC_SIZE(MB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME".split(' ')
         with open(csv_file, 'w', newline='') as f:
             write = csv.writer(f, delimiter=sep, quotechar='|', quoting=csv.QUOTE_MINIMAL)
             write.writerow(header)
+
+
 
 
     # def plot_makespan_by_pipeline():
