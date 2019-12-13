@@ -482,6 +482,15 @@ class SwarpInstance:
 
         return short_s
 
+    def salloc_str():
+        s = ''
+        s = "salloc -N 1 -C haswell -q interactive -t 1:00:00 --bbf=bbf.conf\n"
+        return s
+
+    def bbconf_salloc():
+        s = ''
+        s = "#DW jobdw capacity=100GB access_mode=striped type=scratch\n"
+        return s
 
     def average_loop(self):
         s = ''
@@ -747,14 +756,29 @@ class SwarpInstance:
         return string
 
     @staticmethod
-    def write_launch(file=WRAPPER, overide=False):
+    def write_launch(file=WRAPPER, overide=True):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
         with open(file, 'w') as f:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-    def write(self, file, manual_stage=True, overide=False):
+    @staticmethod
+    def write_interactive_launch(file="interactive.sh", overide=True):
+        if os.path.exists(file):
+            raise FileNotFoundError("file {} already exists.".format(file))
+
+        # TODO: fix this temporary thing
+        with open("bbf.conf", 'w') as f:
+            f.write(SwarpInstance.bbconf_salloc())      
+
+        with open(file, 'w') as f:
+            f.write(SwarpInstance.salloc_str())
+        
+        os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
+
+
+    def write(self, file, manual_stage=True, overide=True):
         if not overide and os.path.exists(file):
             raise FileNotFoundError("file {} already exists".format(file))
 
@@ -794,6 +818,11 @@ class SwarpInstance:
             pass
         try:
             SwarpInstance.write_launch(overide=overide)
+        except FileNotFoundError:
+            sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
+            pass
+        try:
+            SwarpInstance.write_interactive_launch(overide=overide)
         except FileNotFoundError:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
