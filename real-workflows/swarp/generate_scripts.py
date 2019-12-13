@@ -764,7 +764,7 @@ class SwarpInstance:
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
     @staticmethod
-    def write_interactive_launch(file="interactive.sh", overide=True):
+    def write_interactive_launch(file="start_interactive.sh", overide=True):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
 
@@ -810,6 +810,14 @@ class SwarpInstance:
             # f.write(self.script_ending())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
+
+        with open("interactive_"+file, 'w') as f:
+            f.write(self.dw_temporary())
+            f.write(self.script_modules())
+            f.write(self.script_header())
+            f.write(self.average_loop())
+
+        os.chmod("interactive_"+file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
         try:
             SwarpInstance.write_bbinfo(overide=overide)
