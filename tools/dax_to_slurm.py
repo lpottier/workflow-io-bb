@@ -5,6 +5,7 @@ import pwd
 import sys
 import time
 import stat
+import math
 import argparse
 import importlib
 import shlex # for shlex.split
@@ -15,11 +16,20 @@ import networkx.drawing.nx_pydot as pydot
 
 import matplotlib.pyplot as plt
 limits = plt.axis('off')
-# options = {
-#     'node_color': 'black',
-#     'node_size': 100,
-#     'width': 2,
-# }
+options = {
+    'node_color': 'black',
+    'node_size': 100,
+    'width': 2,
+}
+
+# For Haswell
+#name: (max_node, max_walltime_hour,maxjob_submission, maxjob_execution)
+nersc_queue = {
+    "debug": (64,0.5,5,2), 
+    "regular": (1932, 48, 5000,math.inf), 
+    "interactive":(64,4,2,2),
+    "premium":(5,1772,48,math.inf),
+}
 
 class Job:
     def __init__(self, xml_job, schema):
@@ -328,11 +338,11 @@ def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     return s
 
 # take as input a ADAG
-def create_slurm_workflow(adag, output, bin_dir, input_dir, queue=("debug",5), wrapper=False):
+def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False):
     job_wrapper = [
-        "#SBATCH -p {}".format(queue[0]),
+        "#SBATCH -p {}".format(queue),
         "#SBATCH -C haswell",
-        "#SBATCH -t 00:20:00",
+        "#SBATCH -t 00:30:00",
         "#SBATCH -o output.%j",
         "#SBATCH -e error.%j",
         "#SBATCH --mail-user=lpottier@isi.edu",
@@ -395,12 +405,13 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue=("debug",5), w
         #jid2=$(sbatch --dependency=afterany:$jid1  job2.sh)
         roots = G.roots()
         f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
+        max_job_sub = nersc_queue[queue][3]
         for i,u in enumerate(G):
-            if i >= queue[1]:
+            if i >= max_job_sub:
                 # We have reach the max job submission
-                # "queue[1]-1 means here that we wait for one free slot available
-                # "queue[1]-queue[1]=0 would mean that we wait the queue is empty before re-submitting jobs
-                f.write(slurm_sync(queue[0], queue[1], queue[1]-1, 10))
+                # "max_job_sub-1 means here that we wait for one free slot available
+                # "max_job_sub-max_job_sub=0 would mean that we wait the queue is empty before re-submitting jobs
+                f.write(slurm_sync(queue, max_job_sub, max_job_sub-1, 10))
                 f.write("\n")
 
             if wrapper:
@@ -439,12 +450,12 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue=("debug",5), w
     os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Generate Slurm/LSF compatible workflow from DAX files')
+    parser = argparse.ArgumentParser(description='Generate Slurm compatible workflow from DAX files')
     
     parser.add_argument('--dax', '-d', type=str, nargs='?',
                         help='DAX file')
     parser.add_argument('--scheduler', '-s', type=str, nargs='?', default="slurm",
-                        help='Scheduler (slurm or lsf)')
+                        help='Scheduler (slurm or lsf (NOT YET SUPPORTED))')
 
     parser.add_argument('--bin', '-b', type=str, nargs='?', default=None,
                         help='Bin directory  (erase bin directory provided by DAX)')
@@ -453,10 +464,14 @@ if __name__ == '__main__':
                         help='Input directory (erase input directory provided by DAX)')
 
     parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
-                        help='Queue to execute the workflow')
+                        help='Queue to execute the workflow: debug, interactive, regular, premium')
 
     args = parser.parse_args()
     dax_id = os.path.basename(args.dax).split('.')[0]
+
+    if args.queue not in nersc_queue:
+        sys.stderr.write(" === Unknown submission queue -> use \"debug\" queue\n")
+        args.queue = "debug"
 
     sys.stderr.write(" === Generate compatible workflow for HPC schedulers from DAX files\n")
     today = time.localtime()
@@ -467,10 +482,12 @@ if __name__ == '__main__':
                                                     today.tm_min, 
                                                     today.tm_sec)
                                                 )
-    sys.stderr.write(" === DAX file        : {}\n".format(args.dax))
-    sys.stderr.write("     Scheduler       : {}\n".format(args.scheduler))
-    sys.stderr.write("     Bin directory   : {}\n".format(args.bin))
-    sys.stderr.write("     Input directory : {}\n".format(args.input))
+    sys.stderr.write(" === DAX file             : {}\n".format(args.dax))
+    sys.stderr.write("     Scheduler            : {}\n".format(args.scheduler))
+    sys.stderr.write("     Bin directory        : {}\n".format(args.bin))
+    sys.stderr.write("     Input directory      : {}\n".format(args.input))
+    sys.stderr.write("     Queue                : {}\n".format(args.queue))
+    sys.stderr.write("     Job submission limit : {}\n".format(nersc_queue[args.queue][3]))
 
 
     # output_dir = "{}-{}/".format(dax_id, args.scheduler)
@@ -485,7 +502,12 @@ if __name__ == '__main__':
     # sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
 
-    create_slurm_workflow(adag=G, output="submit.sh", bin_dir=args.bin, input_dir=args.input)
+    create_slurm_workflow(
+        adag=G, 
+        output="submit.sh", 
+        bin_dir=args.bin, 
+        input_dir=args.input,
+        queue=args.queue)
 
     sys.stderr.write(" === submit.sh written in current directory {}\n".format(os.getcwd()))
 
