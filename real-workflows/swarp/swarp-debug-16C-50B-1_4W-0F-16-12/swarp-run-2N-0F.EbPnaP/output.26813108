@@ -1,0 +1,271 @@
+File list used: files_to_stage.txt
+List of files used: files_to_stage.txt
+Number of files staged in BB: 0
+#### Starting run 1... 2019-12-16 12:17:10.360401085-08:00
+OUTPUT_DIR -> /var/opt/cray/dws/mounts/batch/26813108_striped_scratch//swarp-scaling.batch.16c.0f.26813108//1
+LOCAL_OUTPUT_DIR -> swarp-scaling.batch.16c.0f.26813108//1
+Number of files kept in PFS:0/0
+NODE=2
+TASK=2
+CORE=16
+NTASKS_PER_NODE=
+Compute nodes: nid00645
+nid00645 
+session ID is: 28336
+instance ID is: 18842
+fragments list:
+frag state instID capacity gran node
+1418842  CA-- 17797   1.36TiB nid09293 
+1471554  CA-- 18842  20.14GiB nid03022 
+1471555  CA-- 18842  20.14GiB nid03021 
+1471556  CA-- 18842  20.14GiB nid11921 
+Starting STAGE_IN... 2019-12-16 12:17:16.083122293-08:00
+SIZE (MB)           : 0.0
+TIME (S)            : 0.0 0.0
+DURATION (S)        : 0.0011242
+EFFICIENCY          : 0.0
+BANDWITH (MB/S)     : 0.0
+TIME STAGE_IN .090105137
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111274755_2_o_38996_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111294943_2_o_39822_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111294943_2_o_39822_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111284696_2_o_39396_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111284696_2_o_39396_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111274755_2_o_38996_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111304878_2_o_40204_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111304878_2_o_40204_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.weight.fits                                     16.00433349609375 MB
+
+ON BURST BUFFERS                                                                                                                                       0.0% (0.0 MB)
+0 0
+Starting RESAMPLE... 2019-12-16 12:17:16.291061728-08:00
+Launching RESAMPLE process 1 at:2019-12-16 12:17:16.299615207-08:00 ... 
+done
+
+Launching RESAMPLE process 2 at:2019-12-16 12:17:16.304679679-08:00 ... 
+done
+
+TIME RESAMPLE 92.519051170
+Starting COMBINE... 2019-12-16 12:18:48.844181149-08:00
+Launching COMBINE process 1 at:2019-12-16 12:18:48.852963581-08:00 ... 
+done
+
+Launching COMBINE process 2 at:2019-12-16 12:18:48.857816259-08:00 ... 
+done
+
+TIME COMBINE 77.851443863
+1.1G	/var/opt/cray/dws/mounts/batch/26813108_striped_scratch/
+Starting STAGE_OUT... 2019-12-16 12:20:06.766088368-08:00
+Launching STAGEOUT process 1 at:2019-12-16 12:20:06.775432608-08:00 ... 
+done
+
+Launching STAGEOUT process 2 at:2019-12-16 12:20:06.779739502-08:00 ... 
+done
+
+output.resample.26813108.1                         (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+error.resample.26813108.1                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+resample.xml                                       (0.0234 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+stat.resample.26813108.1.xml                       (0.643 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+output.combine.26813108.1                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+error.combine.26813108.1                           (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+coadd.fits                                         (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+coadd.weight.fits                                  (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+combine.xml                                        (0.0249 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+stat.combine.xml.26813108.1                        (0.09 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/1//
+SIZE (MB)           : 99.669
+TIME (S)            : 0.12573 0.12573
+DURATION (S)        : 0.60255
+EFFICIENCY          : 0.79879
+BANDWITH (MB/S)     : 792.7
+output.resample.26813108.2                         (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+error.resample.26813108.2                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+resample.xml                                       (0.0234 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+stat.resample.26813108.2.xml                       (0.532 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+output.combine.26813108.2                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+error.combine.26813108.2                           (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+coadd.fits                                         (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+coadd.weight.fits                                  (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+combine.xml                                        (0.0249 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+stat.combine.xml.26813108.2                        (0.09 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1/2//
+SIZE (MB)           : 99.559
+TIME (S)            : 0.12383 0.12383
+DURATION (S)        : 0.65926
+EFFICIENCY          : 0.96442
+BANDWITH (MB/S)     : 804.0
+files_to_stage.txt                                 (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+output.log                                         (0.00627 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+bb.log                                             (0.000244 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+bb_alloc.log                                       (3.34e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+stage-in-pfs.csv                                   (4.86e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+stage-in-bb.csv                                    (4.86e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+stage-in-pfs-global.csv                            (0.000221 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+stage-in-bb-global.csv                             (0.000173 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+resample_files.txt                                 (0.00165 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+data-stagedin.log                                  (3.81e-06 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+slurm.env                                          (0.000918 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//1//
+SIZE (MB)           : 0.009614
+TIME (S)            : 0.044246 0.044246
+DURATION (S)        : 0.11264
+EFFICIENCY          : 0.63965
+BANDWITH (MB/S)     : 0.21728
+TIME STAGE_OUT 1.051381849
+========
+TIME TOTAL 171.511982019
+#### Ending run 1... 2019-12-16 12:20:07.855175826-08:00
+#### Starting run 2... 2019-12-16 12:20:07.857635629-08:00
+OUTPUT_DIR -> /var/opt/cray/dws/mounts/batch/26813108_striped_scratch//swarp-scaling.batch.16c.0f.26813108//2
+LOCAL_OUTPUT_DIR -> swarp-scaling.batch.16c.0f.26813108//2
+Number of files kept in PFS:0/0
+NODE=2
+TASK=2
+CORE=16
+NTASKS_PER_NODE=
+Compute nodes: nid00645
+nid00645 
+session ID is: 28336
+instance ID is: 18842
+fragments list:
+frag state instID capacity gran node
+1418842  CA-- 17797   1.36TiB nid09293 
+1471554  CA-- 18842  20.14GiB nid03022 
+1471555  CA-- 18842  20.14GiB nid03021 
+1471556  CA-- 18842  20.14GiB nid11921 
+Starting STAGE_IN... 2019-12-16 12:20:20.666541505-08:00
+SIZE (MB)           : 0.0
+TIME (S)            : 0.0 0.0
+DURATION (S)        : 0.00063481
+EFFICIENCY          : 0.0
+BANDWITH (MB/S)     : 0.0
+TIME STAGE_IN .105784191
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111274755_2_o_38996_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111294943_2_o_39822_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111294943_2_o_39822_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111184953_2_o_36749_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111284696_2_o_39396_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111284696_2_o_39396_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111095206_2_o_34706_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111234857_2_o_37754_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111274755_2_o_38996_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025412_2_o_33288_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111035427_2_o_33741_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111015420_2_o_32874_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111085228_2_o_34301_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111304878_2_o_40204_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111155050_2_o_35570_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111224851_2_o_37387_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111025428_2_o_33289_06.w.fits                                            32.02789306640625 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111265053_2_o_38612_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111304878_2_o_40204_06.w.weight.fits                                     16.00433349609375 MB
+/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/input/PTF201111165032_2_o_35994_06.w.weight.fits                                     16.00433349609375 MB
+
+ON BURST BUFFERS                                                                                                                                       0.0% (0.0 MB)
+0 0
+Starting RESAMPLE... 2019-12-16 12:20:20.911065972-08:00
+Launching RESAMPLE process 1 at:2019-12-16 12:20:20.921286455-08:00 ... 
+done
+
+Launching RESAMPLE process 2 at:2019-12-16 12:20:20.926962005-08:00 ... 
+done
+
+TIME RESAMPLE 86.689345260
+Starting COMBINE... 2019-12-16 12:21:47.639220936-08:00
+Launching COMBINE process 1 at:2019-12-16 12:21:47.648987354-08:00 ... 
+done
+
+Launching COMBINE process 2 at:2019-12-16 12:21:47.655224455-08:00 ... 
+done
+
+TIME COMBINE 81.521870613
+2.2G	/var/opt/cray/dws/mounts/batch/26813108_striped_scratch/
+Starting STAGE_OUT... 2019-12-16 12:23:09.254424636-08:00
+Launching STAGEOUT process 1 at:2019-12-16 12:23:09.265602940-08:00 ... 
+done
+
+Launching STAGEOUT process 2 at:2019-12-16 12:23:09.271348309-08:00 ... 
+done
+
+output.resample.26813108.2                         (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+error.resample.26813108.2                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+resample.xml                                       (0.0234 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+stat.resample.26813108.2.xml                       (0.813 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+output.combine.26813108.2                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+error.combine.26813108.2                           (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+coadd.fits                                         (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+coadd.weight.fits                                  (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+combine.xml                                        (0.0249 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+stat.combine.xml.26813108.2                        (0.09 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/2//
+SIZE (MB)           : 99.84
+TIME (S)            : 0.12409 0.12409
+DURATION (S)        : 0.48656
+EFFICIENCY          : 0.93181
+BANDWITH (MB/S)     : 804.55
+output.resample.26813108.1                         (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+error.resample.26813108.1                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+resample.xml                                       (0.0234 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+stat.resample.26813108.1.xml                       (0.94 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+output.combine.26813108.1                          (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+error.combine.26813108.1                           (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+coadd.fits                                         (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+coadd.weight.fits                                  (49.4 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+combine.xml                                        (0.0249 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+stat.combine.xml.26813108.1                        (0.0901 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2/1//
+SIZE (MB)           : 99.966
+TIME (S)            : 0.12577 0.12577
+DURATION (S)        : 0.66904
+EFFICIENCY          : 0.90157
+BANDWITH (MB/S)     : 794.81
+files_to_stage.txt                                 (0.0 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+output.log                                         (0.00627 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+bb.log                                             (0.000244 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+bb_alloc.log                                       (3.34e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+stage-in-pfs.csv                                   (4.86e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+stage-in-bb.csv                                    (4.86e-05 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+stage-in-pfs-global.csv                            (0.000221 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+stage-in-bb-global.csv                             (0.000173 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+resample_files.txt                                 (0.00165 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+data-stagedin.log                                  (3.81e-06 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+slurm.env                                          (0.000918 MB) => /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/swarp-run-2N-0F.EbPnaP/swarp-scaling.batch.16c.0f.26813108//2//
+SIZE (MB)           : 0.009614
+TIME (S)            : 0.043647 0.043647
+DURATION (S)        : 0.10674
+EFFICIENCY          : 0.4236
+BANDWITH (MB/S)     : 0.22027
+TIME STAGE_OUT 1.110131106
+========
+TIME TOTAL 169.427131170
+#### Ending run 2... 2019-12-16 12:23:10.407069233-08:00

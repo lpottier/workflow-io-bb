@@ -1,0 +1,58 @@
+Traceback (most recent call last):
+  File "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//copy.py", line 479, in <module>
+    copy_fromlist(args)
+  File "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//copy.py", line 248, in copy_fromlist
+    statistics.mean(utime_files),
+  File "/usr/lib64/python3.6/statistics.py", line 311, in mean
+    raise StatisticsError('mean requires at least one data point')
+statistics.StatisticsError: mean requires at least one data point
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+Traceback (most recent call last):
+  File "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//copy.py", line 479, in <module>
+    copy_fromlist(args)
+  File "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//copy.py", line 248, in copy_fromlist
+    statistics.mean(utime_files),
+  File "/usr/lib64/python3.6/statistics.py", line 311, in mean
+    raise StatisticsError('mean requires at least one data point')
+statistics.StatisticsError: mean requires at least one data point
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109
+srun: Job 26813109 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for job 26813109

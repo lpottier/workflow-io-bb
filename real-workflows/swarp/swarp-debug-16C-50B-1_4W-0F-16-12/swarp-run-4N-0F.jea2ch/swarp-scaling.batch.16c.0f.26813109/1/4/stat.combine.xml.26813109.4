@@ -1,0 +1,1422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-12-16T12:24:02.407-08:00" duration="32.653" interface="ipogif0" hostaddr="10.128.2.220" hostname="nid00727" pid="14068" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-12-16T12:24:02.441-08:00" duration="32.618" pid="14069">
+    <usage utime="7.208" stime="10.656" maxrss="1040112" minflt="259618" majflt="0" nswap="0" inblock="568" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="3772987" nivcsw="5"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="738336" inode="144191976101662615" nlink="1" blksize="4194304" blocks="1448" mtime="2019-10-23T11:09:31-07:00" atime="2019-12-16T12:23:26-08:00" ctime="2019-10-23T11:09:31-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12//combine.swarp</arg>
+      <arg nr="3">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="4">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="6">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="8">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="9">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="10">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="12">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="13">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="14">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="15">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="17">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="18">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="14068" pid="14069" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.451116" stop="1576527875.055181" utime="7.200" stime="10.650" iowait="0.040" finthreads="1" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040112" rchar="962783642" wchar="103725521" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12807">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="7853" nwrite="145" bseek="0" nseek="0" size="7853"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/combine.swarp" bread="4896" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4896"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/combine.xml" bread="0" nread="0" bwrite="26148" nwrite="4" bseek="0" nseek="0" size="26148"/>
+    </proc>
+    <proc ppid="14068" pid="14072" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578426" stop="1576527875.025629" utime="7.200" stime="10.620" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039864" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14073" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578570" stop="1576527875.025091" utime="7.200" stime="10.620" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039664" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14074" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578685" stop="1576527875.023961" utime="7.200" stime="10.620" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039588" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14075" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578795" stop="1576527875.023416" utime="7.200" stime="10.620" iowait="0.000" finthreads="6" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039588" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14077" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578931" stop="1576527875.022792" utime="7.200" stime="10.620" iowait="0.000" finthreads="7" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039116" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14079" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579051" stop="1576527875.022156" utime="7.200" stime="10.620" iowait="0.000" finthreads="8" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039020" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14081" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579175" stop="1576527875.021551" utime="7.200" stime="10.620" iowait="0.000" finthreads="9" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039020" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14083" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579314" stop="1576527875.020996" utime="7.200" stime="10.620" iowait="0.000" finthreads="10" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038752" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14085" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579429" stop="1576527875.020440" utime="7.200" stime="10.620" iowait="0.000" finthreads="11" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038540" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14087" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579557" stop="1576527875.019848" utime="7.200" stime="10.620" iowait="0.000" finthreads="12" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038408" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14089" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579683" stop="1576527875.019207" utime="7.200" stime="10.620" iowait="0.000" finthreads="13" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038180" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14091" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579804" stop="1576527875.018618" utime="7.200" stime="10.620" iowait="0.000" finthreads="14" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038148" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14093" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579947" stop="1576527875.018044" utime="7.200" stime="10.620" iowait="0.000" finthreads="15" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038052" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14095" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580062" stop="1576527875.017261" utime="7.200" stime="10.620" iowait="0.000" finthreads="16" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1037788" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.czaIzG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.PZ6cqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14068" pid="14097" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580226" stop="1576527875.015761" utime="7.200" stime="10.620" iowait="0.000" finthreads="18" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1037788" rchar="962783642" wchar="103699331" rbytes="290816" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" <?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-12-16T12:24:02.390-08:00" duration="32.674" interface="ipogif0" hostaddr="10.128.2.165" hostname="nid00672" pid="62640" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-12-16T12:24:02.435-08:00" duration="32.628" pid="62643">
+    <usage utime="7.110" stime="10.782" maxrss="1040156" minflt="259614" majflt="0" nswap="0" inblock="792" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="3776498" nivcsw="9"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="738336" inode="144191976101662615" nlink="1" blksize="4194304" blocks="1448" mtime="2019-10-23T11:09:31-07:00" atime="2019-12-16T12:23:26-08:00" ctime="2019-10-23T11:09:31-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12//combine.swarp</arg>
+      <arg nr="3">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="4">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="6">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="8">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="9">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="10">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="12">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="13">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="14">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="15">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="17">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="18">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="62640" pid="62643" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.450829" stop="1576527875.059256" utime="7.110" stime="10.780" iowait="0.020" finthreads="1" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040156" rchar="962783642" wchar="103725521" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12807">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="7853" nwrite="145" bseek="0" nseek="0" size="7853"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/combine.swarp" bread="4896" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4896"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/combine.xml" bread="0" nread="0" bwrite="26148" nwrite="4" bseek="0" nseek="0" size="26148"/>
+    </proc>
+    <proc ppid="62640" pid="62644" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586019" stop="1576527875.024881" utime="7.100" stime="10.750" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039908" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62645" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586141" stop="1576527875.023719" utime="7.100" stime="10.750" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039748" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62646" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586226" stop="1576527875.023106" utime="7.100" stime="10.750" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039748" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62647" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586354" stop="1576527875.022416" utime="7.100" stime="10.750" iowait="0.000" finthreads="6" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039584" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62649" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586507" stop="1576527875.021804" utime="7.100" stime="10.750" iowait="0.000" finthreads="7" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039444" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62651" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586590" stop="1576527875.021307" utime="7.100" stime="10.750" iowait="0.000" finthreads="8" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039340" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62653" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586710" stop="1576527875.020782" utime="7.100" stime="10.750" iowait="0.000" finthreads="9" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039168" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62655" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586856" stop="1576527875.020147" utime="7.100" stime="10.750" iowait="0.000" finthreads="10" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039056" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62657" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586958" stop="1576527875.019641" utime="7.100" stime="10.750" iowait="0.000" finthreads="11" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039032" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62659" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587079" stop="1576527875.019075" utime="7.100" stime="10.750" iowait="0.000" finthreads="12" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038944" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62661" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587222" stop="1576527875.018547" utime="7.100" stime="10.750" iowait="0.000" finthreads="13" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038752" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62663" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587329" stop="1576527875.017970" utime="7.100" stime="10.750" iowait="0.000" finthreads="14" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038704" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62664" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587457" stop="1576527875.017269" utime="7.100" stime="10.750" iowait="0.000" finthreads="15" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038480" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62666" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587574" stop="1576527875.016723" utime="7.100" stime="10.750" iowait="0.000" finthreads="16" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038300" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62668" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587678" stop="1576527875.015217" utime="7.100" stime="10.750" iowait="0.000" finthreads="18" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038172" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62640" pid="62670" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587813" stop="1576527875.015097" utime="7.100" stime="10.750" iowait="0.000" finthreads="18" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038172" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libgcc_s.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="96680"/>
+    </proc>
+    <proc ppid="62640" pid="62671" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587927" stop="1576527875.024365" utime="7.100" stime="10.750" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039908" rchar="962783642" wchar="103699331" rbytes="405504" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.3TAf2a" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.tE83IJ" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="26813109" lrmtype="slurm"/>
+  <cwd>/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4</cwd>
+  <usage utime="3.543" stime="9.916" maxrss="6924" minflt="502" majflt="1" nswap="0" inblock="108" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="827354" nivcsw="24"/>
+  <machine page-size="4096">
+    <stamp>2019-12-16T12:24:02.390-08:00</stamp>
+    <uname system="linux" nodename="nid00672" release="4.12.14-150.17_5.0.87-cray_ari_c" machine="x86_64">#1 SMP Tue Nov 19 02:19:53 UTC 2019 (b97317c)</uname>
+    <linux>
+      <ram total="131895080" free="128873852" shared="397896" buffer="2076"/>
+      <swap total="0" free="0"/>
+      <boot idle="33059889.910">2019-12-05T14:37:18.861-08:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="4.38" min5="4.34" min15="11.20"/>
+      <procs total="815" running="2" sleeping="813" vmsize="10888360" rss="366920"/>
+      <task total="861" running="2" sleeping="859"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-12-05T14:47:45-08:00" atime="2019-12-05T14:47:45-08:00" ctime="2019-12-05T14:47:45-08:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.3TAf2a" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="4932912" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.tE83IJ" descriptor="4"/>
+    <statinfo mode="0100600" size="7853" inode="4932913" nlink="1" blksize="4096" blocks="16" mtime="2019-12-16T12:24:35-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:35-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+----- SWarp 2.38.0 started on 2019-12-16 at 12:24:02 with 16 threads
+
+Examining input data ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.weight.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.weight.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.weight.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.weight.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.weight.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.weight.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.weight.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.weight.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.weight.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.weight.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.weight.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.weight.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.weight.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.weight.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.weight.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.weight.fits ...
+Creating NEW output image ...
+Creating NEW weight-map ...
+
+------- Output File coadd.fits:
+    &quot;no ident&quot;  WEIGHTED  no ext. header  3600x3600  32 bits (floats)
+    Center: 14:01:00.00 +54:15:00.0   60&apos;x60&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 0 e-/ADU   Flux scaling (astrom/photom): 1 X / 1 X
+
+Loading input data ...
+
+-------------- File PTF201111015420_2_o_32874_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.54 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 119.2759   RMS: 11.63282   Weight scale: 1
+
+
+-------------- File PTF201111025412_2_o_33288_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3372  32 bits (floats)
+    Center: 14:01:49.26 +54:13:05.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 110.2946   RMS: 11.38889   Weight scale: 1
+
+
+-------------- File PTF201111025428_2_o_33289_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3371  32 bits (floats)
+    Center: 14:01:49.26 +54:13:04.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 137.8565   RMS: 12.12808   Weight scale: 1
+
+
+-------------- File PTF201111035427_2_o_33741_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3378  32 bits (floats)
+    Center: 14:01:49.14 +54:13:08.4   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 116.4897   RMS: 12.96285   Weight scale: 1
+
+
+-------------- File PTF201111085228_2_o_34301_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3377  32 bits (floats)
+    Center: 14:01:50.45 +54:13:07.8   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 74.64999   RMS: 13.19936   Weight scale: 1
+
+
+-------------- File PTF201111095206_2_o_34706_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.83 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 183.7839   RMS: 15.27972   Weight scale: 1
+
+
+-------------- File PTF201111155050_2_o_35570_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3375  32 bits (floats)
+    Center: 14:01:49.94 +54:13:06.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 114.2248   RMS: 12.80604   Weight scale: 1
+
+
+-------------- File PTF201111165032_2_o_35994_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.94 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 99.6018   RMS: 12.30586   Weight scale: 1
+
+
+-------------- File PTF201111184953_2_o_36749_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3380  32 bits (floats)
+    Center: 14:01:50.23 +54:13:09.3   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 91.81 X
+    Background: 120.8314   RMS: 12.98723   Weight scale: 1
+
+
+-------------- File PTF201111224851_2_o_37387_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3379  32 bits (floats)
+    Center: 14:01:49.77 +54:13:08.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 65.78442   RMS: 14.06748   Weight scale: 1
+
+
+-------------- File PTF201111234857_2_o_37754_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3381  32 bits (floats)
+    Center: 14:01:49.83 +54:13:09.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 100.7 X
+    Background: 206.4612   RMS: 13.8399   Weight scale: 1
+
+
+-------------- File PTF201111265053_2_o_38612_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3387  32 bits (floats)
+    Center: 14:01:48.97 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 50.61902   RMS: 13.02685   Weight scale: 1
+
+
+-------------- File PTF201111274755_2_o_38996_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3387  32 bits (floats)
+    Center: 14:01:49.14 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 75.32168   RMS: 11.85545   Weight scale: 1
+
+
+-------------- File PTF201111284696_2_o_39396_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3384  32 bits (floats)
+    Center: 14:01:49.60 +54:13:11.4   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 76.36 X
+    Background: 88.89362   RMS: 11.94137   Weight scale: 1
+
+
+-------------- File PTF201111294943_2_o_39822_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.09 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 4394 X
+    Background: 130.9393   RMS: 11.89085   Weight scale: 1
+
+
+-------------- File PTF201111304878_2_o_40204_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3385  32 bits (floats)
+    Center: 14:01:48.92 +54:13:11.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 60.07642   RMS: 11.90138   Weight scale: 1
+
+-------------- Co-adding frames            
+Maximum overlap density: 16 frames
+Closing files ...
+
+&gt; All done (in 32.5 s)
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.zj8Spi" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="4932914" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-12-16T12:24:02.405-08:00" duration="33.080" interface="ipogif0" hostaddr="10.128.2.220" hostname="nid00727" pid="14067" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-12-16T12:24:02.441-08:00" duration="33.042" pid="14070">
+    <usage utime="7.837" stime="10.643" maxrss="1040112" minflt="259631" majflt="0" nswap="0" inblock="888" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="3768305" nivcsw="19"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="738336" inode="144191976101662615" nlink="1" blksize="4194304" blocks="1448" mtime="2019-10-23T11:09:31-07:00" atime="2019-12-16T12:23:26-08:00" ctime="2019-10-23T11:09:31-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12//combine.swarp</arg>
+      <arg nr="3">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="4">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="6">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="8">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="9">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="10">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="12">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="13">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="14">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="15">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="17">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="18">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="14067" pid="14070" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.451139" stop="1576527875.481607" utime="7.830" stime="10.640" iowait="0.020" finthreads="1" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040112" rchar="962783642" wchar="103725521" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12807">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="7853" nwrite="145" bseek="0" nseek="0" size="7853"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/combine.swarp" bread="4896" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4896"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/combine.xml" bread="0" nread="0" bwrite="26148" nwrite="4" bseek="0" nseek="0" size="26148"/>
+    </proc>
+    <proc ppid="14067" pid="14076" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578884" stop="1576527875.450825" utime="7.830" stime="10.610" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039864" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14078" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.578994" stop="1576527875.450216" utime="7.830" stime="10.610" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039716" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14080" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579142" stop="1576527875.449679" utime="7.830" stime="10.610" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039592" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14082" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579276" stop="1576527875.449121" utime="7.830" stime="10.610" iowait="0.000" finthreads="6" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039480" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14084" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579375" stop="1576527875.448545" utime="7.830" stime="10.610" iowait="0.000" finthreads="7" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039480" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14086" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579507" stop="1576527875.447990" utime="7.830" stime="10.610" iowait="0.000" finthreads="8" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039432" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14088" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579624" stop="1576527875.447426" utime="7.830" stime="10.610" iowait="0.000" finthreads="9" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039008" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14090" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579760" stop="1576527875.446769" utime="7.830" stime="10.610" iowait="0.000" finthreads="10" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038924" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14092" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579887" stop="1576527875.446214" utime="7.830" stime="10.610" iowait="0.000" finthreads="11" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038728" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14094" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.579999" stop="1576527875.445630" utime="7.830" stime="10.610" iowait="0.000" finthreads="12" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038536" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14096" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580109" stop="1576527875.445019" utime="7.830" stime="10.610" iowait="0.000" finthreads="13" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038500" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14098" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580253" stop="1576527875.444113" utime="7.830" stime="10.610" iowait="0.000" finthreads="14" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038420" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14099" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580351" stop="1576527875.443494" utime="7.830" stime="10.610" iowait="0.000" finthreads="15" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038396" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14101" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580470" stop="1576527875.442034" utime="7.830" stime="10.610" iowait="0.000" finthreads="16" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038224" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14103" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580597" stop="1576527875.441295" utime="7.830" stime="10.610" iowait="0.000" finthreads="17" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038224" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="14067" pid="14104" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580704" stop="1576527875.440181" utime="7.830" stime="10.610" iowait="0.000" finthreads="18" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038224" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libgcc_s.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="96680"/>
+    </proc>
+    <proc ppid="14067" pid="14105" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.580809" stop="1576527875.450876" utime="7.830" stime="10.610" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039864" rchar="962783642" wchar="103699331" rbytes="454656" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.x4ejAG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.IXnNqG" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="26813109" lrmtype="slurm"/>
+  <cwd>/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4</cwd>
+  <usage utime="3.607" stime="10.856" maxrss="6616" minflt="532" majflt="0" nswap="0" inblock="240" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="811957" nivcsw="28"/>
+  <machine page-size="4096">
+    <stamp>2019-12-16T12:24:02.405-08:00</stamp>
+    <uname system="linux" nodename="nid00727" release="4.12.14-150.17_5.0.87-cray_ari_c" machine="x86_64">#1 SMP Tue Nov 19 02:19:53 UTC 2019 (b97317c)</uname>
+    <linux>
+      <ram total="131895080" free="129270520" shared="393148" buffer="2144"/>
+      <swap total="0" free="0"/>
+      <boot idle="12362023.500">2019-12-12T20:47:19.476-08:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="3.49" min5="3.52" min15="11.49"/>
+      <procs total="792" running="2" sleeping="790" vmsize="6572420" rss="254448"/>
+      <task total="831" running="2" sleeping="829"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-12-12T20:50:15-08:00" atime="2019-12-12T20:50:15-08:00" ctime="2019-12-12T20:50:15-08:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.x4ejAG" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="1423748" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.IXnNqG" descriptor="4"/>
+    <statinfo mode="0100600" size="7853" inode="1423749" nlink="1" blksize="4096" blocks="16" mtime="2019-12-16T12:24:35-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:35-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+----- SWarp 2.38.0 started on 2019-12-16 at 12:24:02 with 16 threads
+
+Examining input data ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.weight.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.weight.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.weight.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.weight.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.weight.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.weight.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.weight.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.weight.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.weight.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.weight.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.weight.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.weight.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.weight.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.weight.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.weight.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.weight.fits ...
+Creating NEW output image ...
+Creating NEW weight-map ...
+
+------- Output File coadd.fits:
+    &quot;no ident&quot;  WEIGHTED  no ext. header  3600x3600  32 bits (floats)
+    Center: 14:01:00.00 +54:15:00.0   60&apos;x60&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 0 e-/ADU   Flux scaling (astrom/photom): 1 X / 1 X
+
+Loading input data ...
+
+-------------- File PTF201111015420_2_o_32874_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.54 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 119.2759   RMS: 11.63282   Weight scale: 1
+
+
+-------------- File PTF201111025412_2_o_33288_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3372  32 bits (floats)
+    Center: 14:01:49.26 +54:13:05.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 110.2946   RMS: 11.38889   Weight scale: 1
+
+
+-------------- File PTF201111025428_2_o_33289_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3371  32 bits (floats)
+    Center: 14:01:49.26 +54:13:04.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 137.8565   RMS: 12.12808   Weight scale: 1
+
+
+-------------- File PTF201111035427_2_o_33741_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3378  32 bits (floats)
+    Center: 14:01:49.14 +54:13:08.4   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 116.4897   RMS: 12.96285   Weight scale: 1
+
+
+-------------- File PTF201111085228_2_o_34301_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3377  32 bits (floats)
+    Center: 14:01:50.45 +54:13:07.8   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 74.64999   RMS: 13.19936   Weight scale: 1
+
+
+-------------- File PTF201111095206_2_o_34706_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.83 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 183.7839   RMS: 15.27972   Weight scale: 1
+
+
+-------------- File PTF201111155050_2_o_35570_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3375  32 bits (floats)
+    Center: 14:01:49.94 +54:13:06.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 114.2248   RMS: 12.80604   Weight scale: 1
+
+
+-------------- File PTF201111165032_2_o_35994_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.94 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 99.6018   RMS: 12.30586   Weight scale: 1
+
+
+-------------- File PTF201111184953_2_o_36749_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3380  32 bits (floats)
+    Center: 14:01:50.23 +54:13:09.3   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 91.81 X
+    Background: 120.8314   RMS: 12.98723   Weight scale: 1
+
+
+-------------- File PTF201111224851_2_o_37387_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3379  32 bits (floats)
+    Center: 14:01:49.77 +54:13:08.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 65.78442   RMS: 14.06748   Weight scale: 1
+
+
+-------------- File PTF201111234857_2_o_37754_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3381  32 bits (floats)
+    Center: 14:01:49.83 +54:13:09.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 100.7 X
+    Background: 206.4612   RMS: 13.8399   Weight scale: 1
+
+
+-------------- File PTF201111265053_2_o_38612_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3387  32 bits (floats)
+    Center: 14:01:48.97 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 50.61902   RMS: 13.02685   Weight scale: 1
+
+
+-------------- File PTF201111274755_2_o_38996_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3387  32 bits (floats)
+    Center: 14:01:49.14 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 75.32168   RMS: 11.85545   Weight scale: 1
+
+
+-------------- File PTF201111284696_2_o_39396_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3384  32 bits (floats)
+    Center: 14:01:49.60 +54:13:11.4   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 76.36 X
+    Background: 88.89362   RMS: 11.94137   Weight scale: 1
+
+
+-------------- File PTF201111294943_2_o_39822_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.09 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 4394 X
+    Background: 130.9393   RMS: 11.89085   Weight scale: 1
+
+
+-------------- File PTF201111304878_2_o_40204_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3385  32 bits (floats)
+    Center: 14:01:48.92 +54:13:11.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 60.07642   RMS: 11.90138   Weight scale: 1
+
+-------------- Co-adding frames            
+Maximum overlap density: 16 frames
+Closing files ...
+
+&gt; All done (in 33.0 s)
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.BpEhhG" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="1423750" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2019-12-16T12:24:02.390-08:00" duration="33.128" interface="ipogif0" hostaddr="10.128.2.165" hostname="nid00672" pid="62641" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2019-12-16T12:24:02.435-08:00" duration="33.082" pid="62642">
+    <usage utime="7.641" stime="10.831" maxrss="1040156" minflt="259618" majflt="0" nswap="0" inblock="640" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="3768742" nivcsw="13"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="738336" inode="144191976101662615" nlink="1" blksize="4194304" blocks="1448" mtime="2019-10-23T11:09:31-07:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-10-23T11:09:31-07:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12//combine.swarp</arg>
+      <arg nr="3">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="4">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="6">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="8">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="9">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="10">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="12">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="13">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="14">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="15">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="17">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="18">/var/opt/cray/dws/mounts/batch/26813109_striped_scratch//swarp-scaling.batch.16c.0f.26813109//1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="62641" pid="62642" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.450836" stop="1576527875.515084" utime="7.640" stime="10.830" iowait="0.050" finthreads="1" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040156" rchar="962783642" wchar="103725521" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12807">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="7853" nwrite="145" bseek="0" nseek="0" size="7853"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-debug-16C-50B-1_4W-0F-16-12/combine.swarp" bread="4896" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4896"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="30040832" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="30003392" nread="3663" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="30092672" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="30069632" nread="3671" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="30037952" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="30084032" nread="3673" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="30098432" nread="3675" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="30089792" nread="3674" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="30158912" nread="3682" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="30173312" nread="3684" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="30118592" nread="3677" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="30043712" nread="3668" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="30127232" nread="3678" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="51845760" nwrite="6329" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/combine.xml" bread="0" nread="0" bwrite="26148" nwrite="4" bseek="0" nseek="0" size="26148"/>
+    </proc>
+    <proc ppid="62641" pid="62648" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586425" stop="1576527875.475378" utime="7.640" stime="10.790" iowait="0.000" finthreads="2" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040144" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62650" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586540" stop="1576527875.475020" utime="7.640" stime="10.790" iowait="0.000" finthreads="4" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040024" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62652" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586665" stop="1576527875.474771" utime="7.640" stime="10.790" iowait="0.000" finthreads="5" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039808" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62654" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586794" stop="1576527875.474592" utime="7.640" stime="10.790" iowait="0.000" finthreads="6" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039800" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62656" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.586951" stop="1576527875.474357" utime="7.640" stime="10.790" iowait="0.000" finthreads="7" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039660" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62658" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587097" stop="1576527875.474160" utime="7.640" stime="10.790" iowait="0.000" finthreads="8" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039576" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62660" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587204" stop="1576527875.473954" utime="7.640" stime="10.790" iowait="0.000" finthreads="9" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039424" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62662" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587328" stop="1576527875.473753" utime="7.640" stime="10.790" iowait="0.000" finthreads="10" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039308" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62665" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587485" stop="1576527875.473532" utime="7.640" stime="10.790" iowait="0.000" finthreads="11" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039080" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62667" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587668" stop="1576527875.473339" utime="7.640" stime="10.790" iowait="0.000" finthreads="12" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1039020" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62669" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587819" stop="1576527875.473145" utime="7.640" stime="10.790" iowait="0.000" finthreads="13" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038788" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62672" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.587972" stop="1576527875.472940" utime="7.640" stime="10.790" iowait="0.000" finthreads="14" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038552" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62673" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.588089" stop="1576527875.472610" utime="7.640" stime="10.790" iowait="0.000" finthreads="15" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038324" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62674" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.588205" stop="1576527875.472375" utime="7.640" stime="10.790" iowait="0.000" finthreads="16" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038140" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62675" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.588357" stop="1576527875.472023" utime="7.640" stime="10.790" iowait="0.000" finthreads="17" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1038140" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+    <proc ppid="62641" pid="62676" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.588455" stop="1576527875.471728" utime="7.640" stime="10.790" iowait="0.000" finthreads="18" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1037876" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="307089"/>
+      <file name="/lib64/libgcc_s.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="96680"/>
+    </proc>
+    <proc ppid="62641" pid="62677" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1576527842.588590" stop="1576527875.475207" utime="7.640" stime="10.790" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1843948" rsspeak="1040144" rchar="962783642" wchar="103699331" rbytes="327680" wbytes="0" cwbytes="0" syscr="117591" syscw="12800">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.ZTwu1b" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.e1wyIK" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7811"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="26813109" lrmtype="slurm"/>
+  <cwd>/var/opt/cray/dws/mounts/batch/26813109_striped_scratch/swarp-scaling.batch.16c.0f.26813109/1/4</cwd>
+  <usage utime="3.666" stime="10.417" maxrss="6920" minflt="502" majflt="1" nswap="0" inblock="112" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="813047" nivcsw="16"/>
+  <machine page-size="4096">
+    <stamp>2019-12-16T12:24:02.390-08:00</stamp>
+    <uname system="linux" nodename="nid00672" release="4.12.14-150.17_5.0.87-cray_ari_c" machine="x86_64">#1 SMP Tue Nov 19 02:19:53 UTC 2019 (b97317c)</uname>
+    <linux>
+      <ram total="131895080" free="128873852" shared="397896" buffer="2076"/>
+      <swap total="0" free="0"/>
+      <boot idle="33059889.910">2019-12-05T14:37:18.861-08:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="4.38" min5="4.34" min15="11.20"/>
+      <procs total="815" running="2" sleeping="813" vmsize="10888360" rss="368064"/>
+      <task total="861" running="2" sleeping="859"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2019-12-05T14:47:45-08:00" atime="2019-12-05T14:47:45-08:00" ctime="2019-12-05T14:47:45-08:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.ZTwu1b" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="4916934" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.e1wyIK" descriptor="4"/>
+    <statinfo mode="0100600" size="7853" inode="4916935" nlink="1" blksize="4096" blocks="16" mtime="2019-12-16T12:24:35-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:35-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+----- SWarp 2.38.0 started on 2019-12-16 at 12:24:02 with 16 threads
+
+Examining input data ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.weight.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.weight.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.weight.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.weight.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.weight.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.weight.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.weight.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.weight.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.weight.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.weight.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.weight.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.weight.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.weight.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.weight.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.weight.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.weight.fits ...
+Creating NEW output image ...
+Creating NEW weight-map ...
+
+------- Output File coadd.fits:
+    &quot;no ident&quot;  WEIGHTED  no ext. header  3600x3600  32 bits (floats)
+    Center: 14:01:00.00 +54:15:00.0   60&apos;x60&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 0 e-/ADU   Flux scaling (astrom/photom): 1 X / 1 X
+
+Loading input data ...
+
+-------------- File PTF201111015420_2_o_32874_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.54 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 119.2759   RMS: 11.63282   Weight scale: 1
+
+
+-------------- File PTF201111025412_2_o_33288_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3372  32 bits (floats)
+    Center: 14:01:49.26 +54:13:05.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 110.2946   RMS: 11.38889   Weight scale: 1
+
+
+-------------- File PTF201111025428_2_o_33289_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3371  32 bits (floats)
+    Center: 14:01:49.26 +54:13:04.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 137.8565   RMS: 12.12808   Weight scale: 1
+
+
+-------------- File PTF201111035427_2_o_33741_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3378  32 bits (floats)
+    Center: 14:01:49.14 +54:13:08.4   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 116.4897   RMS: 12.96285   Weight scale: 1
+
+
+-------------- File PTF201111085228_2_o_34301_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3377  32 bits (floats)
+    Center: 14:01:50.45 +54:13:07.8   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 74.64999   RMS: 13.19936   Weight scale: 1
+
+
+-------------- File PTF201111095206_2_o_34706_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.83 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 183.7839   RMS: 15.27972   Weight scale: 1
+
+
+-------------- File PTF201111155050_2_o_35570_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3375  32 bits (floats)
+    Center: 14:01:49.94 +54:13:06.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 114.2248   RMS: 12.80604   Weight scale: 1
+
+
+-------------- File PTF201111165032_2_o_35994_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.94 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 99.6018   RMS: 12.30586   Weight scale: 1
+
+
+-------------- File PTF201111184953_2_o_36749_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3380  32 bits (floats)
+    Center: 14:01:50.23 +54:13:09.3   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 91.81 X
+    Background: 120.8314   RMS: 12.98723   Weight scale: 1
+
+
+-------------- File PTF201111224851_2_o_37387_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3379  32 bits (floats)
+    Center: 14:01:49.77 +54:13:08.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 65.78442   RMS: 14.06748   Weight scale: 1
+
+
+-------------- File PTF201111234857_2_o_37754_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3381  32 bits (floats)
+    Center: 14:01:49.83 +54:13:09.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 100.7 X
+    Background: 206.4612   RMS: 13.8399   Weight scale: 1
+
+
+-------------- File PTF201111265053_2_o_38612_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3387  32 bits (floats)
+    Center: 14:01:48.97 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 50.61902   RMS: 13.02685   Weight scale: 1
+
+
+-------------- File PTF201111274755_2_o_38996_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3387  32 bits (floats)
+    Center: 14:01:49.14 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 75.32168   RMS: 11.85545   Weight scale: 1
+
+
+-------------- File PTF201111284696_2_o_39396_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3384  32 bits (floats)
+    Center: 14:01:49.60 +54:13:11.4   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 76.36 X
+    Background: 88.89362   RMS: 11.94137   Weight scale: 1
+
+
+-------------- File PTF201111294943_2_o_39822_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.09 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 4394 X
+    Background: 130.9393   RMS: 11.89085   Weight scale: 1
+
+
+-------------- File PTF201111304878_2_o_40204_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3385  32 bits (floats)
+    Center: 14:01:48.92 +54:13:11.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 60.07642   RMS: 11.90138   Weight scale: 1
+
+-------------- Co-adding frames            
+Maximum overlap density: 16 frames
+Closing files ...
+
+&gt; All done (in 33.0 s)
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.BIqCpj" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="4916936" nlink="1" blksize="4096" blocks="0" mtime="2019-12-16T12:24:02-08:00" atime="2019-12-16T12:24:02-08:00" ctime="2019-12-16T12:24:02-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>
