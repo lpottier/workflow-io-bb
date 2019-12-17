@@ -216,6 +216,18 @@ def copy_fromlist(args):
             except ZeroDivisionError as e:
                 ratio = 0
 
+            try:
+                utime_mean = statistics.mean(utime_files)
+                utime_sd = statistics.stdev(utime_files)
+                stime_mean = statistics.mean(stime_files)
+                stime_sd = statistics.stdev(stime_files)
+            except statistics.StatisticsError as e:
+                utime_mean = 0.0
+                utime_sd = 0.0
+                stime_mean = 0.0
+                stime_sd = 0.0
+
+
             writer_pfs.writerow([
                 len(files_notransfered)+len(files_transfered),
                 total_data_notransfer+total_data,
@@ -245,10 +257,10 @@ def copy_fromlist(args):
                 global_stime,
                 total_data/total_duration,
                 (global_utime+global_stime)/total_duration,
-                statistics.mean(utime_files),
-                statistics.stdev(utime_files), 
-                statistics.mean(stime_files),
-                statistics.stdev(stime_files),
+                utime_mean,
+                utime_sd, 
+                stime_mean,
+                stime_sd,
             ])
 
 
@@ -392,6 +404,18 @@ def copy_dir(args):
             except ZeroDivisionError as e:
                 ratio = 0
 
+            try:
+                utime_mean = statistics.mean(utime_files)
+                utime_sd = statistics.stdev(utime_files)
+                stime_mean = statistics.mean(stime_files)
+                stime_sd = statistics.stdev(stime_files)
+            except statistics.StatisticsError as e:
+                utime_mean = 0.0
+                utime_sd = 0.0
+                stime_mean = 0.0
+                stime_sd = 0.0
+
+
             writer_pfs.writerow([
                 len(all_files),
                 sum([os.path.getsize(x)/(1024.0**2) for x in all_files]),
@@ -420,10 +444,10 @@ def copy_dir(args):
                     global_stime,
                     total_data/total_duration,
                     (global_utime+global_stime)/total_duration,
-                    statistics.mean(utime_files),
-                    statistics.stdev(utime_files), 
-                    statistics.mean(stime_files),
-                    statistics.stdev(stime_files),
+                    utime_mean,
+                    utime_sd, 
+                    stime_mean,
+                    stime_sd,
             ])
 
 
