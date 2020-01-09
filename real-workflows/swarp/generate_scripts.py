@@ -267,26 +267,27 @@ class SwarpInstance:
         self.slurm_profile = slurm_profile
 
     def slurm_header(self):
-        string = "#!/bin/bash -l\n"
-        string += "#SBATCH -p {}\n".format(self.sched_config.queue())
+        string = "#!/bin/bash\n"
+        string += "#SBATCH --qos={}\n".format(self.sched_config.queue())
         if self.standalone:
             # string += "#SBATCH --nodes=@NODES@\n"
             string += "#SBATCH --ntasks=@NODES@\n"
         else:
-            string += "#SBATCH --nodes {}\n".format(self.sched_config.nodes())
+            string += "#SBATCH --nodes={}\n".format(self.sched_config.nodes())
             string += "#SBATCH --ntasks={}\n".format(self.sched_config.nodes())
 
-        string += "#SBATCH -C haswell\n"
+        string += "#SBATCH --constraint=haswell\n"
 
         string += "#SBATCH --ntasks-per-node=32\n"
         string += "#SBATCH --ntasks-per-socket=16\n"
-        string += "#SBATCH -t {}\n".format(self.sched_config.timeout())
+        string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
         string += "#SBATCH -e error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
         string += "#SBATCH --mail-type=FAIL,END\n"
-        string += "#SBATCH --export=ALL\n"
+        # string += "#SBATCH --export=ALL\n"
+        #string += "#SBATCH --exclusive=user\n"
         if self.slurm_profile:
             string += "#SBATCH --profile=ALL\n"
         # string += "#SBATCH -d singleton\n"
