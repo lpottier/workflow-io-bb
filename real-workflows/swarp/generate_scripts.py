@@ -354,7 +354,7 @@ class SwarpInstance:
         s += "\n"
         s += "# Test code to verify command line processing\n\n"
         s += "if [ -f \"$FILES_TO_STAGE\" ]; then\n"
-        s += "    echo \"File list used: $FILES_TO_STAGE\"\n"
+        s += "    echo \"List of files used: $FILES_TO_STAGE\"\n"
         s += "else\n"
         s += "    echo \"$FILES_TO_STAGE does not seem to exist\"\n"
         s += "    exit\n"
@@ -366,7 +366,6 @@ class SwarpInstance:
         s += "fi\n"
         s += "\n"
 
-        s += "echo \"List of files used: $FILES_TO_STAGE\"\n"
         s += "echo \"Number of files staged in BB: $COUNT\"\n"
         s += "\n"
 
@@ -377,8 +376,9 @@ class SwarpInstance:
 
         #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
         s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
-        s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
-        s += "LAUNCH=\"$SCRATCH/$SWARP_DIR/{}/{}\"\n".format(self.script_dir, WRAPPER)
+        # s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
+        s += "BASE=\"$CURRENT_DIR\"\n"
+        s += "LAUNCH=\"$CURRENT_DIR/{}\"\n".format(WRAPPER)
         s += "EXE={}/bin/swarp\n".format(SWARP_DIR)
         s += "COPY={}/copy.py\n".format(SWARP_DIR)
         s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
@@ -896,7 +896,7 @@ class SwarpRun:
                 f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
                 f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
                 f.write("    done\n")
-            f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"${outdir}\"\n")
+            f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
             f.write("    cd \"${outdir}\"\n")
             f.write("    sbatch ${script}\n")
             #TODO ADD waiting time debug queue
