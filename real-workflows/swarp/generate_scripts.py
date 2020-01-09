@@ -278,14 +278,14 @@ class SwarpInstance:
 
         string += "#SBATCH -C haswell\n"
 
-        string += "#SBATCH --ntasks-per-node=2\n"
-        string += "#SBATCH --ntasks-per-socket=1\n"
+        string += "#SBATCH --ntasks-per-node=32\n"
+        string += "#SBATCH --ntasks-per-socket=16\n"
         string += "#SBATCH -t {}\n".format(self.sched_config.timeout())
         string += "#SBATCH -J swarp-scaling\n"
         string += "#SBATCH -o output.%j\n"
         string += "#SBATCH -e error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
-        string += "#SBATCH --mail-type=FAIL\n"
+        string += "#SBATCH --mail-type=FAIL,END\n"
         string += "#SBATCH --export=ALL\n"
         if self.slurm_profile:
             string += "#SBATCH --profile=ALL\n"

@@ -3,6 +3,7 @@
 import statistics
 import os
 import csv
+import re
 import xml.etree.ElementTree as xml
 
 from enum import Enum,unique,auto
@@ -286,10 +287,14 @@ class KickstartEntry(object):
             raise ValueError("{} is not a regular file.".format(path))
         self._ftype = file_type
 
+        with open(self._path) as f:
+            temp_data = f.read()
+
         try:
-            self._tree = xml.ElementTree()
-            self._tree.parse(self._path)
-            self._root = self._tree.getroot()
+            # self._tree = xml.ElementTree()
+            #self._tree.parse(self._path)
+            self._root = xml.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", temp_data) + "</root>")
+            #self._root = self._tree.getroot()
         except xml.ParseError as e:
             print ("[error]", self._path,":",e)
             exit(-1)
