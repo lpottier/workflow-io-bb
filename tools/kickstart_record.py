@@ -285,9 +285,14 @@ class KickstartEntry(object):
         elif not self._path.is_file():
             raise ValueError("{} is not a regular file.".format(path))
         self._ftype = file_type
-        self._tree = xml.ElementTree()
-        self._tree.parse(self._path)
-        self._root = self._tree.getroot()
+
+        try:
+            self._tree = xml.ElementTree()
+            self._tree.parse(self._path)
+            self._root = self._tree.getroot()
+        except xml.ParseError as e:
+            print ("[error]", self._path,":",e)
+            exit(-1)
 
         # Parse machine
         self.machine = Machine(self._get_elem("machine"))
@@ -666,7 +671,7 @@ class KickstartDirectory:
             raise ValueError("error: {} is not a valid directory.".format(self.dir))
 
         #print(self.dir)
-        self.dir_exp = [Path(x) for x in self.dir.iterdir() if x.is_dir()]
+        self.dir_exp = [x for x in self.dir.iterdir() if x.is_dir()]
         self.log = []
         self.resample = {}
         self.combine = {}
@@ -680,50 +685,74 @@ class KickstartDirectory:
 
         self.makespan = {}  # Addition of tasks' execution time
 
-        #print(self.dir_exp)
+        print(self.dir,self.dir_exp)
         for i,d in enumerate(self.dir_exp):
-            dir_at_this_level = [Path(x) for x in d.iterdir() if x.is_dir()]
+            dir_at_this_level = [x for x in d.iterdir() if x.is_dir()]
             # folder should be named like that: 
             #   swarp-queue-xC-xB-x_yW-x_yF-day-month
-
+            print ("dir at this level: ", dir_at_this_level)
             raw_resample = []
             raw_combine = []
             output_log = []
             stage_in = []
             bb_info = []
-            for avg in dir_at_this_level:
-                raw_resample.append(avg / 'stat.resample.xml')
-                raw_combine.append(avg / 'stat.combine.xml')
+
+
+            if len(dir_at_this_level) != 1:
+                #Normally just swarp-scaling.batch ...
+                print("[error]: we need only one directory at this level")
+
+            pid_run = dir_at_this_level[0].name.split('.')[-1]
+
+            print("PID : ", pid_run)
+
+            avg_dir = [x for x in dir_at_this_level[0].iterdir() if x.is_dir()]
+
+            for avg in avg_dir:
+                print(avg)
+                #print(dir_at_this_level,avg)
                 output_log.append(avg / self.log)
                 stage_in.append(avg / self.stage_in_log)
                 bb_info.append(avg / 'data-stagedin.log')
-                
-            self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
-            self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
+
+                nb_pipeline = [x for x in avg.iterdir() if x.is_dir()]
+                for pipeline in nb_pipeline:
+                    id_pipeline = pipeline.parts[-1]
+
+                    resmpl_path = "stat.resample." + pid_run + "." + id_pipeline + ".xml"
+                    raw_resample.append(pipeline / resmpl_path)
+                    combine_path = "stat.combine." + pid_run + "." + id_pipeline + ".xml"
+                    raw_combine.append(pipeline / combine_path)
+
             self.stagein[d] = AvgStageInTask(list_csv_files=stage_in)
             self.outputlog[d] = AvgOutputLog(list_log_files=output_log)
 
+            # Check how to average for all pipeline
+            # Check how to average over each pipeline
+            self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
+            self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
 
-        ## PRINTING TEST
-        for run,d in self.resample.items():
-            data_run = d.data()
-            print("= Run {} averaged on {} runs:".format(run, len(data_run)))
-            # for u,v in data_run.items():
-            #     print("==> Run: {}".format(u))
-            #     print("        duration   : {:.3f}".format(v.duration()))
-            #     print("        ttime      : {:.3f}".format(v.ttime()))
-            #     print("        utime      : {:.3f}".format(v.utime()))
-            #     print("        stime      : {:.3f}".format(v.stime()))
-            #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
-            #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
-            #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
-            print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
-            print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
-            print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
-            print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
-            print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
-            print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
-            print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
+
+        # ## PRINTING TEST
+        # for run,d in self.resample.items():
+        #     data_run = d.data()
+        #     print("= Run {} averaged on {} runs:".format(run, len(data_run)))
+        #     # for u,v in data_run.items():
+        #     #     print("==> Run: {}".format(u))
+        #     #     print("        duration   : {:.3f}".format(v.duration()))
+        #     #     print("        ttime      : {:.3f}".format(v.ttime()))
+        #     #     print("        utime      : {:.3f}".format(v.utime()))
+        #     #     print("        stime      : {:.3f}".format(v.stime()))
+        #     #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
+        #     #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
+        #     #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
+        #     print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
+        #     print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
+        #     print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
+        #     print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
+        #     print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
+        #     print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
+        #     print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
 
     def root_dir(self):
         return self.dir
@@ -747,7 +776,15 @@ class KickstartDirectory:
 
 
 if __name__ == "__main__":
-    # test_record = KickstartEntry("stat.resample.xml")
+
+## TODO: fix
+ # 9861 &gt; WARNING: /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-regular-16C-100B-1_64W-0F-17-12//resample.swarp not found, using internal defaults
+ # 9862
+ # 9863 &#xe01b;[1M&gt;
+ # 9864 &#xe01b;[1A----- SWarp 2.38.0 started on 2019-12-19 at 00:36:42 with 64 threads
+
+
+    test_record = KickstartEntry("/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/swarp-regular-16C-100B-1_64W-0F-17-12/swarp-run-8N-0F.6TXXSk/swarp-scaling.batch.16c.0f.26829339/2/3/stat.resample.26829339.3.xml")
     # print(test_record.path())
     # print(test_record.time())
     # print(test_record.efficiency())
@@ -763,6 +800,9 @@ if __name__ == "__main__":
     # print(exp1.time())
     # print(exp1.efficiency())
 
-    test = KickstartDirectory("test_exp/")
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/"
+    
+
+    #test = KickstartDirectory(exp_dir+"swarp-regular-16C-100B-1_64W-0F-17-12/")
 
 

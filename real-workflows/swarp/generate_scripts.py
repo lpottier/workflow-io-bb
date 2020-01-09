@@ -403,6 +403,22 @@ class SwarpInstance:
         s += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
         s += "\n"
 
+        s += "if [ -f \"$RESAMPLE_CONFIG\" ]; then\n"
+        s += "    echo \"$RESAMPLE_CONFIG exist\"\n"
+        s += "else\n"
+        s += "    echo \"$RESAMPLE_CONFIG does not exist\"\n"
+        s += "    exit\n"
+        s += "fi\n"
+        s += "\n"
+
+        s += "if [ -f \"$COMBINE_CONFIG\" ]; then\n"
+        s += "    echo \"$COMBINE_CONFIG exist\"\n"
+        s += "else\n"
+        s += "    echo \"$COMBINE_CONFIG does not exist\"\n"
+        s += "    exit\n"
+        s += "fi\n"
+        s += "\n"
+
         s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
         s += "\n"
 
