@@ -272,7 +272,7 @@ class KickstartEntry(object):
     """
     KickstartEntry
     """
-    def __init__(self, path, file_type=FileType.XML):
+    def __init__(self, path, file_type=FileType.XML, multi_record=True):
         super(KickstartEntry, self).__init__()
 
         if file_type != FileType.XML and file_type != FileType.YAML:
@@ -287,14 +287,22 @@ class KickstartEntry(object):
             raise ValueError("{} is not a regular file.".format(path))
         self._ftype = file_type
 
-        with open(self._path) as f:
-            temp_data = f.read()
-
         try:
-            # self._tree = xml.ElementTree()
-            #self._tree.parse(self._path)
-            self._root = xml.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", temp_data) + "</root>")
-            #self._root = self._tree.getroot()
+            if not multi_record:
+                self._tree = xml.ElementTree()
+                self._tree.parse(self._path)
+                self._root = self._tree.getroot()
+            else:
+                with open(self._path) as f:
+                    first_line = f.readline()
+                    temp_data = f.read()
+
+                # delete all excpt the first one
+                #<?xml version="1.0" encoding="UTF-8"?>
+                temp_data = first_line + re.sub(r"(<\?xml[^>]+\?>)", "", temp_data)
+
+                self._root = xml.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", temp_data) + "</root>")
+
         except xml.ParseError as e:
             print ("[error]", self._path,":",e)
             exit(-1)
