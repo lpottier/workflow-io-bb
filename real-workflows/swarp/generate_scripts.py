@@ -676,6 +676,15 @@ class SwarpInstance:
         s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
+        s += "    tree\n"
+
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "        cd ${OUTPUT_DIR}/${process}\n"
+        s += "        ls\n"
+        s += "        cd ..\n"
+        s += "    done\n"
+        s += "\n"
+
         s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
