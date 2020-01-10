@@ -662,7 +662,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         else:
-            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -o \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l \"stat.resample.$SLURM_JOB_ID.${process}.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -692,7 +692,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         else:
-            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -o \"stat.combine.xml.$SLURM_JOB_ID.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun --cpus-per-task=$CORE_COUNT -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l \"stat.combine.$SLURM_JOB_ID.${process}.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
