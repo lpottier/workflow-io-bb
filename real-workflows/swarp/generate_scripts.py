@@ -847,7 +847,6 @@ class SwarpInstance:
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
         with open("interactive_"+file, 'w') as f:
-            f.write(self.dw_temporary())
             f.write(self.script_modules())
             f.write(self.script_header())
             f.write(self.average_loop())
