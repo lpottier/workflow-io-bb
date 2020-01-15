@@ -24,6 +24,36 @@ class FileType(Enum):
     XML = auto()
     YAML = auto()
 
+def check_multiple_xml_file(xml_file, sep = r"(<\?xml[^>]+\?>)"):
+    with open(xml_file, 'r') as f:
+        matches = re.findall(sep, f.read())
+        if len(matches) > 1:
+            return True
+    return False
+
+
+def split_multiple_xml_file(xml_file, sep = r"(<\?xml[^>]+\?>)"):
+    with open(xml_file, 'r') as f:
+        data = re.split(sep, f.read())
+
+    i = 1
+    preambule = ''
+    written_files = []
+    for d in data:
+        if d == '':
+            continue
+        m = re.search(sep, d)
+        if m:
+            preambule = d # we found the <?xml version="1.0" encoding="UTF-8"?>
+        else:
+            new_file = str(xml_file)+'.workflow'+str(i)
+            with open(new_file, 'w') as f:
+                f.write(preambule+d)
+            written_files.append(new_file)
+            i += 1
+
+    return written_files
+
 class Machine:
     """
     Machine statistics from KickStart record:
@@ -272,8 +302,8 @@ class KickstartEntry(object):
     """
     KickstartEntry
     """
-    def __init__(self, path, file_type=FileType.XML, multi_record=True):
-        super(KickstartEntry, self).__init__()
+    def __init__(self, path, file_type=FileType.XML):
+        #super(KickstartEntry, self).__init__()
 
         if file_type != FileType.XML and file_type != FileType.YAML:
             raise ValueError("{} is not a regular Kickstart output format. Please use XML or YAML.".format(file_type.name))
@@ -288,24 +318,16 @@ class KickstartEntry(object):
         self._ftype = file_type
 
         try:
-            if not multi_record:
-                self._tree = xml.ElementTree()
-                self._tree.parse(self._path)
-                self._root = self._tree.getroot()
-            else:
-                with open(self._path) as f:
-                    first_line = f.readline()
-                    temp_data = f.read()
-
-                # delete all excpt the first one
-                #<?xml version="1.0" encoding="UTF-8"?>
-                temp_data = first_line + re.sub(r"(<\?xml[^>]+\?>)", "", temp_data)
-
-                self._root = xml.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", temp_data) + "</root>")
-
+            self._tree = xml.ElementTree()
+            self._tree.parse(self._path)
+            self._root = self._tree.getroot()
         except xml.ParseError as e:
-            print ("[error]", self._path,":",e)
-            exit(-1)
+            if check_multiple_xml_file(self.orig_path):
+                print ("[warning]", self._path,": multiple kickstart record detected")
+
+            else:
+                print ("[error]", self._path,":",e)
+                exit(-1)
 
         # Parse machine
         self.machine = Machine(self._get_elem("machine"))
@@ -413,13 +435,47 @@ class KickstartEntry(object):
     def avg_io_size(self):
         return float(self.tot_bwrite()+self.tot_bread()) / (self.tot_nwrite()+self.tot_nread())
 
- 
+
+# #In case there multiple kickstart record in one XML (so multiple workflow running)        
+# class KickStartMultiEntry(KickstartEntry):
+#     # Multiple workflow of one runs
+#     # We take the longest one which represent the makespan of the X parallel workflow
+#     def __init__(self, path, file_type=FileType.XML):
+#         self.orig_path = path
+#         if not check_multiple_xml_file(self.orig_path):
+#             super().__init__(path=self.orig_path, file_type=file_type)
+#         else:
+#             files = split_multiple_xml_file(self.orig_path)
+
+#             self.records = []
+#             makespan = 0
+#             longest_entry = None
+
+#             for r in files:
+#                 self.records.append(KickstartEntry(r))
+#                 if self.records[-1].duration() > makespan:
+#                     makespan = self.records[-1].duration()
+#                     longest_entry = r
+
+#             self.nb_records = len(self.records)
+
+#             for r in self.records:
+#                 if r.path() == Path(longest_entry):
+#                     print(r.path().name, " -> ", r.duration(), " (LONGEST)")
+#                 else:
+#                     print(r.path().name, " -> ", r.duration())
+
+#             #Found the longest one (the makespan)
+
+#             super().__init__(path=longest_entry, file_type=file_type)
+
+
 class KickstartRecord:
     # Manage averaged runs of one experiments
     # A list of KickstartEntry for the same experiments
     def __init__(self,  kickstart_entries, file_type=FileType.XML):
         self.records = []
-        for r in set(kickstart_entries):
+        for r in set(kickstart_entries):                
             self.records.append(KickstartEntry(r))
 
         self.nb_records = len(self.records)
@@ -565,7 +621,7 @@ class AvgOutputLog:
         print("TIME RESAMPLE ", self.time_resample)
         print("TIME COMBINE ", self.time_coadd)
         print("TIME STAGE_OUT ", self.time_stage_out)
-        print("TIME  TOTAL ", self.time_total)
+        print("TIME TOTAL ", self.time_total)
 
 
 ## For stage-*-bb.csv and stage-*-pfs.csv
@@ -625,6 +681,7 @@ class AvgStageInTask:
             pair = (statistics.mean(self._data[k]), statistics.stdev(self._data[k]))
             self._data[k] = pair
 
+            #print(k, " : ", self._data[k][0])
 
 
 class KickstartDirectory:
@@ -676,7 +733,6 @@ class KickstartDirectory:
             ├── output.batch.1c.4f.25823428
             ├── output.batch.1c.6f.25823430
             └── output.batch.1c.8f.25823433
-
     """
     def __init__(self,  directory, file_type=FileType.XML):
         self.dir = Path(os.path.abspath(directory))
@@ -684,7 +740,7 @@ class KickstartDirectory:
             raise ValueError("error: {} is not a valid directory.".format(self.dir))
 
         #print(self.dir)
-        self.dir_exp = [x for x in self.dir.iterdir() if x.is_dir()]
+        self.dir_exp = sorted([x for x in self.dir.iterdir() if x.is_dir()])
         self.log = []
         self.resample = {}
         self.combine = {}
@@ -698,18 +754,17 @@ class KickstartDirectory:
 
         self.makespan = {}  # Addition of tasks' execution time
 
-        print(self.dir,self.dir_exp)
+        print(self.dir)
         for i,d in enumerate(self.dir_exp):
-            dir_at_this_level = [x for x in d.iterdir() if x.is_dir()]
+            dir_at_this_level = sorted([x for x in d.iterdir() if x.is_dir()])
             # folder should be named like that: 
             #   swarp-queue-xC-xB-x_yW-x_yF-day-month
-            print ("dir at this level: ", dir_at_this_level)
+            print ("dir at this level: ", [x.name for x in dir_at_this_level])
             raw_resample = []
             raw_combine = []
             output_log = []
             stage_in = []
             bb_info = []
-
 
             if len(dir_at_this_level) != 1:
                 #Normally just swarp-scaling.batch ...
@@ -717,55 +772,58 @@ class KickstartDirectory:
 
             pid_run = dir_at_this_level[0].name.split('.')[-1]
 
-            print("PID : ", pid_run)
+            print("PID:", pid_run)
 
             avg_dir = [x for x in dir_at_this_level[0].iterdir() if x.is_dir()]
 
             for avg in avg_dir:
-                print(avg)
+                print("run: ", avg.name)
                 #print(dir_at_this_level,avg)
                 output_log.append(avg / self.log)
                 stage_in.append(avg / self.stage_in_log)
                 bb_info.append(avg / 'data-stagedin.log')
 
-                nb_pipeline = [x for x in avg.iterdir() if x.is_dir()]
-                for pipeline in nb_pipeline:
-                    id_pipeline = pipeline.parts[-1]
+                pipeline_set = sorted([x for x in avg.iterdir() if x.is_dir()])
+                for pipeline in pipeline_set:
+                    # TODO: Find here the longest pipeline among the one launched
+                    nb_pipeline = pipeline.parts[-1]
+                    print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = "stat.resample." + pid_run + "." + id_pipeline + ".xml"
+                    resmpl_path = "stat.resample." + pid_run + "." + nb_pipeline + ".xml"
                     raw_resample.append(pipeline / resmpl_path)
-                    combine_path = "stat.combine." + pid_run + "." + id_pipeline + ".xml"
+                    combine_path = "stat.combine." + pid_run + "." + nb_pipeline + ".xml"
                     raw_combine.append(pipeline / combine_path)
+
+                    # Check how to average for all pipeline
+                    # Check how to average over each pipeline
+                    self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
+                    self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
 
             self.stagein[d] = AvgStageInTask(list_csv_files=stage_in)
             self.outputlog[d] = AvgOutputLog(list_log_files=output_log)
-
-            # Check how to average for all pipeline
-            # Check how to average over each pipeline
-            self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
-            self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
+            break
 
 
-        # ## PRINTING TEST
-        # for run,d in self.resample.items():
-        #     data_run = d.data()
-        #     print("= Run {} averaged on {} runs:".format(run, len(data_run)))
-        #     # for u,v in data_run.items():
-        #     #     print("==> Run: {}".format(u))
-        #     #     print("        duration   : {:.3f}".format(v.duration()))
-        #     #     print("        ttime      : {:.3f}".format(v.ttime()))
-        #     #     print("        utime      : {:.3f}".format(v.utime()))
-        #     #     print("        stime      : {:.3f}".format(v.stime()))
-        #     #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
-        #     #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
-        #     #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
-        #     print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
-        #     print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
-        #     print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
-        #     print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
-        #     print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
-        #     print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
-        #     print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
+        # # ## PRINTING TEST
+        for run,d in self.resample.items():
+            data_run = d.data()
+            print("*** \"{}\" averaged on {} runs:".format(run.name, len(data_run)))
+            # for u,v in data_run.items():
+            #     print("==> Run: {}".format(u))
+            #     print("        duration   : {:.3f}".format(v.duration()))
+            #     print("        ttime      : {:.3f}".format(v.ttime()))
+            #     print("        utime      : {:.3f}".format(v.utime()))
+            #     print("        stime      : {:.3f}".format(v.stime()))
+            #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
+            #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
+            #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
+            print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
+            print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
+            print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
+            print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
+            print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
+            print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
+            print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
 
     def root_dir(self):
         return self.dir
@@ -782,6 +840,7 @@ class KickstartDirectory:
 
 
 
+
     # def plot_makespan_by_pipeline():
     #     if seaborn_found is None:
     #         return
@@ -790,14 +849,7 @@ class KickstartDirectory:
 
 if __name__ == "__main__":
 
-## TODO: fix
- # 9861 &gt; WARNING: /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/swarp-regular-16C-100B-1_64W-0F-17-12//resample.swarp not found, using internal defaults
- # 9862
- # 9863 &#xe01b;[1M&gt;
- # 9864 &#xe01b;[1A----- SWarp 2.38.0 started on 2019-12-19 at 00:36:42 with 64 threads
-
-
-    test_record = KickstartEntry("/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/swarp-regular-16C-100B-1_64W-0F-17-12/swarp-run-8N-0F.6TXXSk/swarp-scaling.batch.16c.0f.26829339/2/3/stat.resample.26829339.3.xml")
+    #test_record = KickstartEntry("/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/swarp-regular-16C-100B-1_64W-0F-17-12/swarp-run-8N-0F.6TXXSk/swarp-scaling.batch.16c.0f.26829339/2/3/stat.resample.26829339.3.xml")
     # print(test_record.path())
     # print(test_record.time())
     # print(test_record.efficiency())
@@ -813,9 +865,10 @@ if __name__ == "__main__":
     # print(exp1.time())
     # print(exp1.efficiency())
 
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/"
-    
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/jan9/"
+    # print(check_multiple_xml_file("test_exp/test.xml"))
+    # print(split_multiple_xml_file("test_exp/test.xml"))
 
-    #test = KickstartDirectory(exp_dir+"swarp-regular-16C-100B-1_64W-0F-17-12/")
+    test = KickstartDirectory(exp_dir+"swarp-regular-1C-100B-1_8W-32F-11-1/")
 
 
