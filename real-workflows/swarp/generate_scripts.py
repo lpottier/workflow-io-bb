@@ -739,6 +739,14 @@ class SwarpInstance:
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "\n"
+
+        s += "cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
+        s += "for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "    cd \"${process}\"\n"
+        s += "    rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
+        s += "    cd ..\n"
+        s += "done\n"
+
         s += "    OUTPUT_FILE=$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/output.log\n"
         s += "    rm -rf \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/*/*.fits\"\n"
         s += "    echo \"TIME STAGE_OUT $tdiff4\" | tee -a $OUTPUT_FILE\n"
