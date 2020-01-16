@@ -286,7 +286,7 @@ class SwarpInstance:
 
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
-        string += "#SBATCH --job-name=swarp-scaling\n"
+        string += "#SBATCH --job-name=swarp-@NODES@\n"
         string += "#SBATCH --output=output.%j\n"
         string += "#SBATCH --error=error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
@@ -664,12 +664,12 @@ class SwarpInstance:
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         s += "        KICKSTART_OUTPUT=\"stat.resample.$SLURM_JOB_ID.${process}.xml\"\n"
-        s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
+        # s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         if self.slurm_profile:
-            s += "        srun -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         else:
-            s += "        srun -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -683,14 +683,6 @@ class SwarpInstance:
         s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        s += "    tree\n"
-
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "        cd ${OUTPUT_DIR}/${process}\n"
-        s += "        ls\n"
-        s += "        cd ..\n"
-        s += "    done\n"
-        s += "\n"
 
         s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
@@ -708,9 +700,9 @@ class SwarpInstance:
         s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
         if self.slurm_profile:
-            s += "        srun -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         else:
-            s += "        srun -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
