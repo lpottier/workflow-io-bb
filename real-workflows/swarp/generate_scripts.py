@@ -268,7 +268,7 @@ class SwarpInstance:
 
     def slurm_header(self):
         string = "#!/bin/bash\n"
-        string += "#SBATCH --partition={}\n".format(self.sched_config.queue())
+        # string += "#SBATCH --partition={}\n".format(self.sched_config.queue())
         string += "#SBATCH --qos={}\n".format(self.sched_config.queue())
         string += "#SBATCH --constraint=haswell\n"
 
