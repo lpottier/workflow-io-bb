@@ -436,38 +436,33 @@ class KickstartEntry(object):
         return float(self.tot_bwrite()+self.tot_bread()) / (self.tot_nwrite()+self.tot_nread())
 
 
-# #In case there multiple kickstart record in one XML (so multiple workflow running)        
-# class KickStartMultiEntry(KickstartEntry):
-#     # Multiple workflow of one runs
-#     # We take the longest one which represent the makespan of the X parallel workflow
-#     def __init__(self, path, file_type=FileType.XML):
-#         self.orig_path = path
-#         if not check_multiple_xml_file(self.orig_path):
-#             super().__init__(path=self.orig_path, file_type=file_type)
-#         else:
-#             files = split_multiple_xml_file(self.orig_path)
+class KickStartPipeline(KickstartEntry):
+    # Multiple workflow of one runs
+    # We take the longest one which represent the makespan of the X parallel workflow
+    def __init__(self, ks_entries, file_type=FileType.XML):
+        self.entries = ks_entries
 
-#             self.records = []
-#             makespan = 0
-#             longest_entry = None
+        self.records = []
+        makespan = 0
+        longest_entry = None
 
-#             for r in files:
-#                 self.records.append(KickstartEntry(r))
-#                 if self.records[-1].duration() > makespan:
-#                     makespan = self.records[-1].duration()
-#                     longest_entry = r
+        for r in self.entries:
+            self.records.append(KickstartEntry(r))
+            if self.records[-1].duration() > makespan:
+                makespan = self.records[-1].duration()
+                longest_entry = r
 
-#             self.nb_records = len(self.records)
+        self.nb_records = len(self.records)
 
-#             for r in self.records:
-#                 if r.path() == Path(longest_entry):
-#                     print(r.path().name, " -> ", r.duration(), " (LONGEST)")
-#                 else:
-#                     print(r.path().name, " -> ", r.duration())
+        for r in self.records:
+            if r.path() == Path(longest_entry):
+                print(r.path().name, " -> ", r.duration(), " (LONGEST)")
+            else:
+                print(r.path().name, " -> ", r.duration())
 
-#             #Found the longest one (the makespan)
+        #Found the longest one (the makespan)
 
-#             super().__init__(path=longest_entry, file_type=file_type)
+        super().__init__(path=longest_entry, file_type=file_type)
 
 
 class KickstartRecord:
@@ -476,7 +471,7 @@ class KickstartRecord:
     def __init__(self,  kickstart_entries, file_type=FileType.XML):
         self.records = []
         for r in set(kickstart_entries):                
-            self.records.append(KickstartEntry(r))
+            self.records.append(r)
 
         self.nb_records = len(self.records)
 
@@ -688,51 +683,66 @@ class KickstartDirectory:
     """
         Directory must follow this kind of pattern:
         self.dir = swarp-bb.batch.1c.0f.25856221
-            swarp-bb.batch.1c.0f.25856221
-            ├── output.25823425
-            ├── output.25823427
-            ├── output.25823428
-            ├── output.25823430
-            ├── output.25823433
-            ├── output.25823579
-            ├── output.25823580
-            ├── output.25823581
-            ├── output.25823583
-            ├── output.batch.1c.0f.25823425
-                ├──1/
-                    ├── combine.xml
-                    ├── error.coadd
-                    ├── error.resample
-                    ├── files_to_stage.txt
-                    ├── output.coadd
-                    ├── output.log
-                    ├── output.resample
-                    ├── resample.xml
-                    ├── resample_files.txt
-                    ├── slurm.env
-                    ├── stat.combine.xml
-                    └── stat.resample.xml
-                ├──X/
-                    ├── combine.xml
-                    ├── error.coadd
-                    ├── error.resample
-                    ├── files_to_stage.txt
-                    ├── output.coadd
-                    ├── output.log
-                    ├── output.resample
-                    ├── resample.xml
-                    ├── resample_files.txt
-                    ├── slurm.env
-                    ├── stat.combine.xml
-                    └── stat.resample.xml
-            ├── output.batch.1c.10f.25823579
-            ├── output.batch.1c.12f.25823580
-            ├── output.batch.1c.14f.25823581
-            ├── output.batch.1c.16f.25823583
-            ├── output.batch.1c.2f.25823427
-            ├── output.batch.1c.4f.25823428
-            ├── output.batch.1c.6f.25823430
-            └── output.batch.1c.8f.25823433
+        swarp-premium-1C-50B-1_16W-0F-15-1
+        ├── bbf.conf
+        ├── bbinfo.sh
+        ├── combine.swarp
+        ├── files_to_stage.txt
+        ├── interactive_run-swarp-scaling-bb.sh
+        ├── resample.swarp
+        ├── run-swarp-scaling-bb.sh
+        ├── start_interactive.sh
+        ├── submit.sh
+        ├── swarp-run-16N-0F.wtb3xr
+        │   ├── bbinfo.sh
+        │   ├── build_filemap.py
+        │   ├── combine.swarp
+        │   ├── copy.py
+        │   ├── error.27440714
+        │   ├── files_to_stage.txt
+        │   ├── output.27440714
+        │   ├── resample.swarp
+        │   ├── run-swarp-scaling-bb-16N.sh
+        │   ├── swarp-16.batch.1c.0f.27440714
+        │   │   ├── 1
+        │   │   │   ├── 1
+        │   │   │   │   ├── error.combine.27440714.1
+        │   │   │   │   ├── error.resample.27440714.1
+        │   │   │   │   ├── output.combine.27440714.1
+        │   │   │   │   ├── output.resample.27440714.1
+        │   │   │   │   ├── stage-out-bb-global.csv
+        │   │   │   │   ├── stage-out-bb.csv
+        │   │   │   │   ├── stage-out-pfs-global.csv
+        │   │   │   │   ├── stage-out-pfs.csv
+        │   │   │   │   ├── stat.combine.27440714.1.xml
+        │   │   │   │   └── stat.resample.27440714.1.xml
+        │   │   │   ├── 10/
+        │   │   │   │   ├── ....
+        │   │   │   │   ├── ....
+        │   │   │   ├── X/
+        │   │   │   │   ├── ....
+        │   │   │   │   ├── ....
+        │   │   │   ├── bb.log
+        │   │   │   ├── bb_alloc.log
+        │   │   │   ├── data-stagedin.log
+        │   │   │   ├── files_to_stage.txt
+        │   │   │   ├── output.log
+        │   │   │   ├── resample_files.txt
+        │   │   │   ├── slurm.env
+        │   │   │   ├── stage-in-bb-global.csv
+        │   │   │   ├── stage-in-bb.csv
+        │   │   │   ├── stage-in-pfs-global.csv
+        │   │   │   ├── stage-in-pfs.csv
+        │   │   │   ├── stage-out-bb-global.csv
+        │   │   │   ├── stage-out-bb.csv
+        │   │   │   ├── stage-out-pfs-global.csv
+        │   │   │   ├── stage-out-pfs.csv
+        │   │   ├── 2
+        │   │   │   ├── 1
+        │   │   │   │   ├── error.combine.27440714.1
+        │   │   │   │   ├── error.resample.27440714.1
+        ....
+
     """
     def __init__(self,  directory, file_type=FileType.XML):
         self.dir = Path(os.path.abspath(directory))
@@ -760,11 +770,11 @@ class KickstartDirectory:
             # folder should be named like that: 
             #   swarp-queue-xC-xB-x_yW-x_yF-day-month
             print ("dir at this level: ", [x.name for x in dir_at_this_level])
-            raw_resample = []
-            raw_combine = []
             output_log = []
             stage_in = []
             bb_info = []
+            avg_resample = []
+            avg_combine = []
 
             if len(dir_at_this_level) != 1:
                 #Normally just swarp-scaling.batch ...
@@ -783,10 +793,15 @@ class KickstartDirectory:
                 stage_in.append(avg / self.stage_in_log)
                 bb_info.append(avg / 'data-stagedin.log')
 
+                raw_resample = []
+                raw_combine = []
+
                 pipeline_set = sorted([x for x in avg.iterdir() if x.is_dir()])
                 for pipeline in pipeline_set:
                     # TODO: Find here the longest pipeline among the one launched
                     nb_pipeline = pipeline.parts[-1]
+                    if len(nb_pipeline) >= 3:
+                        continue
                     print ("Dealing with number of pipelines:", nb_pipeline)
 
                     resmpl_path = "stat.resample." + pid_run + "." + nb_pipeline + ".xml"
@@ -794,15 +809,14 @@ class KickstartDirectory:
                     combine_path = "stat.combine." + pid_run + "." + nb_pipeline + ".xml"
                     raw_combine.append(pipeline / combine_path)
 
-                    # Check how to average for all pipeline
-                    # Check how to average over each pipeline
-                    self.resample[d] = KickstartRecord(kickstart_entries=raw_resample)
-                    self.combine[d] = KickstartRecord(kickstart_entries=raw_combine)
+                avg_resample.append(KickStartPipeline(ks_entries=raw_resample))
+                avg_combine.append(KickStartPipeline(ks_entries=raw_combine))
+
+            self.resample[d] = KickstartRecord(kickstart_entries=avg_resample)
+            self.combine[d] = KickstartRecord(kickstart_entries=avg_combine)
 
             self.stagein[d] = AvgStageInTask(list_csv_files=stage_in)
             self.outputlog[d] = AvgOutputLog(list_log_files=output_log)
-            break
-
 
         # # ## PRINTING TEST
         for run,d in self.resample.items():
@@ -865,10 +879,10 @@ if __name__ == "__main__":
     # print(exp1.time())
     # print(exp1.efficiency())
 
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/jan9/"
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
     # print(check_multiple_xml_file("test_exp/test.xml"))
     # print(split_multiple_xml_file("test_exp/test.xml"))
 
-    test = KickstartDirectory(exp_dir+"swarp-regular-1C-100B-1_8W-32F-11-1/")
+    test = KickstartDirectory(exp_dir+"swarp-premium-1C-50B-1_16W-0F-15-1/")
 
 
