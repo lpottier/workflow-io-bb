@@ -447,7 +447,7 @@ class SwarpInstance:
     # If nb_files_on_bb = 32 -> all files on BB
     # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
     # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
-    def file_to_stage(self, count, pairs=True):
+    def file_to_stage(self, count, pairs=False):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")

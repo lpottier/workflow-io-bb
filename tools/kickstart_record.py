@@ -4,12 +4,16 @@ import statistics
 import os
 import csv
 import re
-import xml.etree.ElementTree as xml
 import math
+import glob
+import importlib
+
+import xml.etree.ElementTree as xml
 
 from enum import Enum,unique,auto
 from pathlib import Path
 from collections import OrderedDict
+
 
 VERBOSE = 1
 # VERBOSE = 0 -> nothing besides error messages if any
@@ -18,13 +22,6 @@ VERBOSE = 1
 # VERBOSE = 3 -> all
 
 XML_PREFIX="{http://pegasus.isi.edu/schema/invocation}"
-
-# import importlib
-# seaborn_found = importlib.util.find_spec('seaborn')
-# import seaborn as sns
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# sns.set(style="ticks", color_codes=True)
 
 @unique
 class FileType(Enum):
@@ -831,7 +828,9 @@ class KickstartDirectory:
 
         self.makespan = {}  # Addition of tasks' execution time
 
-        print(self.dir)
+        if VERBOSE >= 2:
+            print(self.dir)
+
         for i,d in enumerate(self.dir_exp):
             dir_at_this_level = sorted([x for x in d.iterdir() if x.is_dir()])
             # folder should be named like that: 
@@ -882,7 +881,11 @@ class KickstartDirectory:
                 with open(bb_info[-1]) as bb_log:
                     data_bb_log = bb_log.read().split(' ')
                     self.setup[pid_run]['file'] = int(data_bb_log[0])
-                    self.setup[pid_run]['size_in_bb'] = int(data_bb_log[1][:-1])
+                    if self.setup[pid_run]['file'] > 0:
+                        data_bb_log[1] = data_bb_log[1].split('\n')[0]
+                        self.setup[pid_run]['size_in_bb'] = int(data_bb_log[1][:-1])
+                    else:
+                        self.setup[pid_run]['size_in_bb'] = 0
 
                 with open(avg / 'bb_alloc.log') as bb_alloc:
                     data_bb_alloc = bb_alloc.read().split('\n')
@@ -953,39 +956,39 @@ class KickstartDirectory:
         #     print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
         #     print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
 
-        print("ID NB_PIPELINE BB_ALLOC_SIZE(GB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME")
-        for run in self.setup:
-            print ("{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-                run,
-                self.setup[run]['pipeline'],
-                self.setup[run]['bb_alloc'],
-                self.setup[run]['core'],
-                32,
-                self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
-                768.515625,
-                self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
-                self.makespan[run][0],
-                self.makespan[run][1],
-                self.outputlog[run].walltime()[0],
-                self.outputlog[run].walltime()[1],
-                self.stagein[run].duration()[0],
-                self.stagein[run].duration()[1],
-                self.outputlog[run].walltime_stagein()[0],
-                self.outputlog[run].walltime_stagein()[1],
-                self.resample[run].duration()[0],
-                self.resample[run].duration()[1],
-                self.outputlog[run].walltime_resample()[0],
-                self.outputlog[run].walltime_resample()[1],
-                self.combine[run].duration()[0],
-                self.combine[run].duration()[1],
-                self.outputlog[run].walltime_combine()[0],
-                self.outputlog[run].walltime_combine()[1],
-                self.stageout[run].duration()[0],
-                self.stageout[run].duration()[1],
-                self.outputlog[run].walltime_stageout()[0],
-                self.outputlog[run].walltime_stageout()[1],
-                )
-            )
+        # print("ID NB_PIPELINE BB_ALLOC_SIZE(GB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME")
+        # for run in self.setup:
+        #     print ("{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+        #         run,
+        #         self.setup[run]['pipeline'],
+        #         self.setup[run]['bb_alloc'],
+        #         self.setup[run]['core'],
+        #         32,
+        #         self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
+        #         768.515625,
+        #         self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
+        #         self.makespan[run][0],
+        #         self.makespan[run][1],
+        #         self.outputlog[run].walltime()[0],
+        #         self.outputlog[run].walltime()[1],
+        #         self.stagein[run].duration()[0],
+        #         self.stagein[run].duration()[1],
+        #         self.outputlog[run].walltime_stagein()[0],
+        #         self.outputlog[run].walltime_stagein()[1],
+        #         self.resample[run].duration()[0],
+        #         self.resample[run].duration()[1],
+        #         self.outputlog[run].walltime_resample()[0],
+        #         self.outputlog[run].walltime_resample()[1],
+        #         self.combine[run].duration()[0],
+        #         self.combine[run].duration()[1],
+        #         self.outputlog[run].walltime_combine()[0],
+        #         self.outputlog[run].walltime_combine()[1],
+        #         self.stageout[run].duration()[0],
+        #         self.stageout[run].duration()[1],
+        #         self.outputlog[run].walltime_stageout()[0],
+        #         self.outputlog[run].walltime_stageout()[1],
+        #         )
+        #     )
 
     def root_dir(self):
         return self.dir
@@ -999,75 +1002,141 @@ class KickstartDirectory:
     # def write_csv_combine_by_pipeline(csv_file, sep = ' '):
     #     pass
 
-    def write_csv_global_by_pipeline(csv_file, write_header=False, sep = ' '):
-        header="ID NB_PIPELINE BB_ALLOC_SIZE(MB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME".split(' ')
-        with open(csv_file, 'w', newline='') as f:
-            csv_writer = csv.writer(f, delimiter=sep, quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
+        header="ID NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        if write_header:
+            open_flag = 'w'
+        else:
+            open_flag = 'a'
+        with open(csv_file, open_flag, newline='') as f:
+            csv_writer = csv.writer(f, delimiter=sep, quotechar='"', quoting=csv.QUOTE_MINIMAL)
             if write_header:
                 csv_writer.writerow(header)
-                for run in self.setup:
-                    line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-                        run,
-                        self.setup[run]['pipeline'],
-                        self.setup[run]['bb_alloc'],
-                        self.setup[run]['core'],
-                        32,
-                        self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
-                        768.515625,
-                        self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
-                        self.makespan[run][0],
-                        self.makespan[run][1],
-                        self.outputlog[run].walltime()[0],
-                        self.outputlog[run].walltime()[1],
-                        self.stagein[run].duration()[0],
-                        self.stagein[run].duration()[1],
-                        self.outputlog[run].walltime_stagein()[0],
-                        self.outputlog[run].walltime_stagein()[1],
-                        self.resample[run].duration()[0],
-                        self.resample[run].duration()[1],
-                        self.outputlog[run].walltime_resample()[0],
-                        self.outputlog[run].walltime_resample()[1],
-                        self.combine[run].duration()[0],
-                        self.combine[run].duration()[1],
-                        self.outputlog[run].walltime_combine()[0],
-                        self.outputlog[run].walltime_combine()[1],
-                        self.stageout[run].duration()[0],
-                        self.stageout[run].duration()[1],
-                        self.outputlog[run].walltime_stageout()[0],
-                        self.outputlog[run].walltime_stageout()[1],
-                        )
-                    csv_writer.writerow(line)
+            for run in self.setup:
+                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                    run,
+                    self.setup[run]['pipeline'],
+                    self.setup[run]['bb_alloc'],
+                    self.setup[run]['core'],
+                    32,
+                    self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
+                    768.515625,
+                    self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
+                    self.makespan[run][0],
+                    self.makespan[run][1],
+                    self.outputlog[run].walltime()[0],
+                    self.outputlog[run].walltime()[1],
+                    self.stagein[run].duration()[0],
+                    self.stagein[run].duration()[1],
+                    self.outputlog[run].walltime_stagein()[0],
+                    self.outputlog[run].walltime_stagein()[1],
+                    self.resample[run].duration()[0],
+                    self.resample[run].duration()[1],
+                    self.outputlog[run].walltime_resample()[0],
+                    self.outputlog[run].walltime_resample()[1],
+                    self.combine[run].duration()[0],
+                    self.combine[run].duration()[1],
+                    self.outputlog[run].walltime_combine()[0],
+                    self.outputlog[run].walltime_combine()[1],
+                    self.stageout[run].duration()[0],
+                    self.stageout[run].duration()[1],
+                    self.outputlog[run].walltime_stageout()[0],
+                    self.outputlog[run].walltime_stageout()[1],
+                    )
+                csv_writer.writerow(line.split(" "))
+
+
+class ExpPlot(object):
+    """docstring for ExpPlot"""
+    def __init__(self, csv_file):
+        super(ExpPlot, self).__init__()
+
+        seaborn_found = importlib.util.find_spec('seaborn')
+        if seaborn_found is None:
+            sys.write.stderr("[error] Seaborn package not found. exit")
+            exit(-1)
+
+        import seaborn as sns
+        import pandas as pd
+        import matplotlib.pyplot as plt
+        #sns.set(style="ticks", color_codes=True)
+        
+        self._csv_file = csv_file
+
+    def plot_line_errors(self):
+        tel = pd.read_csv(self._csv_file)
+
+        sns.set(style="whitegrid", color_codes=True)
+        nyctel = sns.load_dataset(tel)
+
+        sns.relplot(x="timepoint", y="signal", col="region",
+                    hue="event", style="event",
+                    kind="line", data=fmri)
 
 
 
-    # def plot_makespan_by_pipeline():
-    #     if seaborn_found is None:
-    #         return
+def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
+    directories = [Path(x) for x in glob.glob(exp_dir+pattern) if Path(x).is_dir()]
+    if csv_file == None:
+        csv_file = Path(Path(exp_dir) / Path(Path(exp_dir).name+".csv"))
+    else:
+        csv_file = Path(csv_file)
 
+    print(" {:<40s} => ".format(directories[0].name), end='')
+    exp = KickstartDirectory(directories[0])
+    exp.write_csv_global_by_pipeline(csv_file, write_header=True)
+    print("{:<40s}".format(csv_file.name))
+
+    for d in directories[1:]:
+        print(" {:<40s} => ".format(d.name), end='')
+        exp = KickstartDirectory(d)
+        exp.write_csv_global_by_pipeline(csv_file)
+        print("{:<40s}".format(csv_file.name))
 
 
 if __name__ == "__main__":
 
-    #test_record = KickstartEntry("/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/dec17/swarp-regular-16C-100B-1_64W-0F-17-12/swarp-run-8N-0F.6TXXSk/swarp-scaling.batch.16c.0f.26829339/2/3/stat.resample.26829339.3.xml")
-    # print(test_record.path())
-    # print(test_record.time())
-    # print(test_record.efficiency())
-
-    # test_record2 = KickstartEntry("stat.combine.xml")
-    # print(test_record2.path())
-    # print(test_record2.time())
-    # print(test_record2.efficiency())
-
-    # exp1 = KickstartRecord(["stat.resample.xml", "stat.combine.xml"])
-
-    # print(exp1.paths())
-    # print(exp1.time())
-    # print(exp1.efficiency())
-
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
-    # print(check_multiple_xml_file("test_exp/test.xml"))
-    # print(split_multiple_xml_file("test_exp/test.xml"))
 
-    test = KickstartDirectory(exp_dir+"swarp-premium-1C-50B-1_16W-0F-15-1/")
 
+    #create_data_from_exp(exp_dir, csv_file="swarp_exp.csv")
+
+
+    seaborn_found = importlib.util.find_spec('seaborn')
+    if seaborn_found is None:
+        sys.write.stderr("[error] Seaborn package not found. exit")
+        exit(-1)
+
+    import seaborn as sns
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    #import matplotlib.axes as ax
+    
+    #sns.set(style="ticks", color_codes=True)
+    
+    csv_file = "swarp_exp.csv"
+
+    swarp_dt = pd.read_csv(csv_file, sep=' ')
+
+    swarp_dt_0f = swarp_dt[swarp_dt.BB_NB_FILES==8]
+
+    sns.set(style="ticks", color_codes=True)
+
+    print(swarp_dt_0f.info())
+    print(swarp_dt_0f[["NB_PIPELINE", "MEAN_MAKESPAN_S", "SD_MAKESPAN"]])
+
+    
+    ax = sns.lineplot(x=swarp_dt_0f.NB_PIPELINE, y=swarp_dt_0f.MEAN_MAKESPAN_S, markers=True,
+             data=swarp_dt_0f)
+    #ax.fill_between(x=swarp_dt_0f.NB_PIPELINE, y1=swarp_dt_0f.MEAN_MAKESPAN_S - swarp_dt_0f.SD_MAKESPAN, y2=swarp_dt_0f.MEAN_MAKESPAN_S + swarp_dt_0f.SD_MAKESPAN, alpha=.5)
+
+    plt.show()
+
+
+    # parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
+    
+    # parser.add_argument('--threads', '-p', type=int, nargs='?', default=1,
+    #                     help='Number of POSIX threads per workflow tasks (1 by default)')
+
+    # args = parser.parse_args()
 
