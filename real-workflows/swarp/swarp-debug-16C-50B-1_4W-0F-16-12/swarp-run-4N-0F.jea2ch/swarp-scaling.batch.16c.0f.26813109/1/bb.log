@@ -1,8 +1,0 @@
-session ID is: 28337
-instance ID is: 18843
-fragments list:
-frag state instID capacity gran node
-1418843  CA-- 17797   1.36TiB nid09105 
-1471557  CA-- 18843  20.14GiB nid04429 
-1471558  CA-- 18843  20.14GiB nid09105 
-1471559  CA-- 18843  20.14GiB nid03022 
