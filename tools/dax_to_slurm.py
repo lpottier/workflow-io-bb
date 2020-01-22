@@ -200,8 +200,8 @@ class AbstractDag(nx.DiGraph):
             for x in set_input:
                 args_cmd = args_cmd + x + ' '
             
-            self.add_node("stage-in",
-                    label="stage-in",
+            self.add_node("stagein",
+                    label="stagein",
                     args=args_cmd,
                     input=set_input,
                     stdin=[],
@@ -212,7 +212,7 @@ class AbstractDag(nx.DiGraph):
             )
 
             for r in roots:
-                self.add_edge("stage-in", r)
+                self.add_edge("stagein", r)
 
         if add_stageout:
             leafs = self.leafs()
@@ -227,8 +227,8 @@ class AbstractDag(nx.DiGraph):
             for x in set_output:
                 args_cmd = args_cmd + x + ' '
 
-            self.add_node("stage-out",
-                    label="stage-out",
+            self.add_node("stageout",
+                    label="stageout",
                     args=args_cmd,
                     input=[],
                     stdin=[],
@@ -239,7 +239,7 @@ class AbstractDag(nx.DiGraph):
             )
 
             for l in leafs:
-                self.add_edge(l,"stage-out")
+                self.add_edge(l,"stageout")
 
     def __iter__(self):
         self._n = 0
@@ -411,7 +411,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
                 cmd = "{} {}".format(bin_args, input_args)
 
-            if u == "stage-in":
+            if u == "stagein":
                 cmd = cmd + ' $RUN_DIR'
 
             #TODO: handle stage out
