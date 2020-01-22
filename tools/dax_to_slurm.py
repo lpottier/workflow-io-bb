@@ -215,123 +215,6 @@ class AbstractDag(nx.DiGraph):
             output_file = self.graph["id"]+".pdf"
         plt.savefig(output_file)
 
-# def _adjacency_list(self):
-#     #{'ID0000003': ['ID0000002'], 'ID0000004': ['ID0000003'], 'ID0000005': ['ID0000001', 'ID0000004'], 'ID0000006': ['ID0000001', 'ID0000003']}
-#     #reverse the parent list from child -> parent to parent -> child
-#     res = {}
-#     for child in original:
-#         res[child] = []
-#         for parent in original[child]:
-#             if parent in res:
-#                 res[parent].append(child)
-#             else:
-#                 res[parent] = [child]
-#     return res
-
-# def build_adag_from_parentlist(hashmap, data_jobs):
-#     def _rec(L):
-#         for node in L:
-#             new_node = AbstractDag(new_node, data_jobs[node], _rec(adjency_list[node], data_jobs) )
-#         return new_node
-#     return _rec(adjency_list(hashmap), data_jobs)
-
-# def build_adag_from_parentlist(hashmap, data_jobs):
-#     H = adjacency_list(hashmap)
-#     a = set([y for x in hashmap.values() for y in x])
-#     b = set([x for x in hashmap])
-#     #find roots
-#     roots = list(a - (a & b)) # node which are parent but not child of any nodes
-#     # root = AbstractDag("init", None, None, roots)
-#     seen = {}
-
-    # for node in roots:
-    #     current = AbstractDag(node, data_jobs[node], root, adjency_list[node])
-    #     for child in H[node]:
-    #         if not child in seen:
-    #             seen.add(child)
-    #             # new_node = AbstractDag(new_node, data_jobs[node], _rec(adjency_list[node], data_jobs) )
-
-# class AbstractWorkflow:
-#     def __init__(self, dax_file, scheduler):
-#         self.executable = {}
-#         self.jobs = {}
-#         self.scheduler = scheduler
-
-#         if self.scheduler == "slurm":
-#             self.job_wrapper = "#SBATCH -p debug \
-#                             #SBATCH -C haswell \
-#                             #SBATCH -t 00:20:00 \
-#                             #SBATCH -J swarp-bb \
-#                             #SBATCH -o output.%j \
-#                             #SBATCH -e error.%j \
-#                             #SBATCH --mail-user=lpottier@isi.edu \
-#                             #SBATCH --mail-type=FAIL \
-#                             #SBATCH --export=ALL"
-
-#             self.dependency = "--dependency=afterok:"
-#         elif self.scheduler == "lsf":
-#             #TODO
-#             self.job_wrapper = ""
-#             pass
-#         else:
-#             raise ValueError("{} is not a supported scheduler.".format(self.scheduler))
-
-
-#         #self.scheduler_interface = {}
-#         #either Slurm or BSUB
-#         # run -> srun/jsrun
-#         #pragma -> SBATCH/BSUB
-#         #alloc_bb -> #DW ... /#BSUB -alloc "nvme"
-#         # if self.scheduler == "slurm":
-#         #     self.scheduler_interface["exec"] = "srun"
-#         #     self.scheduler_interface["exec"] = "srun"
-#         #     self.scheduler_interface["alloc_bb"] = "#DW jobdw capacity=50GB access_mode=striped type=scratch"
-#         #     self.scheduler_interface["queue"] =  
-
-
-# def parse_dax_xml(dax_xml_file):
-#     # create element tree object 
-#     tree = ET.parse(dax_xml_file) 
-  
-#     # get root element 
-#     root = tree.getroot()
-#     schema = root.attrib["{http://www.w3.org/2001/XMLSchema-instance}schemaLocation"]
-#     schema = '{'+schema.split()[0]+'}'
-
-#     executables = {}
-#     jobs = {}
-#     parents = {}
-
-#     print(root.tag, schema)
-
-#     for elem in root:
-#         if elem.tag == schema+"executable":
-#             executables[elem.attrib["name"]] = Executable(elem, schema)
-#         if elem.tag == schema+"job":
-#             jobs[elem.attrib["id"]] = Job(elem, schema)
-#         if elem.tag == schema+"child":
-#             parents[elem.attrib["ref"]] = []
-#             for p in elem:
-#                 parents[elem.attrib["ref"]].append(p.attrib["ref"])
-
-#     parsing_result = ResultParsing(schema, executables, jobs, parents, adjacency_list(parents))
-#     H = adjacency_list(parsing_result._childs_to_father)
-#     a = set([y for x in parsing_result._childs_to_father.values() for y in x])
-#     b = set([x for x in parsing_result._childs_to_father])
-#     #find roots
-#     roots = list(a - (a & b)) # node which are parent but not child of any nodes
-
-#     return AbstractDag(H)
-
-
-# TODO:
-# echo -n "waiting for an empty queue"
-# until (( $(squeue -p $QUEUE -u $WHO -o "%A" -h | wc -l) == 0  )); do
-#     sleep $SEC
-#     echo -n "."
-# done
-# echo " $QUEUE queue is empty, start new batch of jobs"
-
 def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     if max_jobs < nb_jobs:
         return ''
@@ -473,11 +356,11 @@ if __name__ == '__main__':
     parser.add_argument('--scheduler', '-s', type=str, nargs='?', default="slurm",
                         help='Scheduler (slurm or lsf (NOT SUPPORTED YET))')
 
-    parser.add_argument('--bin', '-b', type=str, nargs='?', default=None,
-                        help='Bin directory  (erase bin directory provided by DAX)')
+    parser.add_argument('--bin', '-b', type=str, nargs='?', default="bin",
+                        help='Bin directory  (replace the \"bin\"" directory provided by the DAX)')
 
-    parser.add_argument('--input', '-i', type=str, nargs='?', default=None,
-                        help='Input directory (erase input directory provided by DAX)')
+    parser.add_argument('--input', '-i', type=str, nargs='?', default="input",
+                        help='Input directory (replace the \"input\"" directory provided by the DAX)')
 
     parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
                         help='Queue to execute the workflow: debug, interactive, regular, premium')
