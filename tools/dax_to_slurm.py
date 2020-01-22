@@ -41,6 +41,7 @@ class Job:
         self._node_label = None
         self._argument = ''
         self._input_files = []
+        self._stdin = []
         self._output_files = []
         self._cores = None 
         self._runtime = None
@@ -65,6 +66,10 @@ class Job:
                     #parse files
                     if file.tag == self._schema+"file":
                         self._argument = self._argument + str(file.attrib["name"])
+
+            if elem.tag == self._schema+"stdin":
+                if elem.attrib["link"] == "input":
+                    self._stdin.append(elem.attrib["name"])
 
             if elem.tag == self._schema+"uses":
                 if elem.attrib["link"] == "input":
@@ -170,6 +175,7 @@ class AbstractDag(nx.DiGraph):
                 label=jobs[father]._node_label,
                 args=jobs[father]._argument, 
                 input=jobs[father]._input_files,
+                stdin=jobs[father]._stdin,
                 output=jobs[father]._output_files,
                 exe=executables[name_exec]._pfn,
                 cores=jobs[father]._cores,
@@ -329,11 +335,12 @@ class AbstractDag(nx.DiGraph):
 def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     if max_jobs < nb_jobs:
         return ''
-    s = "echo -n \"== waiting for an empty queue\"\n"
+    s = "echo -n \"== waiting for a slot in the queue\"\n"
     s += "until (( $(squeue -p {} -u $(whoami) -o \"%A\" -h | wc -l) == {} )); do\n".format(queue, nb_jobs)
     s += "    sleep {}\n".format(freq_sec)
     s += "    echo -n \".\"\n"
     s += "done\n"
+    s += "echo \"\"\n"
     s += "echo \"== {} queue contains {}/{} jobs, starting up to {} new jobs\"\n".format(queue,nb_jobs,max_jobs, max_jobs-nb_jobs)
     return s
 
@@ -353,8 +360,13 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
     #     "#DW jobdw capacity={}GB access_mode={} type={}",
     # ]
 
+    if queue == "debug":
+        walltime = "--time=00:30:00"
+    else:
+        walltime = "--time=1:00:00"
+
     dep = "--dependency=afterok:"
-    cmd = "sbatch --parsable"
+    prefix_cmd = "sbatch --parsable --export=OUTPUT_DIR=$OUTPUT_DIR --mail-user=lpottier@isi.edu --mail-type=FAIL --constraint=haswell --nodes=1 {}".format(walltime)
     job_name = "--job-name="
     #opt = "--ntasks=1 --ntasks-per-core=1"
 
@@ -370,6 +382,9 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
                 f.write("\n")
                 f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
                 f.write("#{} {}\n\n".format("created", time.ctime()))
+                f.write("\n\n")
+                f.write("OUTPUT_DIR=\"output-sns\"\n")
+                f.write("mkdir -p $OUTPUT_DIR\n")
 
                 f.write("echo \"Task {}\"\n".format(u))
                 input_args = G.nodes[u]["args"]
@@ -393,22 +408,23 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
             sys.stderr.write(" === Use PFN defined in {}\n".format(adag["name"]))
 
     if input_dir:
-        sys.stderr.write(" === Prefix all input files with {}\n".format(input_dir))
+        sys.stderr.write(" === Prefix all input files with dir \"{}\"\n".format(input_dir))
     else:
         sys.stderr.write(" === Use input files as defined in {}\n".format(adag["name"]))
+
 
     with open(output, 'w') as f:
         f.write("#!/bin/bash\n")
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
         f.write("#{} {}\n\n".format("created", time.ctime()))
 
-        #jid2=$(sbatch --dependency=afterany:$jid1  job2.sh)
         roots = G.roots()
         f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
         max_job_sub = nersc_queue[queue][3]
         for i,u in enumerate(G):
             if i >= max_job_sub:
-                # We have reach the max job submission
+                # We have reach the max job submission, so we need to wait until we have a free slot
+                # otherwise Slurm will kick us out
                 # "max_job_sub-1 means here that we wait for one free slot available
                 # "max_job_sub-max_job_sub=0 would mean that we wait the queue is empty before re-submitting jobs
                 f.write(slurm_sync(queue, max_job_sub, max_job_sub-1, 10))
@@ -419,7 +435,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
             else:
                 input_args = ' '
                 if input_dir:
-                    for elem in shlex.split(G.nodes[u]["args"]):
+                    for elem in shlex.split(G.nodes[u]["args"]) + G.nodes[u]["stdin"]:
                         if elem.startswith('--') or elem.startswith('-'):
                             input_args += elem + ' '
                         else:
@@ -434,7 +450,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
             #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
             if u in roots:
-                f.write("{}=$(sbatch --parsable --job-name={} {})\n".format(u, adag.graph["id"]+"-"+u, cmd))
+                f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
             else:
                 pred = ''
                 for v in G.pred[u]:
@@ -443,7 +459,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
                     else:
                         pred = pred + ":${}".format(v)
 
-                f.write("{}=$(sbatch --parsable --job-name={} --dependency=afterok:{} {})\n".format(u, adag.graph["id"]+"-"+u, pred, cmd))
+                f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
 
             f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue[0]))
 
@@ -455,7 +471,7 @@ if __name__ == '__main__':
     parser.add_argument('--dax', '-d', type=str, nargs='?',
                         help='DAX file')
     parser.add_argument('--scheduler', '-s', type=str, nargs='?', default="slurm",
-                        help='Scheduler (slurm or lsf (NOT YET SUPPORTED))')
+                        help='Scheduler (slurm or lsf (NOT SUPPORTED YET))')
 
     parser.add_argument('--bin', '-b', type=str, nargs='?', default=None,
                         help='Bin directory  (erase bin directory provided by DAX)')

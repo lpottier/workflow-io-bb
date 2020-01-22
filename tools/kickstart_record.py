@@ -1097,40 +1097,44 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
 if __name__ == "__main__":
 
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
+
+    create_data_from_exp(exp_dir, csv_file="swarp_exp21jan32.csv")
 
 
-    #create_data_from_exp(exp_dir, csv_file="swarp_exp.csv")
+    # seaborn_found = importlib.util.find_spec('seaborn')
+    # if seaborn_found is None:
+    #     sys.write.stderr("[error] Seaborn package not found. exit")
+    #     exit(-1)
 
-
-    seaborn_found = importlib.util.find_spec('seaborn')
-    if seaborn_found is None:
-        sys.write.stderr("[error] Seaborn package not found. exit")
-        exit(-1)
-
-    import seaborn as sns
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    #import matplotlib.axes as ax
+    # import seaborn as sns
+    # import pandas as pd
+    # import matplotlib.pyplot as plt
+    # #import matplotlib.axes as ax
     
-    #sns.set(style="ticks", color_codes=True)
+    # #sns.set(style="ticks", color_codes=True)
     
-    csv_file = "swarp_exp.csv"
+    # csv_file = "swarp_exp.csv"
 
-    swarp_dt = pd.read_csv(csv_file, sep=' ')
+    # swarp_dt = pd.read_csv(csv_file, sep=' ')
 
-    swarp_dt_0f = swarp_dt[swarp_dt.BB_NB_FILES==8]
+    # swarp_dt_0f = swarp_dt[swarp_dt.BB_NB_FILES==8]
 
-    sns.set(style="ticks", color_codes=True)
+    # sns.set(style="ticks", color_codes=True)
 
-    print(swarp_dt_0f.info())
-    print(swarp_dt_0f[["NB_PIPELINE", "MEAN_MAKESPAN_S", "SD_MAKESPAN"]])
+    # print(swarp_dt_0f.info())
+    # print(swarp_dt[["NB_PIPELINE", "BB_NB_FILES" ,"MEAN_MAKESPAN_S", "SD_MAKESPAN"]])
+
+    # small_dt = swarp_dt[["NB_PIPELINE", "BB_NB_FILES" ,"MEAN_MAKESPAN_S", "SD_MAKESPAN"]]
+    # print(small_dt[small_dt.NB_PIPELINE == 16])
 
     
-    ax = sns.lineplot(x=swarp_dt_0f.NB_PIPELINE, y=swarp_dt_0f.MEAN_MAKESPAN_S, markers=True,
-             data=swarp_dt_0f)
-    #ax.fill_between(x=swarp_dt_0f.NB_PIPELINE, y1=swarp_dt_0f.MEAN_MAKESPAN_S - swarp_dt_0f.SD_MAKESPAN, y2=swarp_dt_0f.MEAN_MAKESPAN_S + swarp_dt_0f.SD_MAKESPAN, alpha=.5)
+    # ax = sns.lineplot(x=swarp_dt_0f.NB_PIPELINE, y=swarp_dt_0f.MEAN_MAKESPAN_S, markers=True,
+    #          data=swarp_dt_0f)
+    # #ax.fill_between(x=swarp_dt_0f.NB_PIPELINE, y1=swarp_dt_0f.MEAN_MAKESPAN_S - swarp_dt_0f.SD_MAKESPAN, y2=swarp_dt_0f.MEAN_MAKESPAN_S + swarp_dt_0f.SD_MAKESPAN, alpha=.5)
 
-    plt.show()
+    # plt.show()
 
 
     # parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
