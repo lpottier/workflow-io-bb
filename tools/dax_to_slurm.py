@@ -114,6 +114,7 @@ class Executable:
             if elem.tag == self._schema+"pfn":
                 self._pfn = elem.attrib["url"]
 
+
 class ResultParsing:
     def __init__(self, schema, executables, jobs, parents, dependencies):
         self._schema = schema
@@ -122,9 +123,10 @@ class ResultParsing:
         self._childs_to_father = parents
         self._dependencies = dependencies
 
+
 class AbstractDag(nx.DiGraph):
     """ docstring for AbstractDag """
-    def __init__(self, dax):
+    def __init__(self, dax, add_stagein=False, add_stageout=False):
         short = os.path.basename(dax).split('.')[0]
         super().__init__(id=short,name=dax)
         self._n = 0
@@ -141,8 +143,6 @@ class AbstractDag(nx.DiGraph):
         executables = {}
         jobs = {}
         parents = {}
-
-        #print(root.tag, schema)
 
         # Parse
         for elem in root:
@@ -166,6 +166,8 @@ class AbstractDag(nx.DiGraph):
                     adjacency_list[parent] = [child]
 
         # Create the DAG
+        # print(adjacency_list)
+
         for father,childs in adjacency_list.items():
             # print(father,childs,jobs[father]._name)
             
@@ -185,6 +187,60 @@ class AbstractDag(nx.DiGraph):
                 self.add_node(c)
                 self.add_edge(father, c)
 
+        if add_stagein:
+            roots = self.roots()
+
+            all_input = [self.nodes[u]["input"] for u in self]
+            flatten_input = []
+            for x in all_input:
+                flatten_input += x
+
+            set_input = list(set(flatten_input))
+            args_cmd = ''
+            for x in set_input:
+                args_cmd = args_cmd + x + ' '
+            
+            self.add_node("stage-in",
+                    label="stage-in",
+                    args=args_cmd,
+                    input=set_input,
+                    stdin=[],
+                    output=[],
+                    exe="stage-in.sh",
+                    cores=1,
+                    runtime=100
+            )
+
+            for r in roots:
+                self.add_edge("stage-in", r)
+
+        if add_stageout:
+            leafs = self.leafs()
+
+            all_output = [self.nodes[u]["output"] for u in self]
+            flatten_output = []
+            for x in all_output:
+                flatten_output += x
+
+            set_output = list(set(flatten_output))
+            args_cmd = ''
+            for x in set_output:
+                args_cmd = args_cmd + x + ' '
+
+            self.add_node("stage-out",
+                    label="stage-out",
+                    args=args_cmd,
+                    input=[],
+                    stdin=[],
+                    output=set_output,
+                    exe="stage-out.sh",
+                    cores=1,
+                    runtime=100
+            )
+
+            for l in leafs:
+                self.add_edge(l,"stage-out")
+
     def __iter__(self):
         self._n = 0
         self._order = list(nx.topological_sort(self))
@@ -201,6 +257,9 @@ class AbstractDag(nx.DiGraph):
     def roots(self):
         return [n for n,d in self.in_degree() if d == 0]
 
+    def leafs(self):
+        return [n for n,d in self.out_degree() if d == 0]
+
     def write(self, dot_file=None):
         A = nx.nx_agraph.to_agraph(self)
         if not dot_file:
@@ -214,6 +273,8 @@ class AbstractDag(nx.DiGraph):
         if not output_file:
             output_file = self.graph["id"]+".pdf"
         plt.savefig(output_file)
+
+
 
 def slurm_sync(queue, max_jobs, nb_jobs, freq_sec):
     if max_jobs < nb_jobs:
@@ -249,7 +310,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
         walltime = "--time=1:00:00"
 
     dep = "--dependency=afterok:"
-    prefix_cmd = "sbatch --parsable --export=OUTPUT_DIR=$OUTPUT_DIR --mail-user=lpottier@isi.edu --mail-type=FAIL --constraint=haswell --nodes=1 {}".format(walltime)
+    prefix_cmd = "sbatch --parsable --export=OUTPUT_DIR=$OUTPUT_DIR,RUN_DIR=$RUN_DIR --mail-user=lpottier@isi.edu --mail-type=FAIL --constraint=haswell --nodes=1 {}".format(walltime)
     job_name = "--job-name="
     #opt = "--ntasks=1 --ntasks-per-core=1"
 
@@ -268,6 +329,8 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
                 f.write("\n\n")
                 f.write("OUTPUT_DIR=\"output-sns\"\n")
                 f.write("mkdir -p $OUTPUT_DIR\n")
+                f.write("RUN_DIR=\"$OUTPUT_DIR\"\n")
+                f.write("mkdir -p $RUN_DIR\n")
 
                 f.write("echo \"Task {}\"\n".format(u))
                 input_args = G.nodes[u]["args"]
@@ -295,14 +358,31 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
     else:
         sys.stderr.write(" === Use input files as defined in {}\n".format(adag["name"]))
 
+    
+    # all_input = [G.nodes[u]["input"] for u in G]
+    # flatten_input = []
+    # for x in all_input:
+    #     flatten_input += x
+
+    # set_input = set(flatten_input)
 
     with open(output, 'w') as f:
         f.write("#!/bin/bash\n")
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
         f.write("#{} {}\n\n".format("created", time.ctime()))
 
+        f.write("OUTPUT_DIR=\"output-sns\"\n")
+        f.write("mkdir -p $OUTPUT_DIR\n")
+        f.write("RUN_DIR=\"$OUTPUT_DIR\"\n")
+        f.write("mkdir -p $RUN_DIR\n\n")
+
         roots = G.roots()
-        f.write("echo \"Number of jobs: {}\"\n\n".format(len(adag)))
+        f.write("echo \"Number of jobs : {}\"\n".format(len(adag)))
+        f.write("echo \"OUTPUT_DIR     : $OUTPUT_DIR\"\n")
+        f.write("echo \"RUN_DIR        : $RUN_DIR\"\n")
+        f.write("\n")
+
+
         max_job_sub = nersc_queue[queue][3]
         for i,u in enumerate(G):
             if i >= max_job_sub:
@@ -331,6 +411,11 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
                 cmd = "{} {}".format(bin_args, input_args)
 
+            if u == "stage-in":
+                cmd = cmd + ' $RUN_DIR'
+
+            #TODO: handle stage out
+
             #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
             if u in roots:
                 f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
@@ -344,9 +429,11 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
                 f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
 
-            f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue[0]))
+            f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue))
 
     os.chmod(output, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Slurm compatible workflow from DAX files')
@@ -367,6 +454,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     dax_id = os.path.basename(args.dax).split('.')[0]
+
+    submit_script = "submit.sh"
 
     if args.queue not in nersc_queue:
         sys.stderr.write(" === Unknown submission queue -> use \"debug\" queue\n")
@@ -394,7 +483,7 @@ if __name__ == '__main__':
     #     os.mkdir(output_dir)
     #     sys.stderr.write(" === Directory {} created\n".format(output_dir))
 
-    G = AbstractDag(args.dax)
+    G = AbstractDag(args.dax, add_stagein=True)
 
     # old_path = os.getcwd()+'/'
     # os.chdir(old_path+output_dir)
@@ -403,12 +492,12 @@ if __name__ == '__main__':
 
     create_slurm_workflow(
         adag=G, 
-        output="submit.sh", 
+        output=submit_script, 
         bin_dir=args.bin, 
         input_dir=args.input,
         queue=args.queue)
 
-    sys.stderr.write(" === submit.sh written in current directory {}\n".format(os.getcwd()))
+    sys.stderr.write(" === {} written in current directory {}\n".format(submit_script,os.getcwd()))
 
     # print(G.graph, len(G))
 
