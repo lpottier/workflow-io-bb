@@ -196,26 +196,24 @@ class AbstractDag(nx.DiGraph):
             flatten_input = []
             for x in all_input:
                 flatten_input += x
-
             set_input = set(flatten_input)
 
             all_output = [self.nodes[u]["output"] for u in self]
             flatten_output = []
             for x in all_output:
                 flatten_output += x
-
             set_output = set(flatten_output)
 
             set_final = list(set_input.difference(set_output))
 
             args_cmd = ''
-            for x in set_input:
+            for x in set_final:
                 args_cmd = args_cmd + x + ' '
             
             self.add_node("stagein",
                     label="stagein",
                     args=args_cmd,
-                    input=set_input,
+                    input=set_final,
                     stdin=[],
                     output=[],
                     exe="stage-in.sh",
