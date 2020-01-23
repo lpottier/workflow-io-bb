@@ -322,7 +322,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
         walltime = "--time=1:00:00"
 
     dep = "--dependency=afterok:"
-    prefix_cmd = "sbatch --parsable --export=OUTPUT_DIR=$OUTPUT_DIR,RUN_DIR=$RUN_DIR --mail-user=lpottier@isi.edu --mail-type=FAIL --constraint=haswell --nodes=1 {}".format(walltime)
+    prefix_cmd = "sbatch --parsable --export=OUTPUT_DIR=$OUTPUT_DIR,RUN_DIR=$RUN_DIR --mail-user=lpottier@isi.edu --mail-type=FAIL --constraint=haswell --nodes=1 --ntasks=1 {}".format(walltime)
     job_name = "--job-name="
     #opt = "--ntasks=1 --ntasks-per-core=1"
 
@@ -442,8 +442,13 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
             #TODO: handle stage out
 
             #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
+            chdir = "--chdir=$RUN_DIR"
+
+            if u == "stagein":
+                chdir = ''
+                
             if u in roots:
-                f.write("{}=$({} --chdir=$RUN_DIR --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
+                f.write("{}=$({} {} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, chdir, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
             else:
                 pred = ''
                 for v in G.pred[u]:
@@ -452,7 +457,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
                     else:
                         pred = pred + ":${}".format(v)
 
-                f.write("{}=$({} --chdir=$RUN_DIR --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
+                f.write("{}=$({} {} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, chdir, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
 
             f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue))
 
