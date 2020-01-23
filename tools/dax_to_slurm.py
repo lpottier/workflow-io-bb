@@ -383,7 +383,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
         f.write("#{} {}\n\n".format("created", time.ctime()))
 
-        f.write("OUTPUT_DIR=\"output-sns-$(date \"+%H_%d-%M-%Y\")\"\n")
+        f.write("OUTPUT_DIR=\"output-sns-$(date \"+%M-%H_%d-%Y\")\"\n")
         f.write("mkdir -p $OUTPUT_DIR\n")
         f.write("RUN_DIR=\"$OUTPUT_DIR\"\n")
         f.write("mkdir -p $RUN_DIR\n\n")
