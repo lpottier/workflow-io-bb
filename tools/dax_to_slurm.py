@@ -190,12 +190,24 @@ class AbstractDag(nx.DiGraph):
         if add_stagein:
             roots = self.roots()
 
+            # We compute the difference between file used as input and file produced as output
+            # To stage in only initial input files
             all_input = [self.nodes[u]["input"] for u in self]
             flatten_input = []
             for x in all_input:
                 flatten_input += x
 
-            set_input = list(set(flatten_input))
+            set_input = set(flatten_input)
+
+            all_output = [self.nodes[u]["output"] for u in self]
+            flatten_output = []
+            for x in all_output:
+                flatten_output += x
+
+            set_output = set(flatten_output)
+
+            set_final = list(set_input.difference(set_output))
+
             args_cmd = ''
             for x in set_input:
                 args_cmd = args_cmd + x + ' '
@@ -216,7 +228,7 @@ class AbstractDag(nx.DiGraph):
 
         if add_stageout:
             leafs = self.leafs()
-
+            # TODO: avoid transfer all output files, maybe only the one with the transfer=True flag
             all_output = [self.nodes[u]["output"] for u in self]
             flatten_output = []
             for x in all_output:
