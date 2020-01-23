@@ -6,6 +6,7 @@ import sys
 import time
 import stat
 import math
+import glob
 import argparse
 import importlib
 import shlex # for shlex.split
@@ -382,7 +383,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
         f.write("#{} {}\n".format("creator", "%s@%s" % (USER, os.uname()[1])))
         f.write("#{} {}\n\n".format("created", time.ctime()))
 
-        f.write("OUTPUT_DIR=\"output-sns\"\n")
+        f.write("OUTPUT_DIR=\"output-sns-$(date \"+%H_%d-%M-%Y\")\"\n")
         f.write("mkdir -p $OUTPUT_DIR\n")
         f.write("RUN_DIR=\"$OUTPUT_DIR\"\n")
         f.write("mkdir -p $RUN_DIR\n\n")
@@ -419,10 +420,17 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
                     if bin_dir:
                         bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
+                        input_bin_args = ' '
+                        for e in glob.glob(bin_dir+'/*'):
+                            input_bin_args = input_bin_args + e + ' '
                     else:
                         bin_args = G.nodes[u]["exe"]
+                        # input_bin_args = ' '
+                        # for e in glob.glob(bin_dir+'*'):
+                        #     input_bin_args = input_bin_args + e + ' '
+                            
 
-                    cmd = "{} {}".format(bin_args, input_args)
+                    cmd = "{} {} {}".format(bin_args, input_args, input_bin_args)
                     cmd = cmd + ' $RUN_DIR'
                 else:
                     input_args = ' '
@@ -435,7 +443,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
             #TODO: add --bbf=filename or --bb="capacity=100gb" no file staging supported with --bb
             if u in roots:
-                f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
+                f.write("{}=$({} --chdir=$RUN_DIR --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, cmd))
             else:
                 pred = ''
                 for v in G.pred[u]:
@@ -444,7 +452,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
                     else:
                         pred = pred + ":${}".format(v)
 
-                f.write("{}=$({} --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
+                f.write("{}=$({} --chdir=$RUN_DIR --output=$OUTPUT_DIR/{}.%j.output --error=$OUTPUT_DIR/{}.%j.error --job-name={} --dependency=afterok:{} {})\n".format(u, prefix_cmd, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, adag.graph["id"]+"-"+u, pred, cmd))
 
             f.write("echo \"={}= Job ${} scheduled on queue {} at $(date --rfc-3339=ns)\"\n\n".format(i+1,u,queue))
 
