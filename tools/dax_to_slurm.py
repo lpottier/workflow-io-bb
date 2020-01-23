@@ -196,14 +196,15 @@ class AbstractDag(nx.DiGraph):
             flatten_input = []
             for x in all_input:
                 flatten_input += x
+
             set_input = set(flatten_input)
 
             all_output = [self.nodes[u]["output"] for u in self]
             flatten_output = []
             for x in all_output:
                 flatten_output += x
-            set_output = set(flatten_output)
 
+            set_output = set(flatten_output)
             set_final = list(set_input.difference(set_output))
 
             args_cmd = ''
@@ -394,6 +395,7 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
 
 
         max_job_sub = nersc_queue[queue][3]
+
         for i,u in enumerate(G):
             if i >= max_job_sub:
                 # We have reach the max job submission, so we need to wait until we have a free slot
@@ -406,23 +408,28 @@ def create_slurm_workflow(adag, output, bin_dir, input_dir, queue, wrapper=False
             if wrapper:
                 cmd = "{}.sh".format(u)
             else:
-                input_args = ' '
-                if input_dir:
-                    for elem in shlex.split(G.nodes[u]["args"]) + G.nodes[u]["stdin"]:
-                        if elem.startswith('--') or elem.startswith('-'):
-                            input_args += elem + ' '
-                        else:
-                            input_args += input_dir + '/' + elem + ' '
+                if u == "stagein":
+                    input_args = ' '
+                    if input_dir:
+                        for elem in shlex.split(G.nodes[u]["args"]) + G.nodes[u]["stdin"]:
+                            if elem.startswith('--') or elem.startswith('-'):
+                                input_args += elem + ' '
+                            else:
+                                input_args += input_dir + '/' + elem + ' '
 
-                if bin_dir:
-                    bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
+                    if bin_dir:
+                        bin_args = bin_dir+'/'+os.path.basename(G.nodes[u]["exe"])
+                    else:
+                        bin_args = G.nodes[u]["exe"]
+
+                    cmd = "{} {}".format(bin_args, input_args)
+                    cmd = cmd + ' $RUN_DIR'
                 else:
-                    bin_args = G.nodes[u]["exe"]
-
-                cmd = "{} {}".format(bin_args, input_args)
-
-            if u == "stagein":
-                cmd = cmd + ' $RUN_DIR'
+                    input_args = ' '
+                    for file in G.nodes[u]["stdin"]:
+                        input_args = input_args + file + ' '
+                    
+                    cmd = "{} {}".format(os.path.basename(G.nodes[u]["exe"]), G.nodes[u]["args"]+input_args)
 
             #TODO: handle stage out
 
