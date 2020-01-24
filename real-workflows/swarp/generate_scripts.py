@@ -564,18 +564,18 @@ class SwarpInstance:
         # #s += "        cp $FILES_TO_STAGE ${OUTPUT_DIR}/${process}\n""
         # s += "    done\n"
 
-        s += "    RESAMP_DIR=${OUTPUT_DIR}/${process}/resamp\n"
+        s += "    RESAMP_DIR=\"resamp\"\n"
         s += "\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
-        s += "        mkdir -p $RESAMP_DIR\n"
+        s += "        mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
         s += "\n"
         s += "        cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
         s += "        LOC_RESAMPLE_CONF=${OUTPUT_DIR}/${process}/resample.swarp\n"
-        s += "        sed -i -e \"s|@DIR@|$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "        sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
         s += "        LOC_COMBINE_CONF=${OUTPUT_DIR}/${process}/combine.swarp\n"
-        s += "        sed -i -e \"s|@DIR@|$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "        sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
         s += "\n"
         s += "        cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
         s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
@@ -692,7 +692,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $LOC_RESAMPLE_CONF $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -731,7 +731,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $LOC_COMBINE_CONF ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -797,8 +797,8 @@ class SwarpInstance:
 
         s += "\n"
 
-        s += "echo \"Make tarball ... $(date --rfc-3339=ns)\"\n"
-        s += "tar jcf \"$CURRENT_DIR.tar.bz2" "$CURRENT_DIR\"\n"
+        s += "echo \"Make tarball \"$CURRENT_DIR.tar.bz2\" ... $(date --rfc-3339=ns)\"\n"
+        s += "tar jcf \"$CURRENT_DIR.tar.bz2\" \"$CURRENT_DIR\"\n"
         s += "echo \"Done. Finished at $(date --rfc-3339=ns)\"\n"
 
         return s
