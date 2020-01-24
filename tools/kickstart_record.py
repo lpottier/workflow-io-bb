@@ -326,7 +326,7 @@ class KickstartEntry(object):
             self._tree.parse(self._path)
             self._root = self._tree.getroot()
         except xml.ParseError as e:
-            if check_multiple_xml_file(self.orig_path):
+            if check_multiple_xml_file(self._path):
                 print ("[warning]", self._path,": multiple kickstart record detected")
 
             else:
@@ -1100,7 +1100,10 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
-    create_data_from_exp(exp_dir, csv_file="swarp_exp21jan32.csv")
+    #Latest 22 jan
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-32C-50-100B-1_64W-XF-21-1"
+    
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp22.csv")
 
 
     # seaborn_found = importlib.util.find_spec('seaborn')

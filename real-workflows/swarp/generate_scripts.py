@@ -281,7 +281,7 @@ class SwarpInstance:
 
         #TODO : check this 
 
-        # string += "#SBATCH --ntasks-per-node=32\n"
+        string += "#SBATCH --ntasks-per-node=1\n"
         # string += "#SBATCH --ntasks-per-socket=16\n"
 
 
@@ -343,7 +343,7 @@ class SwarpInstance:
         string += "\n"
         return string
 
-    def script_header(self):
+    def script_header(self, interactive=False):
         s = ''
         s += "usage()\n"
         s += "{\n"
@@ -391,8 +391,12 @@ class SwarpInstance:
         s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
-        s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by sbatch\n"
-        s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
+        if interactive:
+            s += "NODE_COUNT={}   # Number of compute nodes requested by sbatch\n".format(self.sched_config.nodes())
+            s += "TASK_COUNT={}   # Number of tasks allocated\n".format(self.sched_config.nodes())
+        else:
+            s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by sbatch\n"
+            s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
@@ -433,7 +437,10 @@ class SwarpInstance:
         s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
         s += "\n"
 
-        s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
+        if interactive:
+            s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
+        else:
+            s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
         s += "export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
         s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
@@ -507,19 +514,18 @@ class SwarpInstance:
 
     def salloc_str():
         s = ''
-        s = "salloc -N 1 -C haswell -q interactive -t 1:00:00 --bbf=bbf.conf\n"
+        s = "salloc -N 1 -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
         return s
 
     def bbconf_salloc():
         s = ''
-        s = "#DW jobdw capacity=100GB access_mode=striped type=scratch\n"
+        s = "#DW jobdw capacity=50GB access_mode=striped type=scratch\n"
         return s
 
     def average_loop(self):
         s = ''
         s += "for k in $(seq 1 1 $NB_AVG); do\n"
         s += "    echo \"#### Starting run $k... $(date --rfc-3339=ns)\"\n"
-        s += "    rm -rf $INPUT_DIR\n"
         s += "\n"
 
         s += "    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}\n"
@@ -535,15 +541,16 @@ class SwarpInstance:
         s += "    OUTPUT_FILE=$OUTPUT_DIR/output.log\n"
         s += "    BB_INFO=$OUTPUT_DIR/bb.log\n"
         s += "    DU_RES=$OUTPUT_DIR/data-stagedin.log\n"
+        s += "    DU_RESAMP=$OUTPUT_DIR/data-resamp.log\n"
         s += "    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log\n"
         s += "\n"
 
-        s += "    mkdir -p $OUTPUT_DIR\n"
-        s += "    chmod 777 $OUTPUT_DIR\n"
-        s += "\n"
+        # s += "    mkdir -p $OUTPUT_DIR\n"
+        # s += "    chmod 777 $OUTPUT_DIR\n"
+        # s += "\n"
 
-        s += "    export RESAMP_DIR=$OUTPUT_DIR/resamp\n"
-        s += "\n"
+        # s += "    export RESAMP_DIR=$OUTPUT_DIR/resamp\n"
+        # s += "\n"
 
         s += "    mkdir -p $RESAMP_DIR\n"
         s += "    chmod 777 $RESAMP_DIR\n"
@@ -559,12 +566,30 @@ class SwarpInstance:
         #s += "        cp $FILES_TO_STAGE ${OUTPUT_DIR}/${process}\n""
         s += "    done\n"
 
-        # FIX THIS
-        s += "    #### To select file to stage\n"
-        s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
-        s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
-        s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        s += "    sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
+        s += "    RESAMP_DIR=${OUTPUT_DIR}/${process}/resamp\n"
+        s += "\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
+        s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
+        s += "        mkdir -p $RESAMP_DIR\n"
+        s += "\n"
+        s += "        cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
+        s += "        LOC_RESAMPLE_CONF=${OUTPUT_DIR}/${process}/resample.swarp\n"
+        s += "        sed -i -e \"s|@DIR@|$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "        LOC_COMBINE_CONF=${OUTPUT_DIR}/${process}/combine.swarp\n"
+        s += "        sed -i -e \"s|@DIR@|$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "\n"
+        s += "        cp $FILES_TO_STAGE $OUTPUT_DIR/${process}/\n"
+        s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
+        s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
+        s += "    done\n"
+
+        # # FIX THIS
+        # s += "    #### To select file to stage\n"
+        # s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
+        # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
+        # s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
+        # s += "    sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
         #s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
         # s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $LOC_FILES_TO_STAGE\n"
         # s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
@@ -649,7 +674,7 @@ class SwarpInstance:
         s += "    fi\n"
         s += "\n"
 
-        s += "    RESAMPLE_FILES=\"$OUTPUT_DIR/resample_files.txt\"\n"
+        s += "    RESAMPLE_FILES=\"$OUTPUT_DIR/input_files.txt\"\n"
         s += "    $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
@@ -658,6 +683,12 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
 
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "        dsize=$(du -sh $RESAMP_DIR | awk '{print $1}')\n"
+        s += "        nbfiles=$(ls -al $RESAMP_DIR | grep '^-' | wc -l)\n"
+        s += "        echo \"$RESAMP_DIR $nbfiles $dsize\" | tee $DU_RESAMP\n"
+        s += "    done\n"
+        s += "\n"
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
@@ -670,7 +701,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $LOC_RESAMPLE_CONF $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -703,7 +734,7 @@ class SwarpInstance:
         if self.slurm_profile:
             s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c $LOC_COMBINE_CONF ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -740,27 +771,39 @@ class SwarpInstance:
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff4=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "\n"
-
-        s += "cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
-        s += "for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "    cd \"${process}\"\n"
-        s += "    rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
-        s += "    cd ..\n"
-        s += "done\n"
-
-        s += "    OUTPUT_FILE=$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/output.log\n"
-        s += "    rm -rf \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/*/*.fits\"\n"
         s += "    echo \"TIME STAGE_OUT $tdiff4\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
+        s += "    OUTPUT_FILE=$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/output.log\n"
         s += "    echo \"========\" | tee -a $OUTPUT_FILE\n"
         s += "    tdiff=$(echo \"$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4\" | bc -l)\n"
         s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
+
+        s += "    echo \"=== Cleaning run $k... $(date --rfc-3339=ns)\"\n"
+        s += "    rm -rf $DW_JOB_STRIPED/*\n"
+        s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
+        s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "        cd \"${process}\"\n"
+        s += "        rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
+        s += "        cd ..\n"
+        s += "    done\n"
+
+        #s += "    rm -rf \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/*/*.fits\"\n"
+
         s += "\n"
         #s += "    set -x\n"
         #s += "    set +x\n"
         s += "\n"
+        #s += "    rm -rf $INPUT_DIR\n"
         s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
         s += "done\n"
+
+        s += "\n"
+
+        s += "echo \"Make tarball ... $(date --rfc-3339=ns)\"\n"
+        s += "tar jcf \"$CURRENT_DIR.tar.bz2" "$CURRENT_DIR\"\n"
+        s += "echo \"Done. Finished at $(date --rfc-3339=ns)\"\n"
+
         return s
 
     @staticmethod
@@ -849,7 +892,7 @@ class SwarpInstance:
 
         with open("interactive_"+file, 'w') as f:
             f.write(self.script_modules())
-            f.write(self.script_header())
+            f.write(self.script_header(interactive=True))
             f.write(self.average_loop())
 
         os.chmod("interactive_"+file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
