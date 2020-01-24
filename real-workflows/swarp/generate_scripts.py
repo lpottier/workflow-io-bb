@@ -545,26 +545,23 @@ class SwarpInstance:
         s += "    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log\n"
         s += "\n"
 
-        # s += "    mkdir -p $OUTPUT_DIR\n"
-        # s += "    chmod 777 $OUTPUT_DIR\n"
-        # s += "\n"
+        s += "    mkdir -p $OUTPUT_DIR\n"
+        s += "    chmod 777 $OUTPUT_DIR\n"
+        s += "\n"
 
         # s += "    export RESAMP_DIR=$OUTPUT_DIR/resamp\n"
         # s += "\n"
 
-        s += "    mkdir -p $RESAMP_DIR\n"
-        s += "    chmod 777 $RESAMP_DIR\n"
-        s += "\n"
+        # s += "    mkdir -p $RESAMP_DIR\n"
+        # s += "    chmod 777 $RESAMP_DIR\n"
+        # s += "\n"
 
-        s += "    #rm -f {error,output}.*\n"
-        s += "\n"
-
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        #s += "        mkdir -p ${rundir}/${process}\n"
-        s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
-        s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
-        #s += "        cp $FILES_TO_STAGE ${OUTPUT_DIR}/${process}\n""
-        s += "    done\n"
+        # s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        # #s += "        mkdir -p ${rundir}/${process}\n"
+        # s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
+        # s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
+        # #s += "        cp $FILES_TO_STAGE ${OUTPUT_DIR}/${process}\n""
+        # s += "    done\n"
 
         s += "    RESAMP_DIR=${OUTPUT_DIR}/${process}/resamp\n"
         s += "\n"
