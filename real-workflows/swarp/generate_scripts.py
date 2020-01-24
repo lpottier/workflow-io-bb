@@ -355,31 +355,7 @@ class SwarpInstance:
         s += "    exit\n"
         s += "fi\n"
         s += "\n"
-        s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
-        s += "COUNT={}\n".format(self.nb_files_on_bb)
         s += "CURRENT_DIR=$(pwd)\n"
-        s += "\n"
-        s += "# Test code to verify command line processing\n\n"
-        s += "if [ -f \"$FILES_TO_STAGE\" ]; then\n"
-        s += "    echo \"List of files used: $FILES_TO_STAGE\"\n"
-        s += "else\n"
-        s += "    echo \"$FILES_TO_STAGE does not seem to exist\"\n"
-        s += "    exit\n"
-        s += "fi\n"
-        s += "\n"
-
-        s += "if (( \"$COUNT\" < 0 )); then\n"
-        s += "    COUNT=$(cat $FILES_TO_STAGE | wc -l)\n"
-        s += "fi\n"
-        s += "\n"
-
-        s += "echo \"Number of files staged in BB: $COUNT\"\n"
-        s += "\n"
-
-        s += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
-        s += "IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'\n"
-        s += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
-        s += "\n"
 
         #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
         s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
@@ -404,6 +380,31 @@ class SwarpInstance:
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
+        s += "\n"
+
+        s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
+        s += "COUNT={}\n".format(self.nb_files_on_bb)
+        s += "\n"
+        s += "# Test code to verify command line processing\n\n"
+        s += "if [ -f \"$BASE/$FILES_TO_STAGE\" ]; then\n"
+        s += "    echo \"List of files used: $FILES_TO_STAGE\"\n"
+        s += "else\n"
+        s += "    echo \"$FILES_TO_STAGE does not seem to exist in $BASE\"\n"
+        s += "    exit\n"
+        s += "fi\n"
+        s += "\n"
+
+        s += "if (( \"$COUNT\" < 0 )); then\n"
+        s += "    COUNT=$(cat $FILES_TO_STAGE | wc -l)\n"
+        s += "fi\n"
+        s += "\n"
+
+        s += "echo \"Number of files staged in BB: $COUNT\"\n"
+        s += "\n"
+
+        s += "IMAGE_PATTERN='PTF201111*.w.fits'\n"
+        s += "IMAGE_WEIGHT_PATTERN='PTF201111*.w.weight.fits'\n"
+        s += "RESAMPLE_PATTERN='PTF201111*.w.resamp.fits'\n"
         s += "\n"
 
         s += "CONFIG_DIR=$BASE\n"
@@ -457,38 +458,37 @@ class SwarpInstance:
     def file_to_stage(self, count, pairs=False):
         s = ''
         s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits {}/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits {}/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits {}/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits {}/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits {}/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits {}/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits {}/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits {}/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits {}/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits {}/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits {}/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits {}/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits {}/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
         s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        
 
         arr = [x+"\n" for x in s.split('\n')[:-1]]
         short_s = ''
@@ -576,7 +576,7 @@ class SwarpInstance:
         s += "        LOC_COMBINE_CONF=${OUTPUT_DIR}/${process}/combine.swarp\n"
         s += "        sed -i -e \"s|@DIR@|$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
         s += "\n"
-        s += "        cp $FILES_TO_STAGE $OUTPUT_DIR/${process}/\n"
+        s += "        cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
         s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
         s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    done\n"
@@ -598,7 +598,7 @@ class SwarpInstance:
         # s += "    fi\n"
         # s += "\n"
 
-        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT*2\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
+        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
         s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
@@ -680,13 +680,6 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
 
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "        dsize=$(du -sh $RESAMP_DIR | awk '{print $1}')\n"
-        s += "        nbfiles=$(ls -al $RESAMP_DIR | grep '^-' | wc -l)\n"
-        s += "        echo \"$RESAMP_DIR $nbfiles $dsize\" | tee $DU_RESAMP\n"
-        s += "    done\n"
-        s += "\n"
-
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
@@ -712,6 +705,12 @@ class SwarpInstance:
         s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
+        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "        dsize=$(du -sh $RESAMP_DIR | awk '{print $1}')\n"
+        s += "        nbfiles=$(ls -al $RESAMP_DIR | grep '^-' | wc -l)\n"
+        s += "        echo \"$RESAMP_DIR $nbfiles $dsize\" | tee $DU_RESAMP\n"
+        s += "    done\n"
+        s += "\n"
 
         s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
@@ -1071,10 +1070,10 @@ if __name__ == '__main__':
     os.chdir(old_path+output_dir)
     sys.stderr.write(" === Current directory {}\n".format(os.getcwd()))
 
-    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='${RESAMP_DIR}')
+    resample_config = SwarpWorkflowConfig(task_type=TaskType.RESAMPLE, nthreads=args.threads, resample_dir='@DIR@')
     resample_config.write(overide=True) #Write out the resample.swarp
 
-    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='${RESAMP_DIR}')
+    combine_config = SwarpWorkflowConfig(task_type=TaskType.COMBINE, nthreads=args.threads, resample_dir='@DIR@')
     combine_config.write(overide=True) #Write out the combine.swarp
 
     sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, queue=args.queue, timeout=args.timeout, num_cores=args.threads)
