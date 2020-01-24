@@ -709,7 +709,7 @@ class SwarpInstance:
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        dsize=$(du -sh ${OUTPUT_DIR}/${process}/resamp/ | awk '{print $1}')\n"
         s += "        nbfiles=$(ls -al ${OUTPUT_DIR}/${process}/resamp/ | grep '^-' | wc -l)\n"
-        s += "        echo \"${OUTPUT_DIR}/${process}/resamp/ $nbfiles $dsize\" | tee $DU_RESAMP\n"
+        s += "        echo \"${OUTPUT_DIR}/${process}/resamp/ $nbfiles $dsize\" | tee -a $DU_RESAMP\n"
         s += "    done\n"
         s += "\n"
 
