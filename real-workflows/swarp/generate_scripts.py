@@ -797,9 +797,12 @@ class SwarpInstance:
 
         s += "\n"
 
-        s += "echo \"Make tarball \"$CURRENT_DIR.tar.bz2\" ... $(date --rfc-3339=ns)\"\n"
-        s += "tar jcf \"$CURRENT_DIR.tar.bz2\" \"$CURRENT_DIR\"\n"
-        s += "echo \"Done. Finished at $(date --rfc-3339=ns)\"\n"
+        # s += "base_tar=$(dirname $CURRENT_DIR)\n"
+        # s += "target=$(basename $base_tar)\n"
+
+        # s += "echo \"Make tarball \"$target.tar.bz2\" ... $(date --rfc-3339=ns)\"\n"
+        # s += "tar jcf \"$target.tar.bz2\" -C \"$base_tar\" \"$target\"\n"
+        # s += "echo \"Done. Finished at $(date --rfc-3339=ns)\"\n"
 
         return s
 
