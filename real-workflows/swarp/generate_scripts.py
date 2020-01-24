@@ -434,10 +434,6 @@ class SwarpInstance:
         s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
         s += "\n"
 
-        s += "INPUT_DIR_PFS=$SCRATCH/$SWARP_DIR/input\n"
-        s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
-        s += "\n"
-
         if interactive:
             s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
         else:
@@ -445,6 +441,11 @@ class SwarpInstance:
         s += "export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
         s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
+        s += "\n"
+
+        s += "INPUT_DIR_PFS=$SCRATCH/$SWARP_DIR/input\n"
+        #s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
+        s += "INPUT_DIR=$GLOBAL_OUTPUT_DIR/input\n"
         s += "\n"
 
         s += "mkdir -p $OUTPUT_DIR_NAME\n"
@@ -1020,7 +1021,7 @@ if __name__ == '__main__':
     parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
                         help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
     parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
-                        help='Number of files staged in BB (-1 means all). List of values (-1 by default)')
+                        help='Number of files staged in BB (-1 means all). Must be even. List of values (-1 by default)')
 
     parser.add_argument('--slurm-profile', '-z', action="store_true",
                         help='Deactivate kickstart monitoring and activate slurm-based profiling')
@@ -1054,6 +1055,10 @@ if __name__ == '__main__':
         short_count = str(args.count[0])
         if short_count == '-1':
             short_count = '32'
+
+        if int(short_count) % 2 !=0:
+            sys.stderr.write("[error] --count={} cannot be an odd number.\n".format(short_count))
+            exit(-1)
     else:
         short_count = str(min(args.count))+'_'+str(max(args.count))
 
