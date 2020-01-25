@@ -7,6 +7,7 @@ import re
 import math
 import glob
 import importlib
+import time
 
 import xml.etree.ElementTree as xml
 
@@ -1046,52 +1047,67 @@ class KickstartDirectory:
                 csv_writer.writerow(line.split(" "))
 
 
-class ExpPlot(object):
-    """docstring for ExpPlot"""
-    def __init__(self, csv_file):
-        super(ExpPlot, self).__init__()
+# class ExpPlot(object):
+#     """docstring for ExpPlot"""
+#     def __init__(self, csv_file):
+#         super(ExpPlot, self).__init__()
 
-        seaborn_found = importlib.util.find_spec('seaborn')
-        if seaborn_found is None:
-            sys.write.stderr("[error] Seaborn package not found. exit")
-            exit(-1)
+#         seaborn_found = importlib.util.find_spec('seaborn')
+#         if seaborn_found is None:
+#             sys.write.stderr("[error] Seaborn package not found. exit")
+#             exit(-1)
 
-        import seaborn as sns
-        import pandas as pd
-        import matplotlib.pyplot as plt
-        #sns.set(style="ticks", color_codes=True)
+#         import seaborn as sns
+#         import pandas as pd
+#         import matplotlib.pyplot as plt
+#         #sns.set(style="ticks", color_codes=True)
         
-        self._csv_file = csv_file
+#         self._csv_file = csv_file
 
-    def plot_line_errors(self):
-        tel = pd.read_csv(self._csv_file)
+#     def plot_line_errors(self):
+#         tel = pd.read_csv(self._csv_file)
 
-        sns.set(style="whitegrid", color_codes=True)
-        nyctel = sns.load_dataset(tel)
+#         sns.set(style="whitegrid", color_codes=True)
+#         nyctel = sns.load_dataset(tel)
 
-        sns.relplot(x="timepoint", y="signal", col="region",
-                    hue="event", style="event",
-                    kind="line", data=fmri)
+#         sns.relplot(x="timepoint", y="signal", col="region",
+#                     hue="event", style="event",
+#                     kind="line", data=fmri)
 
 
 
 def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
-    directories = [Path(x) for x in glob.glob(exp_dir+pattern) if Path(x).is_dir()]
+
+    directories = [Path(x) for x in sorted(glob.glob(exp_dir+pattern)) if Path(x).is_dir()]
     if csv_file == None:
         csv_file = Path(Path(exp_dir) / Path(Path(exp_dir).name+".csv"))
     else:
         csv_file = Path(csv_file)
 
-    print(" {:<40s} => ".format(directories[0].name), end='')
+    start = []
+    end = []
+
+    start.append(time.time())
+    
+    print(" {:<40s} => ".format(directories[0].name), end='', flush=True)
     exp = KickstartDirectory(directories[0])
     exp.write_csv_global_by_pipeline(csv_file, write_header=True)
-    print("{:<40s}".format(csv_file.name))
+    
+    end.append(time.time())
+
+    print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
 
     for d in directories[1:]:
-        print(" {:<40s} => ".format(d.name), end='')
+        start.append(time.time())
+        print(" {:<40s} => ".format(d.name), end='', flush=True)
         exp = KickstartDirectory(d)
         exp.write_csv_global_by_pipeline(csv_file)
-        print("{:<40s}".format(csv_file.name))
+        end.append(time.time())
+        print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
+
+    print ("Output: {}. {} directories processed in {:.2f} seconds ({:.2f} sec/directory).".format(
+        csv_file.name, len(directories), end[-1] - start[0], (end[-1] - start[0])/len(directories) )
+    )
 
 
 if __name__ == "__main__":
@@ -1101,9 +1117,9 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
     #Latest 22 jan
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-32C-50-100B-1_64W-XF-21-1"
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/23jan/"
     
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp22.csv")
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp23.csv")
 
 
     # seaborn_found = importlib.util.find_spec('seaborn')

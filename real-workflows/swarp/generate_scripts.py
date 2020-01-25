@@ -223,7 +223,7 @@ class SwarpSchedulerConfig:
         return self.num_cores
 
 class SwarpBurstBufferConfig:
-    def __init__(self, size_bb, stage_input_dirs, stage_input_files, stage_output_dirs, access_mode="striped", bbtype="scratch"):
+    def __init__(self, size_bb, stage_input_dirs, stage_input_files, stage_output_dirs, access_mode, bbtype):
         self.size_bb = size_bb
         self.stage_input_dirs = stage_input_dirs #List of input dirs
         self.stage_output_dirs = stage_output_dirs #List of output dirs (usually one)
@@ -292,6 +292,9 @@ class SwarpInstance:
         string += "#SBATCH --error=error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
         string += "#SBATCH --mail-type=FAIL\n"
+        string += "#SBATCH --switches=1\n"
+        #string += "#SBATCH --core-spec=4\n"
+
         # string += "#SBATCH --export=ALL\n"
         string += "#SBATCH --exclusive=user\n"
         if self.slurm_profile:
@@ -301,8 +304,12 @@ class SwarpInstance:
 
         return string
 
-    def dw_temporary(self):
-        string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
+    def dw_temporary(self, persistent_bb=None):
+        if persistent_bb != None:
+            string = "#DW persistentdw name={}\n".format(persistent_bb)
+            #use in the script: $DW_PERSISTENT_STRIPED_name
+        else:
+            string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         if self.standalone or self.no_stagein:
             string += "#@STAGE@\n"
         else:
@@ -520,7 +527,7 @@ class SwarpInstance:
 
     def bbconf_salloc():
         s = ''
-        s = "#DW jobdw capacity=50GB access_mode=striped type=scratch\n"
+        s = "#DW jobdw capacity=200GB access_mode=striped type=scratch\n"
         return s
 
     def average_loop(self):
@@ -690,9 +697,9 @@ class SwarpInstance:
         # s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         if self.slurm_profile:
-            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
+            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -729,9 +736,9 @@ class SwarpInstance:
         s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
         if self.slurm_profile:
-            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         else:
-            s += "        srun -n 1 -N 1 -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
+            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -1091,7 +1098,9 @@ if __name__ == '__main__':
                     SWARP_DIR + "/input"],
                 stage_input_files=[],
                 stage_output_dirs=[
-                    SWARP_DIR + "/output"]
+                    SWARP_DIR + "/output"],
+                access_mode="striped", 
+                bbtype="scratch"
                 )
 
     instance1core = SwarpInstance(script_dir=output_dir,
