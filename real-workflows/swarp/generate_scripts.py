@@ -6,7 +6,7 @@ import stat
 import platform
 import time
 import tempfile
-import subprocess as sb
+import subprocess
 import argparse
 
 from enum import Enum,unique,auto
@@ -1050,7 +1050,7 @@ if __name__ == '__main__':
                         help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
     parser.add_argument('--workflows', '-w', type=int, nargs='+', default=[1],
                         help='Number of identical SWarp workflows running in parallel. List of values (1 by default)')
-    parser.add_argument('--input-sharing', '-s', action='store_true',
+    parser.add_argument('--input-sharing', '-x', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
     parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=5,
                         help='Number of runs to average on (5 by default)')
@@ -1063,6 +1063,9 @@ if __name__ == '__main__':
 
     parser.add_argument('--stage-fits', '-z', action="store_true",
                         help='Stage .resamp.fits for all pipelines in the Burst Buffer')
+
+    parser.add_argument('--submit', '-s', action='store_true',
+                        help='After the generation directly submit the job to the batch scheduler')
 
     # parser.add_argument('--slurm-profile', '-z', action="store_true",
     #                     help='Deactivate kickstart monitoring and activate slurm-based profiling')
@@ -1156,8 +1159,15 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
 
-    run1.standalone(file="submit.sh", count=args.count[0], manual_stage=True, overide=True)
+    submit_file = "submit.sh"
+
+    run1.standalone(file=submit_file, count=args.count[0], manual_stage=True, overide=True)
     #run1.standalone_count(file="submit_files.sh", manual_stage=True, overide=True)
+
+    if args.submit:
+        result = subprocess.run(['bash', submit_file], stdout=subprocess.PIPE)
+        sys.stderr.write(" === Job submitted.\n")
+        print(result.stdout.decode('utf-8'))
 
     os.chdir(old_path)
     sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
