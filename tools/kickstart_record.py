@@ -9,6 +9,8 @@ import glob
 import importlib
 import time
 
+import concurrent.futures
+
 import xml.etree.ElementTree as xml
 
 from enum import Enum,unique,auto
@@ -1076,7 +1078,7 @@ class KickstartDirectory:
 
 
 
-def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
+def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot=None):
 
     directories = [Path(x) for x in sorted(glob.glob(exp_dir+pattern)) if Path(x).is_dir()]
     if csv_file == None:
@@ -1086,6 +1088,27 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
 
     start = []
     end = []
+
+    # if not threads:
+    #     # If threads is not specified, create as many threads as directories
+    #     threads = len(directories)
+    
+    # with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
+
+    #     data = {executor.submit(KickstartDirectory, directory): directory for directory in directories}
+    #     print("{} threads spawned....".format(threads))
+    #     header = True
+    #     for future in concurrent.futures.as_completed(data):
+    #         exp = data[future]
+    #         try:
+    #             res_exp = future.result()
+    #         except Exception as e:
+    #             print('[error] %r: %s' % (exp.name, e))
+    #         else:
+    #             res_exp.write_csv_global_by_pipeline(csv_file, write_header=header)
+    #             print(" {:<40s} => {:<20s} ".format(exp.name, csv_file.name))
+    #         header = False
+
 
     start.append(time.time())
     
@@ -1116,10 +1139,13 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
-    #Latest 22 jan
+    #Latest 23 jan
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/23jan/"
-    
     create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp23.csv")
+
+
+    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/"
+    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_test_switches.csv")
 
 
     # seaborn_found = importlib.util.find_spec('seaborn')

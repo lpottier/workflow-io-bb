@@ -250,7 +250,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True, slurm_profile=False):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, stagein_fits, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True, slurm_profile=False):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -264,6 +264,7 @@ class SwarpInstance:
         self.input_sharing = input_sharing
         # TODO: Fix this -> make a loop to automatically create experiments for each number of files
         self.nb_files_on_bb = nb_files_on_bb[0]
+        self.stagein_fits = stagein_fits # if True all the resamp.fits are staged in
         self.slurm_profile = slurm_profile
 
     def slurm_header(self):
@@ -391,6 +392,13 @@ class SwarpInstance:
 
         s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
         s += "COUNT={}\n".format(self.nb_files_on_bb)
+        if self.stagein_fits:
+            # We stage .resamp.fits in BB
+            s += "STAGE_FITS=1\n"
+        else:
+            # We stage .resamp.fits in PFS
+            s += "STAGE_FITS=0\n"
+        
         s += "\n"
         s += "# Test code to verify command line processing\n\n"
         s += "if [ -f \"$BASE/$FILES_TO_STAGE\" ]; then\n"
@@ -542,8 +550,9 @@ class SwarpInstance:
         s += "\n"
 
         s += "    #The local version\n"
-        s += "    mkdir -p $OUTPUT_DIR_NAME/${k}\n"
-        s += "    echo \"LOCAL_OUTPUT_DIR -> $OUTPUT_DIR_NAME/${k}\"\n"
+        s += "    export LOCAL_OUTPUT_DIR=$BASE/$OUTPUT_DIR_NAME/${k}/\n"
+        s += "    mkdir -p $LOCAL_OUTPUT_DIR\n"
+        s += "    echo \"LOCAL_OUTPUT_DIR -> $LOCAL_OUTPUT_DIR\"\n"
         s += "\n"
 
         s += "    OUTPUT_FILE=$OUTPUT_DIR/output.log\n"
@@ -575,14 +584,25 @@ class SwarpInstance:
         s += "\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
-        s += "        mkdir -p $OUTPUT_DIR_NAME/${k}/${process}\n"
+        s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
+        s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
+
         s += "\n"
         s += "        cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
         s += "        LOC_RESAMPLE_CONF=${OUTPUT_DIR}/${process}/resample.swarp\n"
-        s += "        sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
         s += "        LOC_COMBINE_CONF=${OUTPUT_DIR}/${process}/combine.swarp\n"
-        s += "        sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+
+        s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
+        # We stage .resamp.fits in PFS
+        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "        else\n"
+        # We stage .resamp.fits in BB
+        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "        fi\n"
+
         s += "\n"
         s += "        cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
         s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
@@ -696,10 +716,10 @@ class SwarpInstance:
         s += "        KICKSTART_OUTPUT=\"stat.resample.$SLURM_JOB_ID.${process}.xml\"\n"
         # s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        if self.slurm_profile:
-            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        else:
-            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
+        # if self.slurm_profile:
+        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
+        # else:
+        s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -714,9 +734,13 @@ class SwarpInstance:
         s += "\n"
 
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "        dsize=$(du -sh ${OUTPUT_DIR}/${process}/resamp/ | awk '{print $1}')\n"
-        s += "        nbfiles=$(ls -al ${OUTPUT_DIR}/${process}/resamp/ | grep '^-' | wc -l)\n"
-        s += "        echo \"${OUTPUT_DIR}/${process}/resamp/ $nbfiles $dsize\" | tee -a $DU_RESAMP\n"
+        s += "        dsize=$(du -sh ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
+        s += "        nbfiles=$(ls -al ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
+        s += "        echo \"BB ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ $nbfiles $dsize\" | tee -a $DU_RESAMP\n\n"
+
+        s += "        dsize_pfs=$(du -sh ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
+        s += "        nbfiles_pfs=$(ls -al ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
+        s += "        echo \"PFS ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR $nbfiles_pfs $dsize_pfs\" | tee -a $DU_RESAMP\n"
         s += "    done\n"
         s += "\n"
 
@@ -733,12 +757,16 @@ class SwarpInstance:
         #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
         s += "        cd ${OUTPUT_DIR}/${process}\n"
         s += "        KICKSTART_OUTPUT=\"stat.combine.$SLURM_JOB_ID.${process}.xml\"\n"
-        s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
-        # s += "      srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.coadd\" -e \"$OUTPUT_DIR/error.coadd\" $MONITORING -l \"$OUTPUT_DIR/stat.combine.xml\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN}\n"
-        if self.slurm_profile:
-            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
-        else:
-            s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
+        #s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
+        s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
+        s += "            srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
+        s += "        else\n"
+        s += "            srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
+        s += "        fi\n"
+        # if self.stagein_fits:
+        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
+        # else:
+        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
         s += "        cd ..\n"
         s += "        echo \"done\"\n"
         s += "        echo \"\"\n"
@@ -1033,8 +1061,11 @@ if __name__ == '__main__':
     parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
                         help='Number of files staged in BB (-1 means all). Must be even. List of values (-1 by default)')
 
-    parser.add_argument('--slurm-profile', '-z', action="store_true",
-                        help='Deactivate kickstart monitoring and activate slurm-based profiling')
+    parser.add_argument('--stage-fits', '-z', action="store_true",
+                        help='Stage .resamp.fits for all pipelines in the Burst Buffer')
+
+    # parser.add_argument('--slurm-profile', '-z', action="store_true",
+    #                     help='Deactivate kickstart monitoring and activate slurm-based profiling')
 
 
     args = parser.parse_args()
@@ -1109,9 +1140,10 @@ if __name__ == '__main__':
                                 sched_config=sched_config,
                                 nb_files_on_bb=args.count,
                                 bb_config=bb_config,
+                                stagein_fits=args.stage_fits,
                                 nb_avg=args.nb_run,
                                 input_sharing=args.input_sharing,
-                                slurm_profile=args.slurm_profile,
+                                slurm_profile=None,
                                 )
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
