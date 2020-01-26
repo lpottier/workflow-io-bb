@@ -1104,7 +1104,7 @@ if __name__ == '__main__':
         short_count = str(min(args.count))+'_'+str(max(args.count))
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
-    if args.stagein_fits:
+    if args.stage_fits:
         output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
     else:
         output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
