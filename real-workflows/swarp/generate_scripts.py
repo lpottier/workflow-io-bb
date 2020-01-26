@@ -738,9 +738,9 @@ class SwarpInstance:
         s += "        nbfiles=$(ls -al ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
         s += "        echo \"BB ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ $nbfiles $dsize\" | tee -a $DU_RESAMP\n\n"
 
-        s += "        dsize_pfs=$(du -sh ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
-        s += "        nbfiles_pfs=$(ls -al ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
-        s += "        echo \"PFS ${OUTPUT_DIR_NAME}/${k}/${process}/$RESAMP_DIR $nbfiles_pfs $dsize_pfs\" | tee -a $DU_RESAMP\n"
+        s += "        dsize_pfs=$(du -sh ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
+        s += "        nbfiles_pfs=$(ls -al ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
+        s += "        echo \"PFS ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR $nbfiles_pfs $dsize_pfs\" | tee -a $DU_RESAMP\n"
         s += "    done\n"
         s += "\n"
 
@@ -786,8 +786,8 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        # s += "        echo \"Removing resamp files... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        # s += "        rm -rf \"$RESAMP_DIR\"\n"
+        s += "        echo \"Removing local resamp files if any ... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "        rm -rf \"${LOCAL_OUTPUT_DIR}/$RESAMP_DIR\"\n"
         s += "        echo \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
