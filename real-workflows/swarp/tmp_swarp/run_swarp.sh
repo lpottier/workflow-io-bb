@@ -17,7 +17,7 @@ RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
 BB=0
-WRAPPER="srun -N 1 -n 1 -c 1"
+#SRUN="srun -N 1 -n 1 -c 1"
 
 for i in "$@"; do
 	case $i in
@@ -94,7 +94,7 @@ echo "$SEP"
 
 echo "RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
 
-echo -e "\tRUN ID \tSTAGEIN (S)\t\t RSMPL (S)\t\t\tCOADD (S)\t\t\tTOTAL (S)"
+echo -e "\tRUN ID \tSTAGEIN (S) \t\tRSMPL (S) \t\tCOADD (S) \t\tTOTAL (S)"
 
 all_stagein=()
 all_rsmpl=()
@@ -103,11 +103,11 @@ all_total=()
 
 for k in $(seq 1 1 $AVG); do
     USE_BB='N'
+    time_stagein=0
     if (( $BB == 0 )); then
         if (( $VERBOSE >= 2 )); then
             echo "[$k] No stage in, using PFS."
         fi
-        time_stagein=0
     else
         if (( $VERBOSE >= 2 )); then
             echo "[$k] START stagein:$(date --rfc-3339=ns)"
@@ -130,7 +130,7 @@ for k in $(seq 1 1 $AVG); do
         echo "[$k] START rsmpl:$(date --rfc-3339=ns)"
     fi
     
-    $WRAPPER $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
+    $SRUN $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END rsmpl:$(date --rfc-3339=ns)"
@@ -140,7 +140,7 @@ for k in $(seq 1 1 $AVG); do
         echo "[$k] START coadd:$(date --rfc-3339=ns)"
     fi
     
-    $WRAPPER $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
+    $SRUN $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END coadd:$(date --rfc-3339=ns)"
@@ -148,14 +148,14 @@ for k in $(seq 1 1 $AVG); do
 
     time_rsmpl=$(cat $output_rsmpl | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
     time_coadd=$(cat $output_coadd | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
-    time_total=$(echo "$time_stagein $time_rsmpl + $time_coadd" | bc -l)
+    time_total=$(echo "$time_stagein + $time_rsmpl + $time_coadd" | bc -l)
     
     all_stagein+=( $time_stagein )
     all_rsmpl+=( $time_rsmpl )
     all_coadd+=( $time_coadd )
     all_total+=( $time_total )
 
-    echo -e "\t$k \t$time_stagein \t\t$time_rsmpl \t\t\t\t$time_coadd \t\t\t\t$time_total "
+    echo -e "\t$k \t$time_stagein \t\t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
     
     echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
     
@@ -217,7 +217,7 @@ sd_total=$(echo "sqrt($sd_total / $AVG)" | bc -l)
 
 echo ""
 
-printf "Avg: \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
+printf "Avg: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
 echo "$SEP"
 
