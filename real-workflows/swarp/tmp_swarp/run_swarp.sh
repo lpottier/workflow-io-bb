@@ -16,6 +16,7 @@ RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
 BB=0
+WRAPPER="srun -N 1 -n 1 -c 1"
 
 for i in "$@"; do
 	case $i in
@@ -51,7 +52,12 @@ if [ -z "$VERBOSE" ]; then
 fi
 
 OUTDIR="$RUNDIR/output"
-CSV="$OUTDIR/data.csv"
+
+if (( $BB == 1 )); then
+    CSV="$OUTDIR/data-bb.csv"
+else
+    CSV="$OUTDIR/data.csv"
+fi
 
 mkdir -p $RUNDIR/resamp
 mkdir -p $OUTDIR
@@ -108,7 +114,8 @@ for k in $(seq 1 1 $AVG); do
     if (( $VERBOSE >= 2 )); then
         echo "[$k] START rsmpl:$(date --rfc-3339=ns)"
     fi
-    $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
+    
+    $WRAPPER $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END rsmpl:$(date --rfc-3339=ns)"
@@ -117,7 +124,8 @@ for k in $(seq 1 1 $AVG); do
     if (( $VERBOSE >= 2 )); then 
         echo "[$k] START coadd:$(date --rfc-3339=ns)"
     fi
-    $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
+    
+    $WRAPPER $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END coadd:$(date --rfc-3339=ns)"
@@ -173,4 +181,6 @@ echo ""
 printf "Avg: \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \n" $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
 echo "$SEP"
+
+rm -rf *.{fits,xml} resamp
 
