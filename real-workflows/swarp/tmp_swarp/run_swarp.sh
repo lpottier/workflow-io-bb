@@ -12,6 +12,7 @@ checkbb() {
     fi
 }
 
+PWD=$(pwd)
 RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
@@ -64,11 +65,17 @@ mkdir -p $OUTDIR
 
 input_rsmpl="$RUNDIR/input/PTF201111*.w.fits"
 output_rsmpl="$OUTDIR/output_resample.log"
-config_rsmpl="$RUNDIR/config/resample.swarp"
 
 input_coadd="$RUNDIR/resamp/PTF201111*.w.resamp.fits"
 output_coadd="$OUTDIR/output_coadd.log"
-config_coadd="$RUNDIR/config/combine.swarp"
+
+if (( $BB == 1 )); then
+    config_rsmpl="$RUNDIR/config/resample-bb.swarp"
+    config_coadd="$RUNDIR/config/combine-bb.swarp"
+else
+    config_rsmpl="$RUNDIR/config/resample.swarp"
+    config_coadd="$RUNDIR/config/combine.swarp"
+fi
 
 rm -rf $RUNDIR/*.fits $RUNDIR/*.xml
 
@@ -81,13 +88,15 @@ echo "CSV         -> $CSV"
 echo "AVG         -> $AVG"
 echo "BB_FILES    -> $BB_FILES"
 echo "TOTAL_FILES -> $TOTAL_FILES"
+echo "SRUN        -> $SRUN"
 
 echo "$SEP"
 
-echo "RUN USEBB FILES FILESBB RSMPL COADD MAKESPAN" > $CSV
+echo "RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
 
-echo -e "\tRUN ID \tRSMPL (S)\t\t\tCOADD (S)\t\t\tTOTAL (S)"
+echo -e "\tRUN ID \tSTAGEIN (S)\t\t RSMPL (S)\t\t\tCOADD (S)\t\t\tTOTAL (S)"
 
+all_stagein=()
 all_rsmpl=()
 all_coadd=()
 all_total=()
@@ -98,19 +107,25 @@ for k in $(seq 1 1 $AVG); do
         if (( $VERBOSE >= 2 )); then
             echo "[$k] No stage in, using PFS."
         fi
+        time_stagein=0
     else
         if (( $VERBOSE >= 2 )); then
             echo "[$k] START stagein:$(date --rfc-3339=ns)"
         fi
+        t1=$(date +%s.%N)
         cp swarp $RUNDIR
         cp -r input/ $RUNDIR/
         cp -r config/ $RUNDIR/
+        t2=$(date +%s.%N)
+
         if (( $VERBOSE >= 2 )); then
             echo "[$k] END stagein:$(date --rfc-3339=ns)"
         fi
         BB_FILES=64
         USE_BB='Y'
+        time_stagein=$(echo "$t2 - $t1" | bc -l)
     fi
+
     if (( $VERBOSE >= 2 )); then
         echo "[$k] START rsmpl:$(date --rfc-3339=ns)"
     fi
@@ -133,15 +148,25 @@ for k in $(seq 1 1 $AVG); do
 
     time_rsmpl=$(cat $output_rsmpl | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
     time_coadd=$(cat $output_coadd | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
-    time_total=$(echo "$time_rsmpl + $time_coadd" | bc -l)
+    time_total=$(echo "$time_stagein $time_rsmpl + $time_coadd" | bc -l)
     
+    all_stagein+=( $time_stagein )
     all_rsmpl+=( $time_rsmpl )
     all_coadd+=( $time_coadd )
     all_total+=( $time_total )
 
-    echo -e "\t$k \t$time_rsmpl \t\t\t\t$time_coadd \t\t\t\t$time_total "
+    echo -e "\t$k \t$time_stagein \t\t$time_rsmpl \t\t\t\t$time_coadd \t\t\t\t$time_total "
     
-    echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_rsmpl $time_coadd $time_total" >> $CSV
+    echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
+    
+    rm -rf $RUNDIR/resamp/*
+
+done
+
+
+sum_stagein=0
+for i in ${all_stagein[@]}; do
+    sum_stagein=$(echo "$sum_stagein + $i" | bc -l)
 done
 
 sum_rsmpl=0
@@ -159,26 +184,40 @@ for i in ${all_total[@]}; do
     sum_total=$(echo "$sum_total + $i" | bc -l)
 done
 
+avg_stagein=$(echo "$sum_stagein / $AVG" | bc -l)
 avg_rsmpl=$(echo "$sum_rsmpl / $AVG" | bc -l)
 avg_coadd=$(echo "$sum_coadd / $AVG" | bc -l)
 avg_total=$(echo "$sum_total / $AVG" | bc -l)
 
+sd_stagein=0
 sd_rsmpl=0
 sd_coadd=0
 sd_total=0
-for i in $(seq 0 1 $AVG); do
-    sd_rsmpl=$(echo "$sd_rsmpl + (${all_rsmpl[i]} - $avg_rsmpl)^2" | bc -l)
-    sd_coadd=$(echo "$sd_coadd + (${all_coadd[i]} - $avg_coadd)^2" | bc -l)
-    sd_total=$(echo "$sd_total + (${all_total[i]} - $avg_total)^2" | bc -l)
+
+for i in ${all_stagein[@]}; do
+    sd_stagein=$(echo "$sd_stagein + ($i - $avg_stagein)^2" | bc -l)
 done
 
+for i in ${all_rsmpl[@]}; do
+    sd_rsmpl=$(echo "$sd_rsmpl + ($i - $avg_rsmpl)^2" | bc -l)
+done
+
+for i in ${all_coadd[@]}; do
+    sd_coadd=$(echo "$sd_coadd + ($i - $avg_coadd)^2" | bc -l)
+done
+
+for i in ${all_total[@]}; do
+    sd_total=$(echo "$sd_total + ($i - $avg_total)^2" | bc -l)
+done
+
+sd_stagein=$(echo "sqrt($sd_stagein / $AVG)" | bc -l)
 sd_rsmpl=$(echo "sqrt($sd_rsmpl / $AVG)" | bc -l)
 sd_coadd=$(echo "sqrt($sd_coadd / $AVG)" | bc -l)
 sd_total=$(echo "sqrt($sd_total / $AVG)" | bc -l)
 
 echo ""
 
-printf "Avg: \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \n" $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
+printf "Avg: \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
 echo "$SEP"
 
