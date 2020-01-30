@@ -2,20 +2,29 @@
 
 usage()
 {
-    echo "usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]"
+    echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
 }
 
-checkbb() {
+checkbb_striped() {
     if [ -z "$DW_JOB_STRIPED" ]; then
-	    echo "Error: burst buffer allocation found. Run start_nostage.sh first"
+	    echo "Error: burst buffer allocation found. Run start.sh first"
 	    exit
     fi
 }
 
+checkbb_private() {
+    if [ -z "$DW_JOB_PRIVATE" ]; then
+	    echo "Error: burst buffer allocation found. Run start-private.sh first"
+	    exit
+    fi
+}
+
+ORIG=$(pwd)
 RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
 BB=0
+SRUN="srun -N 1 -n 1"
 
 for i in "$@"; do
 	case $i in
@@ -23,11 +32,22 @@ for i in "$@"; do
     			AVG="${i#*=}"
     			shift # past argument=value
     		;;
-    		-b|--bb)
-                checkbb
-    			RUNDIR=$DW_JOB_STRIPED/
+    		-b=*|--bb=*)
+                BBTYPE="${i#*=}"
+                if [[ "$BBTYPE" == "striped" ]]; then
+                    checkbb_striped
+    			    RUNDIR=$DW_JOB_STRIPED/
+                    BB=1
+                elif [[ "$BBTYPE" == "private" ]]; then 
+                    checkbb_private
+    			    RUNDIR=$DW_JOB_PRIVATE/
+                    BB=2
+                else
+                    echo "Error: must be either striped or private"
+                    usage
+                    exit
+                fi
                 BB_FILES=64
-                BB=1
     			shift # past argument=value
     			;;
     		-h|--usage)
@@ -51,18 +71,35 @@ if [ -z "$VERBOSE" ]; then
 fi
 
 OUTDIR="$RUNDIR/output"
-CSV="$OUTDIR/data.csv"
+
+if (( $BB == 1 )); then
+    CSV="$OUTDIR/data-bb.csv"
+elif (( $BB == 2 )); then
+    CSV="$OUTDIR/data-bb-priv.csv"
+else
+    CSV="$OUTDIR/data.csv"
+fi
 
 mkdir -p $RUNDIR/resamp
 mkdir -p $OUTDIR
 
 input_rsmpl="$RUNDIR/input/PTF201111*.w.fits"
 output_rsmpl="$OUTDIR/output_resample.log"
-config_rsmpl="$RUNDIR/config/resample.swarp"
 
 input_coadd="$RUNDIR/resamp/PTF201111*.w.resamp.fits"
 output_coadd="$OUTDIR/output_coadd.log"
-config_coadd="$RUNDIR/config/combine.swarp"
+
+if (( $BB == 1 )); then
+    config_rsmpl="$RUNDIR/config/resample-bb.swarp"
+    config_coadd="$RUNDIR/config/combine-bb.swarp"
+elif (( $BB == 2 )); then
+    config_rsmpl="$RUNDIR/config/resample-bb-priv.swarp"
+    config_coadd="$RUNDIR/config/combine-bb-priv.swarp"
+else
+    config_rsmpl="$RUNDIR/config/resample.swarp"
+    config_coadd="$RUNDIR/config/combine.swarp"
+fi
+
 
 rm -rf $RUNDIR/*.fits $RUNDIR/*.xml
 
@@ -75,6 +112,7 @@ echo "CSV         -> $CSV"
 echo "AVG         -> $AVG"
 echo "BB_FILES    -> $BB_FILES"
 echo "TOTAL_FILES -> $TOTAL_FILES"
+echo "SRUN        -> $SRUN"
 
 echo "$SEP"
 
@@ -108,7 +146,7 @@ for k in $(seq 1 1 $AVG); do
     if (( $VERBOSE >= 2 )); then
         echo "[$k] START rsmpl:$(date --rfc-3339=ns)"
     fi
-    $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
+    $SRUN $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END rsmpl:$(date --rfc-3339=ns)"
@@ -117,7 +155,7 @@ for k in $(seq 1 1 $AVG); do
     if (( $VERBOSE >= 2 )); then 
         echo "[$k] START coadd:$(date --rfc-3339=ns)"
     fi
-    $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
+    $SRUN $RUNDIR/swarp -c $config_coadd $input_coadd > $output_coadd  2>&1
     
     if (( $VERBOSE >= 2 )); then
         echo "[$k] END coadd:$(date --rfc-3339=ns)"
@@ -134,6 +172,10 @@ for k in $(seq 1 1 $AVG); do
     echo -e "\t$k \t$time_rsmpl \t\t\t\t$time_coadd \t\t\t\t$time_total "
     
     echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_rsmpl $time_coadd $time_total" >> $CSV
+    
+    if (( $BB == 1 )); then
+        rm -rf "$RUNDIR/input" "$RUNDIR/resamp/*"
+    fi
 done
 
 sum_rsmpl=0
@@ -158,10 +200,17 @@ avg_total=$(echo "$sum_total / $AVG" | bc -l)
 sd_rsmpl=0
 sd_coadd=0
 sd_total=0
-for i in $(seq 0 1 $AVG); do
-    sd_rsmpl=$(echo "$sd_rsmpl + (${all_rsmpl[i]} - $avg_rsmpl)^2" | bc -l)
-    sd_coadd=$(echo "$sd_coadd + (${all_coadd[i]} - $avg_coadd)^2" | bc -l)
-    sd_total=$(echo "$sd_total + (${all_total[i]} - $avg_total)^2" | bc -l)
+
+for i in ${all_rsmpl[@]}; do
+    sd_rsmpl=$(echo "$sd_rsmpl + ($i - $avg_rsmpl)^2" | bc -l)
+done
+
+for i in ${all_coadd[@]}; do
+    sd_coadd=$(echo "$sd_coadd + ($i - $avg_coadd)^2" | bc -l)
+done
+
+for i in ${all_total[@]}; do
+    sd_total=$(echo "$sd_total + ($i - $avg_total)^2" | bc -l)
 done
 
 sd_rsmpl=$(echo "sqrt($sd_rsmpl / $AVG)" | bc -l)
@@ -171,6 +220,10 @@ sd_total=$(echo "sqrt($sd_total / $AVG)" | bc -l)
 echo ""
 
 printf "Avg: \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \t\t%-0.2f (+/- %0.2f) \n" $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
+
+if (( $BB > 0 )); then
+    cp -r "$RUNDIR/output" "$ORIG"
+fi
 
 echo "$SEP"
 
