@@ -533,12 +533,12 @@ class SwarpInstance:
 
         return short_s
 
-    def salloc_str():
+    def salloc_str(self):
         s = ''
         s = "salloc -N 1 -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
         return s
 
-    def bbconf_salloc():
+    def bbconf_salloc(self):
         s = ''
         s = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         return s
@@ -882,17 +882,16 @@ class SwarpInstance:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-    @staticmethod
-    def write_interactive_launch(file="start_interactive.sh", overide=True):
+    def write_interactive_launch(self, file="start_interactive.sh", overide=True):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
 
         # TODO: fix this temporary thing
         with open("bbf.conf", 'w') as f:
-            f.write(SwarpInstance.bbconf_salloc())      
+            f.write(self.bbconf_salloc())      
 
         with open(file, 'w') as f:
-            f.write(SwarpInstance.salloc_str())
+            f.write(self.salloc_str())
         
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
@@ -948,7 +947,7 @@ class SwarpInstance:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
         try:
-            SwarpInstance.write_interactive_launch(overide=overide)
+            self.write_interactive_launch(overide=overide)
         except FileNotFoundError:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
