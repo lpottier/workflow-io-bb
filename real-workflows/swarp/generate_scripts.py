@@ -1068,7 +1068,11 @@ if __name__ == '__main__':
     parser.add_argument('--stage-fits', '-z', action="store_true",
                         help='Stage .resamp.fits for all pipelines in the Burst Buffer')
 
-    parser.add_argument('--submit', '-s', action='store_true',
+    parser.add_argument('--striped', '-s', action="store_true",
+                        help='Use a striped burst buffer allocation (bad performance)')
+
+
+    parser.add_argument('--submit', '-S', action='store_true',
                         help='After the generation directly submit the job to the batch scheduler')
 
     # parser.add_argument('--slurm-profile', '-z', action="store_true",
@@ -1111,10 +1115,22 @@ if __name__ == '__main__':
         short_count = str(min(args.count))+'_'+str(max(args.count))
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
-    if args.stage_fits:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+
+    if args.striped:
+        bb_type = "striped"
     else:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        bb_type = "private"
+
+    if args.stage_fits:
+        if args.striped:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        else:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+    else:
+        if args.striped:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        else:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -1138,7 +1154,7 @@ if __name__ == '__main__':
                 stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"],
-                access_mode="private", 
+                access_mode=bb_type, 
                 bbtype="scratch"
                 )
 
