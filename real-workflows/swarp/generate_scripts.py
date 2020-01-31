@@ -308,6 +308,8 @@ class SwarpInstance:
     def dw_temporary(self, persistent_bb=None):
         if persistent_bb != None:
             string = "#DW persistentdw name={}\n".format(persistent_bb)
+            string += "exit 0\n"
+
             #use in the script: $DW_PERSISTENT_STRIPED_name
         else:
             string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
@@ -321,7 +323,7 @@ class SwarpInstance:
                 else:
                     target = directory.split('/')[-1]
 
-                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=directory\n".format(directory, target)
+                string += "#DW stage_in source={} destination=$DW_JOB_{}/{}/ type=directory\n".format(directory, self.bb_config.mode().upper(), target)
 
             for file in self.bb_config.infiles():
                 if file.split('/')[-1] == '':
@@ -330,7 +332,7 @@ class SwarpInstance:
                 else:
                     target = file.split('/')[-1]
 
-                string += "#DW stage_in source={} destination=$DW_JOB_STRIPED/{}/ type=file\n".format(file, target)
+                string += "#DW stage_in source={} destination=$DW_JOB_{}/{}/ type=file\n".format(file, self.bb_config.mode().upper(), target)
 
             # string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
             for directory in self.bb_config.outdirs():
@@ -340,7 +342,7 @@ class SwarpInstance:
                 else:
                     target = directory.split('/')[-1]
 
-                string += "#DW stage_out source=$DW_JOB_STRIPED/{}/  destination={} type=directory\n".format(target, directory)
+                string += "#DW stage_out source=$DW_JOB_{}/{}/  destination={} type=directory\n".format(target, self.bb_config.mode().upper(), directory)
 
         string += "\n"
         return string
@@ -356,9 +358,12 @@ class SwarpInstance:
         s += "usage()\n"
         s += "{\n"
         s += "    echo \"usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]\"\n"
-        s += "}"
+        s += "}\n"
+
+        s += "BBDIR=$DW_JOB_{}/\n".format(self.bb_config.mode().upper())
+
         s += "\n"
-        s += "if [ -z \"$DW_JOB_STRIPED\" ]; then\n"
+        s += "if [ -z \"$BBDIR\" ]; then\n"
         s += "    echo \"Error: burst buffer allocation found. Run start_nostage.sh first\"\n"
         s += "    exit\n"
         s += "fi\n"
@@ -424,7 +429,7 @@ class SwarpInstance:
 
         s += "CONFIG_DIR=$BASE\n"
         s += "if (( \"$STAGE_CONFIG\" == 1 )); then\n"
-        s += "    CONFIG_DIR=$DW_JOB_STRIPED/config\n"
+        s += "    CONFIG_DIR=$BBDIR/config\n"
         s += "fi\n"
         s += "RESAMPLE_CONFIG=${CONFIG_DIR}/resample.swarp\n"
         s += "COMBINE_CONFIG=${CONFIG_DIR}/combine.swarp\n"
@@ -453,7 +458,7 @@ class SwarpInstance:
             s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
         else:
             s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
-        s += "export GLOBAL_OUTPUT_DIR=$DW_JOB_STRIPED/$OUTPUT_DIR_NAME\n"
+        s += "export GLOBAL_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
         s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
         s += "\n"
@@ -528,14 +533,14 @@ class SwarpInstance:
 
         return short_s
 
-    def salloc_str():
+    def salloc_str(self):
         s = ''
         s = "salloc -N 1 -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
         return s
 
-    def bbconf_salloc():
+    def bbconf_salloc(self):
         s = ''
-        s = "#DW jobdw capacity=200GB access_mode=striped type=scratch\n"
+        s = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         return s
 
     def average_loop(self):
@@ -669,12 +674,12 @@ class SwarpInstance:
         s += "\n"
 
         s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
-        s += "        cp -r $EXE $DW_JOB_STRIPED\n"
+        s += "        cp -r $EXE $BBDIR\n"
         s += "    fi\n"
         s += "\n"
 
         s += "    if (( \"$STAGE_CONFIG\" == 1 )); then\n"
-        s += "        cp -r $CONFIG_DIR $DW_JOB_STRIPED\n"
+        s += "        cp -r $CONFIG_DIR $BBDIR\n"
         s += "    fi\n"
         s += "\n"
 
@@ -695,7 +700,7 @@ class SwarpInstance:
 
         #if we stage in executable
         s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
-        s += "        EXE=$DW_JOB_STRIPED/swarp\n"
+        s += "        EXE=$BBDIR/swarp\n"
         s += "    fi\n"
         s += "\n"
 
@@ -779,7 +784,7 @@ class SwarpInstance:
         s += "    tdiff3=$(echo \"$t2 - $t1\" | bc -l)\n"
         s += "    echo \"TIME COMBINE $tdiff3\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
-        s += "    du -sh $DW_JOB_STRIPED/ | tee -a $OUTPUT_FILE\n"
+        s += "    du -sh $BBDIR | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    env | grep SLURM > $OUTPUT_DIR/slurm.env\n"
         s += "\n"
@@ -811,7 +816,7 @@ class SwarpInstance:
         s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
 
         s += "    echo \"=== Cleaning run $k... $(date --rfc-3339=ns)\"\n"
-        s += "    rm -rf $DW_JOB_STRIPED/*\n"
+        s += "    rm -rf $BBDIR/*\n"
         s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
@@ -877,17 +882,16 @@ class SwarpInstance:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-    @staticmethod
-    def write_interactive_launch(file="start_interactive.sh", overide=True):
+    def write_interactive_launch(self, file="start_interactive.sh", overide=True):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
 
         # TODO: fix this temporary thing
         with open("bbf.conf", 'w') as f:
-            f.write(SwarpInstance.bbconf_salloc())      
+            f.write(self.bbconf_salloc())      
 
         with open(file, 'w') as f:
-            f.write(SwarpInstance.salloc_str())
+            f.write(self.salloc_str())
         
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
@@ -943,7 +947,7 @@ class SwarpInstance:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
         try:
-            SwarpInstance.write_interactive_launch(overide=overide)
+            self.write_interactive_launch(overide=overide)
         except FileNotFoundError:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
@@ -990,7 +994,7 @@ class SwarpRun:
             #If we want to use DW to stage file
             if not manual_stage:
                 f.write("    for j in $(seq ${i} -1 1); do\n")
-                f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_STRIPED/input/${j} type=directory\"\n")    
+                f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_" + self.bb_config.mode().upper() + "/input/${j} type=directory\"\n")    
                 f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
                 f.write("    done\n")
             f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
@@ -1064,7 +1068,11 @@ if __name__ == '__main__':
     parser.add_argument('--stage-fits', '-z', action="store_true",
                         help='Stage .resamp.fits for all pipelines in the Burst Buffer')
 
-    parser.add_argument('--submit', '-s', action='store_true',
+    parser.add_argument('--striped', '-s', action="store_true",
+                        help='Use a striped burst buffer allocation (bad performance)')
+
+
+    parser.add_argument('--submit', '-S', action='store_true',
                         help='After the generation directly submit the job to the batch scheduler')
 
     # parser.add_argument('--slurm-profile', '-z', action="store_true",
@@ -1107,10 +1115,22 @@ if __name__ == '__main__':
         short_count = str(min(args.count))+'_'+str(max(args.count))
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
-    if args.stage_fits:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+
+    if args.striped:
+        bb_type = "striped"
     else:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        bb_type = "private"
+
+    if args.stage_fits:
+        if args.striped:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        else:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+    else:
+        if args.striped:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+        else:
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -1134,7 +1154,7 @@ if __name__ == '__main__':
                 stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"],
-                access_mode="striped", 
+                access_mode=bb_type, 
                 bbtype="scratch"
                 )
 

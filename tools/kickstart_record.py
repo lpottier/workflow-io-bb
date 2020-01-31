@@ -442,6 +442,8 @@ class KickstartEntry(object):
     def avg_io_size(self):
         return float(self.tot_bwrite()+self.tot_bread()) / (self.tot_nwrite()+self.tot_nread())
 
+    def 
+
 
 class KickStartPipeline(KickstartEntry):
     # Multiple workflow of one runs
@@ -741,7 +743,8 @@ class AvgStageOutTask:
         return (float(self._data["DURATION(S)"][0]), float(self._data["DURATION(S)"][1]))
 
 
-class KickstartDirectory:
+# No compute of mean or everything
+class RawKickstartDirectory:
     """
         Directory must follow this kind of pattern:
         self.dir = swarp-bb.batch.1c.0f.25856221
@@ -807,8 +810,6 @@ class KickstartDirectory:
 
     """
 
-    # TODO: I used the two files pattern in the last experiments!!! so 2F -> 4 files transfered etc....
-
     def __init__(self,  directory, file_type=FileType.XML):
         self.dir = Path(os.path.abspath(directory))
         if not self.dir.is_dir():
@@ -830,6 +831,7 @@ class KickstartDirectory:
         self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
+        self._stagefits = "stagefits" in str(directory)
 
         if VERBOSE >= 2:
             print(self.dir)
@@ -1006,7 +1008,7 @@ class KickstartDirectory:
     #     pass
 
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        header="ID FITS NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1016,15 +1018,341 @@ class KickstartDirectory:
             if write_header:
                 csv_writer.writerow(header)
             for run in self.setup:
-                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                BB_NB_FILES=int(self.stagein[run]._data['NB_FILES_TRANSFERED'][0])
+                BB_SIZE_FILES_MB=float(self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0])
+                FITS="N"
+                if self._stagefits:
+                    # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
+                    # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
+                    FITS="Y"
+
+                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                     run,
+                    FITS,
                     self.setup[run]['pipeline'],
                     self.setup[run]['bb_alloc'],
                     self.setup[run]['core'],
-                    32,
-                    self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
-                    768.515625,
-                    self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
+                    32 * int(self.setup[run]['pipeline']),
+                    BB_NB_FILES,
+                    768.515625 * int(self.setup[run]['pipeline']),
+                    BB_SIZE_FILES_MB,
+                    self.makespan[run][0],
+                    self.makespan[run][1],
+                    self.outputlog[run].walltime()[0],
+                    self.outputlog[run].walltime()[1],
+                    self.stagein[run].duration()[0],
+                    self.stagein[run].duration()[1],
+                    self.outputlog[run].walltime_stagein()[0],
+                    self.outputlog[run].walltime_stagein()[1],
+                    self.resample[run].duration()[0],
+                    self.resample[run].duration()[1],
+                    self.outputlog[run].walltime_resample()[0],
+                    self.outputlog[run].walltime_resample()[1],
+                    self.combine[run].duration()[0],
+                    self.combine[run].duration()[1],
+                    self.outputlog[run].walltime_combine()[0],
+                    self.outputlog[run].walltime_combine()[1],
+                    self.stageout[run].duration()[0],
+                    self.stageout[run].duration()[1],
+                    self.outputlog[run].walltime_stageout()[0],
+                    self.outputlog[run].walltime_stageout()[1],
+                    )
+                csv_writer.writerow(line.split(" "))
+
+
+
+class KickstartDirectory:
+    """
+        Directory must follow this kind of pattern:
+        self.dir = swarp-bb.batch.1c.0f.25856221
+        swarp-premium-1C-50B-1_16W-0F-15-1
+        ├── bbf.conf
+        ├── bbinfo.sh
+        ├── combine.swarp
+        ├── files_to_stage.txt
+        ├── interactive_run-swarp-scaling-bb.sh
+        ├── resample.swarp
+        ├── run-swarp-scaling-bb.sh
+        ├── start_interactive.sh
+        ├── submit.sh
+        ├── swarp-run-16N-0F.wtb3xr
+        │   ├── bbinfo.sh
+        │   ├── build_filemap.py
+        │   ├── combine.swarp
+        │   ├── copy.py
+        │   ├── error.27440714
+        │   ├── files_to_stage.txt
+        │   ├── output.27440714
+        │   ├── resample.swarp
+        │   ├── run-swarp-scaling-bb-16N.sh
+        │   ├── swarp-16.batch.1c.0f.27440714
+        │   │   ├── 1
+        │   │   │   ├── 1
+        │   │   │   │   ├── error.combine.27440714.1
+        │   │   │   │   ├── error.resample.27440714.1
+        │   │   │   │   ├── output.combine.27440714.1
+        │   │   │   │   ├── output.resample.27440714.1
+        │   │   │   │   ├── stage-out-bb-global.csv
+        │   │   │   │   ├── stage-out-bb.csv
+        │   │   │   │   ├── stage-out-pfs-global.csv
+        │   │   │   │   ├── stage-out-pfs.csv
+        │   │   │   │   ├── stat.combine.27440714.1.xml
+        │   │   │   │   └── stat.resample.27440714.1.xml
+        │   │   │   ├── 10/
+        │   │   │   │   ├── ....
+        │   │   │   │   ├── ....
+        │   │   │   ├── X/
+        │   │   │   │   ├── ....
+        │   │   │   │   ├── ....
+        │   │   │   ├── bb.log
+        │   │   │   ├── bb_alloc.log
+        │   │   │   ├── data-stagedin.log
+        │   │   │   ├── files_to_stage.txt
+        │   │   │   ├── output.log
+        │   │   │   ├── resample_files.txt
+        │   │   │   ├── slurm.env
+        │   │   │   ├── stage-in-bb-global.csv
+        │   │   │   ├── stage-in-bb.csv
+        │   │   │   ├── stage-in-pfs-global.csv
+        │   │   │   ├── stage-in-pfs.csv
+        │   │   │   ├── stage-out-bb-global.csv
+        │   │   │   ├── stage-out-bb.csv
+        │   │   │   ├── stage-out-pfs-global.csv
+        │   │   │   ├── stage-out-pfs.csv
+        │   │   ├── 2
+        │   │   │   ├── 1
+        │   │   │   │   ├── error.combine.27440714.1
+        │   │   │   │   ├── error.resample.27440714.1
+        ....
+
+    """
+
+    def __init__(self,  directory, file_type=FileType.XML):
+        self.dir = Path(os.path.abspath(directory))
+        if not self.dir.is_dir():
+            raise ValueError("error: {} is not a valid directory.".format(self.dir))
+
+        #print(self.dir)
+        self.dir_exp = sorted([x for x in self.dir.iterdir() if x.is_dir()])
+        self.log = []
+        self.resample = {}
+        self.combine = {}
+        self.outputlog = {}
+        self.stagein = {}
+        self.stageout = {}
+        self.log = 'output.log' #Contains wallclock time
+        self.stage_in_log = 'stage-in-bb-global.csv' #CSV 
+        self.stage_out_log = 'stage-out-bb-global.csv' #CSV 
+        self.size_in_bb = {}
+        self.nb_files_stagein = {}
+        self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
+
+        self.makespan = {}  # Addition of tasks' execution time
+        self._stagefits = "stagefits" in str(directory)
+
+        if VERBOSE >= 2:
+            print(self.dir)
+
+        for i,d in enumerate(self.dir_exp):
+            dir_at_this_level = sorted([x for x in d.iterdir() if x.is_dir()])
+            # folder should be named like that: 
+            #   swarp-XWorkflow.batch.Xc.Xf.JOBID
+            if VERBOSE >= 2:
+                print ("dir at this level: ", [x.name for x in dir_at_this_level])
+            output_log = []
+            stage_in = []
+            stage_out = []
+            bb_info = [] # data-stagedin.log -> 4 97M
+            avg_resample = []
+            avg_combine = []
+
+            if len(dir_at_this_level) != 1:
+                #Normally just swarp-scaling.batch ...
+                print("[error]: we need only one directory at this level")
+
+            pid_run = dir_at_this_level[0].name.split('.')[-1]
+            self.setup[pid_run] = {}
+
+            first_part = dir_at_this_level[0].name.split('.')[0]
+
+            self.setup[pid_run]['name'] = first_part.split('-')[0]
+            self.setup[pid_run]['pipeline'] = int(first_part.split('-')[1])
+
+            self.setup[pid_run]['core'] = dir_at_this_level[0].name.split('.')[-3]
+            self.setup[pid_run]['core'] = int(self.setup[pid_run]['core'][:-1]) #to remove the 'c' at the end
+
+            self.setup[pid_run]['file'] = dir_at_this_level[0].name.split('.')[-2]
+            self.setup[pid_run]['file'] = int(self.setup[pid_run]['file'][:-1]) #to remove the 'f' at the end
+
+            if VERBOSE >= 2:
+                print(self.setup[pid_run])
+
+            avg_dir = [x for x in dir_at_this_level[0].iterdir() if x.is_dir()]
+
+            for avg in avg_dir:
+                if VERBOSE >= 2:
+                    print("run: ", avg.name)
+                #print(dir_at_this_level,avg)
+
+                # TODO deal with output log for multiple pipeline
+                output_log.append(avg / self.log)
+                stage_in.append(avg / self.stage_in_log)
+                stage_out.append(avg / self.stage_out_log)
+
+                bb_info.append(avg / 'data-stagedin.log')
+                with open(bb_info[-1]) as bb_log:
+                    data_bb_log = bb_log.read().split(' ')
+                    self.setup[pid_run]['file'] = int(data_bb_log[0])
+                    if self.setup[pid_run]['file'] > 0:
+                        data_bb_log[1] = data_bb_log[1].split('\n')[0]
+                        self.setup[pid_run]['size_in_bb'] = int(data_bb_log[1][:-1])
+                    else:
+                        self.setup[pid_run]['size_in_bb'] = 0
+
+                with open(avg / 'bb_alloc.log') as bb_alloc:
+                    data_bb_alloc = bb_alloc.read().split('\n')
+                    total = 0
+                    for elem in data_bb_alloc:
+                        if elem == '':
+                            continue
+                        fragment = float(elem[:-3])
+                        total += fragment # Remove at the end GiB
+                    self.setup[pid_run]['size_fragment'] = fragment
+                    self.setup[pid_run]['bb_alloc'] = total
+
+
+                raw_resample = []
+                raw_combine = []
+
+                pipeline_set = sorted([x for x in avg.iterdir() if x.is_dir()])
+                for pipeline in pipeline_set:
+                    # TODO: Find here the longest pipeline among the one launched
+                    nb_pipeline = pipeline.parts[-1]
+                    try:
+                        _ = int(nb_pipeline)
+                    except ValueError as e:
+                        continue
+
+                    if VERBOSE >= 2:
+                        print ("Dealing with number of pipelines:", nb_pipeline)
+
+                    resmpl_path = "stat.resample." + pid_run + "." + nb_pipeline + ".xml"
+                    raw_resample.append(pipeline / resmpl_path)
+                    combine_path = "stat.combine." + pid_run + "." + nb_pipeline + ".xml"
+                    raw_combine.append(pipeline / combine_path)
+
+                avg_resample.append(KickStartPipeline(ks_entries=raw_resample))
+                avg_combine.append(KickStartPipeline(ks_entries=raw_combine))
+
+            self.resample[pid_run] = KickstartRecord(kickstart_entries=avg_resample)
+            self.combine[pid_run] = KickstartRecord(kickstart_entries=avg_combine)
+
+            self.stagein[pid_run] = AvgStageInTask(list_csv_files=stage_in)
+            self.stageout[pid_run] = AvgStageOutTask(list_csv_files=stage_out)
+
+            self.outputlog[pid_run] = AvgOutputLog(list_log_files=output_log)
+
+            mean_makespan = float(self.stagein[pid_run].duration()[0]) + float(self.resample[pid_run].duration()[0]) + float(self.combine[pid_run].duration()[0])
+            sd_makespan = math.sqrt(float(self.stagein[pid_run].duration()[1])**2 + float(self.resample[pid_run].duration()[1])**2 + float(self.combine[pid_run].duration()[1])**2)
+
+            self.makespan[pid_run] = (mean_makespan, sd_makespan)
+
+        # # # ## PRINTING TEST
+        # for run,d in self.resample.items():
+        #     data_run = d.data()
+        #     print("*** Resample: \"{}\" averaged on {} runs:".format(run, len(data_run)))
+        #     # for u,v in data_run.items():
+        #     #     print("==> Run: {}".format(u))
+        #     #     print("        duration   : {:.3f}".format(v.duration()))
+        #     #     print("        ttime      : {:.3f}".format(v.ttime()))
+        #     #     print("        utime      : {:.3f}".format(v.utime()))
+        #     #     print("        stime      : {:.3f}".format(v.stime()))
+        #     #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
+        #     #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
+        #     #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
+        #     print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
+        #     print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
+        #     print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
+        #     print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
+        #     print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
+        #     print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
+        #     print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
+
+        # print("ID NB_PIPELINE BB_ALLOC_SIZE(GB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME")
+        # for run in self.setup:
+        #     print ("{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+        #         run,
+        #         self.setup[run]['pipeline'],
+        #         self.setup[run]['bb_alloc'],
+        #         self.setup[run]['core'],
+        #         32,
+        #         self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
+        #         768.515625,
+        #         self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
+        #         self.makespan[run][0],
+        #         self.makespan[run][1],
+        #         self.outputlog[run].walltime()[0],
+        #         self.outputlog[run].walltime()[1],
+        #         self.stagein[run].duration()[0],
+        #         self.stagein[run].duration()[1],
+        #         self.outputlog[run].walltime_stagein()[0],
+        #         self.outputlog[run].walltime_stagein()[1],
+        #         self.resample[run].duration()[0],
+        #         self.resample[run].duration()[1],
+        #         self.outputlog[run].walltime_resample()[0],
+        #         self.outputlog[run].walltime_resample()[1],
+        #         self.combine[run].duration()[0],
+        #         self.combine[run].duration()[1],
+        #         self.outputlog[run].walltime_combine()[0],
+        #         self.outputlog[run].walltime_combine()[1],
+        #         self.stageout[run].duration()[0],
+        #         self.stageout[run].duration()[1],
+        #         self.outputlog[run].walltime_stageout()[0],
+        #         self.outputlog[run].walltime_stageout()[1],
+        #         )
+        #     )
+
+    def root_dir(self):
+        return self.dir
+
+    def dirs(self):
+        return self.dir_exp
+
+    # def write_csv_resample_by_pipeline(csv_file, sep = ' '):
+    #     pass
+
+    # def write_csv_combine_by_pipeline(csv_file, sep = ' '):
+    #     pass
+
+    def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
+        header="ID FITS NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        if write_header:
+            open_flag = 'w'
+        else:
+            open_flag = 'a'
+        with open(csv_file, open_flag, newline='') as f:
+            csv_writer = csv.writer(f, delimiter=sep, quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            if write_header:
+                csv_writer.writerow(header)
+            for run in self.setup:
+                BB_NB_FILES=int(self.stagein[run]._data['NB_FILES_TRANSFERED'][0])
+                BB_SIZE_FILES_MB=float(self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0])
+                FITS="N"
+                if self._stagefits:
+                    # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
+                    # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
+                    FITS="Y"
+
+                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                    run,
+                    FITS,
+                    self.setup[run]['pipeline'],
+                    self.setup[run]['bb_alloc'],
+                    self.setup[run]['core'],
+                    32 * int(self.setup[run]['pipeline']),
+                    BB_NB_FILES,
+                    768.515625 * int(self.setup[run]['pipeline']),
+                    BB_SIZE_FILES_MB,
                     self.makespan[run][0],
                     self.makespan[run][1],
                     self.outputlog[run].walltime()[0],
@@ -1080,6 +1408,14 @@ class KickstartDirectory:
 
 def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot=None):
 
+    if not Path(exp_dir).exists():
+        print("[error] {} does not exist.\n[error] Abort.".format(exp_dir))
+        exit(-1)
+
+    if not Path(exp_dir).is_dir():
+        print("[error] {} is not a valid directory.\n[error] Abort.".format(exp_dir))
+        exit(-1)
+
     directories = [Path(x) for x in sorted(glob.glob(exp_dir+pattern)) if Path(x).is_dir()]
     if csv_file == None:
         csv_file = Path(Path(exp_dir) / Path(Path(exp_dir).name+".csv"))
@@ -1112,7 +1448,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot
 
     start.append(time.time())
     
-    print(" {:<40s} => ".format(directories[0].name), end='', flush=True)
+    print(" {:<50s} => ".format(directories[0].name), end='', flush=True)
     exp = KickstartDirectory(directories[0])
     exp.write_csv_global_by_pipeline(csv_file, write_header=True)
     
@@ -1122,7 +1458,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot
 
     for d in directories[1:]:
         start.append(time.time())
-        print(" {:<40s} => ".format(d.name), end='', flush=True)
+        print(" {:<50s} => ".format(d.name), end='', flush=True)
         exp = KickstartDirectory(d)
         exp.write_csv_global_by_pipeline(csv_file)
         end.append(time.time())
@@ -1140,8 +1476,8 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
     #Latest 23 jan
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/23jan/"
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp23.csv")
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/25jan/"
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp25.csv")
 
 
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/"
