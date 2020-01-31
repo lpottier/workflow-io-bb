@@ -540,7 +540,7 @@ class SwarpInstance:
 
     def bbconf_salloc():
         s = ''
-        s = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(.format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type()))
+        s = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         return s
 
     def average_loop(self):
