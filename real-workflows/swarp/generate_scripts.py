@@ -821,7 +821,8 @@ class SwarpInstance:
         s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
 
         s += "    echo \"=== Cleaning run $k... $(date --rfc-3339=ns)\"\n"
-        s += "    rm -rf $BBDIR/*\n"
+        s += "    rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
+        s += "    rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
         s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
@@ -837,6 +838,7 @@ class SwarpInstance:
         #s += "    set +x\n"
         s += "\n"
         #s += "    rm -rf $INPUT_DIR\n"
+        s += "    rm -rf $BBDIR/*\n"
         s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
         s += "done\n"
 
