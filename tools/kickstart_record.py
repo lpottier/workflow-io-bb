@@ -442,8 +442,6 @@ class KickstartEntry(object):
     def avg_io_size(self):
         return float(self.tot_bwrite()+self.tot_bread()) / (self.tot_nwrite()+self.tot_nread())
 
-    def 
-
 
 class KickStartPipeline(KickstartEntry):
     # Multiple workflow of one runs
@@ -831,8 +829,14 @@ class RawKickstartDirectory:
         self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
-        self._stagefits = "stagefits" in str(directory)
+        self._stagefits = "stagefits" in str(directory.name)
 
+        if "private" in str(directory.name):
+            self._bbtype = "PRIVATE"
+        elif "striped" in str(directory.name):
+            self._bbtype = "STRIPED"
+        else:
+            self._bbtype = "UNKNOWN"
         if VERBOSE >= 2:
             print(self.dir)
 
@@ -1008,7 +1012,7 @@ class RawKickstartDirectory:
     #     pass
 
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID FITS NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        header="ID AVG FITS NB_PIPELINE BB_TYPE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1025,39 +1029,43 @@ class RawKickstartDirectory:
                     # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
                     # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
                     FITS="Y"
+            
+                for id_run in XXXXX:
 
-                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-                    run,
-                    FITS,
-                    self.setup[run]['pipeline'],
-                    self.setup[run]['bb_alloc'],
-                    self.setup[run]['core'],
-                    32 * int(self.setup[run]['pipeline']),
-                    BB_NB_FILES,
-                    768.515625 * int(self.setup[run]['pipeline']),
-                    BB_SIZE_FILES_MB,
-                    self.makespan[run][0],
-                    self.makespan[run][1],
-                    self.outputlog[run].walltime()[0],
-                    self.outputlog[run].walltime()[1],
-                    self.stagein[run].duration()[0],
-                    self.stagein[run].duration()[1],
-                    self.outputlog[run].walltime_stagein()[0],
-                    self.outputlog[run].walltime_stagein()[1],
-                    self.resample[run].duration()[0],
-                    self.resample[run].duration()[1],
-                    self.outputlog[run].walltime_resample()[0],
-                    self.outputlog[run].walltime_resample()[1],
-                    self.combine[run].duration()[0],
-                    self.combine[run].duration()[1],
-                    self.outputlog[run].walltime_combine()[0],
-                    self.outputlog[run].walltime_combine()[1],
-                    self.stageout[run].duration()[0],
-                    self.stageout[run].duration()[1],
-                    self.outputlog[run].walltime_stageout()[0],
-                    self.outputlog[run].walltime_stageout()[1],
-                    )
-                csv_writer.writerow(line.split(" "))
+                    line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                        run,
+                        id_run, #The run number something
+                        FITS,
+                        self.setup[run]['pipeline'],
+                        self._bbtype,
+                        self.setup[run]['bb_alloc'],
+                        self.setup[run]['core'],
+                        32 * int(self.setup[run]['pipeline']),
+                        BB_NB_FILES,
+                        768.515625 * int(self.setup[run]['pipeline']),
+                        BB_SIZE_FILES_MB,
+                        self.makespan[run][0],
+                        self.makespan[run][1],
+                        self.outputlog[run].walltime()[0],
+                        self.outputlog[run].walltime()[1],
+                        self.stagein[run].duration()[0],
+                        self.stagein[run].duration()[1],
+                        self.outputlog[run].walltime_stagein()[0],
+                        self.outputlog[run].walltime_stagein()[1],
+                        self.resample[run].duration()[0],
+                        self.resample[run].duration()[1],
+                        self.outputlog[run].walltime_resample()[0],
+                        self.outputlog[run].walltime_resample()[1],
+                        self.combine[run].duration()[0],
+                        self.combine[run].duration()[1],
+                        self.outputlog[run].walltime_combine()[0],
+                        self.outputlog[run].walltime_combine()[1],
+                        self.stageout[run].duration()[0],
+                        self.stageout[run].duration()[1],
+                        self.outputlog[run].walltime_stageout()[0],
+                        self.outputlog[run].walltime_stageout()[1],
+                        )
+                    csv_writer.writerow(line.split(" "))
 
 
 
@@ -1148,7 +1156,15 @@ class KickstartDirectory:
         self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
-        self._stagefits = "stagefits" in str(directory)
+        self._stagefits = "stagefits" in str(directory.name)
+
+        if "private" in str(directory.name):
+            self._bbtype = "PRIVATE"
+        elif "striped" in str(directory.name):
+            self._bbtype = "STRIPED"
+        else:
+            self._bbtype = "UNKNOWN"
+
 
         if VERBOSE >= 2:
             print(self.dir)
@@ -1325,7 +1341,7 @@ class KickstartDirectory:
     #     pass
 
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID FITS NB_PIPELINE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        header="ID FITS NB_PIPELINE BB_TYPE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1343,10 +1359,11 @@ class KickstartDirectory:
                     # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
                     FITS="Y"
 
-                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                     run,
                     FITS,
                     self.setup[run]['pipeline'],
+                    self._bbtype,
                     self.setup[run]['bb_alloc'],
                     self.setup[run]['core'],
                     32 * int(self.setup[run]['pipeline']),
@@ -1404,9 +1421,7 @@ class KickstartDirectory:
 #                     hue="event", style="event",
 #                     kind="line", data=fmri)
 
-
-
-def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot=None):
+def create_data_from_exp_mt(exp_dir, pattern='*', csv_file=None, threads=None, plot=None):
 
     if not Path(exp_dir).exists():
         print("[error] {} does not exist.\n[error] Abort.".format(exp_dir))
@@ -1425,30 +1440,51 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot
     start = []
     end = []
 
-    # if not threads:
-    #     # If threads is not specified, create as many threads as directories
-    #     threads = len(directories)
+    if not threads:
+        # If threads is not specified, create as many threads as threads available or directories
+        threads = min(os.cpu_count(),len(directories))
     
-    # with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
 
-    #     data = {executor.submit(KickstartDirectory, directory): directory for directory in directories}
-    #     print("{} threads spawned....".format(threads))
-    #     header = True
-    #     for future in concurrent.futures.as_completed(data):
-    #         exp = data[future]
-    #         try:
-    #             res_exp = future.result()
-    #         except Exception as e:
-    #             print('[error] %r: %s' % (exp.name, e))
-    #         else:
-    #             res_exp.write_csv_global_by_pipeline(csv_file, write_header=header)
-    #             print(" {:<40s} => {:<20s} ".format(exp.name, csv_file.name))
-    #         header = False
+    # add_done_callback(fn) to attach a printing function to give feedback
+    with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
 
+        data = {executor.submit(KickstartDirectory, directory): directory for directory in directories}
+        print("{} threads spawned....".format(threads))
+        header = True
+        for future in concurrent.futures.as_completed(data):
+            exp = data[future]
+            try:
+                res_exp = future.result()
+            except Exception as e:
+                print('[error] %r: %s' % (exp.name, e))
+            else:
+                res_exp.write_csv_global_by_pipeline(csv_file, write_header=header)
+                print(" {:<60s} => {:<20s} ".format(exp.name, csv_file.name))
+            header = False
+
+
+def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
+
+    if not Path(exp_dir).exists():
+        print("[error] {} does not exist.\n[error] Abort.".format(exp_dir))
+        exit(-1)
+
+    if not Path(exp_dir).is_dir():
+        print("[error] {} is not a valid directory.\n[error] Abort.".format(exp_dir))
+        exit(-1)
+
+    directories = [Path(x) for x in sorted(glob.glob(exp_dir+pattern)) if Path(x).is_dir()]
+    if csv_file == None:
+        csv_file = Path(Path(exp_dir) / Path(Path(exp_dir).name+".csv"))
+    else:
+        csv_file = Path(csv_file)
+
+    start = []
+    end = []
 
     start.append(time.time())
     
-    print(" {:<50s} => ".format(directories[0].name), end='', flush=True)
+    print(" {:<60s} => ".format(directories[0].name), end='', flush=True)
     exp = KickstartDirectory(directories[0])
     exp.write_csv_global_by_pipeline(csv_file, write_header=True)
     
@@ -1458,7 +1494,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, threads=None, plot
 
     for d in directories[1:]:
         start.append(time.time())
-        print(" {:<50s} => ".format(d.name), end='', flush=True)
+        print(" {:<60s} => ".format(d.name), end='', flush=True)
         exp = KickstartDirectory(d)
         exp.write_csv_global_by_pipeline(csv_file)
         end.append(time.time())
@@ -1475,9 +1511,11 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
-    #Latest 23 jan
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/25jan/"
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp25.csv")
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020/"
+    
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
+
+    #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 
 
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/"

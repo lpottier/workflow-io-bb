@@ -300,8 +300,9 @@ class SwarpInstance:
         string += "#SBATCH --exclusive=user\n"
         if self.slurm_profile:
             string += "#SBATCH --profile=ALL\n"
-        # string += "#SBATCH -d singleton\n"
-        # string += "#SBATCH --hint=nomultithread\n"
+
+        string += "#SBATCH --dependency=singleton\n"
+        string += "#SBATCH --hint=nomultithread\n"
 
         return string
 
@@ -551,12 +552,14 @@ class SwarpInstance:
 
         s += "    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}\n"
         s += "    mkdir -p $OUTPUT_DIR\n"
+        s += "    lfs setstripe -c 1 -o 1 ${OUTPUT_DIR}\n"
         s += "    echo \"OUTPUT_DIR -> $OUTPUT_DIR\"\n"
         s += "\n"
 
         s += "    #The local version\n"
         s += "    export LOCAL_OUTPUT_DIR=$BASE/$OUTPUT_DIR_NAME/${k}/\n"
         s += "    mkdir -p $LOCAL_OUTPUT_DIR\n"
+        s += "    lfs setstripe -c 1 -o 1 ${LOCAL_OUTPUT_DIR}\n"
         s += "    echo \"LOCAL_OUTPUT_DIR -> $LOCAL_OUTPUT_DIR\"\n"
         s += "\n"
 
@@ -587,11 +590,13 @@ class SwarpInstance:
 
         s += "    RESAMP_DIR=\"resamp\"\n"
         s += "\n"
+
         s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
+        
 
         s += "\n"
         s += "        cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
