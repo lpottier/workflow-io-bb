@@ -17,7 +17,7 @@ RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
 BB=0
-#SRUN="srun -N 1 -n 1 -c 1"
+SRUN="srun -N 1 -n 1 -c 1"
 
 for i in "$@"; do
 	case $i in
@@ -56,8 +56,10 @@ OUTDIR="$RUNDIR/output"
 
 if (( $BB == 1 )); then
     CSV="$OUTDIR/data-bb.csv"
+    SUMMARY_CSV="$OUTDIR/summary-bb.csv"
 else
     CSV="$OUTDIR/data.csv"
+    SUMMARY_CSV="$OUTDIR/summary.csv"
 fi
 
 mkdir -p $RUNDIR/resamp
@@ -85,6 +87,7 @@ echo "$SEP"
 echo "RUNDIR      -> $RUNDIR"
 echo "OUTDIR      -> $OUTDIR"
 echo "CSV         -> $CSV"
+echo "SUMMARY_CSV -> $SUMMARY_CSV"
 echo "AVG         -> $AVG"
 echo "BB_FILES    -> $BB_FILES"
 echo "TOTAL_FILES -> $TOTAL_FILES"
@@ -93,6 +96,7 @@ echo "SRUN        -> $SRUN"
 echo "$SEP"
 
 echo "RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
+echo "RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
 
 echo -e "\tRUN ID \tSTAGEIN (S) \t\tRSMPL (S) \t\tCOADD (S) \t\tTOTAL (S)"
 
@@ -163,7 +167,6 @@ for k in $(seq 1 1 $AVG); do
 
 done
 
-
 sum_stagein=0
 for i in ${all_stagein[@]}; do
     sum_stagein=$(echo "$sum_stagein + $i" | bc -l)
@@ -219,7 +222,13 @@ echo ""
 
 printf "Avg: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
+echo "$AVG $USE_BB $TOTAL_FILES $BB_FILES $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total" >> $SUMMARY_CSV
+
 echo "$SEP"
 
-rm -rf *.{fits,xml} resamp
+if (( $BB == 1 )); then
+    cp -r $RUNDIR/output $PWD
+fi
+
+rm -rf *.{fits,xml} resamp/
 
