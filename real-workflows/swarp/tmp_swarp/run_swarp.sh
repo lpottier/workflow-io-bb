@@ -124,6 +124,8 @@ all_rsmpl=()
 all_coadd=()
 all_total=()
 
+#lfs setstripe -c 1 -o 1 $DIR
+
 for k in $(seq 1 1 $AVG); do
     USE_BB='N'
     time_stagein=0
@@ -248,7 +250,7 @@ echo ""
 printf "Avg: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
 if (( $BB > 0 )); then
-    cp -r "$RUNDIR/output" "$ORIG"
+    cp -r "$RUNDIR/output" "$PWD"
 fi
 
 echo "$SEP"
