@@ -378,9 +378,6 @@ class KickstartEntry(object):
             self._data_nread += int(v.nread)
             self._data_bwrite += int(v.bwrite)
             self._data_nwrite += int(v.nwrite)
-            
-
-
 
     def parse_proc(self, xml_root):
         for proc in xml_root:
@@ -584,6 +581,21 @@ class OutputLog:
                     start = len("TIME TOTAL ")
                     self.time_total = float(line[start:])
 
+    def walltime(self):
+        return self.time_total
+
+    def walltime_stagein(self):
+        return self.time_stage_in
+
+    def walltime_resample(self):
+        return self.time_resample
+
+    def walltime_combine(self):
+        return self.time_coadd
+
+    def walltime_stageout(self):
+        return self.time_stage_out
+
 class AvgOutputLog:
     def __init__(self, list_log_files):
         self.nodes = 0
@@ -682,6 +694,10 @@ class StageInTask:
 
         # print(self._data) 
 
+    def duration(self):
+        return float(self._data["DURATION(S)"])
+
+
 class StageOutTask:
     def __init__(self, csv_file, sep=' '):
         self._csv = csv_file
@@ -695,8 +711,10 @@ class StageOutTask:
         for k in self._data:
             self._data[k] = float(self._data[k])
 
-        # print(self._data) 
+        # print(self._data)
 
+    def duration(self):
+        return float(self._data["DURATION(S)"])
 
 class AvgStageInTask:
     def __init__(self, list_csv_files, sep=' '):
@@ -808,7 +826,8 @@ class RawKickstartDirectory:
 
     """
 
-    def __init__(self,  directory, file_type=FileType.XML):
+    # If concat_pipeline == True then we only record the pipeline value and drop the others
+    def __init__(self,  directory, concat_pipeline=False, file_type=FileType.XML):
         self.dir = Path(os.path.abspath(directory))
         if not self.dir.is_dir():
             raise ValueError("error: {} is not a valid directory.".format(self.dir))
@@ -829,11 +848,19 @@ class RawKickstartDirectory:
         self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
-        self._stagefits = "stagefits" in str(directory.name)
+        self._stagefits = "stagefits" in str(self.dir.name)
+        self._concat_pipeline = concat_pipeline
 
-        if "private" in str(directory.name):
+        # Keys iterate on data
+        self.id = set({})
+        self.avg = set({})
+        self.pipeline = set({})
+
+        self.max_pipeline = -1
+
+        if "private" in str(self.dir.name):
             self._bbtype = "PRIVATE"
-        elif "striped" in str(directory.name):
+        elif "striped" in str(self.dir.name):
             self._bbtype = "STRIPED"
         else:
             self._bbtype = "UNKNOWN"
@@ -846,18 +873,21 @@ class RawKickstartDirectory:
             #   swarp-XWorkflow.batch.Xc.Xf.JOBID
             if VERBOSE >= 2:
                 print ("dir at this level: ", [x.name for x in dir_at_this_level])
-            output_log = []
-            stage_in = []
-            stage_out = []
+            # output_log = []
+            # stage_in = []
+            # stage_out = []
             bb_info = [] # data-stagedin.log -> 4 97M
-            avg_resample = []
-            avg_combine = []
+            avg_resample = {}
+            avg_combine = {}
 
             if len(dir_at_this_level) != 1:
                 #Normally just swarp-scaling.batch ...
                 print("[error]: we need only one directory at this level")
 
-            pid_run = dir_at_this_level[0].name.split('.')[-1]
+            pid_run = int(dir_at_this_level[0].name.split('.')[-1])
+
+            self.id = self.id.union({pid_run})
+
             self.setup[pid_run] = {}
 
             first_part = dir_at_this_level[0].name.split('.')[0]
@@ -871,6 +901,13 @@ class RawKickstartDirectory:
             self.setup[pid_run]['file'] = dir_at_this_level[0].name.split('.')[-2]
             self.setup[pid_run]['file'] = int(self.setup[pid_run]['file'][:-1]) #to remove the 'f' at the end
 
+            self.resample[pid_run] = {}
+            self.combine[pid_run] = {}
+            self.outputlog[pid_run] = {}
+            self.stagein[pid_run] = {}
+            self.stageout[pid_run] = {}
+            self.makespan[pid_run] = {}
+
             if VERBOSE >= 2:
                 print(self.setup[pid_run])
 
@@ -879,12 +916,17 @@ class RawKickstartDirectory:
             for avg in avg_dir:
                 if VERBOSE >= 2:
                     print("run: ", avg.name)
-                #print(dir_at_this_level,avg)
+                # print(avg)
+                idavg = int(avg.name)
+                self.avg = self.avg.union({idavg})
 
-                # TODO deal with output log for multiple pipeline
-                output_log.append(avg / self.log)
-                stage_in.append(avg / self.stage_in_log)
-                stage_out.append(avg / self.stage_out_log)
+                self.outputlog[pid_run][idavg] = OutputLog(avg / self.log)
+                self.stagein[pid_run][idavg] = StageInTask(avg / self.stage_in_log)
+                self.stageout[pid_run][idavg] = StageOutTask(avg / self.stage_out_log)
+
+                self.resample[pid_run][idavg] = {}
+                self.combine[pid_run][idavg] = {}
+                self.makespan[pid_run][idavg] = {}
 
                 bb_info.append(avg / 'data-stagedin.log')
                 with open(bb_info[-1]) as bb_log:
@@ -907,97 +949,76 @@ class RawKickstartDirectory:
                     self.setup[pid_run]['size_fragment'] = fragment
                     self.setup[pid_run]['bb_alloc'] = total
 
-
-                raw_resample = []
-                raw_combine = []
+                pipeline_resample = []
+                pipeline_combine = []
 
                 pipeline_set = sorted([x for x in avg.iterdir() if x.is_dir()])
                 for pipeline in pipeline_set:
-                    # TODO: Find here the longest pipeline among the one launched
                     nb_pipeline = pipeline.parts[-1]
                     try:
                         _ = int(nb_pipeline)
                     except ValueError as e:
                         continue
 
+                    self.max_pipeline = int(nb_pipeline)
+
                     if VERBOSE >= 2:
                         print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = "stat.resample." + pid_run + "." + nb_pipeline + ".xml"
-                    raw_resample.append(pipeline / resmpl_path)
-                    combine_path = "stat.combine." + pid_run + "." + nb_pipeline + ".xml"
-                    raw_combine.append(pipeline / combine_path)
+                    resmpl_path = "stat.resample." + str(pid_run) + "." + nb_pipeline + ".xml"
+                    pipeline_resample.append(pipeline / resmpl_path)
+                    combine_path = "stat.combine." + str(pid_run) + "." + nb_pipeline + ".xml"
+                    pipeline_combine.append(pipeline / combine_path)
 
-                avg_resample.append(KickStartPipeline(ks_entries=raw_resample))
-                avg_combine.append(KickStartPipeline(ks_entries=raw_combine))
+                if self._concat_pipeline:
+                    id_max_pipeline = int(nb_pipeline.name)
+                    self.pipeline = self.pipeline.union({id_max_pipeline})
+                    self.resample[pid_run][idavg][id_max_pipeline] = KickStartPipeline(ks_entries=pipeline_resample)
+                    self.combine[pid_run][idavg][id_max_pipeline] = KickStartPipeline(ks_entries=pipeline_combine)
+                else:
+                    idpipe = int(pipeline.name)
+                    self.pipeline = self.pipeline.union({idpipe})
+                    for rsmpl,coadd in zip(pipeline_resample,pipeline_combine):
+                        self.resample[pid_run][idavg][idpipe] = KickstartEntry(rsmpl)
+                        self.combine[pid_run][idavg][idpipe] = KickstartEntry(coadd)
 
-            self.resample[pid_run] = KickstartRecord(kickstart_entries=avg_resample)
-            self.combine[pid_run] = KickstartRecord(kickstart_entries=avg_combine)
+                if self._concat_pipeline:
+                    self.makespan[pid_run][idavg] = float(self.stagein[pid_run][idavg].duration()[0]) + float(self.resample[pid_run][idavg][int(nb_pipeline.name)].duration()[0]) + float(self.combine[pid_run][idavg][int(nb_pipeline.name)].duration()[0])
+                else:
+                    self.makespan[pid_run][idavg] = -1
 
-            self.stagein[pid_run] = AvgStageInTask(list_csv_files=stage_in)
-            self.stageout[pid_run] = AvgStageOutTask(list_csv_files=stage_out)
+        # FITS="N"
+        # if self._stagefits:
+        #     # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
+        #     # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
+        #     FITS="Y"
 
-            self.outputlog[pid_run] = AvgOutputLog(list_log_files=output_log)
+        # print("ID\t\tPIPELINE\tAVG\tFITS\tMAKESPAN_S\tWALLTIME_S\tSTAGEIN_WALLTIME_S\tRESAMPLE_WALLTIME_S\tCOMBINE_WALLTIME_S\tSTAGEOUT_WALLTIME_S")
 
-            mean_makespan = float(self.stagein[pid_run].duration()[0]) + float(self.resample[pid_run].duration()[0]) + float(self.combine[pid_run].duration()[0])
-            sd_makespan = math.sqrt(float(self.stagein[pid_run].duration()[1])**2 + float(self.resample[pid_run].duration()[1])**2 + float(self.combine[pid_run].duration()[1])**2)
-
-            self.makespan[pid_run] = (mean_makespan, sd_makespan)
-
-        # # # ## PRINTING TEST
-        # for run,d in self.resample.items():
-        #     data_run = d.data()
-        #     print("*** Resample: \"{}\" averaged on {} runs:".format(run, len(data_run)))
-        #     # for u,v in data_run.items():
-        #     #     print("==> Run: {}".format(u))
-        #     #     print("        duration   : {:.3f}".format(v.duration()))
-        #     #     print("        ttime      : {:.3f}".format(v.ttime()))
-        #     #     print("        utime      : {:.3f}".format(v.utime()))
-        #     #     print("        stime      : {:.3f}".format(v.stime()))
-        #     #     print("        efficiency : {:.3f}".format(v.efficiency()*100))
-        #     #     print("        read       : {:.3f}".format(v.tot_bread()/(10**6)))
-        #     #     print("        write      : {:.3f}".format(v.tot_bwrite()/(10**6)))
-        #     print("  == duration   : {:.3f} | {:.3f}".format(d.duration()[0], d.duration()[1]))
-        #     print("  == ttime      : {:.3f} | {:.3f}".format(d.ttime()[0],d.ttime()[1]))
-        #     print("  == utime      : {:.3f} | {:.3f}".format(d.utime()[0],d.utime()[1]))
-        #     print("  == stime      : {:.3f} | {:.3f}".format(d.stime()[0],d.stime()[1]))
-        #     print("  == efficiency : {:.3f} | {:.3f}".format(d.efficiency()[0],d.efficiency()[1]))
-        #     print("  == read       : {:.3f} | {:.3f}".format(d.tot_bread()[0],d.tot_bread()[1]))
-        #     print("  == write      : {:.3f} | {:.3f}".format(d.tot_bwrite()[0],d.tot_bwrite()[1]))
-
-        # print("ID NB_PIPELINE BB_ALLOC_SIZE(GB) NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES(MB) BB_SIZE_FILES(MB) MEAN_MAKESPAN(S) SD_MAKESPAN MEAN_WALLTIME(S) SD_WALLTIME STAGEIN_MEAN_TIME(S) STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME(S) STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME(S) RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME(S) RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME(S) COMBINE_SD_TIME COMBINE_MEAN_WALLTIME(S) COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME(S) STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME(S) STAGEOUT_SD_WALLTIME")
-        # for run in self.setup:
-        #     print ("{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-        #         run,
-        #         self.setup[run]['pipeline'],
-        #         self.setup[run]['bb_alloc'],
-        #         self.setup[run]['core'],
-        #         32,
-        #         self.stagein[run]._data['NB_FILES_TRANSFERED'][0],
-        #         768.515625,
-        #         self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0],
-        #         self.makespan[run][0],
-        #         self.makespan[run][1],
-        #         self.outputlog[run].walltime()[0],
-        #         self.outputlog[run].walltime()[1],
-        #         self.stagein[run].duration()[0],
-        #         self.stagein[run].duration()[1],
-        #         self.outputlog[run].walltime_stagein()[0],
-        #         self.outputlog[run].walltime_stagein()[1],
-        #         self.resample[run].duration()[0],
-        #         self.resample[run].duration()[1],
-        #         self.outputlog[run].walltime_resample()[0],
-        #         self.outputlog[run].walltime_resample()[1],
-        #         self.combine[run].duration()[0],
-        #         self.combine[run].duration()[1],
-        #         self.outputlog[run].walltime_combine()[0],
-        #         self.outputlog[run].walltime_combine()[1],
-        #         self.stageout[run].duration()[0],
-        #         self.stageout[run].duration()[1],
-        #         self.outputlog[run].walltime_stageout()[0],
-        #         self.outputlog[run].walltime_stageout()[1],
-        #         )
-        #     )
+        # for run in self.id:
+        #     for pipeline in self.pipeline:
+        #         for avg in sorted(self.avg):
+        #             print ("{}\t{}\t\t{}\t{}\t{}\t\t{}\t\t{}\t\t{}\t\t{}\t\t{}".format(
+        #                 run,
+        #                 pipeline,
+        #                 avg,
+        #                 FITS,
+        #                 float(self.makespan[run][avg]),
+        #                 round(float(self.outputlog[run][avg].walltime()),2),
+        #                 round(float(self.outputlog[run][avg].walltime_stagein()),2),
+        #                 round(float(self.outputlog[run][avg].walltime_resample()),2),
+        #                 round(float(self.outputlog[run][avg].walltime_combine()),2),
+        #                 round(float(self.outputlog[run][avg].walltime_stageout()),2),
+        #                 # self.stagein[run].duration()[0],
+        #                 # self.outputlog[run].walltime_stagein()[0],
+        #                 # self.resample[run].duration()[0],
+        #                 # self.outputlog[run].walltime_resample()[0],
+        #                 # self.combine[run].duration()[0],
+        #                 # self.outputlog[run].walltime_combine()[0],
+        #                 # self.stageout[run].duration()[0],
+        #                 # self.outputlog[run].walltime_stageout()[0],
+        #                 )
+        #             )
 
     def root_dir(self):
         return self.dir
@@ -1005,14 +1026,8 @@ class RawKickstartDirectory:
     def dirs(self):
         return self.dir_exp
 
-    # def write_csv_resample_by_pipeline(csv_file, sep = ' '):
-    #     pass
-
-    # def write_csv_combine_by_pipeline(csv_file, sep = ' '):
-    #     pass
-
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID AVG FITS NB_PIPELINE BB_TYPE BB_ALLOC_SIZE_MB NB_CORES TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MEAN_MAKESPAN_S SD_MAKESPAN MEAN_WALLTIME_S SD_WALLTIME STAGEIN_MEAN_TIME_S STAGEIN_SD_TIME STAGEIN_MEAN_WALLTIME_S STAGEIN_SD_WALLTIME RESAMPLE_MEAN_TIME_S RESAMPLE_SD_TIME RESAMPLE_MEAN_WALLTIME_S RESAMPLE_SD_WALLTIME COMBINE_MEAN_TIME_S COMBINE_SD_TIME COMBINE_MEAN_WALLTIME_S COMBINE_SD_WALLTIME STAGEOUT_MEAN_TIME_S STAGEOUT_SD_TIME STAGEOUT_MEAN_WALLTIME_S STAGEOUT_SD_WALLTIME".split(' ')
+        header="ID FITS NB_PIPELINE NB_CORES AVG PIPELINE BB_TYPE BB_ALLOC_SIZE_MB TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MAKESPAN_S WALLTIME_S STAGEIN_TIME_S STAGEIN_WALLTIME_S RESAMPLE_TIME_S RESAMPLE_WALLTIME_S COMBINE_TIME_S COMBINE_WALLTIME_S STAGEOUT_TIME_S STAGEOUT_WALLTIME_S".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1021,51 +1036,72 @@ class RawKickstartDirectory:
             csv_writer = csv.writer(f, delimiter=sep, quotechar='"', quoting=csv.QUOTE_MINIMAL)
             if write_header:
                 csv_writer.writerow(header)
-            for run in self.setup:
-                BB_NB_FILES=int(self.stagein[run]._data['NB_FILES_TRANSFERED'][0])
-                BB_SIZE_FILES_MB=float(self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0])
-                FITS="N"
-                if self._stagefits:
-                    # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
-                    # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
-                    FITS="Y"
-            
-                for id_run in XXXXX:
 
-                    line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
-                        run,
-                        id_run, #The run number something
-                        FITS,
-                        self.setup[run]['pipeline'],
-                        self._bbtype,
-                        self.setup[run]['bb_alloc'],
-                        self.setup[run]['core'],
-                        32 * int(self.setup[run]['pipeline']),
-                        BB_NB_FILES,
-                        768.515625 * int(self.setup[run]['pipeline']),
-                        BB_SIZE_FILES_MB,
-                        self.makespan[run][0],
-                        self.makespan[run][1],
-                        self.outputlog[run].walltime()[0],
-                        self.outputlog[run].walltime()[1],
-                        self.stagein[run].duration()[0],
-                        self.stagein[run].duration()[1],
-                        self.outputlog[run].walltime_stagein()[0],
-                        self.outputlog[run].walltime_stagein()[1],
-                        self.resample[run].duration()[0],
-                        self.resample[run].duration()[1],
-                        self.outputlog[run].walltime_resample()[0],
-                        self.outputlog[run].walltime_resample()[1],
-                        self.combine[run].duration()[0],
-                        self.combine[run].duration()[1],
-                        self.outputlog[run].walltime_combine()[0],
-                        self.outputlog[run].walltime_combine()[1],
-                        self.stageout[run].duration()[0],
-                        self.stageout[run].duration()[1],
-                        self.outputlog[run].walltime_stageout()[0],
-                        self.outputlog[run].walltime_stageout()[1],
-                        )
-                    csv_writer.writerow(line.split(" "))
+            FITS="N"
+            if self._stagefits:
+                # BB_NB_FILES += (32 * int(self.setup[run]['pipeline'])) #32 files produced by resample per pipeline
+                # BB_SIZE_FILES_MB += (918 * int(self.setup[run]['pipeline'])) # 918 Mo per pipeline
+                FITS="Y"
+
+            for run in self.id:
+                for pipeline in sorted(self.pipeline):
+                    for avg in sorted(self.avg):
+
+                        BB_NB_FILES=int(self.stagein[run][avg]._data['NB_FILES_TRANSFERED'])
+                        BB_SIZE_FILES_MB=float(self.stagein[run][avg]._data['TRANSFERED_SIZE(MB)'])
+
+                        if not self._concat_pipeline:
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                                run,
+                                FITS,
+                                int(self.setup[run]['pipeline']),
+                                int(self.setup[run]['core']),
+                                avg,
+                                pipeline,
+                                self._bbtype,
+                                float(self.setup[run]['bb_alloc']),
+                                32 * int(self.setup[run]['pipeline']),
+                                BB_NB_FILES,
+                                768.515625 * int(self.setup[run]['pipeline']),
+                                BB_SIZE_FILES_MB,
+                                self.makespan[run][avg],
+                                self.outputlog[run][avg].walltime(),
+                                self.stagein[run][avg].duration(),
+                                self.outputlog[run][avg].walltime_stagein(),
+                                self.resample[run][avg][pipeline].duration(),
+                                self.outputlog[run][avg].walltime_resample(),
+                                self.combine[run][avg][pipeline].duration(),
+                                self.outputlog[run][avg].walltime_combine(),
+                                self.stageout[run][avg].duration(),
+                                self.outputlog[run][avg].walltime_stageout(),
+                            )
+                        else:
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                                run,
+                                FITS,
+                                int(self.setup[run]['pipeline']),
+                                int(self.setup[run]['core']),
+                                avg,
+                                self.max_pipeline,
+                                self._bbtype,
+                                float(self.setup[run]['bb_alloc']),
+                                32 * int(self.setup[run]['pipeline']),
+                                BB_NB_FILES,
+                                768.515625 * int(self.setup[run]['pipeline']),
+                                BB_SIZE_FILES_MB,
+                                self.makespan[run][avg],
+                                self.outputlog[run][avg].walltime(),
+                                self.stagein[run][avg].duration(),
+                                self.outputlog[run][avg].walltime_stagein(),
+                                self.resample[run][avg][self.max_pipeline].duration(),
+                                self.outputlog[run][avg].walltime_resample(),
+                                self.combine[run][avg][self.max_pipeline].duration(),
+                                self.outputlog[run][avg].walltime_combine(),
+                                self.stageout[run][avg].duration(),
+                                self.outputlog[run][avg].walltime_stageout(),
+                            )
+
+                        csv_writer.writerow(line.split(" "))
 
 
 
@@ -1156,11 +1192,11 @@ class KickstartDirectory:
         self.setup = {} #swarp-16.batch.1c.0f.27440714 -> swarp-bb.batch.{core}c.{File_in_BB}f.{slurm job id}
 
         self.makespan = {}  # Addition of tasks' execution time
-        self._stagefits = "stagefits" in str(directory.name)
+        self._stagefits = "stagefits" in str(self.dir.name)
 
-        if "private" in str(directory.name):
+        if "private" in str(self.dir.name):
             self._bbtype = "PRIVATE"
-        elif "striped" in str(directory.name):
+        elif "striped" in str(self.dir.name):
             self._bbtype = "STRIPED"
         else:
             self._bbtype = "UNKNOWN"
@@ -1482,12 +1518,17 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
     start = []
     end = []
 
+    csv_full = Path(csv_file.stem + '-full' + csv_file.suffix)
+
     start.append(time.time())
     
     print(" {:<60s} => ".format(directories[0].name), end='', flush=True)
     exp = KickstartDirectory(directories[0])
     exp.write_csv_global_by_pipeline(csv_file, write_header=True)
-    
+
+    exp_full = RawKickstartDirectory(directories[0])
+    exp_full.write_csv_global_by_pipeline(csv_full, write_header=True)
+
     end.append(time.time())
 
     print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
@@ -1497,6 +1538,9 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
         print(" {:<60s} => ".format(d.name), end='', flush=True)
         exp = KickstartDirectory(d)
         exp.write_csv_global_by_pipeline(csv_file)
+
+        exp_full = RawKickstartDirectory(d)
+        exp_full.write_csv_global_by_pipeline(csv_full)
         end.append(time.time())
         print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
 
@@ -1517,6 +1561,8 @@ if __name__ == "__main__":
 
     #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 
+    # exp = RawKickstartDirectory(exp_dir+"/swarp-premium-1C-200B-1W-0F-30-1-private-stagefits/")
+    # exp.write_csv_global_by_pipeline(csv_file="swarp-full.csv", write_header=True)
 
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/"
     # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_test_switches.csv")
