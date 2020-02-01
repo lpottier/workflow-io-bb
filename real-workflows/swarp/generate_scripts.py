@@ -462,7 +462,7 @@ class SwarpInstance:
         s += "export GLOBAL_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
         # s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
-        s += " lfs setstripe -c 1 -o 1 $GLOBAL_OUTPUT_DIR\n"
+        # s += " lfs setstripe -c 1 -o 1 $GLOBAL_OUTPUT_DIR\n"
        
         s += "\n"
 
@@ -560,7 +560,7 @@ class SwarpInstance:
         s += "    #The local version\n"
         s += "    export LOCAL_OUTPUT_DIR=$BASE/$OUTPUT_DIR_NAME/${k}/\n"
         s += "    mkdir -p $LOCAL_OUTPUT_DIR\n"
-        s += "    lfs setstripe -c 1 -o 1 ${LOCAL_OUTPUT_DIR}\n"
+        # s += "    lfs setstripe -c 1 -o 1 ${LOCAL_OUTPUT_DIR}\n"
         s += "    echo \"LOCAL_OUTPUT_DIR -> $LOCAL_OUTPUT_DIR\"\n"
         s += "\n"
 
