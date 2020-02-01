@@ -288,7 +288,7 @@ class SwarpInstance:
 
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
-        string += "#SBATCH --job-name=swarp-@NODES@\n"
+        string += "#SBATCH --job-name=swarp\n"
         string += "#SBATCH --output=output.%j\n"
         string += "#SBATCH --error=error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
