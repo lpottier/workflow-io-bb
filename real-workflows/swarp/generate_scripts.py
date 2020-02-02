@@ -995,6 +995,7 @@ class SwarpRun:
                 f.write("    outdir=$(mktemp -d -t swarp-run-${i}N-"+str(count)+"F.XXXXXX)\n")
             else:
                 f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N-"+str(count)+"F.XXXXXX)\n")
+            f.write("    lfs setstripe -c 1 -S 2048m \"${outdir}\"\n")
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
