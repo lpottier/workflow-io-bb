@@ -6,7 +6,8 @@
 #DW persistentdw name=swarp
 
 
-echo $DW_PERSISTENT_PRIVATE_swarp/
-ls $DW_PERSISTENT_PRIVATE_swarp/
+echo $DW_PERSISTENT_STRIPED_swarp/
+ls $DW_PERSISTENT_STRIPED_swarp/
 sh bbinfo.sh
+exit 0
 

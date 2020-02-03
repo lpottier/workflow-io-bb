@@ -4,4 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --constraint=haswell
 
-#BB destroy_persistent name=swarp
+#BB destroy_persistent name=lpottier_swarp
+
+exit 0
+
