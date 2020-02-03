@@ -1,23 +1,74 @@
 #!/bin/bash
+#SBATCH --qos=debug
+#SBATCH --constraint=haswell
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=0:30:00
+#SBATCH --job-name=swarp-simple
+#SBATCH --output=output.%j
+#SBATCH --error=error.%j
+#SBATCH --mail-user=lpottier@isi.edu
+#SBATCH --mail-type=FAIL
+#SBATCH --switches=1
+#SBATCH --exclusive=user
+#SBATCH --dependency=singleton
+#SBATCH --hint=nomultithread
+#DW jobdw capacity=100GB access_mode=private type=scratch
 
 usage()
 {
     echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
 }
 
-checkbb_striped() {
-    if [ -z "$DW_JOB_STRIPED" ]; then
-	    echo "Error: burst buffer allocation found. Run start.sh first"
-	    exit
-    fi
-}
+PWD=$(pwd)
+RUNDIR=$(pwd)
+TOTAL_FILES=64 #64 files per pipeline
+BB_FILES=0
+BB=0
+SRUN="srun -N 1 -n 1"
 
-checkbb_private() {
-    if [ -z "$DW_JOB_PRIVATE" ]; then
-	    echo "Error: burst buffer allocation found. Run start-private.sh first"
-	    exit
-    fi
-}
+for i in "$@"; do
+	case $i in
+    		-r=*|--run=*)
+    			AVG="${i#*=}"
+    			shift # past argument=value
+    		;;
+    		-b=*|--bb=*)
+                BBTYPE="${i#*=}"
+                if [[ "$BBTYPE" == "striped" ]]; then
+    			    RUNDIR=$DW_JOB_STRIPED/
+                    BB=1
+                elif [[ "$BBTYPE" == "private" ]]; then 
+    			    RUNDIR=$DW_JOB_PRIVATE/
+                    BB=2
+                else
+                    echo "Error: must be either striped or private"
+                    usage
+                    exit
+                fi
+                BB_FILES=64
+    			shift # past argument=value
+    			;;
+    		-h|--usage)
+    			usage
+    			exit
+    		;;
+    		*)
+          	# unknown option
+	  		usage
+			exit
+    		;;
+esac
+done
+
+if [ -z "$AVG" ]; then
+    AVG=1
+fi
+
+if [ -z "$VERBOSE" ]; then
+    VERBOSE=0
+fi
 
 PWD=$(pwd)
 RUNDIR=$(pwd)
@@ -70,7 +121,7 @@ if [ -z "$VERBOSE" ]; then
     VERBOSE=0
 fi
 
-OUTDIR="$RUNDIR/output"
+OUTDIR="$RUNDIR/output_$SLURM_JOB_ID"
 
 if (( $BB == 1 )); then
     CSV="$OUTDIR/data-bb.csv"
@@ -116,8 +167,19 @@ echo "AVG         -> $AVG"
 echo "BB_FILES    -> $BB_FILES"
 echo "TOTAL_FILES -> $TOTAL_FILES"
 echo "SRUN        -> $SRUN"
+echo "STARTED     -> $(date --rfc-3339=ns)"
 
 echo "$SEP"
+
+echo "RUNDIR,$RUNDIR" > $OUTDIR/info.csv
+echo "OUTDIR,$OUTDIR" >> $OUTDIR/info.csv
+echo "CSV,$CSV" >> $OUTDIR/info.csv
+echo "SUMMARY_CSV,$SUMMARY_CSV" >> $OUTDIR/info.csv
+echo "AVG,$AVG" >> $OUTDIR/info.csv
+echo "BB_FILES,$BB_FILES" >> $OUTDIR/info.csv
+echo "TOTAL_FILES,$TOTAL_FILES" >> $OUTDIR/info.csv
+echo "SRUN,$SRUN" >> $OUTDIR/info.csv
+echo "STARTED,$(date --rfc-3339=ns)" >> $OUTDIR/info.csv
 
 echo "RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
 echo "RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
@@ -185,17 +247,14 @@ for k in $(seq 1 1 $AVG); do
     all_coadd+=( $time_coadd )
     all_total+=( $time_total )
 
+    rm -rf $RUNDIR/resamp/*
+
     echo -e "\t$k \t$time_stagein \t\t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
-    
     echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
-    
-    echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_rsmpl $time_coadd $time_total" >> $CSV
     
     #if (( $BB == 1 )); then
     #    rm -rf "$RUNDIR/input" "$RUNDIR/resamp/*"
     #fi
-    rm -rf $RUNDIR/resamp/*
-
 done
 
 sum_stagein=0
@@ -254,16 +313,12 @@ echo ""
 printf "Avg: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
 echo "$AVG $USE_BB $TOTAL_FILES $BB_FILES $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total" >> $SUMMARY_CSV
-=======
+
 if (( $BB > 0 )); then
     cp -r "$RUNDIR/output" "$PWD"
 fi
 
 echo "$SEP"
-
-if (( $BB == 1 )); then
-    cp -r $RUNDIR/output $PWD
-fi
 
 rm -rf *.{fits,xml} resamp/
 
