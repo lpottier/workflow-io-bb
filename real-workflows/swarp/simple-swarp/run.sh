@@ -14,12 +14,28 @@
 #SBATCH --exclusive=user
 #SBATCH --dependency=singleton
 #SBATCH --hint=nomultithread
-#DW jobdw capacity=100GB access_mode=private type=scratch
 
 usage()
 {
     echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
 }
+
+checkbb_striped() {
+    if [ -z "$DW_JOB_STRIPED" ]; then
+        echo "Error: no striped burst buffer allocation found. Use Slurm  --bbf=file option."
+        exit
+    fi
+}
+
+checkbb_private() {
+    if [ -z "$DW_JOB_PRIVATE" ]; then
+        echo "Error: no private burst buffer allocation found. Use Slurm  --bbf=file option."
+        exit
+    fi
+}
+
+BB=0
+BB_FILES=0
 
 for i in "$@"; do
 	case $i in
@@ -30,9 +46,11 @@ for i in "$@"; do
     		-b=*|--bb=*)
                 BBTYPE="${i#*=}"
                 if [[ "$BBTYPE" == "striped" ]]; then
+                    checkbb_striped
     			    RUNDIR=$DW_JOB_STRIPED/
                     BB=1
-                elif [[ "$BBTYPE" == "private" ]]; then 
+                elif [[ "$BBTYPE" == "private" ]]; then
+                    checkbb_private
     			    RUNDIR=$DW_JOB_PRIVATE/
                     BB=2
                 else
@@ -64,13 +82,11 @@ if [ -z "$VERBOSE" ]; then
 fi
 
 PWD=$(pwd)
-RUNDIR=$(pwd)
 TOTAL_FILES=64 #64 files per pipeline
-BB_FILES=0
-BB=0
 SRUN="srun -N 1 -n 1"
 
 OUTDIR="$RUNDIR/output_$SLURM_JOB_ID"
+OUTDIR_PWD="$PWD/output_$SLURM_JOB_ID"
 
 if (( $BB == 1 )); then
     CSV="$OUTDIR/data-bb-striped.csv"
@@ -78,19 +94,25 @@ if (( $BB == 1 )); then
 elif (( $BB == 2 )); then
     CSV="$OUTDIR/data-bb-private.csv"
     SUMMARY_CSV="$OUTDIR/summary-bb-private.csv"
-else
-    CSV="$OUTDIR/data-pfs.csv"
-    SUMMARY_CSV="$OUTDIR/summary-pfs.csv"
 fi
+
+CSV_PFS="$OUTDIR_PWD/data-pfs.csv"
+SUMMARY_CSV_PFS="$OUTDIR_PWD/summary-pfs.csv"
 
 mkdir -p $RUNDIR/resamp
 mkdir -p $OUTDIR
+mkdir -p $OUTDIR_PWD
+mkdir -p $PWD/resamp
 
 input_rsmpl="$RUNDIR/input/PTF201111*.w.fits"
 output_rsmpl="$OUTDIR/output_resample.log"
-
 input_coadd="$RUNDIR/resamp/PTF201111*.w.resamp.fits"
 output_coadd="$OUTDIR/output_coadd.log"
+
+input_rsmpl_pfs="$PWD/input/PTF201111*.w.fits"
+output_rsmpl_pfs="$OUTDIR_PWD/output_resample_pfs.log"
+input_coadd_pfs="$PWD/resamp/PTF201111*.w.resamp.fits"
+output_coadd_pfs="$OUTDIR_PWD/output_coadd_pfs.log"
 
 if (( $BB == 1 )); then
     config_rsmpl="$RUNDIR/config/resample-bb.swarp"
@@ -98,16 +120,18 @@ if (( $BB == 1 )); then
 elif (( $BB == 2 )); then
     config_rsmpl="$RUNDIR/config/resample-bb-priv.swarp"
     config_coadd="$RUNDIR/config/combine-bb-priv.swarp"
-else
-    config_rsmpl="$RUNDIR/config/resample.swarp"
-    config_coadd="$RUNDIR/config/combine.swarp"
 fi
+
+config_rsmpl_pfs="$PWD/config/resample.swarp"
+config_coadd_pfs="$PWD/config/combine.swarp"
+
 
 rm -rf $RUNDIR/*.fits $RUNDIR/*.xml
 
 SEP="===================================================================================================="
 echo "$SEP"
 
+echo "ID          -> $SLURM_JOB_ID"
 echo "RUNDIR      -> $RUNDIR"
 echo "OUTDIR      -> $OUTDIR"
 echo "CSV         -> $CSV"
@@ -120,29 +144,42 @@ echo "STARTED     -> $(date --rfc-3339=ns)"
 
 echo "$SEP"
 
-echo "RUNDIR,$RUNDIR" > $OUTDIR/info.csv
+echo "ID,$SLURM_JOB_ID" > $OUTDIR/info.csv
+echo "RUNDIR,$RUNDIR" >> $OUTDIR/info.csv
 echo "OUTDIR,$OUTDIR" >> $OUTDIR/info.csv
 echo "CSV,$CSV" >> $OUTDIR/info.csv
 echo "SUMMARY_CSV,$SUMMARY_CSV" >> $OUTDIR/info.csv
+echo "CSV_PFS,$CSV_PFS" >> $OUTDIR/info.csv
+echo "SUMMARY_CSV_PFS,$SUMMARY_CSV_PFS" >> $OUTDIR/info.csv
 echo "AVG,$AVG" >> $OUTDIR/info.csv
 echo "BB_FILES,$BB_FILES" >> $OUTDIR/info.csv
 echo "TOTAL_FILES,$TOTAL_FILES" >> $OUTDIR/info.csv
 echo "SRUN,$SRUN" >> $OUTDIR/info.csv
 echo "STARTED,$(date --rfc-3339=ns)" >> $OUTDIR/info.csv
 
-echo "RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
-echo "RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
+echo "ID RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
+echo "ID RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
 
-echo -e "\tRUN ID \tSTAGEIN (S) \t\tRSMPL (S) \t\tCOADD (S) \t\tTOTAL (S)"
+echo "ID RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV_PFS
+echo "ID RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV_PFS
+
+
+echo -e "ID \t\tRUN \tSTAGEIN (S) \t\tRSMPL (S) \t\tCOADD (S) \t\tTOTAL (S)"
 
 all_stagein=()
 all_rsmpl=()
 all_coadd=()
 all_total=()
 
+all_rsmpl_pfs=()
+all_coadd_pfs=()
+all_total_pfs=()
+
 #lfs setstripe -c 1 -o 1 $DIR
 
 for k in $(seq 1 1 $AVG); do
+    ### BB run
+
     USE_BB='N'
     time_stagein=0
     if (( $BB == 0 )); then
@@ -197,15 +234,56 @@ for k in $(seq 1 1 $AVG); do
     all_total+=( $time_total )
 
     rm -rf $RUNDIR/resamp/*
+    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
 
-    echo -e "\t$k \t$time_stagein \t\t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
-    echo "$k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
+    #### PFS run
+
+    USE_BB='N'
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] No stage in, using PFS."
+    fi
+
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] START rsmpl_pfs:$(date --rfc-3339=ns)"
+    fi
+    
+    $SRUN $RUNDIR/swarp -c $config_rsmpl_pfs $input_rsmpl_pfs > $output_rsmpl_pfs 2>&1
+    
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] END rsmpl_pfs:$(date --rfc-3339=ns)"
+    fi
+
+    if (( $VERBOSE >= 2 )); then 
+        echo "[$k] START coadd_pfs:$(date --rfc-3339=ns)"
+    fi
+    
+    $SRUN $RUNDIR/swarp -c $config_coadd_pfs $input_coadd_pfs > $output_coadd_pfs  2>&1
+    
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] END coadd_pfs:$(date --rfc-3339=ns)"
+    fi
+
+    time_rsmpl_pfs=$(cat $output_rsmpl_pfs | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
+    time_coadd_pfs=$(cat $output_coadd_pfs | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
+    time_total_pfs=$(echo "$time_stagein_pfs + $time_rsmpl_pfs + $time_coadd_pfs" | bc -l)
+    
+    all_rsmpl_pfs+=( $time_rsmpl_pfs )
+    all_coadd_pfs+=( $time_coadd_pfs )
+    all_total_pfs+=( $time_total_pfs )
+
+    rm -rf $PWD/resamp/*
+    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES 0 $time_rsmpl_pfs $time_coadd_pfs $time_total_pfs" >> $CSV_PFS
+
+    echo -e "BB  $SLURM_JOB_ID \t$k \t$time_stagein \t\t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
+    echo -e "PFS $SLURM_JOB_ID \t$k \t0 \t\t\t$time_rsmpl_pfs \t\t\t$time_coadd_pfs \t\t\t$time_total_pfs "
     
     #if (( $BB == 1 )); then
     #    rm -rf "$RUNDIR/input" "$RUNDIR/resamp/*"
     #fi
 done
 
+
+### BB computation 
 sum_stagein=0
 for i in ${all_stagein[@]}; do
     sum_stagein=$(echo "$sum_stagein + $i" | bc -l)
@@ -259,12 +337,61 @@ sd_total=$(echo "sqrt($sd_total / $AVG)" | bc -l)
 
 echo ""
 
-printf "Avg: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
+printf "BB:  \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total
 
-echo "$AVG $USE_BB $TOTAL_FILES $BB_FILES $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total" >> $SUMMARY_CSV
+echo "$SLURM_JOB_ID $AVG $USE_BB $TOTAL_FILES $BB_FILES $avg_stagein $sd_stagein $avg_rsmpl $sd_rsmpl $avg_coadd $sd_coadd $avg_total $sd_total" >> $SUMMARY_CSV
+
+### PFS computation 
+
+sum_rsmpl_pfs=0
+for i in ${all_rsmpl_pfs[@]}; do
+    sum_rsmpl=$(echo "$sum_rsmpl_pfs + $i" | bc -l)
+done
+
+sum_coadd=0
+for i in ${all_coadd_pfs[@]}; do
+    sum_coadd=$(echo "$sum_coadd_pfs + $i" | bc -l)
+done
+
+sum_total_pfs=0
+for i in ${all_total_pfs[@]}; do
+    sum_total=$(echo "$sum_total_pfs + $i" | bc -l)
+done
+
+avg_rsmpl_pfs=$(echo "$sum_rsmpl_pfs / $AVG" | bc -l)
+avg_coadd_pfs=$(echo "$sum_coadd_pfs / $AVG" | bc -l)
+avg_total_pfs=$(echo "$sum_total_pfs / $AVG" | bc -l)
+
+sd_rsmpl_pfs=0
+sd_coadd_pfs=0
+sd_total_pfs=0
+
+
+for i in ${all_rsmpl_pfs[@]}; do
+    sd_rsmpl=$(echo "$sd_rsmpl_pfs + ($i - $avg_rsmpl_pfs)^2" | bc -l)
+done
+
+for i in ${all_coadd_pfs[@]}; do
+    sd_coadd=$(echo "$sd_coadd_pfs + ($i - $avg_coadd_pfs)^2" | bc -l)
+done
+
+for i in ${all_total_pfs[@]}; do
+    sd_total=$(echo "$sd_total_pfs + ($i - $avg_total_pfs)^2" | bc -l)
+done
+
+sd_rsmpl_pfs=$(echo "sqrt($sd_rsmpl_pfs / $AVG)" | bc -l)
+sd_coadd_pfs=$(echo "sqrt($sd_coadd_pfs / $AVG)" | bc -l)
+sd_total_pfs=$(echo "sqrt($sd_total_pfs / $AVG)" | bc -l)
+
+echo ""
+
+printf "PFS: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \n" 0 0 $avg_rsmpl_pfs $sd_rsmpl_pfs $avg_coadd_pfs $sd_coadd_pfs $avg_total_pfs $sd_total_pfs
+
+echo "$SLURM_JOB_ID $AVG $USE_BB $TOTAL_FILES $BB_FILES 0 0 $avg_rsmpl_pfs $sd_rsmpl_pfs $avg_coadd_pfs $sd_coadd_pfs $avg_total_pfs $sd_total_pfs" >> $SUMMARY_CSV_PFS
+
 
 if (( $BB > 0 )); then
-    cp -r "$RUNDIR/output" "$PWD"
+    cp -r "$RUNDIR/output/*" "$OUTDIR_PWD/"
 fi
 
 echo "$SEP"
