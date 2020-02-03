@@ -288,7 +288,7 @@ class SwarpInstance:
 
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
-        string += "#SBATCH --job-name=swarp\n"
+        string += "#SBATCH --job-name=swarp-@NODES@\n"
         string += "#SBATCH --output=output.%j\n"
         string += "#SBATCH --error=error.%j\n"
         string += "#SBATCH --mail-user=lpottier@isi.edu\n"
@@ -461,7 +461,7 @@ class SwarpInstance:
             s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
         s += "export GLOBAL_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
-        # s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
+        s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
         # s += " lfs setstripe -c 1 -o 1 $GLOBAL_OUTPUT_DIR\n"
        
         s += "\n"

@@ -21,13 +21,6 @@ usage()
     echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
 }
 
-PWD=$(pwd)
-RUNDIR=$(pwd)
-TOTAL_FILES=64 #64 files per pipeline
-BB_FILES=0
-BB=0
-SRUN="srun -N 1 -n 1"
-
 for i in "$@"; do
 	case $i in
     		-r=*|--run=*)
@@ -76,62 +69,18 @@ TOTAL_FILES=64 #64 files per pipeline
 BB_FILES=0
 BB=0
 SRUN="srun -N 1 -n 1"
-
-for i in "$@"; do
-	case $i in
-    		-r=*|--run=*)
-    			AVG="${i#*=}"
-    			shift # past argument=value
-    		;;
-    		-b=*|--bb=*)
-                BBTYPE="${i#*=}"
-                if [[ "$BBTYPE" == "striped" ]]; then
-                    checkbb_striped
-    			    RUNDIR=$DW_JOB_STRIPED/
-                    BB=1
-                elif [[ "$BBTYPE" == "private" ]]; then 
-                    checkbb_private
-    			    RUNDIR=$DW_JOB_PRIVATE/
-                    BB=2
-                else
-                    echo "Error: must be either striped or private"
-                    usage
-                    exit
-                fi
-                BB_FILES=64
-    			shift # past argument=value
-    			;;
-    		-h|--usage)
-    			usage
-    			exit
-    		;;
-    		*)
-          	# unknown option
-	  		usage
-			exit
-    		;;
-esac
-done
-
-if [ -z "$AVG" ]; then
-    AVG=1
-fi
-
-if [ -z "$VERBOSE" ]; then
-    VERBOSE=0
-fi
 
 OUTDIR="$RUNDIR/output_$SLURM_JOB_ID"
 
 if (( $BB == 1 )); then
-    CSV="$OUTDIR/data-bb.csv"
-    SUMMARY_CSV="$OUTDIR/summary-bb.csv"
+    CSV="$OUTDIR/data-bb-striped.csv"
+    SUMMARY_CSV="$OUTDIR/summary-bb-striped.csv"
 elif (( $BB == 2 )); then
-    CSV="$OUTDIR/data-bb-priv.csv"
-    SUMMARY_CSV="$OUTDIR/summary-bb-priv.csv"
+    CSV="$OUTDIR/data-bb-private.csv"
+    SUMMARY_CSV="$OUTDIR/summary-bb-private.csv"
 else
-    CSV="$OUTDIR/data.csv"
-    SUMMARY_CSV="$OUTDIR/summary.csv"
+    CSV="$OUTDIR/data-pfs.csv"
+    SUMMARY_CSV="$OUTDIR/summary-pfs.csv"
 fi
 
 mkdir -p $RUNDIR/resamp

@@ -1222,19 +1222,27 @@ class KickstartDirectory:
                 #Normally just swarp-scaling.batch ...
                 print("[error]: we need only one directory at this level")
 
-            pid_run = dir_at_this_level[0].name.split('.')[-1]
-            self.setup[pid_run] = {}
+            try:
+                pid_run = dir_at_this_level[0].name.split('.')[-1]
+                self.setup[pid_run] = {}
 
-            first_part = dir_at_this_level[0].name.split('.')[0]
+                first_part = dir_at_this_level[0].name.split('.')[0]
 
-            self.setup[pid_run]['name'] = first_part.split('-')[0]
-            self.setup[pid_run]['pipeline'] = int(first_part.split('-')[1])
+                self.setup[pid_run]['name'] = first_part.split('-')[0]
+                self.setup[pid_run]['pipeline'] = int(d.name.split('-')[2][:-1])
+            
+            except Exception as e:
+                print("", flush=True)
+                print (e, " : ", d.name.split('-'))
+                exit(-1)
 
             self.setup[pid_run]['core'] = dir_at_this_level[0].name.split('.')[-3]
             self.setup[pid_run]['core'] = int(self.setup[pid_run]['core'][:-1]) #to remove the 'c' at the end
 
             self.setup[pid_run]['file'] = dir_at_this_level[0].name.split('.')[-2]
             self.setup[pid_run]['file'] = int(self.setup[pid_run]['file'][:-1]) #to remove the 'f' at the end
+
+
 
             if VERBOSE >= 2:
                 print(self.setup[pid_run])
@@ -1555,9 +1563,14 @@ if __name__ == "__main__":
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
     exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020/"
+    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020/"
     
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
+    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
+
+
+    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020-32c/"
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_privateruns-32c.csv")
+
 
     #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 
