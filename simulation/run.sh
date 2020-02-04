@@ -31,3 +31,4 @@ tail -n 3 $LOG_OUTPUT/err.log
 #         2> $LOG_OUTPUT
 
 # echo "Log written in $LOG_OUTPUT"
+

@@ -15,61 +15,112 @@
 #SBATCH --dependency=singleton
 #SBATCH --hint=nomultithread
 
-usage()
-{
-    echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
+function usage() {
+    echo "usage: $0 [[[-r=num of runs] [-s=num of input files to stage in (0 <= s <= 32)]  [-b=private | striped]] | [-h]]"
 }
 
-checkbb_striped() {
+function checkbb_striped() {
     if [ -z "$DW_JOB_STRIPED" ]; then
         echo "Error: no striped burst buffer allocation found. Use Slurm  --bbf=file option."
         exit
     fi
 }
 
-checkbb_private() {
+function checkbb_private() {
     if [ -z "$DW_JOB_PRIVATE" ]; then
         echo "Error: no private burst buffer allocation found. Use Slurm  --bbf=file option."
         exit
     fi
 }
 
+## $1 is the input directory : ex. input/
+## $2 is the file where to write the files to stage in .fits + weight.fits
+## $3 is the number of files to stage in from 0 to 32 (only even number allowed, 0, 2, 4, ..., 30, 32)
+## $4 is the file where we write the current location to input file (to give as input to swarp resample)
+function get_list_file() {
+    rm -rf  "$2"
+    rm -rf  "$4"
+    count=1
+    touch "$2"
+    touch "$4"
+    for i in $(ls "$1"); do 
+        if (( $count > "$3" )); then
+            if ( ! echo "$i" | grep -q ".w.weight." ); then
+                echo -n "$(pwd)/$1/$i " >> "$4"
+            fi
+        else
+            echo "$(pwd)/$1/$i" >> "$2"
+            if ( ! echo "$i" | grep -q ".w.weight." ); then
+                echo -n "@INPUT@/$i " >> "$4"
+            fi
+            count=$(echo "$count + 1" | bc -l)
+        fi
+    done
+    echo ""
+}
+
+## $1 is the file that contains the name of each file to stage in
+## $2 contains the destination directory
+function stage_in_files() {
+    if [ ! -f "$1" ]; then
+        echo "[error] file $1 does not exist"
+        exit
+    fi
+    
+    if [ ! -f "$1" ]; then
+        echo "[info] directory $2 does not exist. mkdir.."
+        mkdir -p "$2"
+    fi
+    size_total=0
+    local size=0
+    for i in $(cat "$1"); do
+        size=$(du -h "$i" | sed "s/\(^[0-9]*\.*[0-9]*\).*/\1/")
+        cp -f -p "$i" "$2"
+        echo "OK: $i -> $2 [$(du -h "$i" | sed "s/\(^[0-9]*\.*[0-9]*[A-Z]\).*/\1/")]"
+        size_total=$(echo "$size_total + $size" | bc -l)
+    done
+}
+
 BB=0
 BB_FILES=0
 
 for i in "$@"; do
-	case $i in
-    		-r=*|--run=*)
-    			AVG="${i#*=}"
-    			shift # past argument=value
-    		;;
-    		-b=*|--bb=*)
+    case $i in
+            -r=*|--run=*)
+                AVG="${i#*=}"
+                shift # past argument=value
+            ;;
+            -s=*|--stage=*)
+                NBFILES="${i#*=}"
+                shift # past argument=value
+            ;;
+            -b=*|--bb=*)
                 BBTYPE="${i#*=}"
                 if [[ "$BBTYPE" == "striped" ]]; then
                     checkbb_striped
-    			    RUNDIR=$DW_JOB_STRIPED/
+                    RUNDIR=$DW_JOB_STRIPED/
                     BB=1
                 elif [[ "$BBTYPE" == "private" ]]; then
                     checkbb_private
-    			    RUNDIR=$DW_JOB_PRIVATE/
+                    RUNDIR=$DW_JOB_PRIVATE/
                     BB=2
                 else
                     echo "Error: must be either striped or private"
                     usage
                     exit
                 fi
-                BB_FILES=64
-    			shift # past argument=value
-    			;;
-    		-h|--usage)
-    			usage
-    			exit
-    		;;
-    		*)
-          	# unknown option
-	  		usage
-			exit
-    		;;
+                BB_FILES=32
+                shift # past argument=value
+                ;;
+            -h|--usage)
+                usage
+                exit
+            ;;
+            *)
+            # unknown option
+            usage
+            exit
+            ;;
 esac
 done
 
@@ -79,6 +130,16 @@ fi
 
 if [ -z "$VERBOSE" ]; then
     VERBOSE=0
+fi
+
+if [ -z "$NBFILES" ]; then
+    NBFILES=0
+fi
+
+if (( $NBFILES > 32 )); then
+    NBFILES=32
+elif (( $NBFILES < 0 )); then
+    NBFILES=0
 fi
 
 PWD=$(pwd)
@@ -104,7 +165,18 @@ mkdir -p $OUTDIR
 mkdir -p $OUTDIR_PWD
 mkdir -p $PWD/resamp
 
-input_rsmpl="$RUNDIR/input/PTF201111*.w.fits"
+STAGE_LIST="$OUTDIR_PWD/stage.txt"
+INPUT_LIST="$OUTDIR_PWD/input.txt"
+BB_FILES=$(echo "32 + $NBFILES" | bc -l)
+
+get_list_file "input/" "$STAGE_LIST" "$NBFILES" "$INPUT_LIST";
+sed -i -e "s|@INPUT@|$RUNDIR/input/|g" $INPUT_LIST
+#cat "$INPUT_LIST"
+echo ""
+#stage_in_files "$STAGE_LIST" "$OUTDIR";
+#echo $size_total
+
+input_rsmpl="$(cat $INPUT_LIST)"
 output_rsmpl="$OUTDIR/output_resample.log"
 input_coadd="$RUNDIR/resamp/PTF201111*.w.resamp.fits"
 output_coadd="$OUTDIR/output_coadd.log"
@@ -125,22 +197,22 @@ fi
 config_rsmpl_pfs="$PWD/config/resample.swarp"
 config_coadd_pfs="$PWD/config/combine.swarp"
 
-
 rm -rf $RUNDIR/*.fits $RUNDIR/*.xml
 
-SEP="===================================================================================================="
+SEP="=============================================================================================================="
 echo "$SEP"
 
-echo "ID          -> $SLURM_JOB_ID"
-echo "RUNDIR      -> $RUNDIR"
-echo "OUTDIR      -> $OUTDIR"
-echo "CSV         -> $CSV"
-echo "SUMMARY_CSV -> $SUMMARY_CSV"
-echo "AVG         -> $AVG"
-echo "BB_FILES    -> $BB_FILES"
-echo "TOTAL_FILES -> $TOTAL_FILES"
-echo "SRUN        -> $SRUN"
-echo "STARTED     -> $(date --rfc-3339=ns)"
+echo "ID           -> $SLURM_JOB_ID"
+echo "RUNDIR       -> $RUNDIR"
+echo "OUTDIR       -> $OUTDIR"
+echo "CSV          -> $CSV"
+echo "SUMMARY_CSV  -> $SUMMARY_CSV"
+echo "AVG          -> $AVG"
+echo "STAGED_FILES -> $NBFILES"
+echo "BB_FILES     -> $BB_FILES"
+echo "TOTAL_FILES  -> $TOTAL_FILES"
+echo "SRUN         -> $SRUN"
+echo "STARTED      -> $(date --rfc-3339=ns)"
 
 echo "$SEP"
 
@@ -152,16 +224,17 @@ echo "SUMMARY_CSV,$SUMMARY_CSV" >> $OUTDIR/info.csv
 echo "CSV_PFS,$CSV_PFS" >> $OUTDIR/info.csv
 echo "SUMMARY_CSV_PFS,$SUMMARY_CSV_PFS" >> $OUTDIR/info.csv
 echo "AVG,$AVG" >> $OUTDIR/info.csv
+echo "STAGED_FILES,$NBFILES" >> $OUTDIR/info.csv
 echo "BB_FILES,$BB_FILES" >> $OUTDIR/info.csv
 echo "TOTAL_FILES,$TOTAL_FILES" >> $OUTDIR/info.csv
 echo "SRUN,$SRUN" >> $OUTDIR/info.csv
 echo "STARTED,$(date --rfc-3339=ns)" >> $OUTDIR/info.csv
 
-echo "ID RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
-echo "ID RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
+echo "ID RUN USEBB FILES FILESBB SIZEBB STAGEIN RSMPL COADD MAKESPAN" > $CSV
+echo "ID RUN USEBB FILES FILESBB SIZEBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV
 
-echo "ID RUN USEBB FILES FILESBB STAGEIN RSMPL COADD MAKESPAN" > $CSV_PFS
-echo "ID RUN USEBB FILES FILESBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV_PFS
+echo "ID RUN USEBB FILES FILESBB SIZEBB STAGEIN RSMPL COADD MAKESPAN" > $CSV_PFS
+echo "ID RUN USEBB FILES FILESBB SIZEBB STAGEIN STAGE_SD RSMPL RSNPL_SD COADD COADD_SD MAKESPAN MAKESPAN_SD" > $SUMMARY_CSV_PFS
 
 
 echo -e "ID \t\tRUN \tSTAGEIN (S) \t\tRSMPL (S) \t\tCOADD (S) \t\tTOTAL (S)"
@@ -175,6 +248,7 @@ all_rsmpl_pfs=()
 all_coadd_pfs=()
 all_total_pfs=()
 
+
 #lfs setstripe -c 1 -o 1 $DIR
 
 for k in $(seq 1 1 $AVG); do
@@ -182,32 +256,29 @@ for k in $(seq 1 1 $AVG); do
 
     USE_BB='N'
     time_stagein=0
-    if (( $BB == 0 )); then
-        if (( $VERBOSE >= 2 )); then
-            echo "[$k] No stage in, using PFS."
-        fi
-    else
-        if (( $VERBOSE >= 2 )); then
-            echo "[$k] START stagein:$(date --rfc-3339=ns)"
-        fi
-        t1=$(date +%s.%N)
-        cp swarp $RUNDIR
-        cp -r input/ $RUNDIR/
-        cp -r config/ $RUNDIR/
-        t2=$(date +%s.%N)
-
-        if (( $VERBOSE >= 2 )); then
-            echo "[$k] END stagein:$(date --rfc-3339=ns)"
-        fi
-        BB_FILES=64
-        USE_BB='Y'
-        time_stagein=$(echo "$t2 - $t1" | bc -l)
+    size_total=0
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] START stagein:$(date --rfc-3339=ns)"
     fi
+    t1=$(date +%s.%N)
+    cp swarp $RUNDIR
+    stage_in_files "$STAGE_LIST" "$RUNDIR/input";
+    #echo $size_total
+    #cp -r input/ $RUNDIR/
+    cp -r config/ $RUNDIR/
+    t2=$(date +%s.%N)
+
+    if (( $VERBOSE >= 2 )); then
+        echo "[$k] END stagein:$(date --rfc-3339=ns)"
+    fi
+    BB_FILES=$(echo "32 + $NBFILES" | bc -l)
+    USE_BB='Y'
+    time_stagein=$(echo "$t2 - $t1" | bc -l)
 
     if (( $VERBOSE >= 2 )); then
         echo "[$k] START rsmpl:$(date --rfc-3339=ns)"
     fi
-    
+   
     $SRUN $RUNDIR/swarp -c $config_rsmpl $input_rsmpl > $output_rsmpl 2>&1
     
     if (( $VERBOSE >= 2 )); then
@@ -234,7 +305,7 @@ for k in $(seq 1 1 $AVG); do
     all_total+=( $time_total )
 
     rm -rf $RUNDIR/resamp/*
-    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
+    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES $size_total $time_stagein $time_rsmpl $time_coadd $time_total" >> $CSV
 
     #### PFS run
 
@@ -272,7 +343,7 @@ for k in $(seq 1 1 $AVG); do
     all_total_pfs+=( $time_total_pfs )
 
     rm -rf $PWD/resamp/*
-    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES 0 $time_rsmpl_pfs $time_coadd_pfs $time_total_pfs" >> $CSV_PFS
+    echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES 0 0 $time_rsmpl_pfs $time_coadd_pfs $time_total_pfs" >> $CSV_PFS
 
     echo -e "BB  $SLURM_JOB_ID \t$k \t$time_stagein \t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
     echo -e "PFS $SLURM_JOB_ID \t$k \t0 \t\t\t$time_rsmpl_pfs \t\t\t$time_coadd_pfs \t\t\t$time_total_pfs "
@@ -281,7 +352,7 @@ for k in $(seq 1 1 $AVG); do
     #    rm -rf "$RUNDIR/input" "$RUNDIR/resamp/*"
     #fi
 done
-
+echo "ENDED,$(date --rfc-3339=ns)" >> $OUTDIR/info.csv
 
 ### BB computation 
 sum_stagein=0
@@ -396,4 +467,5 @@ fi
 echo "$SEP"
 
 rm -rf *.{fits,xml} resamp/
+
 

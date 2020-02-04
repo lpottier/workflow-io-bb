@@ -606,18 +606,18 @@ class SwarpInstance:
 
         s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
         # We stage .resamp.fits in PFS
-        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
-        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        else\n"
         # We stage .resamp.fits in BB
-        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_RESAMPLE_CONF\"\n"
-        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|\" \"$LOC_COMBINE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        fi\n"
 
         s += "\n"
         s += "        cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
         s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
-        s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
+        s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    done\n"
 
         # # FIX THIS

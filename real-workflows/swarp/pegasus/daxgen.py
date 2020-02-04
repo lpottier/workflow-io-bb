@@ -11,6 +11,7 @@ from Pegasus.DAX3 import *
 INPUTS_DIR="../input/"
 CONFIG_DIR="../config/"
 
+STAGEIN="stagein"
 RESAMPLE="resample"
 COMBINE="combine"
 
@@ -22,7 +23,7 @@ COMBINE_OUTPUT=["combine.xml", "coadd.fits", "coadd.weight.fits"]
 
 FILE_PATTERN="PTF201111*"
 IMAGE_PATTERN="*.w.fits"
-WEIGHTMAP_PATTERN=".weight.fits"
+WEIGHTMAP_PATTERN=".w.weight.fits"
 RESAMPLE_PATTERN=".w.resamp.fits"
 
 ###################### END PARAMETERS ######################
@@ -36,7 +37,10 @@ def main():
                         default=1, help='Number of parallel pipeline', 
                         required=False)
     parser.add_argument('--private-input', '-p', dest='private', 
-                        action='store_true', help='If given, the input files are replicated (so private) for each pipeline', 
+                        action='store_true', help='(NOT IMPLEMENTED) If given, the input files are replicated (so private) for each pipeline', 
+                        required=False)
+    parser.add_argument('--stage-in', '-s', dest='stagein', 
+                        action='store_true', help='Add one staging task from PFS to BB', 
                         required=False)
     # parser.add_argument('--sum', dest='accumulate', action='store_const',
     #                     const=sum, default=max,
@@ -58,6 +62,26 @@ def main():
 
     input_files = glob.glob(os.getcwd()+ "/" + INPUTS_DIR + IMAGE_PATTERN)
 
+    if args.stagein:
+        print (" Add a stage-in task...")
+
+        stagein = Job(name=STAGEIN)
+        stagein_output_files = []
+
+        # COPY TASK
+        for in_file in input_files:
+            # # .fits file
+            # stagein.uses(File("{0}".format(os.path.basename(in_file))), link=Link.INPUT)
+            # # weight map
+            # stagein.uses(File("{0}".format(os.path.basename(in_file).split(".w.")[0] + WEIGHTMAP_PATTERN)), link=Link.INPUT)
+
+            # .fits file
+            stagein.uses(File("{0}".format(os.path.basename(in_file))), link=Link.OUTPUT)
+            # weight map
+            stagein.uses(File("{0}".format(os.path.basename(in_file).split(".w.")[0] + WEIGHTMAP_PATTERN)), link=Link.OUTPUT)
+
+        swarp.addJob(stagein)
+
     for i in range(args.scalability):
         print (" Add resample tasks...")
 
@@ -69,10 +93,10 @@ def main():
         resample.uses(File(RESAMPLE_CONF), link=Link.INPUT)
 
         for in_file in input_files:
-            if args.private:
-                resample.uses(File("{0}".format(os.path.basename(in_file))), link=Link.INPUT)
-            else:
-                resample.uses(File("{0}".format(os.path.basename(in_file))), link=Link.INPUT)
+            # .fits file
+            resample.uses(File("{0}".format(os.path.basename(in_file))), link=Link.INPUT)
+            # weight map
+            resample.uses(File("{0}".format(os.path.basename(in_file).split(".w.")[0] + WEIGHTMAP_PATTERN)), link=Link.INPUT)
 
             output_name = os.path.basename(in_file).split(".w.")[0] + RESAMPLE_PATTERN
             resample_output = File(output_name)
@@ -94,6 +118,7 @@ def main():
 
         for resamp_file in resample_output_files:
             combine.uses(resamp_file, link=Link.INPUT)
+
             combine.addArguments(resamp_file.name)
 
         for output in COMBINE_OUTPUT:
@@ -102,6 +127,9 @@ def main():
         swarp.addJob(combine)
 
         print (" Add dependencies between tasks...")
+
+        if args.stagein:
+            swarp.addDependency(Dependency(parent=stagein, child=resample))
 
         swarp.addDependency(Dependency(parent=resample, child=combine))
 
