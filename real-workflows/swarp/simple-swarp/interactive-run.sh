@@ -1,22 +1,63 @@
 #!/bin/bash
 
-usage()
-{
-    echo "usage: $0 [[[-r=num of runs] [-b=private | striped]] | [-h]]"
+function usage() {
+    echo "usage: $0 [[[-r=num of runs] [-s=num of input files to stage in (0 <= s <= 32)]  [-b=private | striped]] | [-h]]"
 }
 
-checkbb_striped() {
+function checkbb_striped() {
     if [ -z "$DW_JOB_STRIPED" ]; then
         echo "Error: no striped burst buffer allocation found. Use Slurm  --bbf=file option."
         exit
     fi
 }
 
-checkbb_private() {
+function checkbb_private() {
     if [ -z "$DW_JOB_PRIVATE" ]; then
         echo "Error: no private burst buffer allocation found. Use Slurm  --bbf=file option."
         exit
     fi
+}
+
+## $1 is the input directory : ex. input/
+## $2 is the file where to write the files to stage in .fits + weight.fits
+## $3 is the number of files to stage in from 0 to 32 (only even number allowed, 0, 2, 4, ..., 30, 32)
+function get_list_file() {
+    touch "$2"
+    local count=1
+    for i in $(ls "$1"); do 
+        if (( $count > "$3" )); then 
+            break
+        fi
+        if (( $count == 1 )); then
+            echo "$(pwd)/$1/$i" > "$2"
+        else
+            echo "$(pwd)/$1/$i" >> "$2"
+        fi
+        count=$(echo "$count + 1" | bc -l) 
+    done
+}
+
+## $1 is the file that contains the name of each file to stage in
+## $2 contains the destination directory
+function stage_in_files() {
+    if [ ! -f "$1" ]; then
+        echo "[error] file $1 does not exist"
+        exit
+    fi
+    
+    if [ ! -f "$1" ]; then
+        echo "[info] directory $2 does not exist. mkdir.."
+        mkdir -p "$2"
+    fi
+    size_total=0
+    local size=0
+    for i in $(cat "$1"); do
+        size=$(du -h "$1" | sed "s/\(^[0-9]*\.*[0-9]*\).*/\1/")
+        cp -f -p "$1" "$2"
+        echo "OK: $1 -> $2 [$(du -h "$1" | sed "s/\(^[0-9]*\.*[0-9]*[A-Z]\).*/\1/")]"
+        size_total=$(echo $size_total + $size | bc -l)
+    done
+
 }
 
 BB=0
@@ -26,6 +67,10 @@ for i in "$@"; do
     case $i in
             -r=*|--run=*)
                 AVG="${i#*=}"
+                shift # past argument=value
+            ;;
+            -s=*|--stage=*)
+                NBFILES="${i#*=}"
                 shift # past argument=value
             ;;
             -b=*|--bb=*)
@@ -64,6 +109,16 @@ fi
 
 if [ -z "$VERBOSE" ]; then
     VERBOSE=0
+fi
+
+if [ -z "$NBFILES" ]; then
+    NBFILES=0
+fi
+
+if (( $NBFILES > 32 )); then
+    NBFILES=32
+elif (( $NBFILES < 0 )); then
+    NBFILES=0
 fi
 
 PWD=$(pwd)
@@ -110,6 +165,19 @@ fi
 config_rsmpl_pfs="$PWD/config/resample.swarp"
 config_coadd_pfs="$PWD/config/combine.swarp"
 
+STAGE_LIST="$OUTDIR_PWD/stage.txt"
+
+
+get_list_file "input/" "$STAGE_LIST" "$NBFILES";
+
+echo "$STAGE_LIST"
+cat "$STAGE_LIST"
+
+stage_in_files "$STAGE_LIST" "$OUTDIR";
+
+echo $size_total
+
+exit 
 
 rm -rf $RUNDIR/*.fits $RUNDIR/*.xml
 
@@ -250,7 +318,7 @@ for k in $(seq 1 1 $AVG); do
 
     time_rsmpl_pfs=$(cat $output_rsmpl_pfs | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
     time_coadd_pfs=$(cat $output_coadd_pfs | sed -n -e 's/^> All done (in \([0-9]*\.[0-9]*\) s)/\1/p')
-    time_total_pfs=$(echo "$time_stagein_pfs + $time_rsmpl_pfs + $time_coadd_pfs" | bc -l)
+    time_total_pfs=$(echo "$time_rsmpl_pfs + $time_coadd_pfs" | bc -l)
     
     all_rsmpl_pfs+=( $time_rsmpl_pfs )
     all_coadd_pfs+=( $time_coadd_pfs )
@@ -259,7 +327,7 @@ for k in $(seq 1 1 $AVG); do
     rm -rf $PWD/resamp/*
     echo "$SLURM_JOB_ID $k $USE_BB $TOTAL_FILES $BB_FILES 0 $time_rsmpl_pfs $time_coadd_pfs $time_total_pfs" >> $CSV_PFS
 
-    echo -e "BB  $SLURM_JOB_ID \t$k \t$time_stagein \t\t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
+    echo -e "BB  $SLURM_JOB_ID \t$k \t$time_stagein \t\t$time_rsmpl \t\t\t$time_coadd \t\t\t$time_total "
     echo -e "PFS $SLURM_JOB_ID \t$k \t0 \t\t\t$time_rsmpl_pfs \t\t\t$time_coadd_pfs \t\t\t$time_total_pfs "
     
     #if (( $BB == 1 )); then
@@ -330,17 +398,17 @@ echo "$SLURM_JOB_ID $AVG $USE_BB $TOTAL_FILES $BB_FILES $avg_stagein $sd_stagein
 
 sum_rsmpl_pfs=0
 for i in ${all_rsmpl_pfs[@]}; do
-    sum_rsmpl=$(echo "$sum_rsmpl_pfs + $i" | bc -l)
+    sum_rsmpl_pfs=$(echo "$sum_rsmpl_pfs + $i" | bc -l)
 done
 
-sum_coadd=0
+sum_coadd_pfs=0
 for i in ${all_coadd_pfs[@]}; do
-    sum_coadd=$(echo "$sum_coadd_pfs + $i" | bc -l)
+    sum_coadd_pfs=$(echo "$sum_coadd_pfs + $i" | bc -l)
 done
 
 sum_total_pfs=0
 for i in ${all_total_pfs[@]}; do
-    sum_total=$(echo "$sum_total_pfs + $i" | bc -l)
+    sum_total_pfs=$(echo "$sum_total_pfs + $i" | bc -l)
 done
 
 avg_rsmpl_pfs=$(echo "$sum_rsmpl_pfs / $AVG" | bc -l)
@@ -353,15 +421,15 @@ sd_total_pfs=0
 
 
 for i in ${all_rsmpl_pfs[@]}; do
-    sd_rsmpl=$(echo "$sd_rsmpl_pfs + ($i - $avg_rsmpl_pfs)^2" | bc -l)
+    sd_rsmpl_pfs=$(echo "$sd_rsmpl_pfs + ($i - $avg_rsmpl_pfs)^2" | bc -l)
 done
 
 for i in ${all_coadd_pfs[@]}; do
-    sd_coadd=$(echo "$sd_coadd_pfs + ($i - $avg_coadd_pfs)^2" | bc -l)
+    sd_coadd_pfs=$(echo "$sd_coadd_pfs + ($i - $avg_coadd_pfs)^2" | bc -l)
 done
 
 for i in ${all_total_pfs[@]}; do
-    sd_total=$(echo "$sd_total_pfs + ($i - $avg_total_pfs)^2" | bc -l)
+    sd_total_pfs=$(echo "$sd_total_pfs + ($i - $avg_total_pfs)^2" | bc -l)
 done
 
 sd_rsmpl_pfs=$(echo "sqrt($sd_rsmpl_pfs / $AVG)" | bc -l)
@@ -374,9 +442,8 @@ printf "PFS: \t\t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t%-0.2f (+/- %0.2f) \t
 
 echo "$SLURM_JOB_ID $AVG $USE_BB $TOTAL_FILES $BB_FILES 0 0 $avg_rsmpl_pfs $sd_rsmpl_pfs $avg_coadd_pfs $sd_coadd_pfs $avg_total_pfs $sd_total_pfs" >> $SUMMARY_CSV_PFS
 
-
 if (( $BB > 0 )); then
-    cp -r "$RUNDIR/output/*" "$OUTDIR_PWD/"
+    cp -r $OUTDIR/* "$OUTDIR_PWD/"
 fi
 
 echo "$SEP"
