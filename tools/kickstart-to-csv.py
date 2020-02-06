@@ -557,8 +557,20 @@ class OutputLog:
         self.time_stage_out = 0
         self.time_total = 0
 
+        self.start_date = 0 # Contains date like YYYY-MM-DD
+        self.start_time = 0 # Contains time like HH:MM:SS.NS-08:00
+        self.end_date = 0
+        self.end_time = 0
+
+
         with open(self.file, 'r') as f:
             for line in f:
+                if line.startswith("Starting STAGE_IN..."):
+                    self.start_date = line.split('...')[1].split(' ')[0]
+                    self.start_time = line.split('...')[1].split(' ')[1]
+                if line.startswith("Starting STAGE_OUT..."):
+                    self.end_date = line.split('...')[1].split(' ')[0]
+                    self.end_time = line.split('...')[1].split(' ')[1]
                 if line.startswith("NODE"):
                     self.nodes = int(line.split('=')[1])
                 elif line.startswith("TASK"):
@@ -595,6 +607,13 @@ class OutputLog:
 
     def walltime_stageout(self):
         return self.time_stage_out
+
+    def start(self):
+        return (self.start_date, self.start_time)
+
+    def end(self):
+        return (self.end_date, self.end_time)
+
 
 class AvgOutputLog:
     def __init__(self, list_log_files):
@@ -653,6 +672,7 @@ class AvgOutputLog:
 
     def walltime_stageout(self):
         return self.time_stage_out
+
 
 ## For stage-*-bb.csv and stage-*-pfs.csv
 # class DetailedStageInTask:
@@ -759,71 +779,9 @@ class AvgStageOutTask:
         return (float(self._data["DURATION(S)"][0]), float(self._data["DURATION(S)"][1]))
 
 
-# No compute of mean or everything
 class RawKickstartDirectory:
     """
-        Directory must follow this kind of pattern:
-        self.dir = swarp-bb.batch.1c.0f.25856221
-        swarp-premium-1C-50B-1_16W-0F-15-1
-        ├── bbf.conf
-        ├── bbinfo.sh
-        ├── combine.swarp
-        ├── files_to_stage.txt
-        ├── interactive_run-swarp-scaling-bb.sh
-        ├── resample.swarp
-        ├── run-swarp-scaling-bb.sh
-        ├── start_interactive.sh
-        ├── submit.sh
-        ├── swarp-run-16N-0F.wtb3xr
-        │   ├── bbinfo.sh
-        │   ├── build_filemap.py
-        │   ├── combine.swarp
-        │   ├── copy.py
-        │   ├── error.27440714
-        │   ├── files_to_stage.txt
-        │   ├── output.27440714
-        │   ├── resample.swarp
-        │   ├── run-swarp-scaling-bb-16N.sh
-        │   ├── swarp-16.batch.1c.0f.27440714
-        │   │   ├── 1
-        │   │   │   ├── 1
-        │   │   │   │   ├── error.combine.27440714.1
-        │   │   │   │   ├── error.resample.27440714.1
-        │   │   │   │   ├── output.combine.27440714.1
-        │   │   │   │   ├── output.resample.27440714.1
-        │   │   │   │   ├── stage-out-bb-global.csv
-        │   │   │   │   ├── stage-out-bb.csv
-        │   │   │   │   ├── stage-out-pfs-global.csv
-        │   │   │   │   ├── stage-out-pfs.csv
-        │   │   │   │   ├── stat.combine.27440714.1.xml
-        │   │   │   │   └── stat.resample.27440714.1.xml
-        │   │   │   ├── 10/
-        │   │   │   │   ├── ....
-        │   │   │   │   ├── ....
-        │   │   │   ├── X/
-        │   │   │   │   ├── ....
-        │   │   │   │   ├── ....
-        │   │   │   ├── bb.log
-        │   │   │   ├── bb_alloc.log
-        │   │   │   ├── data-stagedin.log
-        │   │   │   ├── files_to_stage.txt
-        │   │   │   ├── output.log
-        │   │   │   ├── resample_files.txt
-        │   │   │   ├── slurm.env
-        │   │   │   ├── stage-in-bb-global.csv
-        │   │   │   ├── stage-in-bb.csv
-        │   │   │   ├── stage-in-pfs-global.csv
-        │   │   │   ├── stage-in-pfs.csv
-        │   │   │   ├── stage-out-bb-global.csv
-        │   │   │   ├── stage-out-bb.csv
-        │   │   │   ├── stage-out-pfs-global.csv
-        │   │   │   ├── stage-out-pfs.csv
-        │   │   ├── 2
-        │   │   │   ├── 1
-        │   │   │   │   ├── error.combine.27440714.1
-        │   │   │   │   ├── error.resample.27440714.1
-        ....
-
+    Raw output of KS data
     """
 
     # If concat_pipeline == True then we only record the pipeline value and drop the others
@@ -884,16 +842,21 @@ class RawKickstartDirectory:
                 #Normally just swarp-scaling.batch ...
                 print("[error]: we need only one directory at this level")
 
-            pid_run = int(dir_at_this_level[0].name.split('.')[-1])
+            try:
+                pid_run = dir_at_this_level[0].name.split('.')[-1]
+                self.setup[pid_run] = {}
+
+                first_part = dir_at_this_level[0].name.split('.')[0]
+
+                self.setup[pid_run]['name'] = first_part.split('-')[0]
+                self.setup[pid_run]['pipeline'] = int(d.name.split('-')[2][:-1])
+            
+            except Exception as e:
+                print("", flush=True)
+                print (e, " : ", d.name.split('-'))
+                exit(-1)
 
             self.id = self.id.union({pid_run})
-
-            self.setup[pid_run] = {}
-
-            first_part = dir_at_this_level[0].name.split('.')[0]
-
-            self.setup[pid_run]['name'] = first_part.split('-')[0]
-            self.setup[pid_run]['pipeline'] = int(first_part.split('-')[1])
 
             self.setup[pid_run]['core'] = dir_at_this_level[0].name.split('.')[-3]
             self.setup[pid_run]['core'] = int(self.setup[pid_run]['core'][:-1]) #to remove the 'c' at the end
@@ -1027,7 +990,7 @@ class RawKickstartDirectory:
         return self.dir_exp
 
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID FITS NB_PIPELINE NB_CORES AVG PIPELINE BB_TYPE BB_ALLOC_SIZE_MB TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MAKESPAN_S WALLTIME_S STAGEIN_TIME_S STAGEIN_WALLTIME_S RESAMPLE_TIME_S RESAMPLE_WALLTIME_S COMBINE_TIME_S COMBINE_WALLTIME_S STAGEOUT_TIME_S STAGEOUT_WALLTIME_S".split(' ')
+        header="ID START END FITS NB_PIPELINE NB_CORES AVG PIPELINE BB_TYPE BB_ALLOC_SIZE_MB TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MAKESPAN_S WALLTIME_S STAGEIN_TIME_S STAGEIN_WALLTIME_S RESAMPLE_TIME_S RESAMPLE_WALLTIME_S COMBINE_TIME_S COMBINE_WALLTIME_S STAGEOUT_TIME_S STAGEOUT_WALLTIME_S".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1051,8 +1014,11 @@ class RawKickstartDirectory:
                         BB_SIZE_FILES_MB=float(self.stagein[run][avg]._data['TRANSFERED_SIZE(MB)'])
 
                         if not self._concat_pipeline:
-                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                            MKSP = self.stagein[run][avg].duration() + self.resample[run][avg][self.max_pipeline].duration() + self.combine[run][avg][self.max_pipeline].duration()+ self.stageout[run][avg].duration()
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                                 run,
+                                self.outputlog[run][avg].start()[0],
+                                self.outputlog[run][avg].end()[0],
                                 FITS,
                                 int(self.setup[run]['pipeline']),
                                 int(self.setup[run]['core']),
@@ -1064,7 +1030,7 @@ class RawKickstartDirectory:
                                 BB_NB_FILES,
                                 768.515625 * int(self.setup[run]['pipeline']),
                                 BB_SIZE_FILES_MB,
-                                self.makespan[run][avg],
+                                MKSP,
                                 self.outputlog[run][avg].walltime(),
                                 self.stagein[run][avg].duration(),
                                 self.outputlog[run][avg].walltime_stagein(),
@@ -1076,8 +1042,10 @@ class RawKickstartDirectory:
                                 self.outputlog[run][avg].walltime_stageout(),
                             )
                         else:
-                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                                 run,
+                                self.outputlog[run][avg].start()[0],
+                                self.outputlog[run][avg].end()[0],
                                 FITS,
                                 int(self.setup[run]['pipeline']),
                                 int(self.setup[run]['core']),
@@ -1438,33 +1406,6 @@ class KickstartDirectory:
                 csv_writer.writerow(line.split(" "))
 
 
-# class ExpPlot(object):
-#     """docstring for ExpPlot"""
-#     def __init__(self, csv_file):
-#         super(ExpPlot, self).__init__()
-
-#         seaborn_found = importlib.util.find_spec('seaborn')
-#         if seaborn_found is None:
-#             sys.write.stderr("[error] Seaborn package not found. exit")
-#             exit(-1)
-
-#         import seaborn as sns
-#         import pandas as pd
-#         import matplotlib.pyplot as plt
-#         #sns.set(style="ticks", color_codes=True)
-        
-#         self._csv_file = csv_file
-
-#     def plot_line_errors(self):
-#         tel = pd.read_csv(self._csv_file)
-
-#         sns.set(style="whitegrid", color_codes=True)
-#         nyctel = sns.load_dataset(tel)
-
-#         sns.relplot(x="timepoint", y="signal", col="region",
-#                     hue="event", style="event",
-#                     kind="line", data=fmri)
-
 def create_data_from_exp_mt(exp_dir, pattern='*', csv_file=None, threads=None, plot=None):
 
     if not Path(exp_dir).exists():
@@ -1526,7 +1467,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
     start = []
     end = []
 
-    csv_full = Path(csv_file.stem + '-full' + csv_file.suffix)
+    csv_full = Path(csv_file.stem + '-raw' + csv_file.suffix)
 
     start.append(time.time())
     
@@ -1541,7 +1482,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
 
     print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
 
-    for d in directories[1:]:
+    for d in sorted(directories[1:]):
         start.append(time.time())
         print(" {:<60s} => ".format(d.name), end='', flush=True)
         exp = KickstartDirectory(d)
@@ -1559,18 +1500,20 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
 
 if __name__ == "__main__":
 
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
+    main_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/"
+
+    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
+    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
+    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
 
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020/"
     
     # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
 
 
-    exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020-32c/"
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_privateruns-32c.csv")
+    exp_dir = main_dir + "bb_runs2020-32c"
 
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c.csv")
 
     #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 

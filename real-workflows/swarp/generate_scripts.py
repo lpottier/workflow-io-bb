@@ -1132,14 +1132,14 @@ if __name__ == '__main__':
 
     if args.stage_fits:
         if args.striped:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-striped-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
         else:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-private-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
     else:
         if args.striped:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-striped/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-striped/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
         else:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}-{}-private/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mday, today.tm_mon)
+            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-private/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
