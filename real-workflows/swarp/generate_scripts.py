@@ -600,7 +600,7 @@ class SwarpInstance:
         s += "    echo $start > $SCONTROL_START\n"
         s += "    echo $start > $SQUEUE_START\n"
         s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
-        s += "    squeue --noconvert --format=%all >> $SQUEUE_START\n"
+        s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_START\n"
 
         s += "\n"
 
@@ -811,7 +811,7 @@ class SwarpInstance:
         s += "    echo $end > $SCONTROL_END\n"
         s += "    echo $end > $SQUEUE_END\n"
         s += "    scontrol show burst --local -o -d >> $SCONTROL_END\n"
-        s += "    squeue --noconvert --format=%all >> $SQUEUE_END\n"
+        s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_END\n"
 
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
