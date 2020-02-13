@@ -596,7 +596,7 @@ class SwarpInstance:
         s += "    RESAMP_DIR=\"resamp\"\n"
         s += "\n"
 
-        s += "    start = $(date --rfc-3339=seconds)\n"
+        s += "    start=$(date --rfc-3339=seconds)\n"
         s += "    echo $start > $SCONTROL_START\n"
         s += "    echo $start > $SQUEUE_START\n"
         s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
@@ -807,7 +807,7 @@ class SwarpInstance:
         s += "    env | grep SLURM > $OUTPUT_DIR/slurm.env\n"
         s += "\n"
 
-        s += "    end = $(date --rfc-3339=seconds)\n"
+        s += "    end=$(date --rfc-3339=seconds)\n"
         s += "    echo $end > $SCONTROL_END\n"
         s += "    echo $end > $SQUEUE_END\n"
         s += "    scontrol show burst --local -o -d >> $SCONTROL_END\n"
