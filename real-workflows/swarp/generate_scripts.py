@@ -301,7 +301,7 @@ class SwarpInstance:
         if self.slurm_profile:
             string += "#SBATCH --profile=ALL\n"
 
-        string += "#SBATCH --dependency=singleton\n"
+        #string += "#SBATCH --dependency=singleton\n"
         string += "#SBATCH --hint=nomultithread\n"
 
         return string

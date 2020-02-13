@@ -904,13 +904,15 @@ class RawKickstartDirectory:
                 with open(avg / 'bb_alloc.log') as bb_alloc:
                     data_bb_alloc = bb_alloc.read().split('\n')
                     total = 0
+                    self.setup[pid_run]['size_fragment'] = 0
+                    self.setup[pid_run]['bb_alloc'] = 0
                     for elem in data_bb_alloc:
                         if elem == '':
                             continue
                         fragment = float(elem[:-3])
                         total += fragment # Remove at the end GiB
-                    self.setup[pid_run]['size_fragment'] = fragment
-                    self.setup[pid_run]['bb_alloc'] = total
+                        self.setup[pid_run]['size_fragment'] = fragment
+                        self.setup[pid_run]['bb_alloc'] = total
 
                 pipeline_resample = []
                 pipeline_combine = []
@@ -1240,13 +1242,15 @@ class KickstartDirectory:
                 with open(avg / 'bb_alloc.log') as bb_alloc:
                     data_bb_alloc = bb_alloc.read().split('\n')
                     total = 0
+                    self.setup[pid_run]['size_fragment'] = 0
+                    self.setup[pid_run]['bb_alloc'] = 0
                     for elem in data_bb_alloc:
                         if elem == '':
                             continue
                         fragment = float(elem[:-3])
                         total += fragment # Remove at the end GiB
-                    self.setup[pid_run]['size_fragment'] = fragment
-                    self.setup[pid_run]['bb_alloc'] = total
+                        self.setup[pid_run]['size_fragment'] = fragment
+                        self.setup[pid_run]['bb_alloc'] = total
 
 
                 raw_resample = []
@@ -1511,9 +1515,17 @@ if __name__ == "__main__":
     # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
 
 
-    exp_dir = main_dir + "bb_runs2020-32c"
+    # exp_dir = main_dir + "bb_runs2020-32c"
+    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c.csv")
 
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c.csv")
+    # exp_dir = main_dir + "bb-fixed_runs2020-32c"
+    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c-fixed.csv")
+
+    exp_dir = main_dir + "bb_runs2020-Xc"
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-Xc.csv")
+
+    exp_dir = main_dir + "time_serie_exp"
+    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-timeserie.csv")
 
     #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 
