@@ -23,3 +23,4 @@ cd "$DIR/"
 ### No Fits -> done
 $RUN -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q $QUEUE -c $FILES
 
+# Then in crontab -e -> "MM HH * * * bash /global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/test_cronjob/example-cron-job.sh"
