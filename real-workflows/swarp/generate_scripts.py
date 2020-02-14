@@ -274,18 +274,16 @@ class SwarpInstance:
         string += "#SBATCH --constraint=haswell\n"
 
         if self.standalone:
-            string += "#SBATCH --nodes=@NODES@\n"
+            # string += "#SBATCH --nodes=@NODES@\n"
             string += "#SBATCH --ntasks=@NODES@\n"
         else:
-            string += "#SBATCH --nodes={}\n".format(self.sched_config.nodes())
+            # string += "#SBATCH --nodes={}\n".format(self.sched_config.nodes())
             string += "#SBATCH --ntasks={}\n".format(self.sched_config.nodes())
 
         #TODO : check this 
 
-        string += "#SBATCH --ntasks-per-node=1\n"
-        # string += "#SBATCH --ntasks-per-socket=16\n"
-
-
+        #string += "#SBATCH --ntasks-per-node=1\n"
+        string += "#SBATCH --ntasks-per-node=32\n"
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
         string += "#SBATCH --job-name=swarp-@NODES@\n"
@@ -385,7 +383,7 @@ class SwarpInstance:
             s += "NODE_COUNT={}   # Number of compute nodes requested by sbatch\n".format(self.sched_config.nodes())
             s += "TASK_COUNT={}   # Number of tasks allocated\n".format(self.sched_config.nodes())
         else:
-            s += "NODE_COUNT=@NODES@   # Number of compute nodes requested by sbatch\n"
+            s += "NODE_COUNT=$SLURM_JOB_NUM_NODES   # Number of compute nodes requested by sbatch\n"
             s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
@@ -395,6 +393,13 @@ class SwarpInstance:
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
+        s += "SRUN=\"srun -n $SLURM_NTASKS -N 1 --cpu-bind=cores\"\n"
+        s += "\n"
+        s += "echo \"SRUN -> $SRUN\"\n"
+        s += "\n"
+        s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
+
+        
 
         s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
         s += "COUNT={}\n".format(self.nb_files_on_bb)
@@ -604,7 +609,7 @@ class SwarpInstance:
 
         s += "\n"
 
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
@@ -651,7 +656,7 @@ class SwarpInstance:
 
         s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
         s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
-        s += "    echo \"TASK=$TASK_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
@@ -661,9 +666,9 @@ class SwarpInstance:
         #s += "    srun meshcoords -j $SLURM_JOB_ID > job-$SLURM_JOB_ID.coord\n"
         
         if self.slurm_profile:
-            s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT\"\n"
+            s += "    MONITORING=\"\"\n"
         else:
-            s += "    MONITORING=\"env OUTPUT_DIR=$OUTPUT_DIR RESAMP_DIR=$RESAMP_DIR CORE_COUNT=$CORE_COUNT pegasus-kickstart -z\"\n"
+            s += "    MONITORING=\"pegasus-kickstart -z\"\n"
 
         s += "\n"
 
@@ -731,23 +736,37 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
 
+
+# 217     echo "Starting $SLURM_NTASKS RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
+# 218     for process in $(seq 0 ${TASK_COUNT}); do
+# 219         #echo "Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... " | tee -a $OUTPUT_FILE
+# 220         #cd ${LOCAL_OUTPUT_DIR}/
+# 221         #KICKSTART_OUTPUT="stat.resample.$SLURM_JOB_ID.${process}_%2t.xml"
+# 222         #cat $RESAMPLE_FILES
+# 223         #echo ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp
+# 224         #cat "${LOCAL_OUTPUT_DIR}/${process}/resample.swarp"
+# 225         echo -e "${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp $input_files" >> resample.conf
+# 226     done
+# 227     $SRUN -o "%t/stat.resample.%j_%2t.xml" -e "%t/error.resample.%j_%2t" --multi-prog resample.conf  &
+
+
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "        echo \"Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "    rm -rf resample.conf\n"
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
-        s += "        cd ${OUTPUT_DIR}/${process}\n"
-        s += "        KICKSTART_OUTPUT=\"stat.resample.$SLURM_JOB_ID.${process}.xml\"\n"
+        # s += "        cd ${OUTPUT_DIR}/${process}\n"
+        # s += "        KICKSTART_OUTPUT=\"stat.resample.$SLURM_JOB_ID.${process}.xml\"\n"
         # s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
         #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         # if self.slurm_profile:
         #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
         # else:
-        s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/resample.swarp\" $(cat $RESAMPLE_FILES) &\n"
-        s += "        cd ..\n"
-        s += "        echo \"done\"\n"
-        s += "        echo \"\"\n"
+        s += "        echo -e \"${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
+        s += "    echo \"Launching $SLURM_NTASKS RESAMPLE process at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+
+        s += "    $SRUN -o \"%t/stat.resample.%j_%2t.xml\" -e \"%t/error.resample.%j_%2t\" --multi-prog resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
@@ -756,7 +775,7 @@ class SwarpInstance:
         s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        dsize=$(du -sh ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
         s += "        nbfiles=$(ls -al ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
         s += "        echo \"BB ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ $nbfiles $dsize\" | tee -a $DU_RESAMP\n\n"
@@ -770,32 +789,32 @@ class SwarpInstance:
         s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        s += "    ###\n"
-        s += "    ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there\n"
-        s += "    ###\n"
+        # s += "    ###\n"
+        # s += "    ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there\n"
+        # s += "    ###\n"
         s += "\n"
+        s += "    rm -rf combine.conf\n"
 
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
-        s += "        echo \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
-        #s += "       indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
-        s += "        cd ${OUTPUT_DIR}/${process}\n"
-        s += "        KICKSTART_OUTPUT=\"stat.combine.$SLURM_JOB_ID.${process}.xml\"\n"
-        #s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
-        s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
-        s += "            srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
-        s += "        else\n"
-        s += "            srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
-        s += "        fi\n"
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
+        s += "      if (( \"$STAGE_FITS\" == \"0\" )); then\n"
+        s += "          rsmpl_files=$(ls ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
+        s += "      else\n"
+        s += "          rsmpl_files=$(ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
+        s += "      fi\n"
+        s += "      echo -e \"${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
         # if self.stagein_fits:
         #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
         # else:
         #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
-        s += "        cd ..\n"
-        s += "        echo \"done\"\n"
-        s += "        echo \"\"\n"
+        # s += "        cd ..\n"
+        # s += "        echo \"done\"\n"
+        # s += "        echo \"\"\n"
         s += "    done\n"
         s += "\n"
 
+        s += "    echo \"Launching COMBINE process $SLURM_NTASKS at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "    $SRUN -o \"%t/stat.combine.%j_%2t.xml\" -e \"%t/error.combine.%j_%2t\" --multi-prog combine.conf &\n"
+        s += "\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
         s += "    t2=$(date +%s.%N)\n"
@@ -815,7 +834,7 @@ class SwarpInstance:
 
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
-        s += "    for process in $(seq 1 ${TASK_COUNT}); do\n"
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        echo \"Removing local resamp files if any ... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "        rm -rf \"${LOCAL_OUTPUT_DIR}/$RESAMP_DIR\"\n"
         s += "        echo \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
