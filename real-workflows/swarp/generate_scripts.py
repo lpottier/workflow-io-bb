@@ -735,7 +735,7 @@ class SwarpInstance:
         s += "    nbfiles=$(ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
-
+        s += "    input_files=$(cat $RESAMPLE_FILES)\n"
         s += "    cd ${OUTPUT_DIR}/\n"
         s += "    rm -rf resample.conf\n\n"
 
