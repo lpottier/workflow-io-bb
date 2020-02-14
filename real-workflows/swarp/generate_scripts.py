@@ -783,7 +783,10 @@ class SwarpInstance:
         s += "      else\n"
         s += "          rsmpl_files=$(ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
         s += "      fi\n"
-        s += "      echo -e \"${process}\\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
+        s += "      echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
+        s += "      echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> \"wrapper-${process}.sh\"\n"
+        s += "      chmod +x \"wrapper-${process}.sh\"\n"
+        s += "      echo -e \"${process}\t wrapper-${process}.sh\" >> combine.conf \n"
         s += "    done\n"
         s += "\n"
 
