@@ -743,7 +743,7 @@ class SwarpInstance:
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo \"#!/bin/bash" > "wrapper-${process}.sh\"\n"
+        s += "        echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "        echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
         s += "        chmod +x \"wrapper-${process}.sh\"\n"
         s += "        echo -e \"${process}\t wrapper-${process}.sh\" >> resample.conf \n"
