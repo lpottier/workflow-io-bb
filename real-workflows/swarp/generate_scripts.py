@@ -381,8 +381,8 @@ class SwarpInstance:
         s += "\n"
 
         if interactive:
-            s += "NODE_COUNT={}   # Number of compute nodes requested by sbatch\n".format(self.sched_config.nodes())
-            s += "TASK_COUNT={}   # Number of tasks allocated\n".format(self.sched_config.nodes())
+            s += "NODE_COUNT=$SLURM_JOB_NUM_NODES   # Number of compute nodes requested by sbatch\n"
+            s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
         else:
             s += "NODE_COUNT=$SLURM_JOB_NUM_NODES   # Number of compute nodes requested by sbatch\n"
             s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
@@ -544,7 +544,7 @@ class SwarpInstance:
 
     def salloc_str(self):
         s = ''
-        s = "salloc -N 1 -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
+        s = "salloc -N 1 -n @NODES@ -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
         return s
 
     def bbconf_salloc(self):
@@ -1009,6 +1009,8 @@ class SwarpRun:
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
+            f.write("    sed \"s/@NODES@/${i}/g\" \"interactive_run-swarp-scaling-bb.sh\" > ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
+            f.write("    sed \"s/@NODES@/${i}/g\" \"start_interactive.sh\" > ${outdir}/start_interactive-${i}N.sh\n")
             #If we want to use DW to stage file
             if not manual_stage:
                 f.write("    for j in $(seq ${i} -1 1); do\n")
