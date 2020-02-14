@@ -736,13 +736,13 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
 
-        s += "    cd ${LOCAL_OUTPUT_DIR}/\n"
+        s += "    cd ${OUTPUT_DIR}/\n"
         s += "    rm -rf resample.conf\n\n"
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo -e \"${process}\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> resample.conf \n"
+        s += "        echo -e \"${process}\\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
         s += "    echo \"Launching $SLURM_NTASKS RESAMPLE process at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
@@ -779,7 +779,7 @@ class SwarpInstance:
         s += "      else\n"
         s += "          rsmpl_files=$(ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
         s += "      fi\n"
-        s += "      echo -e \"${process}\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
+        s += "      echo -e \"${process}\\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
         s += "    done\n"
         s += "\n"
 
