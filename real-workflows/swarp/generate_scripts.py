@@ -1018,6 +1018,7 @@ class SwarpRun:
                 f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
                 f.write("    done\n")
             f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py bbf.conf files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
+            f.write("    chmod u+x ${outdir}/start_interactive-${i}N.sh ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    cd \"${outdir}\"\n")
             f.write("    sbatch ${script}\n")
             #TODO ADD waiting time debug queue
