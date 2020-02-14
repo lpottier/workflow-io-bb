@@ -12,6 +12,8 @@ DIR="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 
 module restore swarp-run
 
+source /global/homes/l/lpottier/.bashrc.ext
+
 cd "$DIR/time_serie_exp" 
 
 ### No Fits -> done

@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-source /global/homes/l/lpottier/.bashrc
+source /global/homes/l/lpottier/.bashrc  
 
 PROC=32
 AVG=15
@@ -12,6 +12,9 @@ DIR="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 cd "$DIR/time_serie_exp"
 
 module restore swarp-run
+
+source /global/homes/l/lpottier/.bashrc.ext  
+
 
 ### No Fits -> done
 #../generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 0
@@ -29,10 +32,10 @@ module restore swarp-run
 
 ### Fits + Striped ->
 python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 0 -z -s
-python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 8 -z -s
-python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 16 -z -s
-python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 24 -z -s
-python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 32 -z -s
+#python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 8 -z -s
+#python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 16 -z -s
+#python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 24 -z -s
+#python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 32 -z -s
 
 ### No Fits + Striped
 #../generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 0 -s

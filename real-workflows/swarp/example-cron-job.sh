@@ -18,6 +18,9 @@ RUN="python3 $DIR/generate_scripts.py"
 
 module restore swarp-run
 
+#Order matters here! module restore and then source
+source /global/homes/l/lpottier/.bashrc.ext
+
 cd "$DIR/"
 
 ### No Fits -> done

@@ -10,9 +10,12 @@ PIPELINE="1"
 FILES=32
 
 DIR="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
-cd "$DIR/bb_runs2020-Xc"
 
 module restore swarp-run
+
+source /global/homes/l/lpottier/.bashrc.ext
+
+cd "$DIR/bb_runs2020-Xc"
 
 ### No Fits -> done
 #../generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 0

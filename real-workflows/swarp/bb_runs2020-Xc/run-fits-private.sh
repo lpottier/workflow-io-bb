@@ -13,6 +13,8 @@ DIR="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
 
 module restore swarp-run
 
+source /global/homes/l/lpottier/.bashrc.ext
+
 cd "$DIR/bb_runs2020-Xc"
 
 ### No Fits -> done
