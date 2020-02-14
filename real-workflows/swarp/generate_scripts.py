@@ -736,32 +736,13 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
 
-
-# 217     echo "Starting $SLURM_NTASKS RESAMPLE... $(date --rfc-3339=ns)" | tee -a $OUTPUT_FILE
-# 218     for process in $(seq 0 ${TASK_COUNT}); do
-# 219         #echo "Launching RESAMPLE process ${process} at:$(date --rfc-3339=ns) ... " | tee -a $OUTPUT_FILE
-# 220         #cd ${LOCAL_OUTPUT_DIR}/
-# 221         #KICKSTART_OUTPUT="stat.resample.$SLURM_JOB_ID.${process}_%2t.xml"
-# 222         #cat $RESAMPLE_FILES
-# 223         #echo ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp
-# 224         #cat "${LOCAL_OUTPUT_DIR}/${process}/resample.swarp"
-# 225         echo -e "${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp $input_files" >> resample.conf
-# 226     done
-# 227     $SRUN -o "%t/stat.resample.%j_%2t.xml" -e "%t/error.resample.%j_%2t" --multi-prog resample.conf  &
-
+        s += "    cd ${LOCAL_OUTPUT_DIR}/\n"
+        s += "    rm -rf resample.conf\n\n"
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        #s += "    indir=\"$DW_JOB_STRIPED/input/${process}\" # This data has already been staged in\n"
-        # s += "        cd ${OUTPUT_DIR}/${process}\n"
-        # s += "        KICKSTART_OUTPUT=\"stat.resample.$SLURM_JOB_ID.${process}.xml\"\n"
-        # s += "        echo \"kickstart output file: $KICKSTART_OUTPUT\" | tee -a $OUTPUT_FILE\n"
-        #s += "        srun --ntasks=1 --cpus-per-task=$CORE_COUNT -o \"$OUTPUT_DIR/output.resample\" -e \"$OUTPUT_DIR/error.resample\" $MONITORING -l \"$OUTPUT_DIR/stat.resample.xml\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        # if self.slurm_profile:
-        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.resample.%j.${process}\" -e \"error.resample.%j.${process}\" $EXE -c $RESAMPLE_CONFIG $(cat $RESAMPLE_FILES) &\n"
-        # else:
-        s += "        echo -e \"${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> resample.conf \n"
+        s += "        echo -e \"${process}\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
         s += "    echo \"Launching $SLURM_NTASKS RESAMPLE process at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
@@ -789,9 +770,6 @@ class SwarpInstance:
         s += "    echo \"Starting COMBINE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        # s += "    ###\n"
-        # s += "    ## TODO: Copy back from the PFS the resamp files so we an play also with the alloc there\n"
-        # s += "    ###\n"
         s += "\n"
         s += "    rm -rf combine.conf\n"
 
@@ -801,14 +779,7 @@ class SwarpInstance:
         s += "      else\n"
         s += "          rsmpl_files=$(ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
         s += "      fi\n"
-        s += "      echo -e \"${process}\t $MONITORING $EXE -c ${LOCAL_OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
-        # if self.stagein_fits:
-        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $EXE -c $COMBINE_CONFIG ${RESAMP_DIR}/${RESAMPLE_PATTERN} &\n"
-        # else:
-        #     s += "        srun -n 1 -N 1 --cpu-bind=cores -o \"output.combine.%j.${process}\" -e \"error.combine.%j.${process}\" $MONITORING -l $KICKSTART_OUTPUT $EXE -c \"${OUTPUT_DIR}/${process}/combine.swarp\" ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN} &\n"
-        # s += "        cd ..\n"
-        # s += "        echo \"done\"\n"
-        # s += "        echo \"\"\n"
+        s += "      echo -e \"${process}\t $MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> combine.conf\n"
         s += "    done\n"
         s += "\n"
 
@@ -876,7 +847,6 @@ class SwarpInstance:
         #s += "    set -x\n"
         #s += "    set +x\n"
         s += "\n"
-        #s += "    rm -rf $INPUT_DIR\n"
         s += "    rm -rf $BBDIR/*\n"
         s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
         s += "done\n"

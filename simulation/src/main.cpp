@@ -110,6 +110,7 @@ int main(int argc, char **argv) {
   printSimulationSummaryTTY(simulation_output);
 
   simulation.dumpAllOutputJSON();
+  simulation.dumpResultPerTaskCSV("", '');
 
   //SEGFAULT ?
   //std::cout << simulation.getHostName() << std::endl;
