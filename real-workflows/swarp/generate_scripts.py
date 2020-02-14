@@ -284,6 +284,7 @@ class SwarpInstance:
 
         #string += "#SBATCH --ntasks-per-node=1\n"
         string += "#SBATCH --ntasks-per-node=32\n"
+        string += "#SBATCH --ntasks-per-core=1\n"
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
         string += "#SBATCH --job-name=swarp-@NODES@\n"
