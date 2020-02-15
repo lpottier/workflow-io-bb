@@ -3,7 +3,7 @@ message(STATUS "Cmake version ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CM
 
 project(%s)
 
-add_definitions("-g -Wall -Wno-unused-variable -Wno-unused-private-field")
+add_definitions("-Wall")
 
 set(CMAKE_CXX_STANDARD 11)
 

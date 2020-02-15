@@ -50,6 +50,7 @@ public:
 class InitialFileAlloc : public FileDecision {
 public:
     InitialFileAlloc(const FileMap_t& _init_file_alloc) : FileDecision(_init_file_alloc) {};
+    
     std::shared_ptr<wrench::StorageService>
     operator()(wrench::WorkflowFile* file) const
     {

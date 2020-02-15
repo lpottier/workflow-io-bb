@@ -68,14 +68,20 @@ int main(int argc, char **argv) {
   //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
   FileMap_t file_placement_heuristic;
 
+  /* All files in PFS */
   for (auto f : workflow->getFiles()) {
-    file_placement_heuristic.insert(std::make_tuple(
-                                    f, 
-                                    simulation.getPFSService(), 
-                                    *(simulation.getBBServices()).begin()
-                                    )
-                              );
+    file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
   }
+
+  /* All BB heuristic : as we can have multiple BB : *(simulation.getBBServices()).begin() */ 
+  // for (auto f : workflow->getFiles()) {
+  //   file_placement_heuristic.insert(std::make_tuple(
+  //                                   f, 
+  //                                   simulation.getPFSService(), 
+  //                                   *(simulation.getBBServices()).begin()
+  //                                   )
+  //                             );
+  // }
 
   printFileAllocationTTY(file_placement_heuristic);
   ////////////////////////
@@ -110,7 +116,6 @@ int main(int argc, char **argv) {
   printSimulationSummaryTTY(simulation_output);
 
   simulation.dumpAllOutputJSON();
-  simulation.dumpResultPerTaskCSV("", '');
 
   //SEGFAULT ?
   //std::cout << simulation.getHostName() << std::endl;

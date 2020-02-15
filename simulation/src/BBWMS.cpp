@@ -49,14 +49,14 @@ int BBWMS::main() {
   // Create a data movement manager
   std::shared_ptr<wrench::DataMovementManager> data_movement_manager = this->createDataMovementManager();
 
-  std::cout << std::right << std::setw(45) << "===    ADD STAGE-IN/OUT TASKS    ===" << std::endl;
+  std::cerr << std::right << std::setw(45) << "===    ADD STAGE-IN/OUT TASKS    ===" << std::endl;
   //print current files allocation
   this->printFileAllocationTTY();
 
   this->addStageInTask("bb_stagein");
   this->addStageOutTask("bb_stageout");
 
-  std::cout << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
+  std::cerr << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
 
   while (true) {
     // Get the ready tasks
@@ -90,7 +90,7 @@ int BBWMS::main() {
 
   this->job_manager.reset();
 
-  std::cout << std::right << std::setw(45) << "===    END SIMULATION    ===" << std::endl;
+  std::cerr << std::right << std::setw(45) << "===    END SIMULATION    ===" << std::endl;
   this->printFileAllocationTTY();
 
   return 0;
@@ -125,27 +125,31 @@ void BBWMS::printFileAllocationTTY() {
   auto precision = std::cout.precision();
   std::cout.precision(std::numeric_limits< double >::max_digits10);
 
+  int width_name = 50;
+  int width_storage = 20;
+  int width_size = 30;
+
   //print current files allocation
-  std::cout << std::left << std::setw(31) 
+  std::cout << std::left << std::setw(width_name+1) 
             << " FILE"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_storage)
             << " STORAGE"
-            << std::left << std::setw(30) 
-            << " SIZE(GB)" << std::endl;
-  std::cout << std::left << std::setw(31) 
+            << std::left << std::setw(width_size) 
+            << " SIZE(MB)" << std::endl;
+  std::cout << std::left << std::setw(width_name+1) 
             << " ----"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_storage)
             << " -------"
-            << std::left << std::setw(30) 
+            << std::left << std::setw(width_size) 
             << " --------" << std::endl;
   for (auto storage : this->getAvailableStorageServices()) {
     for (auto file : this->getWorkflow()->getFiles()) {
       if(storage->lookupFile(file)) {
-        std::cout << " " << std::left << std::setw(31) 
-                  << file->getID() << std::setw(20) 
+        std::cout << " " << std::left << std::setw(width_name+1) 
+                  << file->getID() << std::setw(width_storage) 
                   << std::left << storage->getHostname() 
-                  << std::left << std::setw(30)
-                  << file->getSize()/std::pow(2,30) << std::endl;
+                  << std::left << std::setw(width_size)
+                  << file->getSize()/std::pow(2,20) << std::endl;
       }
     }
   }

@@ -121,32 +121,43 @@ void printFileAllocationTTY(const FileMap_t& file_placement) {
   std::cout.precision(dbl::max_digits10);
   //std::cout.setf( std::ios::fixed, std:: ios::floatfield );
 
-  std::cout << std::left << std::setw(31) 
+  int width_name = 50;
+  int width_src = 15;
+  int width_dest = 15;
+  int width_size = 20;
+
+  std::string sep_name(width_name-1, '-');
+  std::string sep_src(width_src-1, '-');
+  std::string sep_dest(width_dest-1, '-');
+  std::string sep_size(width_size, '-');
+
+
+  std::cout << std::left << std::setw(width_name+1) 
             << " FILE"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_src)
             << "SRC"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_dest)
             << "DEST"
-            << std::left << std::setw(20) 
-            << "SIZE(GB)" << std::endl;
-  std::cout << std::left << std::setw(31) 
-            << " ----"
-            << std::left << std::setw(20)
-            << "---"
-            << std::left << std::setw(20)
-            << "----"
-            << std::left << std::setw(30) 
-            << "--------" << std::endl;
+            << std::left << std::setw(width_size) 
+            << "SIZE(MB)" << std::endl;
+  std::cout << std::left 
+            << " " << sep_name << " "
+            << std::left
+            << sep_src << " "
+            << std::left
+            << sep_dest << " "
+            << std::left
+            << sep_size << std::endl;
 
   for (auto alloc : file_placement) {
-    std::cout << " " << std::left << std::setw(30) 
+    std::cout << " " << std::left << std::setw(width_name) 
               << std::get<0>(alloc)->getID()
-              << std::left << std::setw(20)
+              << std::left << std::setw(width_src)
               << std::get<1>(alloc)->getHostname()
-              << std::left << std::setw(20)
+              << std::left << std::setw(width_dest)
               << std::get<2>(alloc)->getHostname()
-              << std::left << std::setw(30) 
-              << std::get<0>(alloc)->getSize()/std::pow(2,30) << std::endl;
+              << std::left << std::setw(width_size) 
+              << std::get<0>(alloc)->getSize()/std::pow(2,20) << std::endl;
   }
   std::cout.flush();
   //back to previous precision
@@ -165,36 +176,42 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
   for (auto task : trace_tasks)
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
+  int width_workflow = 30;
+  int width_platform = 20;
+  int width_size = 20;
+  int width_link = 20;
+  int width_mksp = 20;
+
   std::cout << std::endl;
-  std::cout << std::left << std::setw(31) 
+  std::cout << std::left << std::setw(width_workflow+1) 
             << " WORKFLOW"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_platform)
             << "PLATFORM"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_size) 
             << "BBSIZE(GB)"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_link) 
             << "BBLINK(GB/S)"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_mksp) 
             << "MAKESPAN(S)" << std::endl;
-  std::cout << std::left << std::setw(31) 
+  std::cout << std::left << std::setw(width_workflow+1) 
             << " --------"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_platform)
             << "--------"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_size) 
             << "----------"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_link) 
             << "------------"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_mksp) 
             << "-----------" << std::endl;
-  std::cout << std::left << std::setw(31) 
+  std::cout << std::left << std::setw(width_workflow+1) 
             << " TODO"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_platform)
             << "TODO"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_size) 
             << "TODO"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_link) 
             << "TODO"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_mksp) 
             << makespan << std::endl;
     //back to previous precision
     std::cout.precision(precision);
@@ -215,31 +232,36 @@ void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::
 
 void printHostStorageAssociationTTY(const std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*>& map) {
 
-  std::cout << std::left << std::setw(31) 
+  int width_compute = 30;
+  int width_storage = 20;
+  int width_link = 20;
+  int width_latency = 20;
+
+  std::cout << std::left << std::setw(width_compute+1) 
             << " COMPUTE HOST"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_storage)
             << "STORAGE"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_link) 
             << "LINK(GB/s)"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_latency) 
             << "LATENCY(uS)" << std::endl;
-  std::cout << std::left << std::setw(31) 
+  std::cout << std::left << std::setw(width_compute+1) 
             << " ------------"
-            << std::left << std::setw(20)
+            << std::left << std::setw(width_storage)
             << "-------"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_link) 
             << "----------"
-            << std::left << std::setw(20) 
+            << std::left << std::setw(width_latency) 
             << "-----------" << std::endl;
 
   for (auto pair : map) {
-    std::cout << " " << std::left << std::setw(30) 
+    std::cout << " " << std::left << std::setw(width_compute) 
               << pair.first.first
-              << std::left << std::setw(20)
+              << std::left << std::setw(width_storage)
               << pair.first.second
-              << std::left << std::setw(20) 
+              << std::left << std::setw(width_link) 
               << pair.second->get_bandwidth()
-              << std::left << std::setw(20) 
+              << std::left << std::setw(width_latency) 
               << pair.second->get_latency() << std::endl;
   }
 }
