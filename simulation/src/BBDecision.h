@@ -40,7 +40,7 @@ public:
     operator()(const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services, const std::vector<wrench::WorkflowTask *> &tasks) const
     {
         for (auto t: tasks) {
-            std::cout << "EFT: "<< t->getID() << std::endl;
+            std::cerr << "EFT: "<< t->getID() << std::endl;
         }
 
         return {};
@@ -54,7 +54,7 @@ public:
     std::shared_ptr<wrench::StorageService>
     operator()(wrench::WorkflowFile* file) const
     {
-        std::cout << "initFileAlloc: " << file->getID() << std::endl;
+        std::cerr << "initFileAlloc: " << file->getID() << std::endl;
 
         for (auto elem : this->getInitAlloc()) {
             if (file->getID() == std::get<0>(elem)->getID())

@@ -12,6 +12,8 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
+#include <cstddef>           // for std::size_t
 
 #include <simgrid/s4u.hpp>
 
@@ -21,8 +23,8 @@
 int main(int argc, char **argv) {
 
   // Parsing of the command-line arguments for this WRENCH simulation
-  if (argc != 4) {
-    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <output dir>" << std::endl;
+  if (argc != 5) {
+    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <stage list file> <output dir>" << std::endl;
     exit(1);
   }
 
@@ -30,15 +32,18 @@ int main(int argc, char **argv) {
   std::string platform_file(argv[1]);
   // The second argument is the workflow description file, written in XML using the DAX DTD
   std::string workflow_file(argv[2]);
+  // The third argument is the list of files to stage (whiccd h files go in BB)
+  // The format is "file_src file_dest", one file per line.
+  // if this file is empty or does not exist -> all files in PFS
+  std::string stage_list(argv[3]);
   // The third argument is the output directory (where to write the simulation results)
-  std::string output_dir(argv[3]);
+  std::string output_dir(argv[4]);
 
   // Declaration of the top-level WRENCH simulation object
-  BBSimulation simulation(platform_file, workflow_file, output_dir);
+  BBSimulation simulation(platform_file, workflow_file, stage_list, output_dir);
 
   // Initialization of the simulation
   simulation.init(&argc, argv);
-
 
   //MAKE SURE THE DIR EXIST/HAS PERM
 
@@ -65,13 +70,49 @@ int main(int argc, char **argv) {
   //All services run on the main PFS node (by rule PFSHost1)
   wrench::FileRegistryService* file_registry_service = simulation.instantiate_file_registry_service();
 
-  //////////////////////// Stage the chosen files from PFS to BB -> here heuristics
-  FileMap_t file_placement_heuristic;
 
+  //////////////////////// Stage the chosen files from PFS to BB -> here heuristics or given
+  FileMap_t file_placement_heuristic;
+  std::shared_ptr<wrench::StorageService> first_bb_node = *(simulation.getBBServices()).begin();
+
+  // Parse the file containing the list of files to stage in
+  auto files_to_stages = BBSimulation::parseFilesList(stage_list, simulation.getPFSService(), first_bb_node);
+
+  int nb_files_staged = 0;
+  float amount_of_data_staged = 0.0;
   /* All files in PFS */
   for (auto f : workflow->getFiles()) {
-    file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
+    // If not found files stay in PFS by default
+    if (files_to_stages.count(f->getID()) == 0) {
+      std::cerr << "[INFO] file " << f->getID() << " not found in " << stage_list << ". This file stays in the PFS." << std::endl;
+      file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
+    }
+    else {
+      if (files_to_stages[f->getID()]->getHostname() != "PFSHost1"){
+        nb_files_staged += 1;
+        amount_of_data_staged += f->getSize();
+      }
+      std::cerr << "[INFO] file " << f->getID() << " will be staged in " << files_to_stages[f->getID()]->getHostname() << std::endl;
+      file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), files_to_stages[f->getID()]));
+    }
   }
+
+  std::cout << nb_files_staged << "/" 
+            << workflow->getFiles().size() 
+            << " files staged in BB (" 
+            << amount_of_data_staged/std::pow(2,20) 
+            << " MB)." << std::endl;
+
+  /* One file in first BB node */ 
+  // for (auto f : workflow->getFiles()) {
+  //   file_placement_heuristic.insert(std::make_tuple(
+  //                                   f, 
+  //                                   simulation.getPFSService(), 
+  //                                   first_bb_node
+  //                                   )
+  //                             );
+  //   break;
+  // }
 
   /* All BB heuristic : as we can have multiple BB : *(simulation.getBBServices()).begin() */ 
   // for (auto f : workflow->getFiles()) {
@@ -83,17 +124,17 @@ int main(int argc, char **argv) {
   //                             );
   // }
 
-  printFileAllocationTTY(file_placement_heuristic);
+  //printFileAllocationTTY(file_placement_heuristic);
   ////////////////////////
 
-  EFT schedule_heuristic;
-  InitialFileAlloc initFileAlloc(file_placement_heuristic);
+  // EFT schedule_heuristic;
+  // InitialFileAlloc initFileAlloc(file_placement_heuristic);
 
   // It is necessary to store, or "stage", input files in the PFS
   std::pair<int, double> stagein_fstat = simulation.stage_input_files();
 
-  auto ftest = *(workflow->getFiles()).begin();
-  initFileAlloc(ftest);
+  // auto ftest = *(workflow->getFiles()).begin();
+  // initFileAlloc(ftest);
 
   std::shared_ptr<wrench::WMS> wms = simulation.instantiate_wms_service(file_placement_heuristic);
 
@@ -115,7 +156,7 @@ int main(int argc, char **argv) {
 
   printSimulationSummaryTTY(simulation_output);
 
-  simulation.dumpAllOutputJSON();
+  //simulation.dumpAllOutputJSON();
 
   //SEGFAULT ?
   //std::cout << simulation.getHostName() << std::endl;

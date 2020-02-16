@@ -51,7 +51,7 @@ int BBWMS::main() {
 
   std::cerr << std::right << std::setw(45) << "===    ADD STAGE-IN/OUT TASKS    ===" << std::endl;
   //print current files allocation
-  this->printFileAllocationTTY();
+  //this->printFileAllocationTTY();
 
   this->addStageInTask("bb_stagein");
   this->addStageOutTask("bb_stageout");
@@ -91,7 +91,7 @@ int BBWMS::main() {
   this->job_manager.reset();
 
   std::cerr << std::right << std::setw(45) << "===    END SIMULATION    ===" << std::endl;
-  this->printFileAllocationTTY();
+  //this->printFileAllocationTTY();
 
   return 0;
 }

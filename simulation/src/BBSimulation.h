@@ -41,10 +41,13 @@ class BBSimulation : public wrench::Simulation {
 public:
     BBSimulation(const std::string& platform_file,
                  const std::string& workflow_file,
+                 const std::string& stage_list,
                  const std::string& output_dir);
 
     void init(int *argc, char **argv);
     wrench::Workflow* parse_inputs();
+    static std::map<std::string, std::shared_ptr<wrench::StorageService> > parseFilesList(std::string, std::shared_ptr<wrench::StorageService>, std::shared_ptr<wrench::StorageService>);
+
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
     std::set<std::shared_ptr<wrench::StorageService>> instantiate_storage_services();
     std::set<std::shared_ptr<wrench::ComputeService>> instantiate_compute_services();

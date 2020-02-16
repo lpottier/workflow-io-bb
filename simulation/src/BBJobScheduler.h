@@ -24,6 +24,7 @@ public:
 
 private:
   FileMap_t file_placement;
+  // std::shared_ptr<wrench::StorageService> default_storage_service;
 };
 
 #endif //MY_BBSCHEDULER_H

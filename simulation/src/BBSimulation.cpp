@@ -17,11 +17,13 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
  */
 BBSimulation::BBSimulation(const std::string& platform_file,
                            const std::string& workflow_file,
+                           const std::string& stage_list,
                            const std::string& output_dir) :
             wrench::Simulation() {
 
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
+  raw_args["stage_list"] = stage_list;
   raw_args["output_dir"] = output_dir;
 }
 
@@ -34,6 +36,66 @@ void BBSimulation::init(int *argc, char **argv) {
   // // Get a vector of all the hosts in the simulated platform
   //std::vector<std::string> hostname_list = this->getHostnameList();
   // std::set<std::string> hostname_set(hostname_list.begin(), hostname_list.end());
+}
+
+std::map<std::string, std::shared_ptr<wrench::StorageService> >
+BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageService> pfs_service, std::shared_ptr<wrench::StorageService> bb_service) {
+  std::map<std::string, std::shared_ptr<wrench::StorageService> > files_to_stages;
+
+  /// Parse stage_list file file_src file_dest
+  // TODO: ADD A FITS OPTION
+  std::string line;
+  std::string delimiter = " ";
+  std::string path_delimiter = "/\\";
+  std::string bb_prefix_cori = "/var/opt/cray/dws/";
+  std::ifstream stage_list_file (path);
+
+  if (stage_list_file.is_open()) {
+    while ( std::getline (stage_list_file,line) ) {
+      // Parse the line to separate the source from the destination
+      std::string src_line = line.substr(0, line.find(delimiter));
+      std::string dst_line = line.substr(line.find(delimiter)+delimiter.length(), line.length());
+
+      // Parse the source to get the filename and the base path
+      std::size_t src_name_pos = src_line.find_last_of(path_delimiter);
+      std::string src_path = src_line.substr(0,src_name_pos);
+      std::string src_file = src_line.substr(src_name_pos+1);
+      // std::cout << " path src: " << src_path << '\n';
+      // std::cout << " file src: " << src_file << '\n';
+
+      // Parse the destination to get the filename and the base path
+      std::size_t dst_name_pos = dst_line.find_last_of(path_delimiter);
+      std::string dst_path = dst_line.substr(0,dst_name_pos);
+      std::string dst_file = dst_line.substr(dst_name_pos+1);
+      // std::cout << " path dst: " << dst_path << '\n';
+      // std::cout << " file dst: " << dst_file << '\n';
+
+      if (src_path.find_first_of(bb_prefix_cori) == std::string::npos) {
+        std::cerr << "[ERROR] file: " << src_file << " cannot be in burst buffers before being staged in" << std::endl;
+        std::exit(1);
+      }
+
+      if (src_file != dst_file && dst_file.length() > 0) {
+        std::cerr << "[ERROR] file: " << src_file << " is different from destination file: " << dst_file << std::endl;
+        std::exit(1);
+      }
+
+      if (dst_path.find_first_of(bb_prefix_cori) != std::string::npos) {
+        // Goes on the first (and only) BB nodes
+        files_to_stages[src_file] = bb_service;
+      } 
+      else {
+        files_to_stages[src_file] = pfs_service;
+      }
+    }
+    stage_list_file.close();
+  }
+  else {
+    std::cerr << "Unable to open file" << std::endl;
+    std::exit(1);
+  }
+
+  return files_to_stages;
 }
 
 wrench::Workflow* BBSimulation::parse_inputs() {
