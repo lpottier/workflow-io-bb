@@ -13,6 +13,7 @@ KS_DIR_FILES="$PWD/data/trace-files/swarp/shared-cori/baseline-pfs/pipeline-1_co
 PLATFORM="test-cori.xml"
 WORKFLOW="swarp-1.dax"
 FILE_MAP="files_to_stage.txt"
+OUTPUT_LOG="output.log"
 TIMESTAMP=$(date "+%ss")
 EXP_ID="simu-pfs-${WORKFLOW%%.*}-${PLATFORM%%.*}-$TIMESTAMP"
 
@@ -29,7 +30,6 @@ python3 kickstart-to-wrench.py \
     -i "$KS_DIR_FILES/stage-in-bb-global.csv" \
     -o "$LOG_OUTPUT/$WORKFLOW"
 
-exit
 
 cd $BUILD/
 cmake .. && make
@@ -38,12 +38,12 @@ cd ..
 $PWD/build/workflow-io-bb \
     "$PWD/data/platform-files/$PLATFORM" \
     "$LOG_OUTPUT/$WORKFLOW" \
-    "$LOG_OUTPUT/$FILE_MAP" \
+    "$BUILD/$FILE_MAP" \
+    "$BUILD/$OUTPUT_LOG" \
     "$LOG_OUTPUT" \
     2> $LOG_OUTPUT/err.log
 
 echo ""
-echo "Output files written in $LOG_OUTPUT directory"
-echo ""
-tail -n 3 $LOG_OUTPUT/err.log
-echo "$EXP_ID/err.log"
+echo "Output files written in $LOG_OUTPUT directory."
+echo "Log written: $EXP_ID/err.log"
+#tail -n 3 $LOG_OUTPUT/err.log
