@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
 
 
   int nb_files_staged = 0;
-  float amount_of_data_staged = 0.0;
+  int amount_of_data_staged = 0;
   /* Stage files */
   for (auto f : workflow->getFiles()) {
     // If not found files stay in PFS by default

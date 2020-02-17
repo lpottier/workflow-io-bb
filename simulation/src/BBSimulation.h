@@ -60,10 +60,10 @@ public:
     const double getLatencyBB() { return std::get<1>(this->bb_link);}
 
     const int getStagedIn() const { return this->nb_files_staged;}
-    const int getDataStaged() const { return this->date_staged;}
+    const int getDataStaged() const { return this->data_staged;}
 
     void setStagedIn(int x) { this->nb_files_staged = x;}
-    void setDataStaged(int x) { this->nb_files_staged = x;}
+    void setDataStaged(int x) { this->data_staged = x;}
 
 
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
@@ -95,7 +95,7 @@ private:
     std::pair<double, double> bb_link; //std::pair<bandwith, latency>
 
     int nb_files_staged; // number of files staged in BB
-    int date_staged; // Amount of data staged in BB (Bytes)
+    int data_staged; // Amount of data staged in BB (Bytes)
 
     wrench::Workflow *workflow;
     std::shared_ptr<wrench::WMS> wms;
