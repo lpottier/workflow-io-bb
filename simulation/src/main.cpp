@@ -19,7 +19,8 @@
 #include <simgrid/s4u.hpp>
 
 #include "BBSimulation.h"
-#include "BBDecision.h"
+#include "config.h"
+// #include "BBDecision.h"
 
 int main(int argc, char **argv) {
 
@@ -64,7 +65,7 @@ int main(int argc, char **argv) {
   //printHostRouteTTY(route);
 
   // Create a list of storage services that will be used by the WMS
-  std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services();
+  std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services(messagepayload_values);
 
   // Create a list of compute services that will be used by the WMS
   // Instantiate a bare metal service and add it to the simulation

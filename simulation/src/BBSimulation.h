@@ -67,7 +67,7 @@ public:
 
 
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
-    std::set<std::shared_ptr<wrench::StorageService>> instantiate_storage_services();
+    std::set<std::shared_ptr<wrench::StorageService>> instantiate_storage_services(const std::map<std::string, double>& payloads);
     std::set<std::shared_ptr<wrench::ComputeService>> instantiate_compute_services();
     wrench::FileRegistryService* instantiate_file_registry_service();
     std::pair<int, double> stage_input_files();
@@ -117,6 +117,8 @@ private:
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> > hostpair_to_link;
     std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_pfs;
     std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> cs_to_bb;
+
+    std::map<std::string, double> storage_payloads;
 };
 
 #endif //MY_BBSIMULATION_H

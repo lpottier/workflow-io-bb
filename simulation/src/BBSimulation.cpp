@@ -262,7 +262,8 @@ std::pair<double, double> BBSimulation::check_links(std::map<std::pair<std::stri
   return res;
 }
 
-std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_storage_services() {
+std::set<std::shared_ptr<wrench::StorageService>> 
+BBSimulation::instantiate_storage_services(const std::map<std::string, double>& payloads) {
   // Create a list of storage services that will be used by the WMS
   
   this->pfs_link = this->check_links(this->cs_to_pfs);
@@ -274,7 +275,9 @@ std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_stor
                                               std::get<1>(this->pfs_storage_host),
                                               this->pfs_link.first,
                                               this->pfs_link.second,
-                                              {})
+                                              {},
+                                              {},
+                                              payloads)
                                       );
     this->storage_services.insert(this->pfs_storage_service);
   } catch (std::invalid_argument &e) {
@@ -290,7 +293,9 @@ std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_stor
                                     this->bb_link.first,
                                     this->bb_link.second,
                                     this->pfs_storage_service,
-                                    {})
+                                    {},
+                                    {},
+                                    payloads)
                               );
       this->storage_services.insert(service);
       this->bb_storage_services.insert(service);
@@ -299,6 +304,8 @@ std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_stor
     std::cerr << "Error: " << e.what() << std::endl;
     std::exit(1);
   }
+
+  this->storage_payloads = payloads;
 
   return storage_services;
 }

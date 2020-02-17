@@ -15,6 +15,7 @@ include_directories(src/ ${SIMGRID_INSTALL_PATH}/include /usr/local/include /opt
 # source files
 set(SOURCE_FILES
       src/main.cpp
+      src/config.h
       src/BBSimulation.h
       src/BBSimulation.cpp
       src/BBDecision.h
