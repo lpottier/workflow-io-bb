@@ -32,8 +32,6 @@
 #define PFS_LINK "pfslink"
 #define BB_LINK "bblink"
 
-class Simulation;
-
 /**
  *  @brief A Burst Buffer Simulation
  */
@@ -42,11 +40,31 @@ public:
     BBSimulation(const std::string& platform_file,
                  const std::string& workflow_file,
                  const std::string& stage_list,
+                 const std::string& real_log,
                  const std::string& output_dir);
 
     void init(int *argc, char **argv);
     wrench::Workflow* parse_inputs();
     static std::map<std::string, std::shared_ptr<wrench::StorageService> > parseFilesList(std::string, std::shared_ptr<wrench::StorageService>, std::shared_ptr<wrench::StorageService>);
+    std::map<std::string, double> parseRealWorkflowLog(std::string path);
+
+    /* Getter */
+    const std::string getWorkflowID() const { return this->workflow_id;}
+    const std::string getPlatformID() const { return this->platform_id;}
+    const double getRealWallTime() { return this->real_data_run["TOTAL"];}
+
+    const double getBandwithPFS() { return std::get<0>(this->pfs_link);}
+    const double getLatencyPFS() { return std::get<1>(this->pfs_link);}
+
+    const double getBandwithBB() { return std::get<0>(this->bb_link);}
+    const double getLatencyBB() { return std::get<1>(this->bb_link);}
+
+    const int getStagedIn() const { return this->nb_files_staged;}
+    const int getDataStaged() const { return this->date_staged;}
+
+    void setStagedIn(int x) { this->nb_files_staged = x;}
+    void setDataStaged(int x) { this->nb_files_staged = x;}
+
 
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
     std::set<std::shared_ptr<wrench::StorageService>> instantiate_storage_services();
@@ -70,6 +88,14 @@ private:
     std::map<std::string, std::string> raw_args;
     std::string workflow_id;
     std::string platform_id;
+
+    //Contains the measured walltime for each task on a machine corresponding to the platform
+    std::map<std::string, double> real_data_run;
+    std::pair<double, double> pfs_link; //std::pair<bandwith, latency>
+    std::pair<double, double> bb_link; //std::pair<bandwith, latency>
+
+    int nb_files_staged; // number of files staged in BB
+    int date_staged; // Amount of data staged in BB (Bytes)
 
     wrench::Workflow *workflow;
     std::shared_ptr<wrench::WMS> wms;

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <cstddef>           // for std::size_t
 
@@ -23,8 +24,8 @@
 int main(int argc, char **argv) {
 
   // Parsing of the command-line arguments for this WRENCH simulation
-  if (argc != 5) {
-    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <stage list file> <output dir>" << std::endl;
+  if (argc != 6) {
+    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <stage list file> <real execution log file> <output dir>" << std::endl;
     exit(1);
   }
 
@@ -32,15 +33,18 @@ int main(int argc, char **argv) {
   std::string platform_file(argv[1]);
   // The second argument is the workflow description file, written in XML using the DAX DTD
   std::string workflow_file(argv[2]);
-  // The third argument is the list of files to stage (whiccd h files go in BB)
+  // The third argument is the list of files to stage (which files go in BB)
   // The format is "file_src file_dest", one file per line.
   // if this file is empty or does not exist -> all files in PFS
   std::string stage_list(argv[3]);
-  // The third argument is the output directory (where to write the simulation results)
-  std::string output_dir(argv[4]);
+  // Must contains a line with "TIME TOTAL WALL_TIME"
+  // Like "TIME TOTAL 0.57464894" for example
+  std::string real_simu_log(argv[4]);
+  // The last argument is the output directory (where to write the simulation results)
+  std::string output_dir(argv[5]);
 
   // Declaration of the top-level WRENCH simulation object
-  BBSimulation simulation(platform_file, workflow_file, stage_list, output_dir);
+  BBSimulation simulation(platform_file, workflow_file, stage_list, real_simu_log, output_dir);
 
   // Initialization of the simulation
   simulation.init(&argc, argv);
@@ -78,9 +82,15 @@ int main(int argc, char **argv) {
   // Parse the file containing the list of files to stage in
   auto files_to_stages = BBSimulation::parseFilesList(stage_list, simulation.getPFSService(), first_bb_node);
 
+
+
+  // TODO: ADD A FITS OPTION
+
+
+
   int nb_files_staged = 0;
   float amount_of_data_staged = 0.0;
-  /* All files in PFS */
+  /* Stage files */
   for (auto f : workflow->getFiles()) {
     // If not found files stay in PFS by default
     if (files_to_stages.count(f->getID()) == 0) {
@@ -97,11 +107,14 @@ int main(int argc, char **argv) {
     }
   }
 
-  std::cout << nb_files_staged << "/" 
-            << workflow->getFiles().size() 
-            << " files staged in BB (" 
-            << amount_of_data_staged/std::pow(2,20) 
-            << " MB)." << std::endl;
+  simulation.setStagedIn(nb_files_staged);
+  simulation.setDataStaged(amount_of_data_staged);
+
+  // std::cout << nb_files_staged << "/" 
+  //           << workflow->getFiles().size() 
+  //           << " files staged in BB (" 
+  //           << amount_of_data_staged/std::pow(2,20) 
+  //           << " MB)." << std::endl;
 
   /* One file in first BB node */ 
   // for (auto f : workflow->getFiles()) {
@@ -152,9 +165,8 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-  auto& simulation_output = simulation.getOutput();
 
-  printSimulationSummaryTTY(simulation_output);
+  printSimulationSummaryTTY(simulation);
 
   //simulation.dumpAllOutputJSON();
 

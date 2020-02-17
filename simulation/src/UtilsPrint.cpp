@@ -12,6 +12,7 @@
 #include <fstream>
 
 #include "UtilsPrint.h"
+#include "BBSimulation.h"
 
 bool ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() && 0 == str.compare(str.size()-suffix.size(), suffix.size(), suffix);
@@ -164,10 +165,12 @@ void printFileAllocationTTY(const FileMap_t& file_placement) {
   std::cout.precision(precision);
 }
 
-void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
+void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
+
+  auto& simulation_output = simulation.getOutput();
 
   auto precision = std::cout.precision();
-  std::cout.precision(dbl::max_digits10);
+  std::cout.precision(8);
   //std::cout.setf( std::ios::fixed, std:: ios::floatfield );
 
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
@@ -176,43 +179,92 @@ void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output) {
   for (auto task : trace_tasks)
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
-  int width_workflow = 30;
+  int width_workflow = 20;
   int width_platform = 20;
-  int width_size = 20;
-  int width_link = 20;
-  int width_mksp = 20;
+  int width_latency = 10;
+  int width_link = 10;
+  int width_bbfile = 10;
+  int width_bbdata = 10;
+  int width_mksp = 15;
+  int width_walltime = 15;
+  int width_err = 15;
 
-  std::cout << std::endl;
+  double latency_ratio = 0.0;
+  double bandwith_ratio = 0.0;
+  // TODO: fix this with epsilon interval
+  if (simulation.getLatencyPFS() > 0.0) {
+    latency_ratio = simulation.getLatencyBB()/simulation.getLatencyPFS();
+  } 
+  else {
+    latency_ratio = simulation.getLatencyBB();
+  }
+
+  // TODO: fix this with epsilon interval
+  if (simulation.getBandwithPFS() > 0.0) {
+    bandwith_ratio = simulation.getBandwithBB()/simulation.getBandwithPFS();
+  } 
+  else {
+    bandwith_ratio = simulation.getBandwithBB();
+  }
+
+  double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
+
+  if (header) {
+    std::cout << std::left << std::setw(width_workflow+1) 
+              << " WORKFLOW"
+              << std::left << std::setw(width_platform)
+              << "PLATFORM"
+              << std::left << std::setw(width_latency)
+              << "FILES"
+              << std::left << std::setw(width_bbfile) 
+              << "DATA(MB)"
+              << std::left << std::setw(width_bbdata) 
+              << "LATENCY"
+              << std::left << std::setw(width_link) 
+              << "BANDWITH"
+              << std::left << std::setw(width_mksp) 
+              << "SIMULATION(S)"
+              << std::left << std::setw(width_walltime) 
+              << "REAL(S)"
+              << std::left << std::setw(width_err) 
+              << "ERR(%)" << std::endl;
+    std::cout << std::left << std::setw(width_workflow+1) 
+              << " --------"
+              << std::left << std::setw(width_platform)
+              << "--------"
+              << std::left << std::setw(width_bbfile) 
+              << "-----"
+              << std::left << std::setw(width_bbdata) 
+              << "--------"
+              << std::left << std::setw(width_latency) 
+              << "-------"
+              << std::left << std::setw(width_link) 
+              << "--------"
+              << std::left << std::setw(width_mksp) 
+              << "-------------"
+              << std::left << std::setw(width_walltime) 
+              << "-------"
+              << std::left << std::setw(width_err) 
+              << "------" << std::endl;
+  }
   std::cout << std::left << std::setw(width_workflow+1) 
-            << " WORKFLOW"
+            << ' ' + simulation.getWorkflowID()
             << std::left << std::setw(width_platform)
-            << "PLATFORM"
-            << std::left << std::setw(width_size) 
-            << "BBSIZE(GB)"
+            << simulation.getPlatformID()
+            << std::left << std::setw(width_bbfile) 
+            << simulation.getStagedIn()
+            << std::left << std::setw(width_bbdata) 
+            << simulation.getDataStaged()/std::pow(2,20)
+            << std::left << std::setw(width_latency) 
+            << latency_ratio
             << std::left << std::setw(width_link) 
-            << "BBLINK(GB/S)"
+            << bandwith_ratio
             << std::left << std::setw(width_mksp) 
-            << "MAKESPAN(S)" << std::endl;
-  std::cout << std::left << std::setw(width_workflow+1) 
-            << " --------"
-            << std::left << std::setw(width_platform)
-            << "--------"
-            << std::left << std::setw(width_size) 
-            << "----------"
-            << std::left << std::setw(width_link) 
-            << "------------"
-            << std::left << std::setw(width_mksp) 
-            << "-----------" << std::endl;
-  std::cout << std::left << std::setw(width_workflow+1) 
-            << " TODO"
-            << std::left << std::setw(width_platform)
-            << "TODO"
-            << std::left << std::setw(width_size) 
-            << "TODO"
-            << std::left << std::setw(width_link) 
-            << "TODO"
-            << std::left << std::setw(width_mksp) 
-            << makespan << std::endl;
+            << makespan
+            << std::left << std::setw(width_walltime) 
+            << simulation.getRealWallTime()
+            << std::left << std::setw(width_err) 
+            << err * 100 << std::endl;
     //back to previous precision
     std::cout.precision(precision);
 }

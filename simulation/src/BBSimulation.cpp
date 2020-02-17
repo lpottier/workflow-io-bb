@@ -18,12 +18,14 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
 BBSimulation::BBSimulation(const std::string& platform_file,
                            const std::string& workflow_file,
                            const std::string& stage_list,
+                           const std::string& real_log,
                            const std::string& output_dir) :
             wrench::Simulation() {
 
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["stage_list"] = stage_list;
+  raw_args["real_log"] = real_log;
   raw_args["output_dir"] = output_dir;
 }
 
@@ -98,6 +100,34 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
   return files_to_stages;
 }
 
+std::map<std::string, double> BBSimulation::parseRealWorkflowLog(std::string path) {
+  std::string line;
+  char delimiter = ' ';
+  std::ifstream log_file (path);
+  std::map<std::string, double> real_data;
+
+  if (log_file.is_open()) {
+    while (std::getline (log_file,line)) {
+      // If there a space in the line and the first word of the line is "TIME" then parse it
+      std::size_t first_delim = line.find_first_of(delimiter);
+      if (first_delim != std::string::npos && line.substr(0,first_delim) == "TIME") {
+        std::string second_part = line.substr(first_delim+1);
+        // Parse the source to get the filename and the base path
+        std::size_t second_delim = second_part.find_first_of(delimiter);
+
+        real_data[second_part.substr(0,second_delim)] = std::stod(second_part.substr(second_delim+1));
+      }
+    }
+    log_file.close();
+  }
+  else {
+    std::cerr << "Unable to open file: " << path << std::endl;
+    std::exit(1);
+  }
+
+  return real_data;
+}
+
 wrench::Workflow* BBSimulation::parse_inputs() {
   std::size_t workflowf_pos = this->raw_args["workflow_file"].find_last_of("/");
   std::size_t platformf_pos = this->raw_args["platform_file"].find_last_of("/");
@@ -108,7 +138,7 @@ wrench::Workflow* BBSimulation::parse_inputs() {
   //MAKE SURE THE DIR EXIST/HAS PERM
 
   // Reading and parsing the platform description file to instantiate a simulated platform
-  this->instantiatePlatform(raw_args["platform_file"]);
+  this->instantiatePlatform(this->raw_args["platform_file"]);
 
   /* Reading and parsing the workflow description file to create a wrench::Workflow object */
   ;
@@ -120,14 +150,18 @@ wrench::Workflow* BBSimulation::parse_inputs() {
       std::cerr << "Workflow file name must end with '.dax' or '.json'" << std::endl;
       exit(1);
   }
-  std::cout << "The workflow has " << this->workflow->getNumberOfTasks() << " tasks " << std::endl;
+  std::cerr << "The workflow has " << this->workflow->getNumberOfTasks() << " tasks " << std::endl;
   auto sizefiles = this->workflow->getFiles();
 
   double totsize = 0;
   for (auto f : sizefiles)
     totsize += f->getSize();
-  std::cout << "Total files size " << totsize << " Bytes (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
-  std::cout.flush();
+  std::cerr << "Total files size " << totsize << " Bytes (" << totsize/std::pow(2,40) << " TB)" << std::endl;  
+  std::cerr.flush();
+
+  // Parse real data to compare with simulated makespan
+  this->real_data_run = parseRealWorkflowLog(this->raw_args["real_log"]);
+
   return this->workflow;
 }
 
@@ -213,13 +247,14 @@ std::pair<double, double> BBSimulation::check_links(std::map<std::pair<std::stri
     //           << " bandwidth:" << elem.second->get_bandwidth()
     //           << " latency:" << elem.second->get_latency() 
     //           << std::endl;
+
     if (res.first != elem.second->get_bandwidth()) {
-      std::cerr << "Bandwidth issue in the platform XML" << std::endl;
+      std::cerr << "Bandwidth issue in the platform XML. The same bandwidth must be used for every similar links." << std::endl;
       exit(1);
     }
 
     if (res.second != elem.second->get_latency()) {
-      std::cerr << "Latency issue in the platform XML" << std::endl;
+      std::cerr << "Latency issue in the platform XML. The same latency must be used for every similar links." << std::endl;
       exit(1);
     }
 
@@ -230,15 +265,15 @@ std::pair<double, double> BBSimulation::check_links(std::map<std::pair<std::stri
 std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_storage_services() {
   // Create a list of storage services that will be used by the WMS
   
-  auto pfs_comm = this->check_links(this->cs_to_pfs);
-  auto bb_comm = this->check_links(this->cs_to_bb);
+  this->pfs_link = this->check_links(this->cs_to_pfs);
+  this->bb_link = this->check_links(this->cs_to_bb);
 
   try {
     this->pfs_storage_service = this->add(new PFSStorageService(
                                               std::get<0>(this->pfs_storage_host), 
                                               std::get<1>(this->pfs_storage_host),
-                                              pfs_comm.first,
-                                              pfs_comm.second,
+                                              this->pfs_link.first,
+                                              this->pfs_link.second,
                                               {})
                                       );
     this->storage_services.insert(this->pfs_storage_service);
@@ -252,8 +287,8 @@ std::set<std::shared_ptr<wrench::StorageService>> BBSimulation::instantiate_stor
       auto service = this->add(new BBStorageService(
                                     std::get<0>(bbhost),
                                     std::get<1>(bbhost),
-                                    bb_comm.first,
-                                    bb_comm.second,
+                                    this->bb_link.first,
+                                    this->bb_link.second,
                                     this->pfs_storage_service,
                                     {})
                               );

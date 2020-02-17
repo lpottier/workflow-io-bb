@@ -12,6 +12,8 @@
 
 #include "BBTypes.h"
 
+class BBSimulation;
+
 #include <simgrid/s4u.hpp>
 #include <wrench-dev.h>
 
@@ -28,7 +30,7 @@ void printWorkflowFile(const std::string& workflow_id,
 void printFileAllocationTTY(const FileMap_t& file_placement);
 void printWMSFileAllocationTTY(const std::shared_ptr<wrench::WMS>& wms);
 
-void printSimulationSummaryTTY(wrench::SimulationOutput& simulation_output);
+void printSimulationSummaryTTY(BBSimulation& simulation, bool header = true);
 
 void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> >& hostpair_to_link);
 
