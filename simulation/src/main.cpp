@@ -16,36 +16,35 @@
 #include <string>
 #include <cstddef>           // for std::size_t
 
+#include <getopt.h>
+
 #include <simgrid/s4u.hpp>
 
 #include "BBSimulation.h"
 #include "config.h"
 // #include "BBDecision.h"
 
+std::map<std::string, std::string> parse_args(int argc, char **argv);
+
 int main(int argc, char **argv) {
 
   // Parsing of the command-line arguments for this WRENCH simulation
-  if (argc != 6) {
-    std::cerr << "Usage: " << argv[0] << " <xml platform file> <workflow file> <stage list file> <real execution log file> <output dir>" << std::endl;
-    exit(1);
-  }
+  auto args = parse_args(argc, argv);
 
-  // The first argument is the platform description file, written in XML following the SimGrid-defined DTD
-  std::string platform_file(argv[1]);
-  // The second argument is the workflow description file, written in XML using the DAX DTD
-  std::string workflow_file(argv[2]);
-  // The third argument is the list of files to stage (which files go in BB)
-  // The format is "file_src file_dest", one file per line.
-  // if this file is empty or does not exist -> all files in PFS
-  std::string stage_list(argv[3]);
-  // Must contains a line with "TIME TOTAL WALL_TIME"
-  // Like "TIME TOTAL 0.57464894" for example
-  std::string real_simu_log(argv[4]);
-  // The last argument is the output directory (where to write the simulation results)
-  std::string output_dir(argv[5]);
+  // Print parsed argument
+  std::for_each(args.begin(), args.end(),
+    [](std::pair<std::string, std::string> element){
+      std::cerr << element.first << " => " << element.second << std::endl;
+    }
+  );
 
   // Declaration of the top-level WRENCH simulation object
-  BBSimulation simulation(platform_file, workflow_file, stage_list, real_simu_log, output_dir);
+  BBSimulation simulation(
+            args["platform"], 
+            args["dax"], 
+            args["stage-file"], 
+            args["real-log"], 
+            args["output"]);
 
   // Initialization of the simulation
   simulation.init(&argc, argv);
@@ -81,11 +80,13 @@ int main(int argc, char **argv) {
   std::shared_ptr<wrench::StorageService> first_bb_node = *(simulation.getBBServices()).begin();
 
   // Parse the file containing the list of files to stage in
-  auto files_to_stages = BBSimulation::parseFilesList(stage_list, simulation.getPFSService(), first_bb_node);
+  auto files_to_stages = BBSimulation::parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
 
 
 
   // TODO: ADD A FITS OPTION
+  /// done -> args["fits"]
+  // WRITE sh script to deal with directory swarp---/
 
 
 
@@ -95,7 +96,7 @@ int main(int argc, char **argv) {
   for (auto f : workflow->getFiles()) {
     // If not found files stay in PFS by default
     if (files_to_stages.count(f->getID()) == 0) {
-      std::cerr << "[INFO] file " << f->getID() << " not found in " << stage_list << ". This file stays in the PFS." << std::endl;
+      std::cerr << "[INFO] file " << f->getID() << " not found in " << args["stage-file"] << ". This file stays in the PFS." << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
     }
     else {
@@ -171,9 +172,98 @@ int main(int argc, char **argv) {
 
   //simulation.dumpAllOutputJSON();
 
-  //SEGFAULT ?
-  //std::cout << simulation.getHostName() << std::endl;
-
   return 0;
+}
+
+std::map<std::string, std::string> parse_args(int argc, char **argv) {
+
+  int c;
+  std::map<std::string, std::string> args;
+
+  static struct option long_options[] = {
+      {"platform",     required_argument, 0, 'p'},
+      {"dax",          required_argument, 0, 'x'},
+      {"stage-file",   required_argument, 0, 's'},
+      {"real-log",     required_argument, 0, 'r'},
+      {"output-dir",   required_argument, 0, 'o'},
+      {"fits",         no_argument,       0, 'f'},
+      {"help",         no_argument,       0, 'h'},
+      {"verbose",      no_argument,       0, 'v'},
+      {0,              0,                 0,  0 }
+  };
+
+  while (1) {
+    int option_index = 0;
+
+    c = getopt_long(argc, argv, "hfp:x:s:r:o:", long_options, &option_index);
+    if (c == -1)
+      break;
+
+    std::string name(long_options[option_index].name);
+
+    switch (c) {
+      case 'h':
+        std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-f | --fits       ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
+        std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
+        std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << std::endl;
+        std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
+        std::cout << "       [-h | --help       ]  Print this help" << std::endl;
+        std::exit(1);
+
+      case 'p':
+        args[name] = optarg;
+        break;
+
+      case 'x':
+        args[name] = optarg;
+        break;
+
+      case 's':
+        args[name] = optarg;
+        break;
+
+      case 'r':
+        args[name] = optarg;
+        break;
+
+      case 'o':
+        args[name] = optarg;
+        break;
+
+      case 'f':
+        args[name] = "1";
+        break;
+
+      case '?':
+        std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-f | --fits       ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
+        std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
+        std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << std::endl;
+        std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
+        std::cout << "       [-h | --help       ]  Print this help" << std::endl;
+        std::exit(1);
+
+      default:
+        std::cout << "?? getopt returned character code 0 "<< c << "??"<< std::endl;
+        std::exit(1);
+    }
+  }
+
+  if (optind < argc) {
+    std::cout << "non-option ARGV-elements: " << std::endl;
+    while (optind < argc)
+      std::cout << argv[optind++] << " " << std::endl;
+  }
+
+  return args;
 }
 

@@ -36,11 +36,11 @@ cmake .. && make
 cd ..
 
 $PWD/build/workflow-io-bb \
-    "$PWD/data/platform-files/$PLATFORM" \
-    "$LOG_OUTPUT/$WORKFLOW" \
-    "$BUILD/$FILE_MAP" \
-    "$BUILD/$OUTPUT_LOG" \
-    "$LOG_OUTPUT" \
+    --platform="$PWD/data/platform-files/$PLATFORM" \
+    --dax="$LOG_OUTPUT/$WORKFLOW" \
+    --stage-file="$BUILD/$FILE_MAP" \
+    --real-log="$BUILD/$OUTPUT_LOG" \
+    --output="$LOG_OUTPUT" \
     2> $LOG_OUTPUT/err.log
 
 echo ""
