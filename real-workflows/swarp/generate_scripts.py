@@ -838,11 +838,11 @@ class SwarpInstance:
         s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
 
         s += "    echo \"=== Cleaning run $k... $(date --rfc-3339=ns)\"\n"
-        s += "    rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
-        s += "    rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
         s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
+        s += "        rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
+        s += "        rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
         s += "        cd \"${process}\"\n"
         s += "        rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
         s += "        cd ..\n"
