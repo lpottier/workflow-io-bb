@@ -83,20 +83,24 @@ int main(int argc, char **argv) {
   auto files_to_stages = BBSimulation::parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
 
 
-
-  // TODO: ADD A FITS OPTION
-  /// done -> args["fits"]
   // WRITE sh script to deal with directory swarp---/
 
-
+  bool stage_fits = (args["fits"] == "1");
 
   int nb_files_staged = 0;
   int amount_of_data_staged = 0;
   /* Stage files */
   for (auto f : workflow->getFiles()) {
+    // Stage resamp.fits file if asked with --fits
+    if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
+      std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
+      file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
+      continue;
+    }
+
     // If not found files stay in PFS by default
     if (files_to_stages.count(f->getID()) == 0) {
-      std::cerr << "[INFO] file " << f->getID() << " not found in " << args["stage-file"] << ". This file stays in the PFS." << std::endl;
+      std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " not found in " << std::left << std::setw(10) << args["stage-file"] << " This file stays in the PFS." << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
     }
     else {
@@ -104,7 +108,7 @@ int main(int argc, char **argv) {
         nb_files_staged += 1;
         amount_of_data_staged += f->getSize();
       }
-      std::cerr << "[INFO] file " << f->getID() << " will be staged in " << files_to_stages[f->getID()]->getHostname() << std::endl;
+      std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << files_to_stages[f->getID()]->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), files_to_stages[f->getID()]));
     }
   }
@@ -191,6 +195,8 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       {"verbose",      no_argument,       0, 'v'},
       {0,              0,                 0,  0 }
   };
+
+  args["fits"] = "0";
 
   while (1) {
     int option_index = 0;
