@@ -8,7 +8,7 @@ import argparse
 from Pegasus.DAX3 import *
 
 ##################### BEGIN PARAMETERS #####################
-INPUTS_DIR="../input/"
+INPUTS_DIR="/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/input/"
 CONFIG_DIR="../config/"
 
 STAGEIN="stagein"
@@ -34,7 +34,7 @@ def main():
                         default='swarp.dax', help='DAX output file', 
                         required=False)
     parser.add_argument('--scalability', '-n', dest='scalability', type=int, 
-                        default=1, help='Number of parallel pipeline', 
+                        default=1, help='Number of parallel pipelines', 
                         required=False)
     parser.add_argument('--private-input', '-p', dest='private', 
                         action='store_true', help='(NOT IMPLEMENTED) If given, the input files are replicated (so private) for each pipeline', 
@@ -48,7 +48,7 @@ def main():
 
     args = parser.parse_args()
 
-    print(args.dax, args.scalability, args.private)
+    #print(args.dax, args.scalability, args.private)
 
     USER = pwd.getpwuid(os.getuid())[0]
 
@@ -60,7 +60,8 @@ def main():
     swarp.metadata("creator", "%s@%s" % (USER, os.uname()[1]))
     swarp.metadata("created", time.ctime())
 
-    input_files = glob.glob(os.getcwd()+ "/" + INPUTS_DIR + IMAGE_PATTERN)
+    input_files = glob.glob(INPUTS_DIR + IMAGE_PATTERN)
+    #print(input_files)
 
     if args.stagein:
         print (" Add a stage-in task...")

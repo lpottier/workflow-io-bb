@@ -8,15 +8,18 @@ VERBOSE=0
 
 export CC=gcc-8
 export CXX=g++-8
+export PYTHONPATH=$(pegasus-config --python)
 
 #On mac OSX gdate, on Linux date
 DATE=gdate
 PYTHON="python3"
 
 PWD=$(pwd)
+
 DIR_OUTPUT=$PWD/output/
 BUILD=$PWD/build/
 KS_TO_DAX="kickstart-to-wrench.py"
+DAXGEN_DIR="/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/pegasus/"
 
 FILE_MAP="files_to_stage.txt"
 OUTPUT_LOG="output.log"
@@ -28,7 +31,7 @@ COMBINE="stat.combine"
 PLATFORM="test-cori.xml"
 
 ### WORK ONLY WITH ONE PIPELINE
-WORKFLOW="swarp-1.dax"
+WORKFLOW="swarp.dax"
 
 echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
 
@@ -78,6 +81,20 @@ for run in $(find $EXP_DIR/* -maxdepth 0 -type d | sort -n); do
             echo "  |-> $RSMPL found: $(basename $LOC_RSMPL)"
             echo "  |-> $COMBINE found: $(basename $LOC_COMBINE)"
         fi
+
+        err_daxgen="/dev/null"
+        if (( "$VERBOSE" >= 1 )); then
+            err_daxgen=1
+        fi
+
+        DAX="$pipeline/${WORKFLOW%%.*}-$(basename $pipeline).dax"
+        ## Generate Pegasus DAX
+        $PYTHON $DAXGEN_DIR/daxgen.py \
+            --dax-file "$DAX" \
+            --scalability "$(basename $pipeline)" \
+            --stage-in > $err_daxgen 2>&1
+
+
         ## Generate WRENCH DAX
         if (( "$VERBOSE" >= 1 )); then
             echo ""
@@ -90,9 +107,9 @@ for run in $(find $EXP_DIR/* -maxdepth 0 -type d | sort -n); do
             err_ks_to_wrench=1
         fi
 
-        DAX="$pipeline/$WORKFLOW"
+        #DAX="$pipeline/$WORKFLOW"
         $PYTHON "$KS_TO_DAX" \
-            -x "$PWD/data/workflow-files/$WORKFLOW" \
+            -x "$DAX" \
             -k "$LOC_RSMPL" \
             -k "$LOC_COMBINE" \
             -i "$LOC_STAGEIN" \
