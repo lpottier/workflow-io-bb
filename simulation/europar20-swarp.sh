@@ -100,19 +100,19 @@ for folder in $SWARP_FOLDER; do
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
     echo ""
 
-    for run in $(find $EXP_DIR/* -maxdepth 0 -type d | sort -n); do
+    for run in $(ls $EXP_DIR | sort -n); do
         if (( "$VERBOSE" >= 1 )); then
             echo "run found: $(basename $run)"
         fi
-        for pipeline in $(find $run/* -maxdepth 0 -type d | sort -n); do
+        for pipeline in $(find $EXP_DIR/$run/* -maxdepth 0 -type d | sort -n); do
             if (( "$VERBOSE" >= 1 )); then
                 echo "  pipeline found: $(basename $pipeline)"
             fi
 
-            LOC_OUTPUTLOG="$(find $run -maxdepth 1 -type f -name $OUTPUT_LOG)"
+            LOC_OUTPUTLOG="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $OUTPUT_LOG)"
             LOC_FILEMAP="$(find $pipeline -maxdepth 1 -type f -name $FILE_MAP)"
 
-            LOC_STAGEIN="$(find $run -maxdepth 1 -type f -name $STAGEIN_CSV)"
+            LOC_STAGEIN="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $STAGEIN_CSV)"
             LOC_RSMPL="$(find $pipeline -maxdepth 1 -type f -name $RSMPL*)"
             LOC_COMBINE="$(find $pipeline -maxdepth 1 -type f -name $COMBINE*)"
 
