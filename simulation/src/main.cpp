@@ -171,8 +171,8 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-
-  printSimulationSummaryTTY(simulation);
+  bool header = (args["no-header"] == "0");
+  printSimulationSummaryTTY(simulation, header);
 
   //simulation.dumpAllOutputJSON();
 
@@ -183,6 +183,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
   int c;
   std::map<std::string, std::string> args;
+  args["fits"] = "0";
+  args["no-header"] = "0";
+
+  int flag_no_header = 0;
 
   static struct option long_options[] = {
       {"platform",     required_argument, 0, 'p'},
@@ -193,10 +197,9 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       {"fits",         no_argument,       0, 'f'},
       {"help",         no_argument,       0, 'h'},
       {"verbose",      no_argument,       0, 'v'},
+      {"no-header",    no_argument,       &flag_no_header,   1},
       {0,              0,                 0,  0 }
   };
-
-  args["fits"] = "0";
 
   while (1) {
     int option_index = 0;
@@ -217,6 +220,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
         std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
         std::cout << std::endl;
+        std::cout << "       [   | --no-header  ]  Do not print header" << std::endl;
         std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
         std::cout << "       [-h | --help       ]  Print this help" << std::endl;
         std::exit(1);
@@ -258,9 +262,9 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-h | --help       ]  Print this help" << std::endl;
         std::exit(1);
 
-      default:
-        std::cout << "?? getopt returned character code 0 "<< c << "??"<< std::endl;
-        std::exit(1);
+      // default:
+        //std::cout << "?? getopt returned character code 0 "<< c << "??"<< std::endl;
+        //std::exit(1);
     }
   }
 
@@ -268,6 +272,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
     std::cout << "non-option ARGV-elements: " << std::endl;
     while (optind < argc)
       std::cout << argv[optind++] << " " << std::endl;
+  }
+
+  if (flag_no_header == 1) {
+    args["no-header"] = "1";
   }
 
   return args;
