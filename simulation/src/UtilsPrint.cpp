@@ -185,8 +185,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
   int width_id = 7;
   int width_pipeline = 10;
-  int width_workflow = 20;
-  int width_platform = 20;
+  int width_workflow = 15;
+  int width_platform = 10;
   int width_latency = 10;
   int width_link = 10;
   int width_bbfile = 10;

@@ -3,8 +3,43 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-
 VERBOSE=0
+
+usage()
+{
+    echo "usage: $0 [[[-d=directory to process ] ] | [-h]]"
+}
+
+##### Main
+
+for i in "$@"; do
+    case $i in
+            -d=*|--dir=*)
+                MAIN_DIR="${i#*=}"
+                shift # past argument=value
+            ;;
+            -h|--usage)
+                usage
+                exit
+            ;;
+            *)
+            # unknown option
+            usage
+            exit
+            ;;
+esac
+done
+
+if [ -z "$MAIN_DIR" ]; then
+
+    response=
+
+    echo -n "Enter name of directory to process> "
+    read response
+    if [ -n "$response" ]; then
+        MAIN_DIR=$response
+    fi
+fi
 
 export CC=gcc-8
 export CXX=g++-8
@@ -28,7 +63,7 @@ RSMPL="stat.resample"
 COMBINE="stat.combine"
 
 
-PLATFORM="test-cori.xml"
+PLATFORM="cori.xml"
 
 ### WORK ONLY WITH ONE PIPELINE
 WORKFLOW="swarp.dax"
@@ -47,15 +82,21 @@ cd ..
 
 echo "[$($DATE --rfc-3339=ns)] Done."
 
-MAIN_DIR="$PWD/data/trace-files/swarp/shared-cori/baseline-pfs/pipeline-1_cores-1/"
+#MAIN_DIR="$PWD/data/trace-files/swarp/shared-cori/baseline-pfs/pipeline-1_cores-1/"
 
-SWARP_FOLDER="swarp-premium-32C-200B-1W-0F-2-2-private swarp-premium-32C-200B-1W-0F-2-2-private"
+# Generate the different folder to process
+current=$(pwd)
+cd $MAIN_DIR
+SWARP_FOLDER="$(find swarp-* -maxdepth 0 -type d)"
+cd $current
 
+# To print the header only for the first run
 print_header=''
 
 for folder in $SWARP_FOLDER; do
 
     EXP_DIR=$(echo $MAIN_DIR/$folder/swarp-run-*N-*F.*/swarp.*/)
+
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
     echo ""
 
