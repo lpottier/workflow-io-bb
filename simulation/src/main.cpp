@@ -283,9 +283,9 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   }
 
   if (optind < argc) {
-    std::cout << "non-option ARGV-elements: " << std::endl;
+    std::cerr << "non-option ARGV-elements: " << std::endl;
     while (optind < argc)
-      std::cout << argv[optind++] << " " << std::endl;
+      std::cerr << argv[optind++] << " " << std::endl;
   }
 
   if (flag_no_header == 1) {
