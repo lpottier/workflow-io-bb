@@ -31,9 +31,17 @@ PLATFORM="test-cori.xml"
 WORKFLOW="swarp-1.dax"
 
 echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
+
+err_make_wrench="/dev/null"
+if (( "$VERBOSE" >= 1 )); then
+    err_ks_to_wrench=1
+fi
+
 cd $BUILD/
-cmake .. && make
+cmake .. > $err_make_wrench 2>&1
+make > $err_make_wrench 2>&1
 cd ..
+
 echo "[$($DATE --rfc-3339=ns)] Done."
 
 KS_DIR_FILES="$PWD/data/trace-files/swarp/shared-cori/baseline-pfs/pipeline-1_cores-1/"
@@ -43,6 +51,7 @@ SWARP_FOLDER="swarp-premium-32C-200B-1W-0F-2-2-private"
 EXP_DIR=$(echo $MAIN_DIR/$SWARP_FOLDER/swarp-run-*N-*F.*/swarp.*/)
 
 echo "[$($DATE --rfc-3339=ns)] Target directory found: $(basename $EXP_DIR)"
+echo ""
 
 print_header=''
 
@@ -99,6 +108,7 @@ for run in $(find $EXP_DIR/* -maxdepth 0 -type d | sort -n); do
 
         $PWD/build/workflow-io-bb \
             --id="$(basename $run)" \
+            --pipeline="$(basename $pipeline)" \
             --platform="$PWD/data/platform-files/$PLATFORM" \
             --dax="$DAX" "$print_header" \
             --stage-file="$LOC_FILEMAP" \

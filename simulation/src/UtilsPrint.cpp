@@ -180,10 +180,11 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
   // Number of space to offset to the right
-  int offset = 4;
+  int offset = 2;
   std::string off_str(offset, ' ');
 
   int width_id = 7;
+  int width_pipeline = 10;
   int width_workflow = 20;
   int width_platform = 20;
   int width_latency = 10;
@@ -217,6 +218,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   if (header) {
     std::cout << std::left << std::setw(width_id+offset) 
               << off_str + "ID"
+              << std::left << std::setw(width_pipeline) 
+              << "PIPELINE"
               << std::left << std::setw(width_workflow) 
               << "WORKFLOW"
               << std::left << std::setw(width_platform)
@@ -238,6 +241,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
     std::cout << std::left << std::setw(width_id+offset) 
               << off_str + "--"
+              << std::left << std::setw(width_pipeline) 
+              << "--------"
               << std::left << std::setw(width_workflow) 
               << "--------"
               << std::left << std::setw(width_platform)
@@ -260,6 +265,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
   std::cout << std::left << std::setw(width_id+offset)
             << off_str + simulation.getID()
+            << std::left << std::setw(width_pipeline) 
+            << simulation.getNumberPipeline()
             << std::left << std::setw(width_workflow) 
             << simulation.getWorkflowID()
             << std::left << std::setw(width_platform)

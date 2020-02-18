@@ -42,6 +42,7 @@ int main(int argc, char **argv) {
   // Declaration of the top-level WRENCH simulation object
   BBSimulation simulation(
             args["id"],
+            args["pipeline"],
             args["platform"], 
             args["dax"], 
             args["stage-file"], 
@@ -196,6 +197,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
   static struct option long_options[] = {
       {"id",     required_argument, 0, 'd'},
+      {"pipeline",     required_argument, 0, 'n'},
       {"platform",     required_argument, 0, 'p'},
       {"dax",          required_argument, 0, 'x'},
       {"stage-file",   required_argument, 0, 's'},
@@ -211,7 +213,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfd:p:x:s:r:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfd:p:n:x:s:r:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -221,6 +223,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       case 'h':
         std::cout << "usage: " << argv[0] << std::endl;
         std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
@@ -234,6 +237,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::exit(1);
 
       case 'd':
+        args[name] = optarg;
+        break;
+
+      case 'n':
         args[name] = optarg;
         break;
 
@@ -264,6 +271,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
         std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
