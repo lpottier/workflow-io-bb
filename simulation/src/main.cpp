@@ -14,9 +14,10 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <cstddef>           // for std::size_t
+#include <cstddef>          // for std::size_t
 
 #include <getopt.h>
+#include <unistd.h>         // for getpid();
 
 #include <simgrid/s4u.hpp>
 
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
 
   // Declaration of the top-level WRENCH simulation object
   BBSimulation simulation(
+            args["id"],
             args["platform"], 
             args["dax"], 
             args["stage-file"], 
@@ -186,9 +188,12 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["fits"] = "0";
   args["no-header"] = "0";
 
+  args["id"] = std::to_string(getpid());
+
   int flag_no_header = 0;
 
   static struct option long_options[] = {
+      {"id",     required_argument, 0, 'd'},
       {"platform",     required_argument, 0, 'p'},
       {"dax",          required_argument, 0, 'x'},
       {"stage-file",   required_argument, 0, 's'},
@@ -204,7 +209,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfp:x:s:r:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfd:p:x:s:r:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -213,6 +218,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
     switch (c) {
       case 'h':
         std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
@@ -224,6 +230,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
         std::cout << "       [-h | --help       ]  Print this help" << std::endl;
         std::exit(1);
+
+      case 'd':
+        args[name] = optarg;
+        break;
 
       case 'p':
         args[name] = optarg;
@@ -251,6 +261,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
@@ -258,6 +269,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
         std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
         std::cout << std::endl;
+        std::cout << "       [   | --no-header  ]  Do not print header" << std::endl;
         std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
         std::cout << "       [-h | --help       ]  Print this help" << std::endl;
         std::exit(1);

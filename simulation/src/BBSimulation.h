@@ -37,7 +37,8 @@
  */
 class BBSimulation : public wrench::Simulation {
 public:
-    BBSimulation(const std::string& platform_file,
+    BBSimulation(const std::string& id,
+                 const std::string& platform_file,
                  const std::string& workflow_file,
                  const std::string& stage_list,
                  const std::string& real_log,
@@ -49,6 +50,7 @@ public:
     std::map<std::string, double> parseRealWorkflowLog(std::string path);
 
     /* Getter */
+    const std::string getID() const { return this->simulation_id;}
     const std::string getWorkflowID() const { return this->workflow_id;}
     const std::string getPlatformID() const { return this->platform_id;}
     const double getRealWallTime() { return this->real_data_run["TOTAL"];}
@@ -86,6 +88,7 @@ private:
     std::pair<double, double> check_links(std::map<std::pair<std::string, std::string>, simgrid::s4u::Link*> route);
 
     std::map<std::string, std::string> raw_args;
+    std::string simulation_id;
     std::string workflow_id;
     std::string platform_id;
 

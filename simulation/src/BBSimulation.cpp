@@ -15,13 +15,15 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
  *
  * @param hostname: the name of the host on which to start the service
  */
-BBSimulation::BBSimulation(const std::string& platform_file,
+BBSimulation::BBSimulation(const std::string& id,
+                           const std::string& platform_file,
                            const std::string& workflow_file,
                            const std::string& stage_list,
                            const std::string& real_log,
                            const std::string& output_dir) :
             wrench::Simulation() {
 
+  this->simulation_id = id;
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["stage_list"] = stage_list;

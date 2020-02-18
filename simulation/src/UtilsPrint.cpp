@@ -179,6 +179,11 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   for (auto task : trace_tasks)
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
+  // Number of space to offset to the right
+  int offset = 4;
+  std::string off_str(offset, ' ');
+
+  int width_id = 7;
   int width_workflow = 20;
   int width_platform = 20;
   int width_latency = 10;
@@ -210,8 +215,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
 
   if (header) {
-    std::cout << std::left << std::setw(width_workflow+1) 
-              << " WORKFLOW"
+    std::cout << std::left << std::setw(width_id+offset) 
+              << off_str + "ID"
+              << std::left << std::setw(width_workflow) 
+              << "WORKFLOW"
               << std::left << std::setw(width_platform)
               << "PLATFORM"
               << std::left << std::setw(width_latency)
@@ -228,8 +235,11 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << "REAL(S)"
               << std::left << std::setw(width_err) 
               << "ERR(%)" << std::endl;
-    std::cout << std::left << std::setw(width_workflow+1) 
-              << " --------"
+
+    std::cout << std::left << std::setw(width_id+offset) 
+              << off_str + "--"
+              << std::left << std::setw(width_workflow) 
+              << "--------"
               << std::left << std::setw(width_platform)
               << "--------"
               << std::left << std::setw(width_bbfile) 
@@ -247,8 +257,11 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_err) 
               << "------" << std::endl;
   }
-  std::cout << std::left << std::setw(width_workflow+1) 
-            << ' ' + simulation.getWorkflowID()
+
+  std::cout << std::left << std::setw(width_id+offset)
+            << off_str + simulation.getID()
+            << std::left << std::setw(width_workflow) 
+            << simulation.getWorkflowID()
             << std::left << std::setw(width_platform)
             << simulation.getPlatformID()
             << std::left << std::setw(width_bbfile) 
