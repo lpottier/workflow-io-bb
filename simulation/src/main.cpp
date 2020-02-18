@@ -74,7 +74,8 @@ int main(int argc, char **argv) {
 
 
   //All services run on the main PFS node (by rule PFSHost1)
-  wrench::FileRegistryService* file_registry_service = simulation.instantiate_file_registry_service();
+  //wrench::FileRegistryService* file_registry_service = 
+  simulation.instantiate_file_registry_service();
 
 
   //////////////////////// Stage the chosen files from PFS to BB -> here heuristics or given
@@ -152,7 +153,8 @@ int main(int argc, char **argv) {
   // InitialFileAlloc initFileAlloc(file_placement_heuristic);
 
   // It is necessary to store, or "stage", input files in the PFS
-  std::pair<int, double> stagein_fstat = simulation.stage_input_files();
+  //std::pair<int, double> stagein_fstat = 
+  simulation.stage_input_files();
 
   // auto ftest = *(workflow->getFiles()).begin();
   // initFileAlloc(ftest);
