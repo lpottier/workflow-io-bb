@@ -17,6 +17,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
  */
 BBSimulation::BBSimulation(const std::string& id, 
                            const std::string& pipeline,
+                           const std::string& cores,
                            const std::string& platform_file,
                            const std::string& workflow_file,
                            const std::string& stage_list,
@@ -26,6 +27,7 @@ BBSimulation::BBSimulation(const std::string& id,
 
   this->simulation_id = id;
   this->nb_pipeline = pipeline;
+  this->nb_cores = cores;
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["stage_list"] = stage_list;
@@ -370,7 +372,7 @@ std::shared_ptr<wrench::WMS> BBSimulation::instantiate_wms_service(const FileMap
   // Instantiate a WMS
   this->wms = this->add(
           new BBWMS(
-            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placement_heuristic)),
+            std::unique_ptr<BBJobScheduler>(new BBJobScheduler(file_placement_heuristic, this->nb_cores)),
             nullptr, this->compute_services, 
             this->storage_services,
             std::get<0>(this->pfs_storage_host))

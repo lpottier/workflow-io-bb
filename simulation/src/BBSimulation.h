@@ -39,6 +39,7 @@ class BBSimulation : public wrench::Simulation {
 public:
     BBSimulation(const std::string& id, 
                  const std::string& pipeline,
+                 const std::string& cores,
                  const std::string& platform_file,
                  const std::string& workflow_file,
                  const std::string& stage_list,
@@ -53,6 +54,8 @@ public:
     /* Getter */
     const std::string getID() const { return this->simulation_id;}
     const std::string getNumberPipeline() const { return this->nb_pipeline;}
+    const std::string getNumberCores() const { return this->nb_cores;}
+
     const std::string getWorkflowID() const { return this->workflow_id;}
     const std::string getPlatformID() const { return this->platform_id;}
     const double getRealWallTime() { return this->real_data_run["TOTAL"];}
@@ -92,6 +95,7 @@ private:
     std::map<std::string, std::string> raw_args;
     std::string simulation_id;
     std::string nb_pipeline;
+    std::string nb_cores;
 
     std::string workflow_id;
     std::string platform_id;

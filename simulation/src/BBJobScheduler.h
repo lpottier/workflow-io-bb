@@ -16,7 +16,7 @@
 
 class BBJobScheduler : public wrench::StandardJobScheduler {
 public:
-  BBJobScheduler(const FileMap_t &file_placement);
+  BBJobScheduler(const FileMap_t &file_placement, const std::string& nb_cores);
 
   void scheduleTasks(
        const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
@@ -24,6 +24,7 @@ public:
 
 private:
   FileMap_t file_placement;
+  std::string nb_cores; // Core per task (same for all of them)
   // std::shared_ptr<wrench::StorageService> default_storage_service;
 };
 

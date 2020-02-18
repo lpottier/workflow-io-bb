@@ -185,6 +185,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
   int width_id = 7;
   int width_pipeline = 10;
+  int width_cores = 6;
   int width_workflow = 15;
   int width_platform = 10;
   int width_latency = 10;
@@ -218,12 +219,14 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   if (header) {
     std::cout << std::left << std::setw(width_id+offset) 
               << off_str + "ID"
-              << std::left << std::setw(width_pipeline) 
-              << "PIPELINE"
               << std::left << std::setw(width_workflow) 
               << "WORKFLOW"
               << std::left << std::setw(width_platform)
               << "PLATFORM"
+              << std::left << std::setw(width_pipeline) 
+              << "PIPELINE"
+              << std::left << std::setw(width_cores) 
+              << "CORES"
               << std::left << std::setw(width_latency)
               << "FILES"
               << std::left << std::setw(width_bbfile) 
@@ -241,12 +244,14 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
     std::cout << std::left << std::setw(width_id+offset) 
               << off_str + "--"
-              << std::left << std::setw(width_pipeline) 
-              << "--------"
               << std::left << std::setw(width_workflow) 
               << "--------"
               << std::left << std::setw(width_platform)
               << "--------"
+              << std::left << std::setw(width_pipeline) 
+              << "--------"
+              << std::left << std::setw(width_cores) 
+              << "-----"
               << std::left << std::setw(width_bbfile) 
               << "-----"
               << std::left << std::setw(width_bbdata) 
@@ -265,12 +270,14 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
   std::cout << std::left << std::setw(width_id+offset)
             << off_str + simulation.getID()
-            << std::left << std::setw(width_pipeline) 
-            << simulation.getNumberPipeline()
             << std::left << std::setw(width_workflow) 
             << simulation.getWorkflowID()
             << std::left << std::setw(width_platform)
             << simulation.getPlatformID()
+            << std::left << std::setw(width_pipeline) 
+            << simulation.getNumberPipeline()
+            << std::left << std::setw(width_cores) 
+            << simulation.getNumberCores()
             << std::left << std::setw(width_bbfile) 
             << simulation.getStagedIn()
             << std::left << std::setw(width_bbdata) 

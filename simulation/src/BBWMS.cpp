@@ -53,8 +53,8 @@ int BBWMS::main() {
   //print current files allocation
   //this->printFileAllocationTTY();
 
-  this->addStageInTask("bb_stagein");
-  this->addStageOutTask("bb_stageout");
+  // this->addStageInTask("bb_stagein");
+  // this->addStageOutTask("bb_stageout");
 
   std::cerr << std::right << std::setw(45) << "===    SIMULATION    ===" << std::endl;
 
@@ -100,12 +100,12 @@ void BBWMS::addStageInTask(const std::string& task_id, unsigned int parallelizat
   wrench::WorkflowTask* bb_stagein = this->getWorkflow()->addTask(task_id, 1.0, 1, wrench::ComputeService::ALL_CORES, 1.0,  1);
 
   // Retrieve the first level of tasks to connect the new BB tasks
-  int nb_level = this->getWorkflow()->getNumLevels();
+  //int nb_level = this->getWorkflow()->getNumLevels();
   std::vector<wrench::WorkflowTask*> first_tasks = this->getWorkflow()->getTasksInTopLevelRange(0,0);
   // Connect the BB stage in task to the first tasks in the workflow
   for (auto task : first_tasks) {
     this->getWorkflow()->addControlDependency(bb_stagein, task);
-  } 
+  }
 }
 
 void BBWMS::addStageOutTask(const std::string& task_id, unsigned int parallelization) {

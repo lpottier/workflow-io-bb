@@ -43,6 +43,7 @@ int main(int argc, char **argv) {
   BBSimulation simulation(
             args["id"],
             args["pipeline"],
+            args["cores"],
             args["platform"], 
             args["dax"], 
             args["stage-file"], 
@@ -86,10 +87,9 @@ int main(int argc, char **argv) {
   // Parse the file containing the list of files to stage in
   auto files_to_stages = BBSimulation::parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
 
-
-  // WRITE sh script to deal with directory swarp---/
-
+  // Create the hashmap containing the files that will be staged in
   bool stage_fits = (args["fits"] == "1");
+  // Recall that if stage_fits is true then all the files produced by resample will be written in BB
 
   int nb_files_staged = 0;
   int amount_of_data_staged = 0;
@@ -117,6 +117,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  // Store some useful information for later
   simulation.setStagedIn(nb_files_staged);
   simulation.setDataStaged(amount_of_data_staged);
 
@@ -192,12 +193,14 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["no-header"] = "0";
 
   args["id"] = std::to_string(getpid());
+  args["cores"] = "1";
 
   int flag_no_header = 0;
 
   static struct option long_options[] = {
-      {"id",     required_argument, 0, 'd'},
+      {"id",           required_argument, 0, 'd'},
       {"pipeline",     required_argument, 0, 'n'},
+      {"cores",        required_argument, 0, 'c'},
       {"platform",     required_argument, 0, 'p'},
       {"dax",          required_argument, 0, 'x'},
       {"stage-file",   required_argument, 0, 's'},
@@ -213,7 +216,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfd:p:n:x:s:r:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfc:d:p:n:x:s:r:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -224,6 +227,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "usage: " << argv[0] << std::endl;
         std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
@@ -237,6 +241,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::exit(1);
 
       case 'd':
+        args[name] = optarg;
+        break;
+
+      case 'c':
         args[name] = optarg;
         break;
 
@@ -272,6 +280,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "usage: " << argv[0] << std::endl;
         std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;

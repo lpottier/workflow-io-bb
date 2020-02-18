@@ -62,7 +62,6 @@ STAGEIN_CSV="stage-in-bb-global.csv"
 RSMPL="stat.resample"
 COMBINE="stat.combine"
 
-
 PLATFORM="cori.xml"
 
 ### WORK ONLY WITH ONE PIPELINE
@@ -70,15 +69,16 @@ WORKFLOW="swarp.dax"
 
 echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
 
-err_make_wrench="/dev/null"
-if (( "$VERBOSE" >= 1 )); then
-    err_ks_to_wrench=1
-fi
+err_make_wrench="$(mktemp /tmp/build.wrench.XXXXX)"
 
 cd $BUILD/
 cmake .. > $err_make_wrench 2>&1
-make > $err_make_wrench 2>&1
+make >> $err_make_wrench 2>&1
 cd ..
+
+if (( "$VERBOSE" >= 1 )); then
+    cat $err_make_wrench
+fi
 
 echo "[$($DATE --rfc-3339=ns)] Done."
 
@@ -151,11 +151,13 @@ for folder in $SWARP_FOLDER; do
 
             #DAX="$pipeline/$WORKFLOW"
             $PYTHON "$KS_TO_DAX" \
-                -x "$DAX" \
-                -k "$LOC_RSMPL" \
-                -k "$LOC_COMBINE" \
-                -i "$LOC_STAGEIN" \
-                -o "$DAX" 2>$err_ks_to_wrench
+                --dax="$DAX" \
+                --kickstart="$LOC_RSMPL" \
+                --kickstart="$LOC_COMBINE" \
+                --io="0.203" \
+                --io="0.26" \
+                --stagein="$LOC_STAGEIN" \
+                -o "$DAX" --debug 2>$err_ks_to_wrench
 
             if (( "$VERBOSE" >= 1 )); then
                 echo "  [$($DATE --rfc-3339=ns)] Done. Written in $DAX."
@@ -165,6 +167,13 @@ for folder in $SWARP_FOLDER; do
                 echo ""
             fi
 
+            err_wrench="$pipeline/wrench.err"
+            if (( "$VERBOSE" >= 2 )); then
+                err_wrench=1
+            fi
+
+            # TODO parse the folder name to get the number of cores + stage fits
+
             $PWD/build/workflow-io-bb \
                 --id="$(basename $run)" \
                 --pipeline="$(basename $pipeline)" \
@@ -173,13 +182,13 @@ for folder in $SWARP_FOLDER; do
                 --stage-file="$LOC_FILEMAP" \
                 --real-log="$LOC_OUTPUTLOG" \
                 --output="$pipeline" \
-                2> $pipeline/wrench.err
+                2> $err_wrench
 
             print_header="--no-header"
 
             if (( "$VERBOSE" >= 1 )); then
                 echo ""
-                echo "[$($DATE --rfc-3339=ns)] Done. Log written in $pipeline/wrench.err"
+                echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
             fi
         done
     done
