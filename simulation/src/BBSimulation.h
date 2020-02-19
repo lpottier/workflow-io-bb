@@ -37,7 +37,8 @@
  */
 class BBSimulation : public wrench::Simulation {
 public:
-    BBSimulation(const std::string& id, 
+    BBSimulation(const std::string& jobid,
+                 const std::string& id, 
                  const std::string& pipeline,
                  const std::string& cores,
                  const std::string& platform_file,
@@ -52,6 +53,7 @@ public:
     std::map<std::string, double> parseRealWorkflowLog(std::string path);
 
     /* Getter */
+    const std::string getJobID() const { return this->simulation_job_id;}
     const std::string getID() const { return this->simulation_id;}
     const std::string getNumberPipeline() const { return this->nb_pipeline;}
     const std::string getNumberCores() const { return this->nb_cores;}
@@ -94,6 +96,7 @@ private:
 
     std::map<std::string, std::string> raw_args;
     std::string simulation_id;
+    std::string simulation_job_id;
     std::string nb_pipeline;
     std::string nb_cores;
 

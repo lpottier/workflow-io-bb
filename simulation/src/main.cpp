@@ -41,6 +41,7 @@ std::map<std::string, double> compute_payload_values;
 
   // Declaration of the top-level WRENCH simulation object
   BBSimulation simulation(
+            args["jobid"],
             args["id"],
             args["pipeline"],
             args["cores"],
@@ -194,13 +195,15 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["fits"] = "0";
   args["no-header"] = "0";
 
-  args["id"] = std::to_string(getpid());
+  args["id"] = "0";
+  args["jobid"] = std::to_string(getpid());
   args["cores"] = "1";
 
   int flag_no_header = 0;
 
   static struct option long_options[] = {
       {"id",           required_argument, 0, 'd'},
+      {"jobid",        required_argument, 0, 'j'},
       {"pipeline",     required_argument, 0, 'n'},
       {"cores",        required_argument, 0, 'c'},
       {"platform",     required_argument, 0, 'p'},
@@ -218,7 +221,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfc:d:p:n:x:s:r:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfj:c:d:p:n:x:s:r:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -227,7 +230,8 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
     switch (c) {
       case 'h':
         std::cout << "usage: " << argv[0] << std::endl;
-        std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-d | --id         ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
@@ -243,6 +247,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::exit(1);
 
       case 'd':
+        args[name] = optarg;
+        break;
+
+      case 'j':
         args[name] = optarg;
         break;
 
@@ -280,7 +288,8 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
-        std::cout << "       [-d | --id         ]  Add an ID to the run (a column ID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-d | --id         ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;

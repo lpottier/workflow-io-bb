@@ -101,7 +101,7 @@ print_header=''
     core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
     core=${core%%c}
 
-    jobpid=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
+    jobpid=$(echo "$(basename $EXP_DIR)" | cut -f5 -d'.')
 
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
     echo ""
@@ -191,6 +191,7 @@ print_header=''
             fi
 
             $PWD/build/workflow-io-bb \
+                --jobid="$jobpid" \
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \

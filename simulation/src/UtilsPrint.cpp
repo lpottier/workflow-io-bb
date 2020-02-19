@@ -170,7 +170,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   auto& simulation_output = simulation.getOutput();
 
   auto precision = std::cout.precision();
-  std::cout.precision(8);
+  std::cout.precision(7);
   //std::cout.setf( std::ios::fixed, std:: ios::floatfield );
 
   std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
@@ -183,6 +183,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   int offset = 2;
   std::string off_str(offset, ' ');
 
+  int width_jobid = 10;
   int width_id = 7;
   int width_pipeline = 10;
   int width_cores = 6;
@@ -217,8 +218,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
 
   if (header) {
-    std::cout << std::left << std::setw(width_id+offset) 
-              << off_str + "AVG"
+    std::cout << std::left << std::setw(width_jobid+offset) 
+              << off_str + "ID"
+              << std::left << std::setw(width_id) 
+              << "AVG"
               << std::left << std::setw(width_workflow) 
               << "WORKFLOW"
               << std::left << std::setw(width_platform)
@@ -242,8 +245,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_err) 
               << "ERR(%)" << std::endl;
 
-    std::cout << std::left << std::setw(width_id+offset) 
-              << off_str + "---"
+    std::cout << std::left << std::setw(width_jobid+offset) 
+              << off_str + "--"
+              << std::left << std::setw(width_id) 
+              << "---"
               << std::left << std::setw(width_workflow) 
               << "--------"
               << std::left << std::setw(width_platform)
@@ -268,8 +273,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << "------" << std::endl;
   }
 
-  std::cout << std::left << std::setw(width_id+offset)
-            << off_str + simulation.getID()
+  std::cout << std::left << std::setw(width_jobid+offset)
+            << off_str + simulation.getJobID()
+            << std::left << std::setw(width_id) 
+            << simulation.getID()
             << std::left << std::setw(width_workflow) 
             << simulation.getWorkflowID()
             << std::left << std::setw(width_platform)
@@ -339,54 +346,58 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
 
   if (fs) {
     if (header) {
-      fs << "AVG"
-                << sep
-                << "WORKFLOW"
-                << sep
-                << "PLATFORM"
-                << sep
-                << "PIPELINE"
-                << sep
-                << "CORES"
-                << sep
-                << "FILES"
-                << sep
-                << "DATA_MB"
-                << sep
-                << "LATENCY"
-                << sep
-                << "BANDWITH"
-                << sep
-                << "SIMULATION_S"
-                << sep
-                << "MEASURED_S"
-                << sep
-                << "ERR" << std::endl;
+      fs << "ID"
+         << sep
+         << "AVG"
+         << sep
+         << "WORKFLOW"
+         << sep
+         << "PLATFORM"
+         << sep
+         << "PIPELINE"
+         << sep
+         << "CORES"
+         << sep
+         << "FILES"
+         << sep
+         << "DATA_MB"
+         << sep
+         << "LATENCY"
+         << sep
+         << "BANDWITH"
+         << sep
+         << "SIMULATION_S"
+         << sep
+         << "MEASURED_S"
+         << sep
+         << "ERR" << std::endl;
     }
 
-    fs << simulation.getID()
-              << sep 
-              << simulation.getWorkflowID()
-              << sep
-              << simulation.getPlatformID()
-              << sep 
-              << simulation.getNumberPipeline()
-              << sep 
-              << simulation.getNumberCores()
-              << sep 
-              << simulation.getStagedIn()
-              << sep 
-              << simulation.getDataStaged()/std::pow(2,20)
-              << sep 
-              << latency_ratio
-              << sep 
-              << bandwith_ratio
-              << sep 
-              << makespan
-              << sep 
-              << simulation.getRealWallTime()
-              << sep 
-              << err * 100 << std::endl;
+    fs << simulation.getJobID()
+       << sep
+       << simulation.getID()
+       << sep 
+       << simulation.getWorkflowID()
+       << sep
+       << simulation.getPlatformID()
+       << sep 
+       << simulation.getNumberPipeline()
+       << sep 
+       << simulation.getNumberCores()
+       << sep 
+       << simulation.getStagedIn()
+       << sep 
+       << simulation.getDataStaged()/std::pow(2,20)
+       << sep 
+       << latency_ratio
+       << sep 
+       << bandwith_ratio
+       << sep 
+       << makespan
+       << sep 
+       << simulation.getRealWallTime()
+       << sep 
+       << err * 100 << std::endl;
   }
 
   fs.close();
