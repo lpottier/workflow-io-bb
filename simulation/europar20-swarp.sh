@@ -96,7 +96,7 @@ print_header=''
 
 #for folder in $SWARP_FOLDER; do
 
-    EXP_DIR=$(echo $MAIN_DIR/$SWARP_FOLDER/swarp-run-*N-*F.*/swarp.*/)
+    EXP_DIR=$(echo $MAIN_DIR/$SWARP_FOLDER/swarp*.*/swarp*/)
 
     core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
     core=${core%%c}
@@ -142,7 +142,6 @@ print_header=''
                 --scalability "$(basename $pipeline)" \
                 --stage-in > $err_daxgen 2>&1
 
-
             ## Generate WRENCH DAX
             if (( "$VERBOSE" >= 1 )); then
                 echo ""
@@ -172,10 +171,10 @@ print_header=''
                 --stagein="$LOC_STAGEIN" \
                 -o "$DAX" --debug 2>$err_ks_to_wrench
 
-            if (( "$VERBOSE" >= 1 )); then
-                echo "  [$($DATE --rfc-3339=ns)] Done. Written in $DAX."
-                echo ""
-
+           
+            echo "[$($DATE --rfc-3339=ns)] Written in $DAX"
+            echo ""
+             if (( "$VERBOSE" >= 1 )); then
                 echo "[$($DATE --rfc-3339=ns)] Run the simulations..."
                 echo ""
             fi
@@ -186,9 +185,14 @@ print_header=''
                 err_wrench=1
             fi
 
+            nb_pipeline=$(basename $pipeline)
+            if (( $nb_pipeline == 0 )); then
+                nb_pipeline=$(echo "$nb_pipeline + 1" | bc -l)
+            fi
+
             $PWD/build/workflow-io-bb \
                 --id="$(basename $run)" \
-                --pipeline="$(basename $pipeline)" \
+                --pipeline="$nb_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \
                 --dax="$DAX" "$print_header" \
                 --stage-file="$LOC_FILEMAP" \
@@ -203,6 +207,8 @@ print_header=''
                 echo ""
                 echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
             fi
+
+            exit
         done
     done
     echo ""

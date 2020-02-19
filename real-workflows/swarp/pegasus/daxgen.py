@@ -63,6 +63,10 @@ def main():
     input_files = glob.glob(INPUTS_DIR + IMAGE_PATTERN)
     #print(input_files)
 
+    if args.scalability <= 0:
+        print ("[WARNING] having " + str(args.scalability) + " pipelines is not possible, generating a workflow with 1 pipeline")
+        args.scalability = 1
+
     if args.stagein:
         print (" Add a stage-in task...")
 
