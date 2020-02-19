@@ -178,7 +178,9 @@ std::map<std::string, double> compute_payload_values;
   }
 
   bool header = (args["no-header"] == "0");
+
   printSimulationSummaryTTY(simulation, header);
+  printSimulationSummaryCSV(simulation, "sim.csv", header);
 
   //simulation.dumpAllOutputJSON();
 

@@ -172,9 +172,9 @@ print_header=''
                 -o "$DAX" --debug 2>$err_ks_to_wrench
 
            
-            echo "[$($DATE --rfc-3339=ns)] Written in $DAX"
-            echo ""
              if (( "$VERBOSE" >= 1 )); then
+                echo "[$($DATE --rfc-3339=ns)] Written in $DAX"
+                echo ""
                 echo "[$($DATE --rfc-3339=ns)] Run the simulations..."
                 echo ""
             fi
@@ -208,7 +208,6 @@ print_header=''
                 echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
             fi
 
-            exit
         done
     done
     echo ""

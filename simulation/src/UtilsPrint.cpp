@@ -218,7 +218,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
 
   if (header) {
     std::cout << std::left << std::setw(width_id+offset) 
-              << off_str + "ID"
+              << off_str + "AVG"
               << std::left << std::setw(width_workflow) 
               << "WORKFLOW"
               << std::left << std::setw(width_platform)
@@ -238,12 +238,12 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_mksp) 
               << "SIMULATION(S)"
               << std::left << std::setw(width_walltime) 
-              << "REAL(S)"
+              << "MEASURED(S)"
               << std::left << std::setw(width_err) 
               << "ERR(%)" << std::endl;
 
     std::cout << std::left << std::setw(width_id+offset) 
-              << off_str + "--"
+              << off_str + "---"
               << std::left << std::setw(width_workflow) 
               << "--------"
               << std::left << std::setw(width_platform)
@@ -263,7 +263,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_mksp) 
               << "-------------"
               << std::left << std::setw(width_walltime) 
-              << "-------"
+              << "-----------"
               << std::left << std::setw(width_err) 
               << "------" << std::endl;
   }
@@ -294,6 +294,103 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
             << err * 100 << std::endl;
     //back to previous precision
     std::cout.precision(precision);
+}
+
+void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, bool header) {
+
+  auto& simulation_output = simulation.getOutput();
+
+  std::string sep = " ";
+
+  std::vector<wrench::SimulationTimestamp<wrench::SimulationTimestampTaskCompletion> *> trace_tasks = simulation_output.getTrace<wrench::SimulationTimestampTaskCompletion>();
+
+  double makespan = trace_tasks[0]->getDate();
+  for (auto task : trace_tasks)
+    makespan = makespan < task->getDate() ? task->getDate() : makespan;
+
+  double latency_ratio = 0.0;
+  double bandwith_ratio = 0.0;
+  // TODO: fix this with epsilon interval
+  if (simulation.getLatencyPFS() > 0.0) {
+    latency_ratio = simulation.getLatencyBB()/simulation.getLatencyPFS();
+  } 
+  else {
+    latency_ratio = simulation.getLatencyBB();
+  }
+
+  // TODO: fix this with epsilon interval
+  if (simulation.getBandwithPFS() > 0.0) {
+    bandwith_ratio = simulation.getBandwithBB()/simulation.getBandwithPFS();
+  } 
+  else {
+    bandwith_ratio = simulation.getBandwithBB();
+  }
+
+  double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
+
+  std::fstream fs;
+  if (header) {
+    fs.open (file_name, std::fstream::out | std::fstream::trunc);
+  }
+  else {
+    fs.open (file_name, std::fstream::out | std::fstream::app);
+  }
+  
+
+  if (fs) {
+    if (header) {
+      fs << "AVG"
+                << sep
+                << "WORKFLOW"
+                << sep
+                << "PLATFORM"
+                << sep
+                << "PIPELINE"
+                << sep
+                << "CORES"
+                << sep
+                << "FILES"
+                << sep
+                << "DATA_MB"
+                << sep
+                << "LATENCY"
+                << sep
+                << "BANDWITH"
+                << sep
+                << "SIMULATION_S"
+                << sep
+                << "MEASURED_S"
+                << sep
+                << "ERR" << std::endl;
+    }
+
+    fs << simulation.getID()
+              << sep 
+              << simulation.getWorkflowID()
+              << sep
+              << simulation.getPlatformID()
+              << sep 
+              << simulation.getNumberPipeline()
+              << sep 
+              << simulation.getNumberCores()
+              << sep 
+              << simulation.getStagedIn()
+              << sep 
+              << simulation.getDataStaged()/std::pow(2,20)
+              << sep 
+              << latency_ratio
+              << sep 
+              << bandwith_ratio
+              << sep 
+              << makespan
+              << sep 
+              << simulation.getRealWallTime()
+              << sep 
+              << err * 100 << std::endl;
+  }
+
+  fs.close();
+
 }
 
 void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> >& hostpair_to_link) {

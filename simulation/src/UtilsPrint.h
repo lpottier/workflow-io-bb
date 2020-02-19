@@ -31,6 +31,7 @@ void printFileAllocationTTY(const FileMap_t& file_placement);
 void printWMSFileAllocationTTY(const std::shared_ptr<wrench::WMS>& wms);
 
 void printSimulationSummaryTTY(BBSimulation& simulation, bool header = true);
+void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, bool header = true);
 
 void printHostRouteTTY(const std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*> >& hostpair_to_link);
 
