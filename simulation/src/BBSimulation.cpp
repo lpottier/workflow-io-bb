@@ -23,6 +23,7 @@ BBSimulation::BBSimulation(const std::string& jobid,
                            const std::string& workflow_file,
                            const std::string& stage_list,
                            const std::string& real_log,
+                           const std::string& makespan,
                            const std::string& output_dir) :
             wrench::Simulation() {
 
@@ -30,6 +31,7 @@ BBSimulation::BBSimulation(const std::string& jobid,
   this->simulation_id = id;
   this->nb_pipeline = pipeline;
   this->nb_cores = cores;
+  this->measured_makespan = std::stod(makespan);
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["stage_list"] = stage_list;
@@ -101,7 +103,7 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
     stage_list_file.close();
   }
   else {
-    std::cerr << "Unable to open file" << std::endl;
+    std::cerr << "Unable to open stage list:" << path << std::endl;
     std::exit(1);
   }
 
@@ -129,7 +131,7 @@ std::map<std::string, double> BBSimulation::parseRealWorkflowLog(std::string pat
     log_file.close();
   }
   else {
-    std::cerr << "Unable to open file: " << path << std::endl;
+    std::cerr << "Unable to open workflow log: " << path << std::endl;
     std::exit(1);
   }
 
@@ -345,8 +347,8 @@ std::set<std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_comp
   // }
 
   std::map<std::string, double> compute_payload_values = {
-      {wrench::ComputeServiceMessagePayload::JOB_TYPE_NOT_SUPPORTED_MESSAGE_PAYLOAD,         0},
-      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    25000000000},
+      {wrench::ComputeServiceMessagePayload::JOB_TYPE_NOT_SUPPORTED_MESSAGE_PAYLOAD,         0}, 
+      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    32000000000}, //32000000000
       {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD,              0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_FAILED_MESSAGE_PAYLOAD,            0},

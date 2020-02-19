@@ -215,7 +215,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
     bandwith_ratio = simulation.getBandwithBB();
   }
 
-  double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
+  double err = abs(makespan - simulation.getMeasuredMakespan())/simulation.getMeasuredMakespan();
 
   if (header) {
     std::cout << std::left << std::setw(width_jobid+offset) 
@@ -296,7 +296,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
             << std::left << std::setw(width_mksp) 
             << makespan
             << std::left << std::setw(width_walltime) 
-            << simulation.getRealWallTime()
+            << simulation.getMeasuredMakespan()
             << std::left << std::setw(width_err) 
             << err * 100 << std::endl;
     //back to previous precision
@@ -333,7 +333,10 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
     bandwith_ratio = simulation.getBandwithBB();
   }
 
-  double err = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
+  double err = abs(makespan - simulation.getMeasuredMakespan())/simulation.getMeasuredMakespan();
+
+  double err_walltime = abs(makespan - simulation.getRealWallTime())/simulation.getRealWallTime();
+
 
   std::fstream fs;
   if (header) {
@@ -368,9 +371,14 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
          << sep
          << "SIMULATION_S"
          << sep
-         << "MEASURED_S"
+         << "MEASURED_MKSP_S"
          << sep
-         << "ERR" << std::endl;
+         << "ERR_MKSP"
+         << sep
+         << "MEASURED_WALLTIME_S"
+         << sep
+         << "ERR_WALLTIME" 
+         << std::endl;
     }
 
     fs << simulation.getJobID()
@@ -392,12 +400,17 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
        << latency_ratio
        << sep 
        << bandwith_ratio
-       << sep 
+       << sep
        << makespan
        << sep 
+       << simulation.getMeasuredMakespan()
+       << sep 
+       << err
+       << sep
        << simulation.getRealWallTime()
        << sep 
-       << err * 100 << std::endl;
+       << err_walltime
+       << std::endl;
   }
 
   fs.close();

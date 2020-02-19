@@ -48,7 +48,8 @@ std::map<std::string, double> compute_payload_values;
             args["platform"], 
             args["dax"], 
             args["stage-file"], 
-            args["real-log"], 
+            args["scheduler-log"],
+            args["makespan"],
             args["output"]);
 
   // Initialization of the simulation
@@ -181,7 +182,7 @@ std::map<std::string, double> compute_payload_values;
   bool header = (args["no-header"] == "0");
 
   printSimulationSummaryTTY(simulation, header);
-  printSimulationSummaryCSV(simulation, "sim.csv", header);
+  printSimulationSummaryCSV(simulation, "simu-"+simulation.getJobID()+".csv", header);
 
   //simulation.dumpAllOutputJSON();
 
@@ -202,26 +203,27 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   int flag_no_header = 0;
 
   static struct option long_options[] = {
-      {"id",           required_argument, 0, 'd'},
-      {"jobid",        required_argument, 0, 'j'},
-      {"pipeline",     required_argument, 0, 'n'},
-      {"cores",        required_argument, 0, 'c'},
-      {"platform",     required_argument, 0, 'p'},
-      {"dax",          required_argument, 0, 'x'},
-      {"stage-file",   required_argument, 0, 's'},
-      {"real-log",     required_argument, 0, 'r'},
-      {"output-dir",   required_argument, 0, 'o'},
-      {"fits",         no_argument,       0, 'f'},
-      {"help",         no_argument,       0, 'h'},
-      {"verbose",      no_argument,       0, 'v'},
-      {"no-header",    no_argument,       &flag_no_header,   1},
-      {0,              0,                 0,  0 }
+      {"id",             required_argument, 0, 'd'},
+      {"jobid",          required_argument, 0, 'j'},
+      {"pipeline",       required_argument, 0, 'n'},
+      {"cores",          required_argument, 0, 'c'},
+      {"platform",       required_argument, 0, 'p'},
+      {"dax",            required_argument, 0, 'x'},
+      {"stage-file",     required_argument, 0, 's'},
+      {"makespan",       required_argument, 0, 'm'},
+      {"scheduler-log",  required_argument, 0, 'w'},
+      {"output-dir",     required_argument, 0, 'o'},
+      {"fits",           no_argument,       0, 'f'},
+      {"help",           no_argument,       0, 'h'},
+      {"verbose",        no_argument,       0, 'v'},
+      {"no-header",      no_argument,       &flag_no_header,   1},
+      {0,                0,                 0,  0 }
   };
 
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfj:c:d:p:n:x:s:r:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfj:c:d:p:n:x:s:w:m:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -230,20 +232,21 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
     switch (c) {
       case 'h':
         std::cout << "usage: " << argv[0] << std::endl;
-        std::cout << "       [-d | --id         ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
-        std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
-        std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
-        std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
-        std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
-        std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
-        std::cout << "       [-f | --fits       ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
-        std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
-        std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
+        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-f | --fits          ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
+        std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
+        std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;
+        std::cout << "       [-o | --output-dir    ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
         std::cout << std::endl;
-        std::cout << "       [   | --no-header  ]  Do not print header" << std::endl;
-        std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
-        std::cout << "       [-h | --help       ]  Print this help" << std::endl;
+        std::cout << "       [   | --no-header     ]  Do not print header" << std::endl;
+        std::cout << "       [-v | --verbose       ]  Verbose output" << std::endl;
+        std::cout << "       [-h | --help          ]  Print this help" << std::endl;
         std::exit(1);
 
       case 'd':
@@ -274,7 +277,11 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         args[name] = optarg;
         break;
 
-      case 'r':
+      case 'm':
+        args[name] = optarg;
+        break;
+
+      case 'w':
         args[name] = optarg;
         break;
 
@@ -288,20 +295,21 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
-        std::cout << "       [-d | --id         ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
+        std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
-        std::cout << "       [-n | --pipeline   ]  Number of parallel pipeline in the workflow" << std::endl;
-        std::cout << "       [-c | --cores      ]  Number of cores per tasks (same for all the tasks)" << std::endl;
-        std::cout << "       [-x | --dax        ]  XML workflow file " << std::endl;
-        std::cout << "       [-p | --platform   ]  XML platform file " << std::endl;
-        std::cout << "       [-s | --stage-file ]  List of file to stage in BB " << std::endl;
-        std::cout << "       [-f | --fits       ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
-        std::cout << "       [-r | --real-log   ]  Log of this workflow executed on a real platform " << std::endl;
-        std::cout << "       [-o | --output-dir ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
+        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-f | --fits          ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
+        std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
+        std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;
+        std::cout << "       [-o | --output-dir    ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
         std::cout << std::endl;
-        std::cout << "       [   | --no-header  ]  Do not print header" << std::endl;
-        std::cout << "       [-v | --verbose    ]  Verbose output" << std::endl;
-        std::cout << "       [-h | --help       ]  Print this help" << std::endl;
+        std::cout << "       [   | --no-header     ]  Do not print header" << std::endl;
+        std::cout << "       [-v | --verbose       ]  Verbose output" << std::endl;
+        std::cout << "       [-h | --help          ]  Print this help" << std::endl;
         std::exit(1);
 
       // default:

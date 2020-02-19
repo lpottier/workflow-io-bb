@@ -37,15 +37,18 @@
  */
 class BBSimulation : public wrench::Simulation {
 public:
-    BBSimulation(const std::string& jobid,
-                 const std::string& id, 
-                 const std::string& pipeline,
-                 const std::string& cores,
-                 const std::string& platform_file,
-                 const std::string& workflow_file,
-                 const std::string& stage_list,
-                 const std::string& real_log,
-                 const std::string& output_dir);
+    BBSimulation(
+                const std::string& jobid,
+                const std::string& id, 
+                const std::string& pipeline,
+                const std::string& cores,
+                const std::string& platform_file,
+                const std::string& workflow_file,
+                const std::string& stage_list,
+                const std::string& real_log,
+                const std::string& makespan,
+                const std::string& output_dir
+    );
 
     void init(int *argc, char **argv);
     wrench::Workflow* parse_inputs();
@@ -57,6 +60,7 @@ public:
     const std::string getID() const { return this->simulation_id;}
     const std::string getNumberPipeline() const { return this->nb_pipeline;}
     const std::string getNumberCores() const { return this->nb_cores;}
+    const double getMeasuredMakespan() const { return this->measured_makespan;}
 
     const std::string getWorkflowID() const { return this->workflow_id;}
     const std::string getPlatformID() const { return this->platform_id;}
@@ -99,6 +103,8 @@ private:
     std::string simulation_job_id;
     std::string nb_pipeline;
     std::string nb_cores;
+
+    double measured_makespan;
 
     std::string workflow_id;
     std::string platform_id;
