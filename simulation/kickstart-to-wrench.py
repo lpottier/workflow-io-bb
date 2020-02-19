@@ -31,13 +31,15 @@ def _configure_logging(debug):
     logger.addHandler(ch)
 
 
-def _parse_stagein(stagein_file, io_fraction):
+def _parse_stagein(stagein_file, io_fraction, core_stagein):
     """
     Parse a StageIn file
     :param stagein_file: a StageIn file
+    :param io_fraction:  I/O fraction of the stage-in task (1 if only I/O)
+    :param core_stagein: number of cores to use
     """
     logger.info('Parsing StageIn file: ' + os.path.basename(stagein_file))
-    cores['stagein'] = "1"
+    cores['stagein'] = core_stagein
     with open(stagein_file, 'r') as file:
         lines = file.readlines()[1:]
         for line in lines:
@@ -144,6 +146,7 @@ def main():
     parser.add_argument('-i', '--stagein', dest='stagein_file', action='store', help='StageIn file name', default='stage-in.csv')
     parser.add_argument('--io-stagein', type=float, default=1.0, dest='io_frac_stagein', action='store', help='I/O fraction for the stage-in task (usually 1)')
     parser.add_argument('-c', '--cores', dest='core_tasks', action='append', help='Number of cores per tasks (must be in the same order as kickstart files)')
+    parser.add_argument('--cores-stagein', dest='core_stagein', action='store', help='Number of cores for stage-in (must be in the same order as kickstart files)')
     parser.add_argument('-o', dest='output', action='store', help='Output filename', default='wrench.dax')
     parser.add_argument('-d', '--debug', action='store_true', help='Print debug messages to stderr')
     args = parser.parse_args()
@@ -186,7 +189,7 @@ def main():
         exit(1)
 
     # parse StageIn file
-    _parse_stagein(args.stagein_file, args.io_frac_stagein)
+    _parse_stagein(args.stagein_file, args.io_frac_stagein, args.core_stagein)
 
     # parse DAX file
     _parse_dax(args.dax_file)

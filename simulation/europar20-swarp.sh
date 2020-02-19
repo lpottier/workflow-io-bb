@@ -161,6 +161,8 @@ for folder in $SWARP_FOLDER; do
                 --kickstart="$LOC_COMBINE" \
                 --io="0.203" \
                 --io="0.26" \
+                --io-stagein="1" \
+                --cores-stagein="$core" \
                 --cores="$core" \
                 --cores="$core" \
                 --stagein="$LOC_STAGEIN" \
@@ -186,6 +188,7 @@ for folder in $SWARP_FOLDER; do
                 --dax="$DAX" "$print_header" \
                 --stage-file="$LOC_FILEMAP" \
                 --real-log="$LOC_OUTPUTLOG" \
+                --cores="$core" \
                 --output="$pipeline" \
                 2> $err_wrench
 

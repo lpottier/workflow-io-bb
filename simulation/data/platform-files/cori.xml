@@ -2,7 +2,7 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
     <zone id="AS0" routing="Full">
-        <host id="Host1" speed="1000Gf" core="32">
+        <host id="Host1" speed="30Gf" core="32">
             <prop id="type" value="compute"/>
         </host>
 <!--         <host id="Host2" speed="1000Gf" core="32">

@@ -38,7 +38,8 @@ void BBJobScheduler::scheduleTasks(
   std::map< std::string, std::string> tasks_resource_mapping;
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
-  for (auto task : tasks) { 
+  for (auto task : tasks) {
+
     tasks_resource_mapping[task->getID()] = this->nb_cores;
 
     std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_locations;

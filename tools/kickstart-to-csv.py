@@ -8,6 +8,7 @@ import math
 import glob
 import importlib
 import time
+import argparse
 
 import concurrent.futures
 
@@ -1452,7 +1453,7 @@ def create_data_from_exp_mt(exp_dir, pattern='*', csv_file=None, threads=None, p
             header = False
 
 
-def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
+def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None, compact=None):
 
     if not Path(exp_dir).exists():
         print("[error] {} does not exist.\n[error] Abort.".format(exp_dir))
@@ -1462,7 +1463,7 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
         print("[error] {} is not a valid directory.\n[error] Abort.".format(exp_dir))
         exit(-1)
 
-    directories = [Path(x) for x in sorted(glob.glob(exp_dir+pattern)) if Path(x).is_dir()]
+    directories = [Path(x) for x in sorted(glob.glob(str(exp_dir)+str(pattern))) if Path(x).is_dir()]
     if csv_file == None:
         csv_file = Path(Path(exp_dir) / Path(Path(exp_dir).name+".csv"))
     else:
@@ -1471,16 +1472,18 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
     start = []
     end = []
 
-    csv_full = Path(csv_file.stem + '-raw' + csv_file.suffix)
+    if compact:
+        csv_compact = Path(csv_file.stem + '-compact' + csv_file.suffix)
 
     start.append(time.time())
     
     print(" {:<60s} => ".format(directories[0].name), end='', flush=True)
-    exp = KickstartDirectory(directories[0])
-    exp.write_csv_global_by_pipeline(csv_file, write_header=True)
+    if compact:
+        exp = KickstartDirectory(directories[0])
+        exp.write_csv_global_by_pipeline(csv_compact, write_header=True)
 
     exp_full = RawKickstartDirectory(directories[0])
-    exp_full.write_csv_global_by_pipeline(csv_full, write_header=True)
+    exp_full.write_csv_global_by_pipeline(csv_file, write_header=True)
 
     end.append(time.time())
 
@@ -1489,11 +1492,12 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
     for d in sorted(directories[1:]):
         start.append(time.time())
         print(" {:<60s} => ".format(d.name), end='', flush=True)
-        exp = KickstartDirectory(d)
-        exp.write_csv_global_by_pipeline(csv_file)
+        if compact:
+            exp = KickstartDirectory(d)
+            exp.write_csv_global_by_pipeline(csv_compact)
 
         exp_full = RawKickstartDirectory(d)
-        exp_full.write_csv_global_by_pipeline(csv_full)
+        exp_full.write_csv_global_by_pipeline(csv_file)
         end.append(time.time())
         print("{:<20s} [{:.2f} sec]".format(csv_file.name, end[-1] - start[-1]))
 
@@ -1504,7 +1508,15 @@ def create_data_from_exp(exp_dir, pattern='*', csv_file=None, plot=None):
 
 if __name__ == "__main__":
 
-    main_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/"
+    parser = argparse.ArgumentParser(description='Parse kickstart record to produce CSV')
+    
+    parser.add_argument('--dir', '-d', required=True, action="append", help='Directory that contains all the directory generated bu SWARP runs')
+    parser.add_argument('--csv', '-o', required=False, help='Name of the output files')
+    parser.add_argument('--compact', '-x',  action="store_true", help='Generate a compact CSV files with averages and standard deviation computed')
+
+    args = parser.parse_args()
+
+    # main_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/"
 
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
     # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
@@ -1521,11 +1533,12 @@ if __name__ == "__main__":
     # exp_dir = main_dir + "bb-fixed_runs2020-32c"
     # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c-fixed.csv")
 
-    exp_dir = main_dir + "bb_runs2020-Xc"
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-Xc.csv")
+    for d in args.dir:
+        directory = Path(d)
+        if args.csv == None:
+            args.csv = str(directory.name)+".csv" 
 
-    exp_dir = main_dir + "time_serie_exp"
-    create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-timeserie.csv")
+        create_data_from_exp(directory, pattern="/swarp-*", csv_file=args.csv, compact=args.compact)
 
     #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
 
