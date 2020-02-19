@@ -171,7 +171,8 @@ wrench::Workflow* BBSimulation::parse_inputs() {
   return this->workflow;
 }
 
-std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> BBSimulation::create_hosts() {
+std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> 
+BBSimulation::create_hosts() {
   std::vector<std::string> hostname_list = this->getHostnameList();
 
   int pfs_count = 0;

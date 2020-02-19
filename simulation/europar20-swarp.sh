@@ -41,6 +41,7 @@ if [ -z "$MAIN_DIR" ]; then
     fi
 fi
 
+
 export CC=gcc-8
 export CXX=g++-8
 export PYTHONPATH=$(pegasus-config --python)
@@ -86,18 +87,21 @@ echo "[$($DATE --rfc-3339=ns)] Done."
 
 # Generate the different folder to process
 current=$(pwd)
-cd $MAIN_DIR
-SWARP_FOLDER="$(find swarp-* -maxdepth 0 -type d)"
-cd $current
+# cd $MAIN_DIR
+# SWARP_FOLDER="$(find swarp-* -maxdepth 0 -type d)"
+# cd $current
 
 # To print the header only for the first run
 print_header=''
 
-for folder in $SWARP_FOLDER; do
+#for folder in $SWARP_FOLDER; do
 
-    EXP_DIR=$(echo $MAIN_DIR/$folder/swarp-run-*N-*F.*/swarp.*/)
-    core=$(echo "$folder" | cut -f3 -d'-')
-    core=${core%%C}
+    EXP_DIR=$(echo $MAIN_DIR/$SWARP_FOLDER/swarp-run-*N-*F.*/swarp.*/)
+
+    core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
+    core=${core%%c}
+
+    jobpid=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
 
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
     echo ""
@@ -176,6 +180,7 @@ for folder in $SWARP_FOLDER; do
                 echo ""
             fi
 
+
             err_wrench="$pipeline/wrench.err"
             if (( "$VERBOSE" >= 2 )); then
                 err_wrench=1
@@ -201,7 +206,7 @@ for folder in $SWARP_FOLDER; do
         done
     done
     echo ""
-done
+#done
 
 echo ""
 echo "[$($DATE --rfc-3339=ns)] Done."
