@@ -10,6 +10,7 @@ import xml.etree.ElementTree
 logger = logging.getLogger(__name__)
 files = {}
 runtimes = {}
+cores = {}
 jobs = {}
 
 
@@ -36,18 +37,19 @@ def _parse_stagein(stagein_file, io_fraction):
     :param stagein_file: a StageIn file
     """
     logger.info('Parsing StageIn file: ' + os.path.basename(stagein_file))
-
+    cores['stagein'] = "1"
     with open(stagein_file, 'r') as file:
         lines = file.readlines()[1:]
         for line in lines:
             runtimes['stagein'] = float(line.split(' ')[5])*(1-float(io_fraction))
 
 
-def _parse_kickstart(kickstart_file, io_fraction):
+def _parse_kickstart(kickstart_file, io_fraction, core):
     """
     Parse a Kickstart file
     :param kickstart_file: a Kickstart file
-    :param io_fraction: the fraction of the execution time taken by I/O (default: 0.0)
+    :param io_fraction: the fraction of the execution time taken by I/O
+    :param core: the number of cores the task can use
     """
     logger.info('Parsing Kickstart file: ' + os.path.basename(kickstart_file))
     logger.info('Using I/O fraction: ' + str(io_fraction))
@@ -59,9 +61,11 @@ def _parse_kickstart(kickstart_file, io_fraction):
                 for r in a.findall('{http://pegasus.isi.edu/schema/invocation}arg'):
                     if 'combine' in r.text:
                         runtimes['combine'] = float(j.get('duration'))*(1-float(io_fraction))
+                        cores['combine'] = core
                         break
                     elif 'resample' in r.text:
                         runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction))
+                        cores['resample'] = core
                         break
             for p in j.findall('{http://pegasus.isi.edu/schema/invocation}proc'):
                 for f in p.findall('{http://pegasus.isi.edu/schema/invocation}file'):
@@ -86,6 +90,7 @@ def _parse_dax(dax_file):
             job['id'] = str(j.get('id'))
             job['type'] = 'compute'
             job['runtime'] = str(runtimes[job['name']])
+            job['core'] = str(cores[job['name']])
             job['parents'] = []
             job['files'] = []
 
@@ -117,7 +122,7 @@ def _write_dax(output_file):
         out.write('<?xml version="1.0" encoding="UTF-8"?>\n')
         out.write('<adag xmlns="http://pegasus.isi.edu/schema/DAX" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/DAX http://pegasus.isi.edu/schema/dax-2.1.xsd" version="2.1" count="1" index="0" name="test" jobCount="3" fileCount="0" childCount="2">\n')
         for id in jobs:
-            out.write('  <job id="' + id + '" name="' + jobs[id]['name'] + '" version="1.0" runtime="' + jobs[id]['runtime'] + '">\n')
+            out.write('  <job id="' + id + '" name="' + jobs[id]['name'] + '" version="1.0" runtime="' + jobs[id]['runtime'] + '" numcores="' + jobs[id]['core'] + '">\n')
             for file in jobs[id]['files']:
                 out.write('    <uses file="' + file['name'] + '" link="' + file['link'] +  '" register="false" transfer="false" optional="false" type="data" size="' + file['size'] + '"/>\n')
             out.write('  </job>\n')
@@ -138,6 +143,7 @@ def main():
     parser.add_argument('-k', '--kickstart', dest='kickstart_files', action='append', help='Kickstart file name')
     parser.add_argument('-i', '--stagein', dest='stagein_file', action='store', help='StageIn file name', default='stage-in.csv')
     parser.add_argument('--io-stagein', type=float, default=1.0, dest='io_frac_stagein', action='store', help='I/O fraction for the stage-in task (usually 1)')
+    parser.add_argument('-c', '--cores', dest='core_tasks', action='append', help='Number of cores per tasks (must be in the same order as kickstart files)')
     parser.add_argument('-o', dest='output', action='store', help='Output filename', default='wrench.dax')
     parser.add_argument('-d', '--debug', action='store_true', help='Print debug messages to stderr')
     args = parser.parse_args()
@@ -151,11 +157,11 @@ def main():
         exit(1)
 
 
-    if len(args.kickstart_files) != len(args.io_frac):
-        logger.error("Number of kickstart files and the number of I/O fractions do not match.")
+    if len(args.kickstart_files) != len(args.io_frac) != len(args.core_tasks):
+        logger.error("Number of kickstart files, the number of I/O fractions do not match and the number of cores must match.")
         exit(1)
 
-    for f,io in zip(args.kickstart_files,args.io_frac):
+    for f,io,core in zip(args.kickstart_files,args.io_frac, args.core_tasks):
         if not os.path.isfile(f):
             logger.error('The provided Kickstart file does not exist:\n\t' + f)
             exit(1)
@@ -168,7 +174,11 @@ def main():
             logger.error('The I/O fraction must not between 0 and 1:\n\t' + io_cast)
             exit(1)
 
-        _parse_kickstart(f,io_cast)
+        if int(core) <= 0:
+            logger.error('The number of cores must be positive:\n\t' + core)
+            exit(1)
+
+        _parse_kickstart(f, io_cast, core)
 
 
     if not os.path.isfile(args.stagein_file):

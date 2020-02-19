@@ -269,11 +269,28 @@ std::pair<double, double> BBSimulation::check_links(std::map<std::pair<std::stri
 }
 
 std::set<std::shared_ptr<wrench::StorageService>> 
-BBSimulation::instantiate_storage_services(const std::map<std::string, double>& payloads) {
+BBSimulation::instantiate_storage_services() {
   // Create a list of storage services that will be used by the WMS
   
   this->pfs_link = this->check_links(this->cs_to_pfs);
   this->bb_link = this->check_links(this->cs_to_bb);
+
+  std::map<std::string, double> message_payload_values = {
+      {wrench::SimpleStorageServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD,              0},
+      {wrench::SimpleStorageServiceMessagePayload::DAEMON_STOPPED_MESSAGE_PAYLOAD,           0},
+      {wrench::SimpleStorageServiceMessagePayload::FREE_SPACE_REQUEST_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FREE_SPACE_ANSWER_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_DELETE_REQUEST_MESSAGE_PAYLOAD,      0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_DELETE_ANSWER_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_REQUEST_MESSAGE_PAYLOAD,      0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_ANSWER_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_REQUEST_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_ANSWER_MESSAGE_PAYLOAD,         0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         0},
+  };
 
   try {
     this->pfs_storage_service = this->add(new PFSStorageService(
@@ -283,7 +300,7 @@ BBSimulation::instantiate_storage_services(const std::map<std::string, double>& 
                                               this->pfs_link.second,
                                               {},
                                               {},
-                                              payloads)
+                                              message_payload_values)
                                       );
     this->storage_services.insert(this->pfs_storage_service);
   } catch (std::invalid_argument &e) {
@@ -301,7 +318,7 @@ BBSimulation::instantiate_storage_services(const std::map<std::string, double>& 
                                     this->pfs_storage_service,
                                     {},
                                     {},
-                                    payloads)
+                                    message_payload_values)
                               );
       this->storage_services.insert(service);
       this->bb_storage_services.insert(service);
@@ -311,8 +328,6 @@ BBSimulation::instantiate_storage_services(const std::map<std::string, double>& 
     std::exit(1);
   }
 
-  this->storage_payloads = payloads;
-
   return storage_services;
 }
 
@@ -320,11 +335,45 @@ std::set<std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_comp
 
   // Create a list of compute services that will be used by the WMS
   // Instantiate a bare metal service and add it to the simulation
-  try {
-    auto baremetal_service = new wrench::BareMetalComputeService(
-          std::get<0>(this->pfs_storage_host), this->execution_hosts, 0, {}, {});
 
-    this->compute_services.insert(this->add(baremetal_service));
+  std::map< std::string, std::tuple< unsigned long, double >> compute_resources;
+  // for (auto host : this->execution_hosts) {
+  //   compute_resources[host] = std::make_tuple(wrench::ComputeService::ALL_CORES, wrench::ComputeService::ALL_RAM);
+  // }
+
+  std::map<std::string, double> compute_payload_values = {
+      {wrench::ComputeServiceMessagePayload::JOB_TYPE_NOT_SUPPORTED_MESSAGE_PAYLOAD,         0},
+      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    25000000000},
+      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
+      {wrench::ComputeServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD,              0},
+      {wrench::ComputeServiceMessagePayload::STANDARD_JOB_FAILED_MESSAGE_PAYLOAD,            0},
+      {wrench::ComputeServiceMessagePayload::TERMINATE_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD, 0},
+      {wrench::ComputeServiceMessagePayload::TERMINATE_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,  0},
+      {wrench::ComputeServiceMessagePayload::SUBMIT_PILOT_JOB_REQUEST_MESSAGE_PAYLOAD,       0},
+      {wrench::ComputeServiceMessagePayload::SUBMIT_PILOT_JOB_ANSWER_MESSAGE_PAYLOAD,        0},
+      {wrench::ComputeServiceMessagePayload::PILOT_JOB_STARTED_MESSAGE_PAYLOAD,              0},
+      {wrench::ComputeServiceMessagePayload::PILOT_JOB_EXPIRED_MESSAGE_PAYLOAD,              0},
+      {wrench::ComputeServiceMessagePayload::PILOT_JOB_FAILED_MESSAGE_PAYLOAD,               0},
+      {wrench::ComputeServiceMessagePayload::TTL_REQUEST_MESSAGE_PAYLOAD,                    0},
+      {wrench::ComputeServiceMessagePayload::TTL_ANSWER_MESSAGE_PAYLOAD,                     0},
+      {wrench::ComputeServiceMessagePayload::TERMINATE_PILOT_JOB_REQUEST_MESSAGE_PAYLOAD,    0},
+      {wrench::ComputeServiceMessagePayload::TERMINATE_PILOT_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
+      {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_REQUEST_MESSAGE_PAYLOAD,   0},
+      {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_ANSWER_MESSAGE_PAYLOAD,    0},
+  };
+
+  try {
+    // auto baremetal_service = new wrench::BareMetalComputeService(
+    //       std::get<0>(this->pfs_storage_host), this->execution_hosts, 0, {}, {});
+
+    for (auto host : this->execution_hosts) {
+      compute_resources[host] = std::make_tuple(wrench::ComputeService::ALL_CORES, wrench::ComputeService::ALL_RAM);
+      
+      auto baremetal_service = new wrench::BareMetalComputeService(
+            host, compute_resources, 0, {}, compute_payload_values);
+
+      this->compute_services.insert(this->add(baremetal_service));
+    }
   } catch (std::invalid_argument &e) {
     std::cerr << "Error: " << e.what() << std::endl;
     std::exit(1);

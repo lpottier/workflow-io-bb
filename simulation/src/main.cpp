@@ -22,13 +22,13 @@
 #include <simgrid/s4u.hpp>
 
 #include "BBSimulation.h"
-#include "config.h"
+//#include "config.h"
 // #include "BBDecision.h"
 
 std::map<std::string, std::string> parse_args(int argc, char **argv);
 
 int main(int argc, char **argv) {
-
+std::map<std::string, double> compute_payload_values;
   // Parsing of the command-line arguments for this WRENCH simulation
   auto args = parse_args(argc, argv);
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
   //printHostRouteTTY(route);
 
   // Create a list of storage services that will be used by the WMS
-  std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services(messagepayload_values);
+  std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services();
 
   // Create a list of compute services that will be used by the WMS
   // Instantiate a bare metal service and add it to the simulation

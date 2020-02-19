@@ -96,6 +96,8 @@ print_header=''
 for folder in $SWARP_FOLDER; do
 
     EXP_DIR=$(echo $MAIN_DIR/$folder/swarp-run-*N-*F.*/swarp.*/)
+    core=$(echo "$folder" | cut -f3 -d'-')
+    core=${core%%C}
 
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
     echo ""
@@ -149,6 +151,9 @@ for folder in $SWARP_FOLDER; do
                 err_ks_to_wrench=1
             fi
 
+            # TODO parse the folder name to get the number of cores + stage fits
+
+
             #DAX="$pipeline/$WORKFLOW"
             $PYTHON "$KS_TO_DAX" \
                 --dax="$DAX" \
@@ -156,6 +161,8 @@ for folder in $SWARP_FOLDER; do
                 --kickstart="$LOC_COMBINE" \
                 --io="0.203" \
                 --io="0.26" \
+                --cores="$core" \
+                --cores="$core" \
                 --stagein="$LOC_STAGEIN" \
                 -o "$DAX" --debug 2>$err_ks_to_wrench
 
@@ -171,8 +178,6 @@ for folder in $SWARP_FOLDER; do
             if (( "$VERBOSE" >= 2 )); then
                 err_wrench=1
             fi
-
-            # TODO parse the folder name to get the number of cores + stage fits
 
             $PWD/build/workflow-io-bb \
                 --id="$(basename $run)" \
