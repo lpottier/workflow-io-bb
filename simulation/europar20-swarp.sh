@@ -7,15 +7,25 @@ VERBOSE=0
 
 usage()
 {
-    echo "usage: $0 [[[-d=directory to process ] ] | [-h]]"
+    echo "usage: $0 [[[-d=directory] [-c=csv] [-s print CSV header]] | [-h]]"
 }
 
 ##### Main
+
+HEADER_CSV=1
 
 for i in "$@"; do
     case $i in
             -d=*|--dir=*)
                 MAIN_DIR="${i#*=}"
+                shift # past argument=value
+            ;;
+            -c=*|--csv=*)
+                CSV_OUTPUT="${i#*=}"
+                shift # past argument=value
+            ;;
+            -s|--no-header)
+                HEADER_CSV=0
                 shift # past argument=value
             ;;
             -h|--usage)
@@ -91,17 +101,25 @@ current=$(pwd)
 # SWARP_FOLDER="$(find swarp-* -maxdepth 0 -type d)"
 # cd $current
 
-# To print the header only for the first run
 print_header=''
+
+# To print the header only for the first run
+if (( "$HEADER_CSV" == 0 )); then
+    print_header="--no-header"
+fi
+
 
 #for folder in $SWARP_FOLDER; do
 
-EXP_DIR=$(echo $MAIN_DIR/$SWARP_FOLDER/swarp*.*/swarp*/)
+EXP_DIR=$(echo $MAIN_DIR/swarp*.*/swarp*/)
+
 
 core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
 core=${core%%c}
 
 jobpid=$(echo "$(basename $EXP_DIR)" | cut -f5 -d'.')
+
+fits=${MAIN_DIR##*-}
 
 echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
 
@@ -130,6 +148,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo "  |-> $RSMPL found: $(basename $LOC_RSMPL)"
             echo "  |-> $COMBINE found: $(basename $LOC_COMBINE)"
         fi
+
 
         stagein=$(awk -F "\"* \"*" '{print $6}' $LOC_STAGEIN)
         stagein=$(echo $stagein | cut -d' ' -f2) 
@@ -197,18 +216,38 @@ for run in $(ls $EXP_DIR | sort -n); do
             nb_pipeline=$(echo "$nb_pipeline + 1" | bc -l)
         fi
 
-        $PWD/build/workflow-io-bb \
-            --jobid="$jobpid" \
-            --id="$(basename $run)" \
-            --pipeline="$nb_pipeline" \
-            --platform="$PWD/data/platform-files/$PLATFORM" \
-            --dax="$DAX" "$print_header" \
-            --stage-file="$LOC_FILEMAP" \
-            --makespan="$mksp" \
-            --scheduler-log="$LOC_OUTPUTLOG" \
-            --cores="$core" \
-            --output="$pipeline" \
-            2> $err_wrench
+        if [[ "$fits" == "stagefits" ]]; then
+            $PWD/build/workflow-io-bb \
+                --jobid="$jobpid" \
+                --id="$(basename $run)" \
+                --pipeline="$nb_pipeline" \
+                --platform="$PWD/data/platform-files/$PLATFORM" \
+                --dax="$DAX" \
+                --stage-file="$LOC_FILEMAP" \
+                --makespan="$mksp" \
+                --scheduler-log="$LOC_OUTPUTLOG" \
+                --cores="$core" \
+                --output="$pipeline" \
+                --fits \
+                --csv="$CSV_OUTPUT" \
+                "$print_header" \
+                2> $err_wrench
+        else
+            $PWD/build/workflow-io-bb \
+                --jobid="$jobpid" \
+                --id="$(basename $run)" \
+                --pipeline="$nb_pipeline" \
+                --platform="$PWD/data/platform-files/$PLATFORM" \
+                --dax="$DAX" \
+                --stage-file="$LOC_FILEMAP" \
+                --makespan="$mksp" \
+                --scheduler-log="$LOC_OUTPUTLOG" \
+                --cores="$core" \
+                --output="$pipeline" \
+                --csv="$CSV_OUTPUT" \
+                "$print_header" \
+                2> $err_wrench
+        fi
 
         print_header="--no-header"
         

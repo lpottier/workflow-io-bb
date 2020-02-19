@@ -101,6 +101,8 @@ std::map<std::string, double> compute_payload_values;
     if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
+      nb_files_staged++;
+      amount_of_data_staged += f->getSize();
       continue;
     }
 
@@ -182,7 +184,7 @@ std::map<std::string, double> compute_payload_values;
   bool header = (args["no-header"] == "0");
 
   printSimulationSummaryTTY(simulation, header);
-  printSimulationSummaryCSV(simulation, "simu-"+simulation.getJobID()+".csv", header);
+  printSimulationSummaryCSV(simulation, args["csv"], header);
 
   //simulation.dumpAllOutputJSON();
 
@@ -213,6 +215,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       {"makespan",       required_argument, 0, 'm'},
       {"scheduler-log",  required_argument, 0, 'w'},
       {"output-dir",     required_argument, 0, 'o'},
+      {"csv",            required_argument, 0, 'a'},
       {"fits",           no_argument,       0, 'f'},
       {"help",           no_argument,       0, 'h'},
       {"verbose",        no_argument,       0, 'v'},
@@ -243,6 +246,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
         std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;
         std::cout << "       [-o | --output-dir    ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << "       [-a | --csv           ]  CSV output file " << std::endl;
         std::cout << std::endl;
         std::cout << "       [   | --no-header     ]  Do not print header" << std::endl;
         std::cout << "       [-v | --verbose       ]  Verbose output" << std::endl;
@@ -250,6 +254,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::exit(1);
 
       case 'd':
+        args[name] = optarg;
+        break;
+
+      case 'a':
         args[name] = optarg;
         break;
 
@@ -306,6 +314,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
         std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;
         std::cout << "       [-o | --output-dir    ]  Directory where to output all files produced by the simulation (must exist) " << std::endl;
+        std::cout << "       [-a | --csv           ]  CSV output file " << std::endl;
         std::cout << std::endl;
         std::cout << "       [   | --no-header     ]  Do not print header" << std::endl;
         std::cout << "       [-v | --verbose       ]  Verbose output" << std::endl;
