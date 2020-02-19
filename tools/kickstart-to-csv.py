@@ -931,10 +931,10 @@ class RawKickstartDirectory:
                     if VERBOSE >= 2:
                         print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = "stat.resample." + str(pid_run) + "." + nb_pipeline + ".xml"
-                    pipeline_resample.append(pipeline / resmpl_path)
-                    combine_path = "stat.combine." + str(pid_run) + "." + nb_pipeline + ".xml"
-                    pipeline_combine.append(pipeline / combine_path)
+                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + str(pid_run) + "*")[0]
+                    pipeline_resample.append(resmpl_path)
+                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + str(pid_run) + "*")[0]
+                    pipeline_combine.append(combine_path)
 
                 if self._concat_pipeline:
                     id_max_pipeline = int(nb_pipeline.name)
@@ -1269,10 +1269,10 @@ class KickstartDirectory:
                     if VERBOSE >= 2:
                         print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = "stat.resample." + pid_run + "." + nb_pipeline + ".xml"
-                    raw_resample.append(pipeline / resmpl_path)
-                    combine_path = "stat.combine." + pid_run + "." + nb_pipeline + ".xml"
-                    raw_combine.append(pipeline / combine_path)
+                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + str(pid_run) + "*")[0]
+                    pipeline_resample.append(resmpl_path)
+                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + str(pid_run) + "*")[0]
+                    pipeline_combine.append(combine_path)
 
                 avg_resample.append(KickStartPipeline(ks_entries=raw_resample))
                 avg_combine.append(KickStartPipeline(ks_entries=raw_combine))
