@@ -385,6 +385,7 @@ std::set<std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_comp
       {wrench::ComputeServiceMessagePayload::TERMINATE_PILOT_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
       {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_REQUEST_MESSAGE_PAYLOAD,   0},
       {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_ANSWER_MESSAGE_PAYLOAD,    0},
+      {wrench::BareMetalComputeServiceProperty::THREAD_STARTUP_OVERHEAD,                     0},
   };
 
   try {
