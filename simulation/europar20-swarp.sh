@@ -266,7 +266,6 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
-exit
     done
 done
 #done
