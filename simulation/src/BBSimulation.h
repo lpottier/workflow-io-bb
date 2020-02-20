@@ -43,6 +43,8 @@ public:
                 const std::string& pipeline,
                 const std::string& max_pipeline,
                 const std::string& cores,
+                const std::string& fits,
+                const std::string& bb_type,
                 const std::string& platform_file,
                 const std::string& workflow_file,
                 const std::string& stage_list,
@@ -53,7 +55,12 @@ public:
 
     void init(int *argc, char **argv);
     wrench::Workflow* parse_inputs();
-    static std::map<std::string, std::shared_ptr<wrench::StorageService> > parseFilesList(std::string, std::shared_ptr<wrench::StorageService>, std::shared_ptr<wrench::StorageService>);
+
+    std::map<std::string, std::shared_ptr<wrench::StorageService> > 
+        parseFilesList(std::string, 
+            std::shared_ptr<wrench::StorageService>, 
+            std::shared_ptr<wrench::StorageService>
+    );
     std::map<std::string, double> parseRealWorkflowLog(std::string path);
 
     /* Getter */
@@ -74,11 +81,18 @@ public:
     const double getBandwithBB() { return std::get<0>(this->bb_link);}
     const double getLatencyBB() { return std::get<1>(this->bb_link);}
 
-    const int getStagedIn() const { return this->nb_files_staged;}
-    const int getDataStaged() const { return this->data_staged;}
+    const std::string getFITS() { return this->fits;}
+    const std::string getBBtype() { return this->bb_type;}
 
-    void setStagedIn(int x) { this->nb_files_staged = x;}
-    void setDataStaged(int x) { this->data_staged = x;}
+    const int getNBFileStaged() const { return this->nb_files_staged;}
+    const double getDataStaged() const { return this->amount_of_data_staged;}
+    void setNBFileStaged(int x) { this->nb_files_staged = x;}
+    void setDataStaged(double x) { this->amount_of_data_staged = x;}
+
+    const int getNBFileInBB() const { return this->nb_files_in_bb;}
+    const double getDataInBB() const { return this->amount_of_data_in_bb;}
+    void setNBFileInBB(int x) { this->nb_files_in_bb = x;}
+    void setDataInBB(double x) { this->amount_of_data_in_bb = x;}
 
 
     std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> create_hosts();
@@ -106,6 +120,8 @@ private:
     std::string nb_pipeline;
     std::string max_pipeline;
     std::string nb_cores;
+    std::string fits;
+    std::string bb_type;
 
     double measured_makespan;
 
@@ -118,7 +134,11 @@ private:
     std::pair<double, double> bb_link; //std::pair<bandwith, latency>
 
     int nb_files_staged; // number of files staged in BB
-    int data_staged; // Amount of data staged in BB (Bytes)
+    double amount_of_data_staged; // Amount of data staged in BB (Bytes)
+
+
+    int nb_files_in_bb; // number of files in BB
+    double amount_of_data_in_bb; // Amount of data in BB (Bytes)
 
     wrench::Workflow *workflow;
     std::shared_ptr<wrench::WMS> wms;

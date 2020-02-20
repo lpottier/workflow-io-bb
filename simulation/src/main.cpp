@@ -46,6 +46,8 @@ std::map<std::string, double> compute_payload_values;
             args["pipeline"],
             args["max-pipeline"],
             args["cores"],
+            args["fits"],
+            args["bb-type"],
             args["platform"], 
             args["dax"], 
             args["stage-file"], 
@@ -88,14 +90,13 @@ std::map<std::string, double> compute_payload_values;
   std::shared_ptr<wrench::StorageService> first_bb_node = *(simulation.getBBServices()).begin();
 
   // Parse the file containing the list of files to stage in
-  auto files_to_stages = BBSimulation::parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
+  auto files_to_stages = simulation.parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
 
   // Create the hashmap containing the files that will be staged in
   bool stage_fits = (args["fits"] == "1");
   // Recall that if stage_fits is true then all the files produced by resample will be written in BB
 
-  int nb_files_staged = 0;
-  int amount_of_data_staged = 0;
+  double temp_tot = 0.0;
   /* Stage files */
   /* ignore the W0- in the beggining */
   for (auto f : workflow->getFiles()) {
@@ -104,8 +105,6 @@ std::map<std::string, double> compute_payload_values;
     if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
-      nb_files_staged++;
-      amount_of_data_staged += f->getSize();
       continue;
     }
 
@@ -116,17 +115,36 @@ std::map<std::string, double> compute_payload_values;
     }
     else {
       if (files_to_stages[f->getID()]->getHostname() != "PFSHost1"){
-        nb_files_staged += 1;
-        amount_of_data_staged += f->getSize();
+        temp_tot += f->getSize();
       }
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << files_to_stages[f->getID()]->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), files_to_stages[f->getID()]));
     }
+    //std::cout << " " << f->getID() << " " << f->getSize() << " " << amount_of_data_staged << std::endl;
   }
 
+  int nb_files_in_bb = 0;
+  double amount_of_data_in_bb = 0;
+
+  for (auto alloc : file_placement_heuristic) {
+    if (std::get<2>(alloc)->getHostname().find("BB") != std::string::npos) {
+      nb_files_in_bb = nb_files_in_bb + 1;
+      amount_of_data_in_bb = amount_of_data_in_bb + std::get<0>(alloc)->getSize();
+    }
+    // std::cout << " " << std::left << std::setw(60) 
+    //         << std::get<0>(alloc)->getID()
+    //         << std::left << std::setw(20)
+    //         << std::get<1>(alloc)->getHostname()
+    //         << std::left << std::setw(20)
+    //         << std::get<2>(alloc)->getHostname()
+    //         << std::left << std::setw(10) 
+    //         << std::get<0>(alloc)->getSize()/std::pow(2,20) << std::endl;
+}
+
   // Store some useful information for later
-  simulation.setStagedIn(nb_files_staged);
-  simulation.setDataStaged(amount_of_data_staged);
+  simulation.setNBFileInBB(nb_files_in_bb);
+  simulation.setDataInBB(amount_of_data_in_bb);
+  simulation.setDataStaged(temp_tot);
 
   // std::cout << nb_files_staged << "/" 
   //           << workflow->getFiles().size() 
@@ -164,6 +182,7 @@ std::map<std::string, double> compute_payload_values;
   // It is necessary to store, or "stage", input files in the PFS
   //std::pair<int, double> stagein_fstat = 
   simulation.stage_input_files();
+  //std::cerr << "Staged "<< stagein_fstat.first << ". Total size:" << stagein_fstat.second << std::endl;
 
   // auto ftest = *(workflow->getFiles()).begin();
   // initFileAlloc(ftest);
@@ -213,6 +232,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       {"pipeline",       required_argument, 0, 'n'},
       {"max-pipeline",   required_argument, 0, 'z'},
       {"cores",          required_argument, 0, 'c'},
+      {"bb-type",        required_argument, 0, 'b'},
       {"platform",       required_argument, 0, 'p'},
       {"dax",            required_argument, 0, 'x'},
       {"stage-file",     required_argument, 0, 's'},
@@ -230,7 +250,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfz:j:c:d:p:n:x:s:w:m:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfb:z:j:c:d:p:n:x:s:w:m:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -244,6 +264,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
+        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE or STRIPED)" << std::endl;
         std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
         std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
@@ -267,6 +288,10 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         break;
 
       case 'j':
+        args[name] = optarg;
+        break;
+
+      case 'b':
         args[name] = optarg;
         break;
 
@@ -316,6 +341,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE or STRIPED)" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;

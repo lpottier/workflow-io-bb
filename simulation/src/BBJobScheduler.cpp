@@ -35,10 +35,6 @@ void BBJobScheduler::scheduleTasks(
 
   auto compute_service = *compute_services.begin();
 
-  for (auto task : tasks) {
-    std::cout << task->getID() << std::endl;
-  }
-
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
     std::map< std::string, std::string> tasks_resource_mapping;

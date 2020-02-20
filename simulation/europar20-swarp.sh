@@ -3,7 +3,7 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-VERBOSE=2
+VERBOSE=0
 
 usage()
 {
@@ -121,7 +121,11 @@ core=${core%%c}
 
 jobpid=$(echo "$(basename $EXP_DIR)" | cut -f5 -d'.')
 
+bb_type=$(echo "$(basename $MAIN_DIR)" | cut -f8 -d'-')
+
 fits=${MAIN_DIR##*-}
+
+echo $(basename $EXP_DIR) $jobpid $max_pipeline $core $fits 
 
 echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
 
@@ -197,7 +201,8 @@ for run in $(ls $EXP_DIR | sort -n); do
             --cores="$core" \
             --cores="$core" \
             --stagein="$LOC_STAGEIN" \
-            -o "$DAX" --debug #2>$err_ks_to_wrench
+            -o "$DAX" --debug \
+            2>$err_ks_to_wrench
 
        
          if (( "$VERBOSE" >= 1 )); then
@@ -226,6 +231,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --max-pipeline="$max_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \
                 --dax="$DAX" \
+                --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \
                 --makespan="$mksp" \
                 --scheduler-log="$LOC_OUTPUTLOG" \
@@ -234,7 +240,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --fits \
                 --csv="$CSV_OUTPUT" \
                 "$print_header" \
-                #2> $err_wrench
+                2> $err_wrench
         else
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
@@ -243,6 +249,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --max-pipeline="$max_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \
                 --dax="$DAX" \
+                --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \
                 --makespan="$mksp" \
                 --scheduler-log="$LOC_OUTPUTLOG" \
@@ -250,7 +257,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --output="$pipeline" \
                 --csv="$CSV_OUTPUT" \
                 "$print_header" \
-                #2> $err_wrench
+                2> $err_wrench
         fi
 
         print_header="--no-header"
@@ -259,8 +266,6 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
-
-        exit
 
     done
 done

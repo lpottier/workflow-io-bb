@@ -187,6 +187,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   int width_id = 7;
   int width_pipeline = 12;
   int width_cores = 6;
+  int width_fits = 5;
+  int width_bbtype = 8;
   int width_workflow = 15;
   int width_platform = 10;
   int width_latency = 10;
@@ -226,6 +228,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << "WORKFLOW"
               << std::left << std::setw(width_platform)
               << "PLATFORM"
+              << std::left << std::setw(width_fits)
+              << "FITS"
+              << std::left << std::setw(width_bbtype)
+              << "BB TYPE"
               << std::left << std::setw(width_pipeline) 
               << "#PIPELINES"
               << std::left << std::setw(width_cores) 
@@ -253,6 +259,10 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << "--------"
               << std::left << std::setw(width_platform)
               << "--------"
+              << std::left << std::setw(width_fits)
+              << "----"
+              << std::left << std::setw(width_bbtype)
+              << "-------"
               << std::left << std::setw(width_pipeline) 
               << "----------"
               << std::left << std::setw(width_cores) 
@@ -283,12 +293,16 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
             << simulation.getWorkflowID()
             << std::left << std::setw(width_platform)
             << simulation.getPlatformID()
+            << std::left << std::setw(width_fits) 
+            << simulation.getFITS()
+            << std::left << std::setw(width_bbtype) 
+            << simulation.getBBtype()
             << std::left << std::setw(width_pipeline) 
             << pip
             << std::left << std::setw(width_cores) 
             << simulation.getNumberCores()
             << std::left << std::setw(width_bbfile) 
-            << simulation.getStagedIn()
+            << simulation.getNBFileStaged()
             << std::left << std::setw(width_bbdata) 
             << simulation.getDataStaged()/std::pow(2,20)
             << std::left << std::setw(width_latency) 
@@ -355,6 +369,10 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
          << sep
          << "AVG"
          << sep
+         << "FITS"
+         << sep
+         << "BB_TYPE"
+         << sep
          << "WORKFLOW"
          << sep
          << "PLATFORM"
@@ -388,7 +406,11 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
     fs << simulation.getJobID()
        << sep
        << simulation.getID()
-       << sep 
+       << sep
+       << simulation.getFITS()
+       << sep
+       << simulation.getBBtype()
+       << sep
        << simulation.getWorkflowID()
        << sep
        << simulation.getPlatformID()
@@ -399,8 +421,8 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
        << sep 
        << simulation.getNumberCores()
        << sep 
-       << simulation.getStagedIn()
-       << sep 
+       << simulation.getNBFileStaged()
+       << sep
        << simulation.getDataStaged()/std::pow(2,20)
        << sep 
        << latency_ratio

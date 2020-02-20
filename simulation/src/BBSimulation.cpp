@@ -20,6 +20,8 @@ BBSimulation::BBSimulation(const std::string& jobid,
                            const std::string& pipeline,
                            const std::string& max_pipeline,
                            const std::string& cores,
+                           const std::string& fits,
+                           const std::string& bb_type,
                            const std::string& platform_file,
                            const std::string& workflow_file,
                            const std::string& stage_list,
@@ -33,12 +35,28 @@ BBSimulation::BBSimulation(const std::string& jobid,
   this->nb_pipeline = pipeline;
   this->max_pipeline = max_pipeline;
   this->nb_cores = cores;
+  
+  this->bb_type = bb_type;
+  for (auto & c: this->bb_type) c = std::toupper(c);
+
+  if (fits == "1"){
+    this->fits = "Y";
+  }
+  else {
+    this->fits = "N";
+  }
   this->measured_makespan = std::stod(makespan);
   raw_args["platform_file"] = platform_file;
   raw_args["workflow_file"] = workflow_file;
   raw_args["stage_list"] = stage_list;
   raw_args["real_log"] = real_log;
   raw_args["output_dir"] = output_dir;
+
+  this->nb_files_in_bb = 0; // number of files in BB
+  this->amount_of_data_in_bb = 0.0; // Amount of data in BB (Bytes)
+
+  this->nb_files_staged = 0; // number of files staged
+  this->amount_of_data_staged = 0.0; // Amount of data staged
 }
 
 void BBSimulation::init(int *argc, char **argv) {
@@ -57,7 +75,6 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
   std::map<std::string, std::shared_ptr<wrench::StorageService> > files_to_stages;
 
   /// Parse stage_list file file_src file_dest
-  // TODO: ADD A FITS OPTION
   std::string line;
   std::string delimiter = " ";
   std::string path_delimiter = "/\\";
@@ -97,6 +114,7 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
       if (dst_path.find_first_of(bb_prefix_cori) != std::string::npos) {
         // Goes on the first (and only) BB nodes
         files_to_stages[src_file] = bb_service;
+        this->nb_files_staged++;
       } 
       else {
         files_to_stages[src_file] = pfs_service;
