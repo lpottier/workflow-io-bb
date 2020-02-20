@@ -18,6 +18,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_simulation, "Log category for BB Simulation");
 BBSimulation::BBSimulation(const std::string& jobid,
                            const std::string& id, 
                            const std::string& pipeline,
+                           const std::string& max_pipeline,
                            const std::string& cores,
                            const std::string& platform_file,
                            const std::string& workflow_file,
@@ -30,6 +31,7 @@ BBSimulation::BBSimulation(const std::string& jobid,
   this->simulation_job_id = jobid;
   this->simulation_id = id;
   this->nb_pipeline = pipeline;
+  this->max_pipeline = max_pipeline;
   this->nb_cores = cores;
   this->measured_makespan = std::stod(makespan);
   raw_args["platform_file"] = platform_file;

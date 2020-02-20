@@ -44,6 +44,7 @@ std::map<std::string, double> compute_payload_values;
             args["jobid"],
             args["id"],
             args["pipeline"],
+            args["max-pipeline"],
             args["cores"],
             args["platform"], 
             args["dax"], 
@@ -96,8 +97,10 @@ std::map<std::string, double> compute_payload_values;
   int nb_files_staged = 0;
   int amount_of_data_staged = 0;
   /* Stage files */
+  /* ignore the W0- in the beggining */
   for (auto f : workflow->getFiles()) {
     // Stage resamp.fits file if asked with --fits
+    // DO IT for w.resamp.weight.fits
     if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
@@ -208,6 +211,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
       {"id",             required_argument, 0, 'd'},
       {"jobid",          required_argument, 0, 'j'},
       {"pipeline",       required_argument, 0, 'n'},
+      {"max-pipeline",   required_argument, 0, 'z'},
       {"cores",          required_argument, 0, 'c'},
       {"platform",       required_argument, 0, 'p'},
       {"dax",            required_argument, 0, 'x'},
@@ -226,7 +230,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   while (1) {
     int option_index = 0;
 
-    c = getopt_long(argc, argv, "hfj:c:d:p:n:x:s:w:m:o:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hfz:j:c:d:p:n:x:s:w:m:o:", long_options, &option_index);
     if (c == -1)
       break;
 
@@ -238,6 +242,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
@@ -301,11 +306,16 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
         args[name] = "1";
         break;
 
+      case 'z':
+        args[name] = optarg;
+        break;
+
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
         std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
+        std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
         std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
         std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;

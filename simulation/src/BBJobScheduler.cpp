@@ -35,18 +35,21 @@ void BBJobScheduler::scheduleTasks(
 
   auto compute_service = *compute_services.begin();
 
-  std::map< std::string, std::string> tasks_resource_mapping;
+  for (auto task : tasks) {
+    std::cout << task->getID() << std::endl;
+  }
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
   for (auto task : tasks) {
-
-    tasks_resource_mapping[task->getID()] = this->nb_cores;
-
+    std::map< std::string, std::string> tasks_resource_mapping;
     std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_locations;
+    
     for (auto tuple : this->file_placement)
       file_locations[std::get<0>(tuple)] = std::get<2>(tuple);
 
     wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(task, file_locations);
+
+    tasks_resource_mapping[task->getID()] = this->nb_cores;
 
     this->getJobManager()->submitJob(job, compute_service, tasks_resource_mapping);
   }

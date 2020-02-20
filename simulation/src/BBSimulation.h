@@ -41,6 +41,7 @@ public:
                 const std::string& jobid,
                 const std::string& id, 
                 const std::string& pipeline,
+                const std::string& max_pipeline,
                 const std::string& cores,
                 const std::string& platform_file,
                 const std::string& workflow_file,
@@ -59,6 +60,7 @@ public:
     const std::string getJobID() const { return this->simulation_job_id;}
     const std::string getID() const { return this->simulation_id;}
     const std::string getNumberPipeline() const { return this->nb_pipeline;}
+    const std::string getMaxPipeline() const { return this->max_pipeline;}
     const std::string getNumberCores() const { return this->nb_cores;}
     const double getMeasuredMakespan() const { return this->measured_makespan;}
 
@@ -102,6 +104,7 @@ private:
     std::string simulation_id;
     std::string simulation_job_id;
     std::string nb_pipeline;
+    std::string max_pipeline;
     std::string nb_cores;
 
     double measured_makespan;

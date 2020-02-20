@@ -103,7 +103,7 @@ def main():
             # weight map
             resample.uses(File("{0}".format(os.path.basename(in_file).split(".w.")[0] + WEIGHTMAP_PATTERN)), link=Link.INPUT)
 
-            output_name = os.path.basename(in_file).split(".w.")[0] + RESAMPLE_PATTERN
+            output_name = 'W'+str(i)+'-'+os.path.basename(in_file).split(".w.")[0] + RESAMPLE_PATTERN
             resample_output = File(output_name)
             resample_output_files.append(resample_output)
 
@@ -111,7 +111,7 @@ def main():
             resample.addArguments(os.path.basename(in_file))
 
         for output in RESAMPLE_OUTPUT:
-            resample.uses(File(output), link=Link.OUTPUT, transfer=True, register=True)
+            resample.uses(File('W'+str(i)+'-'+output), link=Link.OUTPUT, transfer=True, register=True)
 
         swarp.addJob(resample)
 
@@ -127,7 +127,7 @@ def main():
             combine.addArguments(resamp_file.name)
 
         for output in COMBINE_OUTPUT:
-            combine.uses(File(output), link=Link.OUTPUT, transfer=True, register=True)
+            combine.uses(File('W'+str(i)+'-'+output), link=Link.OUTPUT, transfer=True, register=True)
 
         swarp.addJob(combine)
 

@@ -83,7 +83,7 @@ def _parse_dax(dax_file):
     :param dax_file: the DAX file
     """
     logger.info('Parsing DAX file: ' + os.path.basename(dax_file))
-
+    print("IIII ", files)
     try:
         e = xml.etree.ElementTree.parse(dax_file).getroot()
         for j in e.findall('{http://pegasus.isi.edu/schema/DAX}job'):
@@ -100,7 +100,13 @@ def _parse_dax(dax_file):
                 file = collections.OrderedDict()
                 file['link'] = f.get('link')
                 file['name'] = f.get('name') if not f.get('name') == None else f.get('file')
-                file['size'] = files[file['name']]
+                print("XXXX ", f.get('name'))
+                if len(file['name'].split('-')) == 2:
+                    #Dirty fix
+                    # To deal with multi pipeline workflow where some files are prefixed with 'W'X'-' where X is the id of the pipeline
+                    file['size'] = files[file['name'].split('-')[1]]
+                else:
+                    file['size'] = files[file['name']]
                 job['files'].append(file)
 
             jobs[job['id']] = job

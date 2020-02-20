@@ -180,12 +180,12 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
     makespan = makespan < task->getDate() ? task->getDate() : makespan;
 
   // Number of space to offset to the right
-  int offset = 2;
+  int offset = 1;
   std::string off_str(offset, ' ');
 
   int width_jobid = 10;
   int width_id = 7;
-  int width_pipeline = 10;
+  int width_pipeline = 12;
   int width_cores = 6;
   int width_workflow = 15;
   int width_platform = 10;
@@ -227,7 +227,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_platform)
               << "PLATFORM"
               << std::left << std::setw(width_pipeline) 
-              << "PIPELINE"
+              << "#PIPELINES"
               << std::left << std::setw(width_cores) 
               << "CORES"
               << std::left << std::setw(width_latency)
@@ -254,7 +254,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_platform)
               << "--------"
               << std::left << std::setw(width_pipeline) 
-              << "--------"
+              << "----------"
               << std::left << std::setw(width_cores) 
               << "-----"
               << std::left << std::setw(width_bbfile) 
@@ -273,6 +273,8 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << "------" << std::endl;
   }
 
+  std::string pip = simulation.getNumberPipeline() + '/' + simulation.getMaxPipeline();
+
   std::cout << std::left << std::setw(width_jobid+offset)
             << off_str + simulation.getJobID()
             << std::left << std::setw(width_id) 
@@ -282,7 +284,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
             << std::left << std::setw(width_platform)
             << simulation.getPlatformID()
             << std::left << std::setw(width_pipeline) 
-            << simulation.getNumberPipeline()
+            << pip
             << std::left << std::setw(width_cores) 
             << simulation.getNumberCores()
             << std::left << std::setw(width_bbfile) 
@@ -357,11 +359,13 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
          << sep
          << "PLATFORM"
          << sep
+         << "NB_PIPELINE"
+         << sep
          << "PIPELINE"
          << sep
-         << "CORES"
+         << "NB_CORES"
          << sep
-         << "FILES"
+         << "BB_NB_FILES"
          << sep
          << "DATA_MB"
          << sep
@@ -388,6 +392,8 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
        << simulation.getWorkflowID()
        << sep
        << simulation.getPlatformID()
+       << sep
+       << simulation.getMaxPipeline()
        << sep 
        << simulation.getNumberPipeline()
        << sep 

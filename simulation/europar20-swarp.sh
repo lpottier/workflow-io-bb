@@ -3,7 +3,7 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-VERBOSE=0
+VERBOSE=2
 
 usage()
 {
@@ -113,6 +113,8 @@ fi
 
 EXP_DIR=$(echo $MAIN_DIR/swarp*.*/swarp*/)
 
+max_pipeline=$(echo "$(basename $EXP_DIR)" | cut -f1 -d'.')
+max_pipeline=$(echo "$max_pipeline" | cut -f2 -d'-')
 
 core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
 core=${core%%c}
@@ -145,16 +147,15 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo "  |-> $OUTPUT_LOG found: $(basename $LOC_OUTPUTLOG)"
             echo "  |-> $FILE_MAP found: $(basename $LOC_FILEMAP)"
             echo "  |-> $STAGEIN_CSV found: $(basename $LOC_STAGEIN)"
-            echo "  |-> $RSMPL found: $(basename $LOC_RSMPL)"
-            echo "  |-> $COMBINE found: $(basename $LOC_COMBINE)"
+            echo "  |-> $RSMPL found: $LOC_RSMPL"
+            echo "  |-> $COMBINE found: $LOC_COMBINE"
         fi
-
 
         stagein=$(awk -F "\"* \"*" '{print $6}' $LOC_STAGEIN)
         stagein=$(echo $stagein | cut -d' ' -f2) 
-        rsmpl=$(sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_RSMPL)
-        combine=$(sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_COMBINE)
-        mksp=$(echo "$stagein + $rsmpl +$combine" | bc -l)
+        rsmpl=$(LC_ALL=C sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_RSMPL)
+        combine=$(LC_ALL=C sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_COMBINE)
+        mksp=$(echo "$stagein + $rsmpl + $combine" | bc -l)
 
         err_daxgen="/dev/null"
         if (( "$VERBOSE" >= 1 )); then
@@ -165,8 +166,9 @@ for run in $(ls $EXP_DIR | sort -n); do
         ## Generate Pegasus DAX
         $PYTHON $DAXGEN_DIR/daxgen.py \
             --dax-file "$DAX" \
-            --scalability "$(basename $pipeline)" \
-            --stage-in > $err_daxgen 2>&1
+            --scalability "$max_pipeline" \
+            --stage-in \
+            > $err_daxgen 2>&1
 
         ## Generate WRENCH DAX
         if (( "$VERBOSE" >= 1 )); then
@@ -195,7 +197,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             --cores="$core" \
             --cores="$core" \
             --stagein="$LOC_STAGEIN" \
-            -o "$DAX" --debug 2>$err_ks_to_wrench
+            -o "$DAX" --debug #2>$err_ks_to_wrench
 
        
          if (( "$VERBOSE" >= 1 )); then
@@ -221,6 +223,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --jobid="$jobpid" \
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
+                --max-pipeline="$max_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \
                 --dax="$DAX" \
                 --stage-file="$LOC_FILEMAP" \
@@ -231,12 +234,13 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --fits \
                 --csv="$CSV_OUTPUT" \
                 "$print_header" \
-                2> $err_wrench
+                #2> $err_wrench
         else
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
+                --max-pipeline="$max_pipeline" \
                 --platform="$PWD/data/platform-files/$PLATFORM" \
                 --dax="$DAX" \
                 --stage-file="$LOC_FILEMAP" \
@@ -246,7 +250,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --output="$pipeline" \
                 --csv="$CSV_OUTPUT" \
                 "$print_header" \
-                2> $err_wrench
+                #2> $err_wrench
         fi
 
         print_header="--no-header"
@@ -255,6 +259,8 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
+
+        exit
 
     done
 done
