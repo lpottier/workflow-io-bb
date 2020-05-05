@@ -11,7 +11,7 @@ import argparse
 
 from enum import Enum,unique,auto
 
-SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/cori/"
+SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-executions/swarp/cori/"
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
