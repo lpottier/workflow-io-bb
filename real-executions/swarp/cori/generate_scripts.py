@@ -371,7 +371,7 @@ class SwarpInstance:
         s += "CURRENT_DIR=$(pwd)\n"
 
         #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
-        s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp/cori\n"
+        s += "SWARP_DIR=workflow-io-bb/real-executions/swarp/\n"
         # s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         s += "BASE=\"$CURRENT_DIR\"\n"
         s += "LAUNCH=\"$CURRENT_DIR/{}\"\n".format(WRAPPER)
