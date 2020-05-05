@@ -30,7 +30,6 @@ python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIM
 python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 24 -z
 python3 $DIR/generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 32 -z
 
-
 ### Fits + Striped ->
 #../generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 0 -z -s
 #../generate_scripts.py -S -b $BB -p $PROC -w $PIPELINE -r $AVG -t $TIME -q premium -c 8 -z -s
