@@ -11,7 +11,7 @@ import argparse
 
 from enum import Enum,unique,auto
 
-SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
+SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/cori/"
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
 
@@ -371,13 +371,13 @@ class SwarpInstance:
         s += "CURRENT_DIR=$(pwd)\n"
 
         #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
-        s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp/cori\n"
         # s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         s += "BASE=\"$CURRENT_DIR\"\n"
         s += "LAUNCH=\"$CURRENT_DIR/{}\"\n".format(WRAPPER)
         s += "EXE={}/bin/swarp\n".format(SWARP_DIR)
-        s += "COPY={}/copy.py\n".format(SWARP_DIR)
-        s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
+        s += "COPY={}/tools/copy.py\n".format(SWARP_DIR)
+        s += "FILE_MAP={}/tools/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
         if interactive:
