@@ -116,12 +116,20 @@ EXP_DIR=$(echo $MAIN_DIR/swarp*.*/swarp*/)
 max_pipeline=$(echo "$(basename $EXP_DIR)" | cut -f1 -d'.')
 max_pipeline=$(echo "$max_pipeline" | cut -f2 -d'-')
 
+max_pipeline=1
+
 core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
 core=${core%%c}
 
 jobpid=$(echo "$(basename $EXP_DIR)" | cut -f5 -d'.')
-
 bb_type=$(echo "$(basename $MAIN_DIR)" | cut -f8 -d'-')
+
+
+# ##########
+# # Old format
+# max_pipeline=1
+# bb_type=$(echo "$(basename $MAIN_DIR)" | cut -f9 -d'-')
+# # ##########
 
 fits=${MAIN_DIR##*-}
 
@@ -203,9 +211,8 @@ for run in $(ls $EXP_DIR | sort -n); do
             --stagein="$LOC_STAGEIN" \
             -o "$DAX" --debug \
             2>$err_ks_to_wrench
-
        
-         if (( "$VERBOSE" >= 1 )); then
+        if (( "$VERBOSE" >= 1 )); then
             echo "[$($DATE --rfc-3339=ns)] Written in $DAX"
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Run the simulations..."
@@ -218,6 +225,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             err_wrench=1
         fi
 
+        # nb_pipeline=0
         nb_pipeline=$(basename $pipeline)
         if (( $nb_pipeline == 0 )); then
             nb_pipeline=$(echo "$nb_pipeline + 1" | bc -l)

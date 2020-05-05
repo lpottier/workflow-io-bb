@@ -1,9 +1,0 @@
-SRC DEST FILE SIZE(MB) TOTAL(S) STIME(S) UTIME(S)
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111274755_2_o_38996_06.w.fits 32.02789306640625 0.024529999999999996 0.0 0.024529999999999996
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111284696_2_o_39396_06.w.fits 32.02789306640625 0.023014 0.0 0.023014
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111294943_2_o_39822_06.w.fits 32.02789306640625 0.023006999999999993 0.0 0.023006999999999993
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111304878_2_o_40204_06.w.fits 32.02789306640625 0.023113999999999996 0.0 0.023113999999999996
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111274755_2_o_38996_06.w.weight.fits 16.00433349609375 0.015035999999999994 0.0 0.015035999999999994
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111284696_2_o_39396_06.w.weight.fits 16.00433349609375 0.015105000000000007 0.0 0.015105000000000007
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111294943_2_o_39822_06.w.weight.fits 16.00433349609375 0.015657000000000004 0.0 0.015657000000000004
-/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp//input /var/opt/cray/dws/mounts/batch/25859407_striped_scratch//input PTF201111304878_2_o_40204_06.w.weight.fits 16.00433349609375 0.01433899999999999 0.0 0.01433899999999999
