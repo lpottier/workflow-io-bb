@@ -11,11 +11,12 @@ import argparse
 
 from enum import Enum,unique,auto
 
-SWARP_DIR = "/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
+PROJID="csc355"
+USER="lpottier"
+
+SWARP_DIR = "/gpfs/alpine/scratch/{0}/{1}/workflow-io-bb/real-workflows/swarp/".format(USER, PROJID)
 BBINFO = "bbinfo.sh"
 WRAPPER = "wrapper.sh"
-
-# Cori fragment size -> 20.14GiB
 
 INPUT_ONE_RUN = 769 #Input size in MB
 SIZE_ONE_PIPELINE = 2048 #Disk Usage for one run in MiB -> 1688. We take 2GiB for safety
@@ -269,36 +270,28 @@ class SwarpInstance:
 
     def slurm_header(self):
         string = "#!/bin/bash\n"
-        # string += "#SBATCH --partition={}\n".format(self.sched_config.queue())
-        string += "#SBATCH --qos={}\n".format(self.sched_config.queue())
-        string += "#SBATCH --constraint=haswell\n"
+        string += "#BSUB -P {}\n".format(PROJID)
+        #string += "#BSUB -nnodes 1\n"
 
         if self.standalone:
-            # string += "#SBATCH --nodes=@NODES@\n"
-            string += "#SBATCH --ntasks=@NODES@\n"
+            string += "#BSUB -n @NODES@\n"
         else:
-            # string += "#SBATCH --nodes={}\n".format(self.sched_config.nodes())
-            string += "#SBATCH --ntasks={}\n".format(self.sched_config.nodes())
+            string += "#BSUB -n {}\n".format(self.sched_config.nodes())
 
-        #TODO : check this 
 
         #string += "#SBATCH --ntasks-per-node=1\n"
-        string += "#SBATCH --ntasks-per-node=32\n"
+        string += "#BSUB -R \"span[ptile=32]\"\n"
         string += "#SBATCH --ntasks-per-core=1\n"
 
-        string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
-        string += "#SBATCH --job-name=swarp-@NODES@\n"
-        string += "#SBATCH --output=output.%j\n"
-        string += "#SBATCH --error=error.%j\n"
-        string += "#SBATCH --mail-user=lpottier@isi.edu\n"
-        string += "#SBATCH --mail-type=FAIL\n"
-        string += "#SBATCH --switches=1\n"
-        #string += "#SBATCH --core-spec=4\n"
-
+        string += "#BSUB -W {}\n".format(self.sched_config.timeout())
+        string += "#BSUB -J swarp-@NODES@\n"
+        string += "#BSUB -o output.%J\n"
+        string += "#BSUB -e error.%J\n"
         # string += "#SBATCH --export=ALL\n"
-        string += "#SBATCH --exclusive=user\n"
-        if self.slurm_profile:
-            string += "#SBATCH --profile=ALL\n"
+        
+        string += "#BSUB -N\n"
+    
+        string += "#BSUB -x\n"
 
         #string += "#SBATCH --dependency=singleton\n"
         string += "#SBATCH --hint=nomultithread\n"
@@ -462,9 +455,9 @@ class SwarpInstance:
         s += "\n"
 
         if interactive:
-            s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
+            s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$LSB_JOBID/\n"
         else:
-            s += "OUTPUT_DIR_NAME=$SLURM_JOB_NAME.batch.${CORE_COUNT}c.${COUNT}f.$SLURM_JOB_ID/\n"
+            s += "OUTPUT_DIR_NAME=$LSB_JOBNAME.batch.${CORE_COUNT}c.${COUNT}f.$LSB_JOBID/\n"
         s += "export GLOBAL_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
         s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
         s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
@@ -662,9 +655,9 @@ class SwarpInstance:
         s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
-        #s += "    lstopo \"$OUTPUT_DIR/topo.$SLURM_JOB_ID.pdf\"\n"
-        #s += "    xtdb2proc -f coritopo-$SLURM_JOB_ID.out\n"
-        #s += "    srun meshcoords -j $SLURM_JOB_ID > job-$SLURM_JOB_ID.coord\n"
+        #s += "    lstopo \"$OUTPUT_DIR/topo.$LSB_JOBID.pdf\"\n"
+        #s += "    xtdb2proc -f coritopo-$LSB_JOBID.out\n"
+        #s += "    srun meshcoords -j $LSB_JOBID > job-$LSB_JOBID.coord\n"
         
         if self.slurm_profile:
             s += "    MONITORING=\"\"\n"

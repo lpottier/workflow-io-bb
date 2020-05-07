@@ -2,9 +2,14 @@
 
 #set -x
 
+while getopts 'f:' opt; do
+    case $opt in
+        f) INPUT_FILE=$OPTARG ;;
+    esac
+done
+
 WRAPPER="jsrun -n 1 "
 BB_DIR="/mnt/bb/$USER"
-INPUT_FILE="files_to_stage.txt"
 
 #$WRAPPER ls -alh $BB_DIR
 $WRAPPER mkdir -p $BB_DIR/input
