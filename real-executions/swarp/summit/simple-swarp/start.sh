@@ -1,1 +1,10 @@
-salloc -N 1 -C haswell -q interactive -t 2:00:00 --bbf=bbf-private.conf
+#!/bin/bash
+
+#set -x
+
+PROJECT="CSC355"
+
+# -alloc_flags "NVME" will create a directory /mnt/bb/lpottier/
+
+bsub -Is -P $PROJECT -nnodes 1 -W 0:30 -alloc_flags "NVME" $SHELL
+
