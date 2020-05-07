@@ -5,7 +5,8 @@
 #set -x
 
 #module load perftools-base perftools
-BASE="/ccs/home/lpottier/workflow-io-bb/real-workflows/swarp/"
+#BASE="/ccs/home/lpottier/workflow-io-bb/real-workflows/swarp/"
+BASE=$(pwd)
 
 #BASE=/gpfs/alpine/scratch/lpottier/csc355/
 #BASE="$SCRATCH/deep-sky"
