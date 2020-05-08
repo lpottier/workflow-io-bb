@@ -16,7 +16,7 @@ USER="lpottier"
 HOME="/ccs/home/{}".format(USER)
 SCRATCH="/gpfs/alpine/scratch/"
 
-SWARP_DIR = "{0}/{1}/{2}/workflow-io-bb/real-workflows/swarp/".format(SCRATCH, USER, PROJID)
+SWARP_DIR = "{0}/{1}/{2}/workflow-io-bb/real-executions/swarp/".format(SCRATCH, USER, PROJID)
 WRAPPER = "wrapper.sh" 
 
 INPUT_ONE_RUN = 769 #Input size in MB
@@ -271,17 +271,19 @@ class SwarpInstance:
     def scheduler_header(self):
         string = "#!/bin/bash\n"
         string += "#BSUB -P {}\n".format(PROJID)
-        # string += "#BSUB -nnodes 1\n"
+        
+        # or use ln_slots (where one slot is the samllest unit (one sequential task use 1 slots)
 
         if self.standalone:
-            string += "#BSUB -n @NODES@\n"
+            string += "#BSUB -nnodes @NODES@\n"
         else:
-            string += "#BSUB -n {}\n".format(self.sched_config.nodes())
+            string += "#BSUB -nnodes {}\n".format(self.sched_config.nodes())
 
 
         # All processors allocated to this job must be on the same hosts
         # Each slot maps to one core. LSF tries to pack n cores as close as possible on single NUMA or socket.
-        string += "#BSUB -R \"span[hosts=1] affinity[core(1):distribute=pack]\"\n"
+        #Cannot be use with -nnodes (easy mode)
+        #string += "#BSUB -R \"span[hosts=1] affinity[core(1):distribute=pack]\"\n"
 
         string += "#BSUB -W {}\n".format(self.sched_config.timeout())
         string += "#BSUB -J swarp-@NODES@\n"
@@ -290,14 +292,14 @@ class SwarpInstance:
         # string += "#SBATCH --export=ALL\n"
         
         # Send email when the job ends
-        string += "#BSUB -N\n"
+        #string += "#BSUB -N\n"
     
         # Exclusive usage of the node
-        string += "#BSUB -x\n"
+        #string += "#BSUB -x\n"
 
          # Disable SMT and activate private burst buffers access
         string += "#BSUB -alloc_flags \"smt1\"\n"
-        string += "#BSUB -alloc_flags \"nvme\"\n"
+        string += "#BSUB -alloc_flags \"nvme\"\n\n"
 
         return string
 
@@ -426,7 +428,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "mkdir -p $OUTPUT_DIR_NAME\n"
-        s += "\n"
+        s += "exit \n"
         return s
 
     def average_loop(self):
@@ -516,10 +518,10 @@ class SwarpInstance:
         s += "    done\n"
 
         s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
-        s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
-        s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
+        #s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
+        #s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
-        s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
+        #s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    echo \"Compute nodes: $($WRAPPER uname -n) \" | tee -a $OUTPUT_FILE\n"
 
@@ -899,7 +901,7 @@ class SwarpRun:
             f.write("    sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"interactive_run-swarp-scaling-bb.sh\" > ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"start_interactive.sh\" > ${outdir}/start_interactive-${i}N.sh\n")
-            f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py files_to_stage.txt \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
+            f.write("    cp " + SWARP_DIR + "/tools/copy.py "+ SWARP_DIR +"/tools/build_filemap.py files_to_stage.txt \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
             f.write("    chmod u+x ${outdir}/start_interactive-${i}N.sh ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    cd \"${outdir}\"\n")
             f.write("    bsub ${script}\n")
@@ -960,8 +962,8 @@ if __name__ == '__main__':
                         help='Number of runs to average on (5 by default)')
     parser.add_argument('--queue', '-q', type=str, nargs='?', default="batch",
                         help='Queue to execute the workflow')
-    parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
-                        help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
+    parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30",
+                        help='Timeout in hh:mm (00:30 for 30 minutes, DO NOT USE SECONDS)')
     parser.add_argument('--count', '-c', type=int, nargs='+', default=[-1],
                         help='Number of files staged in BB (-1 means all). Must be even. List of values (-1 by default)')
 
@@ -1013,9 +1015,9 @@ if __name__ == '__main__':
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
 
     if args.stage_fits:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-summit-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
+        output_dir = "swarp-{}-{}C-1400B-{}W-{}F-{}_{}_{}_{}-summit-stagefits/".format(args.queue, args.threads, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
     else:
-        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-summit/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
+        output_dir = "swarp-{}-{}C-1400B-{}W-{}F-{}_{}_{}_{}-summit/".format(args.queue, args.threads, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -1033,14 +1035,14 @@ if __name__ == '__main__':
 
     sched_config = SwarpSchedulerConfig(num_nodes=args.nodes, queue=args.queue, timeout=args.timeout, num_cores=args.threads)
     bb_config = SwarpBurstBufferConfig(
-                size_bb=args.bbsize,
+                size_bb=14000, #1.4TB per node
                 stage_input_dirs=[
                     SWARP_DIR + "/input"],
                 stage_input_files=[],
                 stage_output_dirs=[
                     SWARP_DIR + "/output"],
-                access_mode=bb_type, 
-                bbtype="scratch"
+                access_mode="private", 
+                bbtype="summit"
                 )
 
     instance1core = SwarpInstance(script_dir=output_dir,
@@ -1052,7 +1054,6 @@ if __name__ == '__main__':
                                 stagein_fits=args.stage_fits,
                                 nb_avg=args.nb_run,
                                 input_sharing=args.input_sharing,
-                                slurm_profile=None,
                                 )
 
     instance1core.write(file="run-swarp-scaling-bb.sh", manual_stage=True, overide=True)
