@@ -309,7 +309,7 @@ class SwarpInstance:
         string = ""
         return string
 
-    def script_header(self, interactive=False):
+    def script_headers(self, interactive=False):
         s = ''
         s += "usage()\n"
         s += "{\n"
@@ -351,8 +351,6 @@ class SwarpInstance:
         s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
         s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
-
-        
 
         s += "FILES_TO_STAGE=\"files_to_stage.txt\"\n"
         s += "COUNT={}\n".format(self.nb_files_on_bb)
@@ -412,7 +410,6 @@ class SwarpInstance:
 
         s += "CONFIG_FILES=\"${RESAMPLE_CONFIG} ${COMBINE_CONFIG}\"\n"
         s += "\n"
-
         if interactive:
             s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$LSB_JOBID/\n"
         else:
@@ -423,7 +420,6 @@ class SwarpInstance:
         # s += " lfs setstripe -c 1 -o 1 $BB_OUTPUT_DIR\n"
        
         s += "\n"
-
         s += "INPUT_DIR_PFS=$MEMBERWORK/$SWARP_DIR/input\n"
         #s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
         s += "INPUT_DIR=$BB_OUTPUT_DIR/input\n"
@@ -832,20 +828,20 @@ class SwarpInstance:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(file))
 
         # TODO: fix this temporary thing
-        with open("files_to_stage.txt", 'w') as f:
+        with open("files_to_stage.txt", 'w', encoding='utf-8') as f:
             f.write(self.file_to_stage(count=self.nb_files_on_bb))
 
-        with open(file, 'w') as f:
+        with open(file, 'w', encoding='utf-8') as f:
             f.write(self.scheduler_header())
             f.write(self.script_modules())
-            f.write(self.script_header())
+            f.write(self.script_headers())
             f.write(self.average_loop())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-        with open("interactive_"+file, 'w') as f:
+        with open("interactive_"+file, 'w', encoding='utf-8') as f:
             f.write(self.script_modules())
-            f.write(self.script_header(interactive=True))
+            f.write(self.script_headers(interactive=True))
             f.write(self.average_loop())
 
         os.chmod("interactive_"+file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
