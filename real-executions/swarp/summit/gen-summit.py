@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
 import sys
@@ -859,7 +860,7 @@ class SwarpInstance:
         except FileNotFoundError:
             sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(WRAPPER))
             pass
-            
+
 class SwarpRun:
     def __init__(self, pipelines=[1]):
         self._pipelines = pipelines
