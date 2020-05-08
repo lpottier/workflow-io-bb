@@ -97,7 +97,8 @@ def copy_fromlist(args):
 
             #if not os.path.isdir(dir_dest):
                 # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
-            if not dir_exists(dir_dest):
+            print(dir_dest,dir_exists(dir_dest))
+            if not dir_exists(dir_dest) or True:
                 try:
                     # os.mkdir(dir_dest)
                     cmdline = [*DEF_MKDIR_CMD, str(dir_dest)]     
@@ -110,7 +111,7 @@ def copy_fromlist(args):
             
             try:
                 #shutil.copy(src, dir_dest)
-                cmdline = [*DEF_COPY_CMD, str(src), str(dir_dest)]
+                cmdline = [*DEF_COPY_CMD, str(src), str(dir_dest)+'/']
                 if args.wrapper:
                     cmdline = shlex.split(args.wrapper) + cmdline
 
@@ -312,7 +313,7 @@ def copy_dir(args):
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     for f in files_to_copy:
         try:
-            cmdline = [*DEF_COPY_CMD, str(f), str(args.dest)]
+            cmdline = [*DEF_COPY_CMD, str(f), str(args.dest)+'/']
             if args.wrapper:
                 cmdline = shlex.split(args.wrapper) + cmdline
 
