@@ -275,9 +275,10 @@ class SwarpInstance:
         # or use ln_slots (where one slot is the samllest unit (one sequential task use 1 slots)
 
         if self.standalone:
-            string += "#BSUB -nnodes @NODES@\n"
+            # string += "#BSUB -nnodes @NODES@\n"
+            string += "#BSUB -ln_slots @NODES@\n"
         else:
-            string += "#BSUB -nnodes {}\n".format(self.sched_config.nodes())
+            string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
 
 
         # All processors allocated to this job must be on the same hosts
@@ -343,8 +344,8 @@ class SwarpInstance:
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}           # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
-        s += "WRAPPER=\"jsrun -n 1 -N 1 -a 1\"\n"
-        s += "JSRUN=\"jsrun -n 1 -N 1 -a @NODES@ \"\n"
+        s += "WRAPPER=\"jsrun -n 1 -a 1 –c 1\"\n"
+        s += "JSRUN=\"jsrun -n @NODES@ -a 1 –c $CORE_COUNT –bpacked:$CORE_COUNT\"\n"
         s += "\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
@@ -428,7 +429,6 @@ class SwarpInstance:
         s += "\n"
 
         s += "mkdir -p $OUTPUT_DIR_NAME\n"
-        s += "exit \n"
         return s
 
     def average_loop(self):
@@ -438,7 +438,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    export OUTPUT_DIR=$BB_OUTPUT_DIR/${k}\n"
-        s += "    mkdir -p $OUTPUT_DIR\n"
+        s += "    $WRAPPER mkdir -p $OUTPUT_DIR\n"
         s += "    echo \"OUTPUT_DIR -> $OUTPUT_DIR\"\n"
         s += "\n"
 
@@ -490,14 +490,14 @@ class SwarpInstance:
         s += "\n"
 
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        mkdir -p ${OUTPUT_DIR}/${process}\n"
+        s += "        $WRAPPER mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}\n"
-        s += "        mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
+        s += "        $WRAPPER mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
         
 
         s += "\n"
-        s += "        cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
+        s += "        $WRAPPER cp $CONFIG_FILES ${OUTPUT_DIR}/${process}/\n"
         s += "        LOC_RESAMPLE_CONF=${OUTPUT_DIR}/${process}/resample.swarp\n"
         s += "        LOC_COMBINE_CONF=${OUTPUT_DIR}/${process}/combine.swarp\n"
 
@@ -507,17 +507,17 @@ class SwarpInstance:
         s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        else\n"
         # We stage .resamp.fits in BB
-        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
-        s += "            sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        fi\n"
 
         s += "\n"
-        s += "        cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
+        s += "        $WRAPPER cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/${process}/\"\n"
         s += "        LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/${process}/$FILES_TO_STAGE\"\n"
-        s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$LOC_FILES_TO_STAGE\"\n"
+        s += "        $WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    done\n"
 
-        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
+        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$($WRAPPER cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
         #s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
         #s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
@@ -528,9 +528,10 @@ class SwarpInstance:
         s += "    MONITORING=\"pegasus-kickstart -z\"\n"
 
         s += "\n"
-        s += "    echo \"\" > $BB_ALLOC\n"
+        s += "    echo \"1.4TB\" > $BB_ALLOC\n"
         s += "\n"
 
+        # CHECK WHERE TO PUT THE WRAPPER
         s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
@@ -567,7 +568,7 @@ class SwarpInstance:
 
         #if we stage in executable
         s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
-        s += "        EXE=$BBDIR/swarp\n"
+        s += "        EXE=\"$WRAPPER $BBDIR/swarp\"\n"
         s += "    fi\n"
         s += "\n"
 
@@ -579,7 +580,7 @@ class SwarpInstance:
         s += "    nbfiles=$($WRAPPER ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
-        s += "    input_files=$(cat $RESAMPLE_FILES)\n"
+        s += "    input_files=$($WRAPPER cat $RESAMPLE_FILES)\n"
         s += "    cd ${OUTPUT_DIR}/\n"
         s += "    rm -rf resample.conf\n\n"
 
