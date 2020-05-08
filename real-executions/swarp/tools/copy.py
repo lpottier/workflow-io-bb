@@ -30,21 +30,27 @@ def shorten_strings(s1, s2):
 
     return (s1[last_valid_slash+1:],s2[last_valid_slash+1:], s1[:last_valid_slash+1])
 
-def dir_exists(path):
+def wrap_cmd(cmdline):
     try:
-        subprocess.check_call(["test", "-d", str(path)])
+        if args.wrapper:
+            cmdline = shlex.split(args.wrapper) + cmdline
+        subprocess.run(cmdline, check=True)
     except subprocess.CalledProcessError as e:
-        return False
+        return e
     else:
         return True
 
+# Needed for interface like IBM MVMe burst buffers
+# Without that python like open() will fail
+
+def dir_exists(path):
+    return wrap_cmd(["test", "-d", str(path)])
+
 def file_exists(path):
-    try:
-        subprocess.check_call(["test", "-f", str(path)])
-    except subprocess.CalledProcessError as e:
-        return False
-    else:
-        return True
+    return wrap_cmd(["test", "-f", str(path)])
+
+def create_file(file):
+    return wrap_cmd(["touch", str(file)])
 
 def copy_fromlist(args):
     if not os.path.isfile(args.file):
@@ -171,6 +177,10 @@ def copy_fromlist(args):
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
+        
+        create_file(str(args.dir)+str(args.stats)+"-pfs.csv")
+        create_file(str(args.dir)+str(args.stats)+"-bb.csv")
+
         with open(str(args.dir)+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -203,6 +213,10 @@ def copy_fromlist(args):
                 )
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
+        
+        create_file(str(args.dir)+str(args.stats)+"-pfs-global.csv")
+        create_file(str(args.dir)+str(args.stats)+"-bb-global.csv")
+
         with open(str(args.dir)+str(args.stats)+"-pfs-global.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb-global.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -358,6 +372,10 @@ def copy_dir(args):
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
+
+        create_file(str(args.dir)+str(args.stats)+"-pfs.csv")
+        create_file(str(args.dir)+str(args.stats)+"-bb.csv")
+
         with open(str(args.dir)+str(args.stats)+"-pfs.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -391,6 +409,10 @@ def copy_dir(args):
                     )
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
+        
+        create_file(str(args.dir)+str(args.stats)+"-pfs-global.csv")
+        create_file(str(args.dir)+str(args.stats)+"-bb-global.csv")
+
         with open(str(args.dir)+str(args.stats)+"-pfs-global.csv", 'w', newline='') as pfs_file, open(str(args.dir)+str(args.stats)+"-bb-global.csv", 'w', newline='') as bb_file:
             writer_pfs = csv.writer(pfs_file, delimiter=' ',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)

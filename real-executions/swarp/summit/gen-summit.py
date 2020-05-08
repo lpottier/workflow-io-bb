@@ -13,10 +13,11 @@ from enum import Enum,unique,auto
 
 PROJID="csc355"
 USER="lpottier"
+HOME="/ccs/home/{}".format(USER)
+SCRATCH="/gpfs/alpine/scratch/"
 
-SWARP_DIR = "/gpfs/alpine/scratch/{0}/{1}/workflow-io-bb/real-workflows/swarp/".format(USER, PROJID)
-BBINFO = "bbinfo.sh"
-WRAPPER = "wrapper.sh"
+SWARP_DIR = "{0}/{1}/{2}/workflow-io-bb/real-workflows/swarp/".format(SCRATCH, USER, PROJID)
+WRAPPER = "wrapper.sh" 
 
 INPUT_ONE_RUN = 769 #Input size in MB
 SIZE_ONE_PIPELINE = 2048 #Disk Usage for one run in MiB -> 1688. We take 2GiB for safety
@@ -251,7 +252,7 @@ class SwarpBurstBufferConfig:
         return self.bbtype
 
 class SwarpInstance:
-    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, stagein_fits, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True, slurm_profile=False):
+    def __init__(self, script_dir, resample_config, combine_config, sched_config, bb_config, nb_files_on_bb, stagein_fits, nb_avg=1, input_sharing=True, standalone=True, no_stagein=True):
         self.standalone = standalone
         self.no_stagein = no_stagein
 
@@ -266,12 +267,11 @@ class SwarpInstance:
         # TODO: Fix this -> make a loop to automatically create experiments for each number of files
         self.nb_files_on_bb = nb_files_on_bb[0]
         self.stagein_fits = stagein_fits # if True all the resamp.fits are staged in
-        self.slurm_profile = slurm_profile
 
-    def slurm_header(self):
+    def scheduler_header(self):
         string = "#!/bin/bash\n"
         string += "#BSUB -P {}\n".format(PROJID)
-        #string += "#BSUB -nnodes 1\n"
+        # string += "#BSUB -nnodes 1\n"
 
         if self.standalone:
             string += "#BSUB -n @NODES@\n"
@@ -279,9 +279,9 @@ class SwarpInstance:
             string += "#BSUB -n {}\n".format(self.sched_config.nodes())
 
 
-        #string += "#SBATCH --ntasks-per-node=1\n"
-        string += "#BSUB -R \"span[ptile=32]\"\n"
-        string += "#SBATCH --ntasks-per-core=1\n"
+        # All processors allocated to this job must be on the same hosts
+        # Each slot maps to one core. LSF tries to pack n cores as close as possible on single NUMA or socket.
+        string += "#BSUB -R \"span[hosts=1] affinity[core(1):distribute=pack]\"\n"
 
         string += "#BSUB -W {}\n".format(self.sched_config.timeout())
         string += "#BSUB -J swarp-@NODES@\n"
@@ -289,61 +289,20 @@ class SwarpInstance:
         string += "#BSUB -e error.%J\n"
         # string += "#SBATCH --export=ALL\n"
         
+        # Send email when the job ends
         string += "#BSUB -N\n"
     
+        # Exclusive usage of the node
         string += "#BSUB -x\n"
 
-        #string += "#SBATCH --dependency=singleton\n"
-        string += "#SBATCH --hint=nomultithread\n"
+         # Disable SMT and activate private burst buffers access
+        string += "#BSUB -alloc_flags \"smt1\"\n"
+        string += "#BSUB -alloc_flags \"nvme\"\n"
 
-        return string
-
-    def dw_temporary(self, persistent_bb=None):
-        if persistent_bb != None:
-            string = "#DW persistentdw name={}\n".format(persistent_bb)
-            string += "exit 0\n"
-
-            #use in the script: $DW_PERSISTENT_STRIPED_name
-        else:
-            string = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
-        if self.standalone or self.no_stagein:
-            string += "#@STAGE@\n"
-        else:
-            for directory in self.bb_config.indirs():                
-                if directory.split('/')[-1] == '':
-                    #end with / so we should take the second last one
-                    target = directory.split('/')[-2]
-                else:
-                    target = directory.split('/')[-1]
-
-                string += "#DW stage_in source={} destination=$DW_JOB_{}/{}/ type=directory\n".format(directory, self.bb_config.mode().upper(), target)
-
-            for file in self.bb_config.infiles():
-                if file.split('/')[-1] == '':
-                    #end with / so we should take the second last one
-                    target = file.split('/')[-2]
-                else:
-                    target = file.split('/')[-1]
-
-                string += "#DW stage_in source={} destination=$DW_JOB_{}/{}/ type=file\n".format(file, self.bb_config.mode().upper(), target)
-
-            # string += "#DW stage_in source={}/config destination=$DW_JOB_STRIPED/config type=directory\n".format(SWARP_DIR)
-            for directory in self.bb_config.outdirs():
-                if directory.split('/')[-1] == '':
-                    #end with / so we should take the second last one
-                    target = directory.split('/')[-2]
-                else:
-                    target = directory.split('/')[-1]
-
-                string += "#DW stage_out source=$DW_JOB_{}/{}/  destination={} type=directory\n".format(target, self.bb_config.mode().upper(), directory)
-
-        string += "\n"
         return string
 
     def script_modules(self):
-        string = "module unload darshan\n"
-        string += "module load perftools-base perftools\n"
-        string += "\n"
+        string = ""
         return string
 
     def script_header(self, interactive=False):
@@ -353,43 +312,39 @@ class SwarpInstance:
         s += "    echo \"usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]\"\n"
         s += "}\n"
 
-        s += "BBDIR=$DW_JOB_{}/\n".format(self.bb_config.mode().upper())
+        s += "BBDIR=/mnt/bb/{}/\n".format(USER)
 
-        s += "\n"
-        s += "if [ -z \"$BBDIR\" ]; then\n"
-        s += "    echo \"Error: burst buffer allocation found. Run start_nostage.sh first\"\n"
-        s += "    exit\n"
-        s += "fi\n"
         s += "\n"
         s += "CURRENT_DIR=$(pwd)\n"
 
         #BASE="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/"
-        s += "SWARP_DIR=workflow-io-bb/real-workflows/swarp\n"
+        s += "SWARP_DIR=workflow-io-bb/real-executions/swarp\n"
         # s += "BASE=\"$SCRATCH/$SWARP_DIR/{}\"\n".format(self.script_dir)
         s += "BASE=\"$CURRENT_DIR\"\n"
         s += "LAUNCH=\"$CURRENT_DIR/{}\"\n".format(WRAPPER)
         s += "EXE={}/bin/swarp\n".format(SWARP_DIR)
-        s += "COPY={}/copy.py\n".format(SWARP_DIR)
+        s += "COPY={}/summit/copy.py\n".format(SWARP_DIR)
         s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
         if interactive:
-            s += "NODE_COUNT=$SLURM_JOB_NUM_NODES   # Number of compute nodes requested by sbatch\n"
-            s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
+            s += "NODE_COUNT=@NODES@   # Number of compute nodes requested\n"
+            s += "TASK_COUNT=@NODES@   # Number of tasks allocated\n"
         else:
-            s += "NODE_COUNT=$SLURM_JOB_NUM_NODES   # Number of compute nodes requested by sbatch\n"
-            s += "TASK_COUNT=$SLURM_NTASKS   # Number of tasks allocated\n"
+            s += "NODE_COUNT=@NODES@   # Number of compute nodes requested\n"
+            s += "TASK_COUNT=@NODES@   # Number of tasks allocated\n"
         s += "CORE_COUNT={}        # Number of cores used by both tasks\n".format(self.sched_config.cores())
         s += "\n"
 
         #s += echo "SLURM NODES: ${SLURM_JOB_NUM_NODES}"
         s += "STAGE_EXEC=0        #0 no stage. 1 -> stage exec in BB\n"
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
-        s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
+        s += "NB_AVG={}           # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
-        s += "SRUN=\"srun -n $SLURM_NTASKS -N 1 --cpu-bind=cores\"\n"
+        s += "WRAPPER=\"jsrun -n 1 -N 1 -a 1\"\n"
+        s += "JSRUN=\"jsrun -n 1 -N 1 -a @NODES@ \"\n"
         s += "\n"
-        s += "echo \"SRUN -> $SRUN\"\n"
+        s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
         s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
 
@@ -458,91 +413,20 @@ class SwarpInstance:
             s += "OUTPUT_DIR_NAME=swarp.interactive.${CORE_COUNT}c.${COUNT}f.$LSB_JOBID/\n"
         else:
             s += "OUTPUT_DIR_NAME=$LSB_JOBNAME.batch.${CORE_COUNT}c.${COUNT}f.$LSB_JOBID/\n"
-        s += "export GLOBAL_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
-        s += "mkdir -p $GLOBAL_OUTPUT_DIR\n"
-        s += "chmod 777 $GLOBAL_OUTPUT_DIR\n"
-        # s += " lfs setstripe -c 1 -o 1 $GLOBAL_OUTPUT_DIR\n"
+        s += "export BB_OUTPUT_DIR=$BBDIR/$OUTPUT_DIR_NAME\n"
+        s += "$WRAPPER mkdir -p $BB_OUTPUT_DIR\n"
+        s += "$WRAPPER chmod 777 $BB_OUTPUT_DIR\n"
+        # s += " lfs setstripe -c 1 -o 1 $BB_OUTPUT_DIR\n"
        
         s += "\n"
 
-        s += "INPUT_DIR_PFS=$SCRATCH/$SWARP_DIR/input\n"
+        s += "INPUT_DIR_PFS=$MEMBERWORK/$SWARP_DIR/input\n"
         #s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
-        s += "INPUT_DIR=$GLOBAL_OUTPUT_DIR/input\n"
+        s += "INPUT_DIR=$BB_OUTPUT_DIR/input\n"
         s += "\n"
 
         s += "mkdir -p $OUTPUT_DIR_NAME\n"
         s += "\n"
-        return s
-
-    # If nb_files_on_bb = 0 -> no files on BB
-    # If nb_files_on_bb = 32 -> all files on BB
-    # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
-    # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
-    def file_to_stage(self, count, pairs=False):
-        s = ''
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits {}/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits {}/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits {}/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits {}/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits {}/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits {}/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits {}/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits {}/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits {}/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits {}/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits {}/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits {}/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits {}/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
-        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
-
-        arr = [x+"\n" for x in s.split('\n')[:-1]]
-        short_s = ''
-        if count < 0:
-            count = len(arr)
-        count = min(count, len(arr))
-
-        if pairs:
-            if count % 2 != 0:
-                count += 1
-
-            count = min(count, len(arr)//2)
-            
-            for i in range(count):
-                short_s += arr[i]
-                short_s += arr[i+16]
-
-        else:
-            for i in range(count):
-                short_s += arr[i]
-
-        return short_s
-
-    def salloc_str(self):
-        s = ''
-        s = "salloc -N 1 -n @NODES@ -C haswell -q interactive -t 2:00:00 --bbf=bbf.conf\n"
-        return s
-
-    def bbconf_salloc(self):
-        s = ''
-        s = "#DW jobdw capacity={}GB access_mode={} type={}\n".format(self.bb_config.size(), self.bb_config.mode(), self.bb_config.type())
         return s
 
     def average_loop(self):
@@ -551,7 +435,7 @@ class SwarpInstance:
         s += "    echo \"#### Starting run $k... $(date --rfc-3339=ns)\"\n"
         s += "\n"
 
-        s += "    export OUTPUT_DIR=$GLOBAL_OUTPUT_DIR/${k}\n"
+        s += "    export OUTPUT_DIR=$BB_OUTPUT_DIR/${k}\n"
         s += "    mkdir -p $OUTPUT_DIR\n"
         s += "    echo \"OUTPUT_DIR -> $OUTPUT_DIR\"\n"
         s += "\n"
@@ -568,10 +452,10 @@ class SwarpInstance:
         s += "    DU_RES=$OUTPUT_DIR/data-stagedin.log\n"
         s += "    DU_RESAMP=$OUTPUT_DIR/data-resamp.log\n"
         s += "    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log\n"
-        s += "    SQUEUE_START=$OUTPUT_DIR/squeue_start.log\n"
-        s += "    SQUEUE_END=$OUTPUT_DIR/squeue_end.log\n"
-        s += "    SCONTROL_START=$OUTPUT_DIR/scontrol_start.log\n"
-        s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
+        # s += "    SQUEUE_START=$OUTPUT_DIR/squeue_start.log\n"
+        # s += "    SQUEUE_END=$OUTPUT_DIR/squeue_end.log\n"
+        # s += "    SCONTROL_START=$OUTPUT_DIR/scontrol_start.log\n"
+        # s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
         s += "\n"
 
         s += "    mkdir -p $OUTPUT_DIR\n"
@@ -596,10 +480,10 @@ class SwarpInstance:
         s += "\n"
 
         s += "    start=$(date --rfc-3339=seconds)\n"
-        s += "    echo $start > $SCONTROL_START\n"
-        s += "    echo $start > $SQUEUE_START\n"
-        s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
-        s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_START\n"
+        # s += "    echo $start > $SCONTROL_START\n"
+        # s += "    echo $start > $SQUEUE_START\n"
+        # s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
+        # s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_START\n"
 
         s += "\n"
 
@@ -631,72 +515,36 @@ class SwarpInstance:
         s += "        sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    done\n"
 
-        # # FIX THIS
-        # s += "    #### To select file to stage\n"
-        # s += "    ## To modify the lines 1 to 5 to keep 5 files on the PFS (by default they all go on the BB)\n"
-        # s += "    cp $FILES_TO_STAGE $OUTPUT_DIR/\n"
-        # s += "    LOC_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        # s += "    sed -i -e \"s|@INPUT@|$INPUT_DIR|\" \"$LOC_FILES_TO_STAGE\"\n"
-        #s += "    cat \"$LOC_FILES_TO_STAGE\"\n"
-        # s += "    #sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)|${BASE}|\" $LOC_FILES_TO_STAGE\n"
-        # s += "    #We want to unstage the w.fits and the corresponding w.weight.fits\n"
-        # s += "    if (( \"$COUNT\" > 0 )); then\n"
-        # s += "        sed -i -e \"1,${COUNT}s|\(\$DW_JOB_STRIPED\/\)\(.*w.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
-        # s += "        ## TODO: Fix this, only work if files are sorted w.fits first and with 16 files....\n"
-        # s += "        x=$(echo \"$COUNT+16\" | bc)\n"
-        # s += "        sed -i -e \"16,${x}s|\(\$DW_JOB_STRIPED\/\)\(.*w.weight.fits\)|${BASE}\2|\" $LOC_FILES_TO_STAGE\n"
-        # s += "    fi\n"
-        # s += "\n"
-
         s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$(cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
         s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
         s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
-        s += "    echo \"Compute nodes: $(srun uname -n) \" | tee -a $OUTPUT_FILE\n"
-        #s += "    lstopo \"$OUTPUT_DIR/topo.$LSB_JOBID.pdf\"\n"
-        #s += "    xtdb2proc -f coritopo-$LSB_JOBID.out\n"
-        #s += "    srun meshcoords -j $LSB_JOBID > job-$LSB_JOBID.coord\n"
-        
-        if self.slurm_profile:
-            s += "    MONITORING=\"\"\n"
-        else:
-            s += "    MONITORING=\"pegasus-kickstart -z\"\n"
+        s += "    echo \"Compute nodes: $($WRAPPER uname -n) \" | tee -a $OUTPUT_FILE\n"
+
+        s += "    MONITORING=\"pegasus-kickstart -z\"\n"
 
         s += "\n"
-
-        s += "    module unload python3\n"
-        s += "    module load dws\n"
-        s += "    sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')\n"
-        s += "    echo \"session ID is: \"${sessID} | tee $BB_INFO\n"
-        s += "    instID=$(dwstat instances | grep $sessID | awk '{print $1}')\n"
-        s += "    echo \"instance ID is: \"${instID} | tee -a $BB_INFO\n"
-        s += "    echo \"fragments list:\" | tee -a $BB_INFO\n"
-        s += "    echo \"frag state instID capacity gran node\" | tee -a $BB_INFO\n"
-        s += "    dwstat fragments | grep ${instID} | tee -a $BB_INFO\n"
-        s += "\n"
-
-        s += "    bballoc=$(dwstat fragments | grep ${instID} | awk '{print $4}')\n"
-        s += "    echo \"$bballoc\" > $BB_ALLOC\n"
+        s += "    echo \"\" > $BB_ALLOC\n"
         s += "\n"
 
         s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
-        s += "        $COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
+        s += "        $COPY --wrapper \"$WRAPPER\" -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
         s += "    else\n"
-        s += "        $COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
+        s += "        $COPY --wrapper \"$WRAPPER\" -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
         s += "    fi\n"
         s += "\n"
 
         s += "    if (( \"$STAGE_EXEC\" == 1 )); then\n"
-        s += "        cp -r $EXE $BBDIR\n"
+        s += "        $WRAPPER cp -r $EXE $BBDIR\n"
         s += "    fi\n"
         s += "\n"
 
         s += "    if (( \"$STAGE_CONFIG\" == 1 )); then\n"
-        s += "        cp -r $CONFIG_DIR $BBDIR\n"
+        s += "        $WRAPPER cp -r $CONFIG_DIR $BBDIR\n"
         s += "    fi\n"
         s += "\n"
 
@@ -705,11 +553,11 @@ class SwarpInstance:
         s += "    echo \"TIME STAGE_IN $tdiff1\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        s += "    mkdir -p $INPUT_DIR\n"
+        s += "    $WRAPPER mkdir -p $INPUT_DIR\n"
         s += "\n"
 
         s += "    #If we did not stage any input files\n"
-        s += "    if [[ -f \"$(ls -A $INPUT_DIR)\" ]]; then\n"
+        s += "    if [[ -f \"$($WRAPPER ls -A $INPUT_DIR)\" ]]; then\n"
         s += "        INPUT_DIR=$INPUT_DIR_PFS\n"
         s += "        echo \"No files staged in, INPUT_DIR set as $INPUT_DIR\"\n"
         s += "    fi\n"
@@ -722,16 +570,22 @@ class SwarpInstance:
         s += "\n"
 
         s += "    RESAMPLE_FILES=\"$OUTPUT_DIR/input_files.txt\"\n"
-        s += "    $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE\n"
+        s += "    $WRAPPER $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE\n"
         s += "\n"
 
-        s += "    dsize=$(du -sh $INPUT_DIR | awk '{print $1}')\n"
-        s += "    nbfiles=$(ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
+        s += "    dsize=$($WRAPPER du -sh $INPUT_DIR | awk '{print $1}')\n"
+        s += "    nbfiles=$($WRAPPER ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
         s += "    input_files=$(cat $RESAMPLE_FILES)\n"
         s += "    cd ${OUTPUT_DIR}/\n"
         s += "    rm -rf resample.conf\n\n"
+
+
+        ## TEMP FOR TESTING
+        s += "    exit\n\n"
+
+
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
@@ -744,7 +598,7 @@ class SwarpInstance:
         s += "\n"
         s += "    echo \"Launching $SLURM_NTASKS RESAMPLE process at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
 
-        s += "    $SRUN -o \"%t/stat.resample.%j_%2t.xml\" -e \"%t/error.resample.%j_%2t\" --multi-prog resample.conf  &\n"
+        s += "    $JSRUN -o \"%t/stat.resample.%j_%2t.xml\" -e \"%t/error.resample.%j_%2t\" --multi-prog resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
@@ -784,7 +638,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    echo \"Launching COMBINE process $SLURM_NTASKS at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
-        s += "    $SRUN -o \"%t/stat.combine.%j_%2t.xml\" -e \"%t/error.combine.%j_%2t\" --multi-prog combine.conf &\n"
+        s += "    $JSRUN -o \"%t/stat.combine.%j_%2t.xml\" -e \"%t/error.combine.%j_%2t\" --multi-prog combine.conf &\n"
         s += "\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
@@ -851,7 +705,19 @@ class SwarpInstance:
         s += "    echo \"#### Ending run $k... $(date --rfc-3339=ns)\"\n"
         s += "done\n"
 
-        s += "\n"
+        s += "\n\n"
+
+        s += "OUTPUT_LSFJOB=$CURRENT_DIR/$OUTPUT_DIR_NAME/lsf.log\n"
+        s += "echo \"LSB_ACCUMULATED_CPUTIME=$LSB_ACCUMULATED_CPUTIME\" | tee $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_MAX_MEM_RUSAGE=$LSB_MAX_MEM_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_MAX_SWAP_RUSAGE=$LSB_MAX_SWAP_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_MAX_PROCESSES_RUSAGE=$LSB_MAX_PROCESSES_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_MAX_THREADS_RUSAGE=$LSB_MAX_THREADS_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_JOB_SUBMIT_TIME=$LSB_JOB_SUBMIT_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_JOB_START_TIME=$LSB_JOB_START_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_JOB_END_TIME=$LSB_JOB_END_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_JOB_PEND_TIME=$LSB_JOB_PEND_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        s += "echo \"LSB_JOB_STATUS=$LSB_JOB_STATUS\" | tee -a $OUTPUT_LSFJOB\n"
 
         # s += "base_tar=$(dirname $CURRENT_DIR)\n"
         # s += "target=$(basename $base_tar)\n"
@@ -862,26 +728,71 @@ class SwarpInstance:
 
         return s
 
-    @staticmethod
-    def bbinfo():
-        string = "#!/bin/bash\n"
-        string += "module load dws\n"
-        string += "sessID=$(dwstat sessions | grep $SLURM_JOBID | awk '{print $1}')\n"
-        string += "echo \"session ID is: \"${sessID}\n"
-        string += "instID=$(dwstat instances | grep $sessID | awk '{print $1}')\n"
-        string += "echo \"instance ID is: \"${instID}\n"
-        string += "echo \"fragments list:\"\n"
-        string += "echo \"frag state instID capacity gran node\"\n"
-        string += "dwstat fragments | grep ${instID}\n"
-        return string
+    # If nb_files_on_bb = 0 -> no files on BB
+    # If nb_files_on_bb = 32 -> all files on BB
+    # If pairs = True means that if PTFX.w.fits is on BB then PTFX.w.weight.fits is also taken
+    # So if pairs = True and nb_files_on_bb = 16 then all files are on BB
+    def file_to_stage(self, count, pairs=False):
+        s = ''
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.fits {}/PTF201111015420_2_o_32874_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111015420_2_o_32874_06.w.weight.fits {}/PTF201111015420_2_o_32874_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.fits {}/PTF201111025412_2_o_33288_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025412_2_o_33288_06.w.weight.fits {}/PTF201111025412_2_o_33288_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.fits {}/PTF201111025428_2_o_33289_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111025428_2_o_33289_06.w.weight.fits {}/PTF201111025428_2_o_33289_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.fits {}/PTF201111035427_2_o_33741_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111035427_2_o_33741_06.w.weight.fits {}/PTF201111035427_2_o_33741_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.fits {}/PTF201111085228_2_o_34301_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111085228_2_o_34301_06.w.weight.fits {}/PTF201111085228_2_o_34301_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.fits {}/PTF201111095206_2_o_34706_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111095206_2_o_34706_06.w.weight.fits {}/PTF201111095206_2_o_34706_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.fits {}/PTF201111155050_2_o_35570_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111155050_2_o_35570_06.w.weight.fits {}/PTF201111155050_2_o_35570_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.fits {}/PTF201111165032_2_o_35994_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111165032_2_o_35994_06.w.weight.fits {}/PTF201111165032_2_o_35994_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.fits {}/PTF201111184953_2_o_36749_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111184953_2_o_36749_06.w.weight.fits {}/PTF201111184953_2_o_36749_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.fits {}/PTF201111224851_2_o_37387_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111224851_2_o_37387_06.w.weight.fits {}/PTF201111224851_2_o_37387_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.fits {}/PTF201111234857_2_o_37754_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111234857_2_o_37754_06.w.weight.fits {}/PTF201111234857_2_o_37754_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.fits {}/PTF201111265053_2_o_38612_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111265053_2_o_38612_06.w.weight.fits {}/PTF201111265053_2_o_38612_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.fits {}/PTF201111274755_2_o_38996_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111274755_2_o_38996_06.w.weight.fits {}/PTF201111274755_2_o_38996_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.fits {}/PTF201111284696_2_o_39396_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111284696_2_o_39396_06.w.weight.fits {}/PTF201111284696_2_o_39396_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.fits {}/PTF201111294943_2_o_39822_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111294943_2_o_39822_06.w.weight.fits {}/PTF201111294943_2_o_39822_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.fits {}/PTF201111304878_2_o_40204_06.w.fits\n".format(SWARP_DIR, "@INPUT@")
+        s += "{}/input/PTF201111304878_2_o_40204_06.w.weight.fits {}/PTF201111304878_2_o_40204_06.w.weight.fits\n".format(SWARP_DIR, "@INPUT@")
 
-    @staticmethod
-    def write_bbinfo(file=BBINFO, overide=False):
-        if os.path.exists(file):
-            raise FileNotFoundError("file {} already exists.".format(file))
-        with open(file, 'w') as f:
-            f.write(SwarpInstance.bbinfo())
-        os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
+        arr = [x+"\n" for x in s.split('\n')[:-1]]
+        short_s = ''
+        if count < 0:
+            count = len(arr)
+        count = min(count, len(arr))
+
+        if pairs:
+            if count % 2 != 0:
+                count += 1
+
+            count = min(count, len(arr)//2)
+            
+            for i in range(count):
+                short_s += arr[i]
+                short_s += arr[i+16]
+
+        else:
+            for i in range(count):
+                short_s += arr[i]
+
+        return short_s
+
+    def salloc_str(self):
+        s = 'PROJECT=\"CSC355\"\n'
+        s = "bsub -Is -P $PROJECT -nnodes 1 -W 1:30 -alloc_flags \"NVME\" $SHELL\n"
+        return s
 
     @staticmethod
     def launch():
@@ -898,13 +809,10 @@ class SwarpInstance:
             f.write(SwarpInstance.launch())
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
+
     def write_interactive_launch(self, file="start_interactive.sh", overide=True):
         if os.path.exists(file):
             raise FileNotFoundError("file {} already exists.".format(file))
-
-        # TODO: fix this temporary thing
-        with open("bbf.conf", 'w') as f:
-            f.write(self.bbconf_salloc())      
 
         with open(file, 'w') as f:
             f.write(self.salloc_str())
@@ -924,24 +832,10 @@ class SwarpInstance:
             f.write(self.file_to_stage(count=self.nb_files_on_bb))
 
         with open(file, 'w') as f:
-            f.write(self.slurm_header())
-            f.write(self.dw_temporary())
+            f.write(self.scheduler_header())
             f.write(self.script_modules())
             f.write(self.script_header())
             f.write(self.average_loop())
-
-            # f.write(self.script_globalvars())
-            # f.write(self.create_output_dirs())
-            # if manual_stage:
-            #     f.write(self.stage_in_files())
-
-            # f.write(self.script_run_resample())
-            # f.write(self.script_copy_resample())
-            # f.write(self.script_run_combine())
-            # if manual_stage:
-            #     f.write(self.stage_out_files())
-
-            # f.write(self.script_ending())
 
         os.chmod(file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
@@ -952,11 +846,6 @@ class SwarpInstance:
 
         os.chmod("interactive_"+file, stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH) #make the script executable by the user
 
-        try:
-            SwarpInstance.write_bbinfo(overide=overide)
-        except FileNotFoundError:
-            sys.stderr.write(" === SWarp script: file {} already exists and will be re-written.\n".format(BBINFO))
-            pass
         try:
             SwarpInstance.write_launch(overide=overide)
         except FileNotFoundError:
@@ -1003,24 +892,17 @@ class SwarpRun:
                 f.write("    outdir=$(mktemp -d -t swarp-run-${i}N-"+str(count)+"F.XXXXXX)\n")
             else:
                 f.write("    outdir=$(mktemp --directory --tmpdir=$(/bin/pwd) swarp-run-${i}N-"+str(count)+"F.XXXXXX)\n")
-            f.write("    lfs setstripe -c 1 -S 2048m \"${outdir}\"\n")
+            # f.write("    lfs setstripe -c 1 -S 2048m \"${outdir}\"\n")
             f.write("    script=\"run-swarp-scaling-bb-${i}N.sh\"\n")
             f.write("    echo $outdir\n")
             f.write("    echo $script\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"run-swarp-scaling-bb.sh\" > ${outdir}/${script}\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"interactive_run-swarp-scaling-bb.sh\" > ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    sed \"s/@NODES@/${i}/g\" \"start_interactive.sh\" > ${outdir}/start_interactive-${i}N.sh\n")
-            #If we want to use DW to stage file
-            if not manual_stage:
-                f.write("    for j in $(seq ${i} -1 1); do\n")
-                f.write("        stage_in=\"#DW stage_in source=" + SWARP_DIR + "/input destination=\$DW_JOB_" + self.bb_config.mode().upper() + "/input/${j} type=directory\"\n")    
-                f.write("        sed -i \"s|@STAGE@|@STAGE@\\n${stage_in}|\" ${outdir}/${script}\n")
-                f.write("    done\n")
-            f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py bbf.conf files_to_stage.txt \"" + BBINFO +"\" \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
+            f.write("    cp " + SWARP_DIR + "/copy.py "+ SWARP_DIR +"/build_filemap.py files_to_stage.txt \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
             f.write("    chmod u+x ${outdir}/start_interactive-${i}N.sh ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    cd \"${outdir}\"\n")
-            f.write("    sbatch ${script}\n")
-            #TODO ADD waiting time debug queue
+            f.write("    bsub ${script}\n")
             f.write("    cd ..\n")
             f.write("done\n")
 
@@ -1069,16 +951,14 @@ if __name__ == '__main__':
     parser.add_argument('--threads', '-p', type=int, nargs='?', default=1,
                         help='Number of POSIX threads per workflow tasks (1 by default)')
     parser.add_argument('--nodes', '-n', type=int, nargs='?', default=1,
-                        help='Number of compute nodes requested')
-    parser.add_argument('--bbsize', '-b', type=int, nargs='?', default=50,
-                        help='Burst buffers allocation in GB (because of Cray API and Slurm, no decimal notation allowed)')
+                        help='Number of compute nodes requested (750GB of BB per node)')
     parser.add_argument('--workflows', '-w', type=int, nargs='+', default=[1],
                         help='Number of identical SWarp workflows running in parallel. List of values (1 by default)')
     parser.add_argument('--input-sharing', '-x', action='store_true',
                         help='Use this flag if you want to only have the same input files shared by all workflows (NOT SUPPORTED)')
     parser.add_argument('--nb-run', '-r', type=int, nargs='?', default=5,
                         help='Number of runs to average on (5 by default)')
-    parser.add_argument('--queue', '-q', type=str, nargs='?', default="debug",
+    parser.add_argument('--queue', '-q', type=str, nargs='?', default="batch",
                         help='Queue to execute the workflow')
     parser.add_argument('--timeout', '-t', type=str, nargs='?', default="00:30:00",
                         help='Timeout in hh:mm:ss (00:30:00 for 30 minutes)')
@@ -1087,10 +967,6 @@ if __name__ == '__main__':
 
     parser.add_argument('--stage-fits', '-z', action="store_true",
                         help='Stage .resamp.fits for all pipelines in the Burst Buffer')
-
-    parser.add_argument('--striped', '-s', action="store_true",
-                        help='Use a striped burst buffer allocation (bad performance)')
-
 
     parser.add_argument('--submit', '-S', action='store_true',
                         help='After the generation directly submit the job to the batch scheduler')
@@ -1136,21 +1012,10 @@ if __name__ == '__main__':
 
     # tempfile.mkstemp(suffix=None, prefix=None, dir=None, text=False)
 
-    if args.striped:
-        bb_type = "striped"
-    else:
-        bb_type = "private"
-
     if args.stage_fits:
-        if args.striped:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-striped-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
-        else:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-private-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
+        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-summit-stagefits/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
     else:
-        if args.striped:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-striped/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
-        else:
-            output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-private/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
+        output_dir = "swarp-{}-{}C-{}B-{}W-{}F-{}_{}_{}_{}-summit/".format(args.queue, args.threads, args.bbsize, short_workflow, short_count, today.tm_mon, today.tm_mday, today.tm_hour, today.tm_min)
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -1198,7 +1063,6 @@ if __name__ == '__main__':
         sys.stderr.write(" WARNING: Burst buffers allocation seems to be too small.\n")
         sys.stderr.write(" WARNING: Estimated size needed by {} pipelines -> {} GB (you asked for {} GB).\n".format(run1.num_pipelines(), run1.num_pipelines() * SIZE_ONE_PIPELINE/1024.0, bb_config.size()))
 
-
     submit_file = "submit.sh"
 
     run1.standalone(file=submit_file, count=args.count[0], manual_stage=True, overide=True)
@@ -1212,6 +1076,3 @@ if __name__ == '__main__':
     os.chdir(old_path)
     sys.stderr.write(" === Switched back to initial directory {}\n".format(os.getcwd()))
 
-
-
-    
