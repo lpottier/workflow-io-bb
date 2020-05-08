@@ -97,7 +97,6 @@ def copy_fromlist(args):
 
             #if not os.path.isdir(dir_dest):
                 # raise IOError("[error] IO: {} is not a valid directory".format(dir_dest))
-            print(dir_dest,dir_exists(dir_dest))
             if not dir_exists(dir_dest) or True:
                 try:
                     # os.mkdir(dir_dest)
