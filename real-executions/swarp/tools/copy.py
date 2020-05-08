@@ -115,6 +115,7 @@ def copy_fromlist(args):
                     cmdline = shlex.split(args.wrapper) + cmdline
 
                 usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
+                print(cmdline)
                 subprocess.run(cmdline, check=True)
                 
                 usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -128,7 +129,7 @@ def copy_fromlist(args):
             else:
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
-                print("{}/{:<50} ({:.3} MB) => {:<20}".format( 
+                print("/{}/{:<50} ({:.3} MB) => /{:<20}".format( 
                     s,
                     file_src,
                     size_files[-1]/(1024.0**2),
