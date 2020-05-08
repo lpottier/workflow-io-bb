@@ -535,9 +535,9 @@ class SwarpInstance:
         s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
-        s += "        $COPY --wrapper \"$WRAPPER\" -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
+        s += "        $WRAPPER $COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
         s += "    else\n"
-        s += "        $COPY --wrapper \"$WRAPPER\" -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
+        s += "        $WRAPPER $COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
         s += "    fi\n"
         s += "\n"
 
@@ -581,7 +581,7 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
         s += "\n"
         s += "    input_files=$($WRAPPER cat $RESAMPLE_FILES)\n"
-        s += "    cd ${OUTPUT_DIR}/\n"
+        s += "    $WRAPPER cd ${OUTPUT_DIR}/\n" # DO NOTHING
         s += "    rm -rf resample.conf\n\n"
 
 

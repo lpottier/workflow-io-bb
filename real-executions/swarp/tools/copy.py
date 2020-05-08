@@ -36,7 +36,7 @@ def wrap_cmd(cmdline):
             cmdline = shlex.split(args.wrapper) + cmdline
         subprocess.run(cmdline, check=True)
     except subprocess.CalledProcessError as e:
-        return e
+        return False
     else:
         return True
 
@@ -116,7 +116,6 @@ def copy_fromlist(args):
                     cmdline = shlex.split(args.wrapper) + cmdline
 
                 usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)
-                print(cmdline)
                 subprocess.run(cmdline, check=True)
                 
                 usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
