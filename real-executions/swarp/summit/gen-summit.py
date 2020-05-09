@@ -311,6 +311,10 @@ class SwarpInstance:
 
     def script_headers(self, interactive=False):
         s = ''
+        if interactive:
+            s += "#!/bin/bash\n\n"
+            s += "set -x\n\n"
+
         s += "usage()\n"
         s += "{\n"
         s += "    echo \"usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]\"\n"
@@ -327,8 +331,8 @@ class SwarpInstance:
         s += "BASE=\"$CURRENT_DIR\"\n"
         s += "LAUNCH=\"$CURRENT_DIR/{}\"\n".format(WRAPPER)
         s += "EXE={}/bin/swarp\n".format(SWARP_DIR)
-        s += "COPY={}/summit/copy.py\n".format(SWARP_DIR)
-        s += "FILE_MAP={}/build_filemap.py\n".format(SWARP_DIR)
+        s += "COPY={}/tools/copy.py\n".format(SWARP_DIR)
+        s += "FILE_MAP={}/tools/build_filemap.py\n".format(SWARP_DIR)
         s += "\n"
 
         if interactive:
@@ -345,8 +349,8 @@ class SwarpInstance:
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}           # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
-        s += "WRAPPER=\"jsrun -n 1 -a 1 –c 1\"\n"
-        s += "JSRUN=\"jsrun -n @NODES@ -a 1 –c $CORE_COUNT –bpacked:$CORE_COUNT\"\n"
+        s += "WRAPPER=\"jsrun -n 1 -a 1 -c 1 \"\n"
+        s += "JSRUN=\"jsrun -n @NODES@ -a 1 -c $CORE_COUNT -bpacked:$CORE_COUNT\"\n"
         s += "\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
@@ -420,7 +424,7 @@ class SwarpInstance:
         # s += " lfs setstripe -c 1 -o 1 $BB_OUTPUT_DIR\n"
        
         s += "\n"
-        s += "INPUT_DIR_PFS=$MEMBERWORK/$SWARP_DIR/input\n"
+        s += "INPUT_DIR_PFS=$MEMBERWORK/csc355/$SWARP_DIR/input\n"
         #s += "INPUT_DIR=$DW_JOB_STRIPED/input\n"
         s += "INPUT_DIR=$BB_OUTPUT_DIR/input\n"
         s += "\n"
@@ -457,8 +461,8 @@ class SwarpInstance:
         # s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
         s += "\n"
 
-        s += "    mkdir -p $OUTPUT_DIR\n"
-        s += "    chmod 777 $OUTPUT_DIR\n"
+        s += "    $WRAPPER mkdir -p $OUTPUT_DIR\n"
+        s += "    $WRAPPER chmod 777 $OUTPUT_DIR\n"
         s += "\n"
 
         # s += "    export RESAMP_DIR=$OUTPUT_DIR/resamp\n"
@@ -500,8 +504,8 @@ class SwarpInstance:
 
         s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
         # We stage .resamp.fits in PFS
-        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
-        s += "            sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        else\n"
         # We stage .resamp.fits in BB
         s += "            $WRAPPER sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
@@ -514,22 +518,22 @@ class SwarpInstance:
         s += "        $WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$LOC_FILES_TO_STAGE\"\n"
         s += "    done\n"
 
-        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$($WRAPPER cat $LOC_FILES_TO_STAGE | wc -l)\" | tee $OUTPUT_FILE\n"
+        s += "    echo \"Number of files kept in PFS:$(echo \"$COUNT\" | bc)/$($WRAPPER cat $LOC_FILES_TO_STAGE | wc -l)\" | $WRAPPER tee $OUTPUT_FILE\n"
         #s += "    echo \"NODE=$NODE_COUNT\" | tee -a $OUTPUT_FILE\n"
         #s += "    echo \"TASK=$SLURM_NTASKS\" | tee -a $OUTPUT_FILE\n"
-        s += "    echo \"CORE=$CORE_COUNT\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"CORE=$CORE_COUNT\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         #s += "    echo \"NTASKS_PER_NODE=$SLURM_NTASKS_PER_NODE\" | tee -a $OUTPUT_FILE\n"
         s += "\n"
-        s += "    echo \"Compute nodes: $($WRAPPER uname -n) \" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Compute nodes: $($WRAPPER uname -n) \" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
         s += "    MONITORING=\"pegasus-kickstart -z\"\n"
 
         s += "\n"
-        s += "    echo \"1.4TB\" > $BB_ALLOC\n"
+        s += "    echo \"1.4TB\" | $WRAPPER tee $BB_ALLOC\n"
         s += "\n"
 
         # CHECK WHERE TO PUT THE WRAPPER
-        s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
         s += "        $WRAPPER $COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
@@ -550,7 +554,7 @@ class SwarpInstance:
 
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff1=$(echo \"$t2 - $t1\" | bc -l)\n"
-        s += "    echo \"TIME STAGE_IN $tdiff1\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"TIME STAGE_IN $tdiff1\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "\n"
 
         s += "    $WRAPPER mkdir -p $INPUT_DIR\n"
@@ -575,10 +579,10 @@ class SwarpInstance:
 
         s += "    dsize=$($WRAPPER du -sh $INPUT_DIR | awk '{print $1}')\n"
         s += "    nbfiles=$($WRAPPER ls -al $INPUT_DIR | grep '^-' | wc -l)\n"
-        s += "    echo \"$nbfiles $dsize\" | tee $DU_RES\n"
+        s += "    echo \"$nbfiles $dsize\" | $WRAPPER tee $DU_RES\n"
         s += "\n"
         s += "    input_files=$($WRAPPER cat $RESAMPLE_FILES)\n"
-        s += "    $WRAPPER cd ${OUTPUT_DIR}/\n" # DO NOTHING
+        s += "    #$WRAPPER cd ${OUTPUT_DIR}/\n" # DO NOTHING
         s += "    rm -rf resample.conf\n\n"
 
 
@@ -902,7 +906,7 @@ class SwarpRun:
             f.write("    cp " + SWARP_DIR + "/tools/copy.py "+ SWARP_DIR +"/tools/build_filemap.py files_to_stage.txt \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
             f.write("    chmod u+x ${outdir}/start_interactive-${i}N.sh ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    cd \"${outdir}\"\n")
-            f.write("    bsub ${script}\n")
+            f.write("    #bsub ${script}\n")
             f.write("    cd ..\n")
             f.write("done\n")
 
@@ -978,7 +982,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    sys.stderr.write(" === Generate Slurm scripts for SWarp workflow\n")
+    sys.stderr.write(" === Generate LSF  scripts for SWarp workflow\n")
     today = time.localtime()
     sys.stderr.write(" === Executed: {}-{}-{} at {}:{}:{}.\n".format(today.tm_mday,
                                                     today.tm_mon, 
