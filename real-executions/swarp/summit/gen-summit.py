@@ -350,7 +350,7 @@ class SwarpInstance:
         s += "NB_AVG={}           # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
         s += "WRAPPER=\"jsrun -n 1 -a 1 -c 1 \"\n"
-        s += "JSRUN=\"jsrun -n @NODES@ -a 1 -c $CORE_COUNT -bpacked:$CORE_COUNT\"\n"
+        s += "JSRUN=\"jsrun -a @NODES@ -c $CORE_COUNT -bpacked:$CORE_COUNT\"\n"
         s += "\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
@@ -574,7 +574,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    RESAMPLE_FILES=\"$OUTPUT_DIR/input_files.txt\"\n"
-        s += "    $WRAPPER $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | tee -a $OUTPUT_FILE\n"
+        s += "    $WRAPPER $FILE_MAP -I $INPUT_DIR_PFS -B $INPUT_DIR -O $RESAMPLE_FILES -R $IMAGE_PATTERN  | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "\n"
 
         s += "    dsize=$($WRAPPER du -sh $INPUT_DIR | awk '{print $1}')\n"
@@ -591,24 +591,24 @@ class SwarpInstance:
 
 
 
-        s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
-        s += "        echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
-        s += "        chmod +x \"wrapper-${process}.sh\"\n"
-        s += "        echo -e \"${process}\t wrapper-${process}.sh\" >> resample.conf \n"
+        s += "        $WRAPPER echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
+        s += "        $WRAPPER echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
+        s += "        #chmod +x \"wrapper-${process}.sh\"\n"
+        s += "        $WRAPPER echo -e \"${process}\t wrapper-${process}.sh\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
-        s += "    echo \"Launching $SLURM_NTASKS RESAMPLE process at:$(date --rfc-3339=ns) ... \" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Launching $TASK_COUNT RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
-        s += "    $JSRUN -o \"%t/stat.resample.%j_%2t.xml\" -e \"%t/error.resample.%j_%2t\" --multi-prog resample.conf  &\n"
+        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%j_%2t.xml\" -k \"%t/error.resample.%j_%2t\" --appfile resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
         s += "    t2=$(date +%s.%N)\n"
         s += "    tdiff2=$(echo \"$t2 - $t1\" | bc -l)\n"
-        s += "    echo \"TIME RESAMPLE $tdiff2\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"TIME RESAMPLE $tdiff2\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "\n"
 
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
