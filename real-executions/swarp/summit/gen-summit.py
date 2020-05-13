@@ -593,16 +593,19 @@ class SwarpInstance:
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    rm -rf resample.conf\n"
+        s+= "     ALLOC=\"swarp\"\n"
+
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        $WRAPPER echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "        $WRAPPER echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
-        s += "        #chmod +x \"wrapper-${process}.sh\"\n"
-        s += "        $WRAPPER echo -e \"${process}\t wrapper-${process}.sh\" >> resample.conf \n"
+        s += "        $WRAPPER chmod +x \"wrapper-${process}.sh\"\n"
+        s += "        $WRAPPER echo -e \"1:$ALLOC:wrapper-${process}.sh\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
         s += "    echo \"Launching $TASK_COUNT RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
-        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%j_%2t.xml\" -k \"%t/error.resample.%j_%2t\" --appfile resample.conf  &\n"
+        s += "    jsrun --allocate_only $ALLOC -c 1 --nrs 1 -bpacked:1\n"
+        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%j_%t.xml\" -k \"%t/error.resample.%j_%t\" --appfile resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
