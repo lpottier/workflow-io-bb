@@ -275,11 +275,11 @@ class SwarpInstance:
         
         # or use ln_slots (where one slot is the samllest unit (one sequential task use 1 slots)
 
-        if self.standalone:
+        #if self.standalone:
             # string += "#BSUB -nnodes @NODES@\n"
-            string += "#BSUB -ln_slots @NODES@\n"
-        else:
-            string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
+            #string += "#BSUB -ln_slots @NODES@\n"
+        #else:
+            #string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
 
 
         # All processors allocated to this job must be on the same hosts
@@ -351,9 +351,9 @@ class SwarpInstance:
         s += "\n"
         s += "ALLOC=swarp\n"
         s += "WRAPPER=\"jsrun -n 1 -a 1 -c 1 \"\n"
-        s += "JSRUN=\"jsrun -a @NODES@ -c $CORE_COUNT -bpacked:$CORE_COUNT\"\n"
+        s += "JSRUN=\"jsrun -a 1 -c $CORE_COUNT -bpacked:$CORE_COUNT\"\n"
         s += "\n"
-        s += "jsrun --allocate_only $ALLOC -c $CORE_COUNT --nrs @NODES@ -bpacked:$CORE_COUNT\n"
+        s += "jsrun --allocate_only $ALLOC -c $CORE_COUNT --nrs $TASK_COUNT -bpacked:$CORE_COUNT\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
         s += "\n"
         s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
@@ -692,11 +692,11 @@ class SwarpInstance:
         s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        #rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
+        #s += "        rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
         s += "        rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
-        s += "        cd \"${process}\"\n"
+        #s += "        cd \"${process}\"\n"
         s += "        rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
-        s += "        cd ..\n"
+        #s += "        cd ..\n"
         s += "    done\n"
 
         #s += "    rm -rf \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/*/*.fits\"\n"
