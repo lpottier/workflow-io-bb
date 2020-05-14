@@ -435,15 +435,14 @@ class SwarpInstance:
 
 
         s += "echo \"Warming BB... $(date --rfc-3339=ns)\"\n"
-        s += "$WRAPPER cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/\"\n"
-        s += "TMP_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        s += "$WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$TNP_FILES_TO_STAGE\"\n"
+        s += "$WRAPPER cp \"$BASE/$FILES_TO_STAGE\" \"$BB_OUTPUT_DIR/\"\n"
+        s += "TMP_FILES_TO_STAGE=\"$BB_OUTPUT_DIR/$FILES_TO_STAGE\"\n"
+        s += "$WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$TMP_FILES_TO_STAGE\"\n"
 
-        s += "$WRAPPER $COPY -f $TMP_FILES_TO_STAGE -d $OUTPUT_DIR\n"
+        s += "$WRAPPER $COPY -f $TMP_FILES_TO_STAGE -d $BB_OUTPUT_DIR\n"
         s += "\n"
         s += "echo \"Warming done. $(date --rfc-3339=ns)\"\n"
-        s += "$WRAPPER bash -c \"rm -rf $OUTPUT_DIR/*\"\n"
-        s += "$WRAPPER ls -alh $OUTPUT_DIR/\n"
+        s += "$WRAPPER bash -c \"rm -rf $BB_OUTPUT_DIR/*\"\n"
         s += "\n"
         return s
 
@@ -612,9 +611,8 @@ class SwarpInstance:
         s += "        echo -e \"1:$ALLOC:sh wrapper-${process}.sh\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
-        s += "    echo \"Launching $TASK_COUNT RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Launching  $(echo \"$TASK_COUNT+1\" | bc -l) RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
-        #s += "    jsrun --allocate_only $ALLOC -c 1 --nrs 1 -bpacked:1\n"
         s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%j_%t.xml\" -k \"%t/error.resample.%j_%t\" --appfile resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
@@ -654,7 +652,7 @@ class SwarpInstance:
         s += "    done\n"
         s += "\n"
 
-        s += "    echo \"Launching COMBINE process $TASK_COUNT at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Launching COMBINE process  $(echo \"$TASK_COUNT+1\" | bc -l) at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    $JSRUN --stdio_mode individual -o \"%t/stat.combine.%j_%t.xml\" -k \"%t/error.combine.%j_%t\" --appfile combine.conf &\n"
         s += "\n"
         s += "    t1=$(date +%s.%N)\n"
