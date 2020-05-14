@@ -273,13 +273,13 @@ class SwarpInstance:
         string = "#!/bin/bash\n"
         string += "#BSUB -P {}\n".format(PROJID)
         
-        # or use ln_slots (where one slot is the samllest unit (one sequential task use 1 slots)
+        # or use ln_slots (where one slot is the smallest unit (one sequential task use 1 slots)
 
-        #if self.standalone:
+        if self.standalone:
             # string += "#BSUB -nnodes @NODES@\n"
-            #string += "#BSUB -ln_slots @NODES@\n"
-        #else:
-            #string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
+            string += "#BSUB -ln_slots @NODES@\n"
+        else:
+            string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
 
 
         # All processors allocated to this job must be on the same hosts
@@ -722,17 +722,17 @@ class SwarpInstance:
 
         s += "\n\n"
 
-        s += "OUTPUT_LSFJOB=$CURRENT_DIR/$OUTPUT_DIR_NAME/lsf.log\n"
-        s += "echo \"LSB_ACCUMULATED_CPUTIME=$LSB_ACCUMULATED_CPUTIME\" | tee $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_MAX_MEM_RUSAGE=$LSB_MAX_MEM_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_MAX_SWAP_RUSAGE=$LSB_MAX_SWAP_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_MAX_PROCESSES_RUSAGE=$LSB_MAX_PROCESSES_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_MAX_THREADS_RUSAGE=$LSB_MAX_THREADS_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_JOB_SUBMIT_TIME=$LSB_JOB_SUBMIT_TIME\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_JOB_START_TIME=$LSB_JOB_START_TIME\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_JOB_END_TIME=$LSB_JOB_END_TIME\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_JOB_PEND_TIME=$LSB_JOB_PEND_TIME\" | tee -a $OUTPUT_LSFJOB\n"
-        s += "echo \"LSB_JOB_STATUS=$LSB_JOB_STATUS\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "OUTPUT_LSFJOB=$CURRENT_DIR/$OUTPUT_DIR_NAME/lsf.log\n"
+        # s += "echo \"LSB_ACCUMULATED_CPUTIME=$LSB_ACCUMULATED_CPUTIME\" | tee $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_MAX_MEM_RUSAGE=$LSB_MAX_MEM_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_MAX_SWAP_RUSAGE=$LSB_MAX_SWAP_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_MAX_PROCESSES_RUSAGE=$LSB_MAX_PROCESSES_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_MAX_THREADS_RUSAGE=$LSB_MAX_THREADS_RUSAGE\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_JOB_SUBMIT_TIME=$LSB_JOB_SUBMIT_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_JOB_START_TIME=$LSB_JOB_START_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_JOB_END_TIME=$LSB_JOB_END_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_JOB_PEND_TIME=$LSB_JOB_PEND_TIME\" | tee -a $OUTPUT_LSFJOB\n"
+        # s += "echo \"LSB_JOB_STATUS=$LSB_JOB_STATUS\" | tee -a $OUTPUT_LSFJOB\n"
 
         # s += "base_tar=$(dirname $CURRENT_DIR)\n"
         # s += "target=$(basename $base_tar)\n"

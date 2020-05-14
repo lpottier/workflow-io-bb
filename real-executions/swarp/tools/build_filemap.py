@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import argparse
 import glob
 
@@ -47,9 +48,9 @@ if __name__ == '__main__':
     res,size_bb,size_total = build_hashmap(args.input, args.bb)
     
     for e in res:
-        print("{:<150} {:>10} MB".format(e, os.path.getsize(e)/(1024.0**2)))
+        print("{:<150} {:>10} MB".format(e, os.path.getsize(e)/(1024.0**2)), file=sys.stderr)
    
-    print("\n{:<150} {:>10}".format("ON BURST BUFFERS", str(100*(round(size_bb/size_total, 3)))+'% ('+ str(round(size_bb/(1024.0**2),2))+' MB)' ))
+    print("\n{:<150} {:>10}".format("ON BURST BUFFERS", str(100*(round(size_bb/size_total, 3)))+'% ('+ str(round(size_bb/(1024.0**2),2))+' MB)' ), file=sys.stderr)
 
     if args.output != None:
         res_pattern, _, _ = build_hashmap(args.input, args.bb, args.pattern)

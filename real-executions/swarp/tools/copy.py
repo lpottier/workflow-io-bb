@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import shutil
+import sys
 import os
 import argparse
 import glob
@@ -106,7 +107,7 @@ def copy_fromlist(args):
 
                     subprocess.run(cmdline, check=True)
                 except subprocess.CalledProcessError as e:
-                    print(e)
+                    print(e, file=sys.stderr)
             
             try:
                 #shutil.copy(src, dir_dest)
@@ -124,7 +125,7 @@ def copy_fromlist(args):
             #     print(e)
             except subprocess.CalledProcessError as e:
                 size_files_notransfer.append(os.path.getsize(src))
-                print(e)
+                print(e, file=sys.stderr)
             else:
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
@@ -173,7 +174,7 @@ def copy_fromlist(args):
                     subprocess.run(cmdline, check=True)
 
                 except subprocess.CalledProcessError as e:
-                    print(e)
+                    print(e, file=sys.stderr)
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
@@ -303,7 +304,7 @@ def copy_dir(args):
             subprocess.run(cmdline, check=True)
 
         except subprocess.CalledProcessError as e:
-            print(e)
+            print(e,file=sys.stderr)
 
     start_duration = timer()
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -323,7 +324,7 @@ def copy_dir(args):
         # except IOError as e:
         #     print(e)
         except subprocess.CalledProcessError as e:
-            print(e)
+            print(e, file=sys.stderr)
         else:
             size_files.append(os.path.getsize(f))
             print("{:<50} ({:.3} MB) => {:<20}".format(
@@ -366,7 +367,7 @@ def copy_dir(args):
                     subprocess.run(cmdline, check=True)
 
                 except subprocess.CalledProcessError as e:
-                    print(e)
+                    print(e, file=sys.stderr)
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
