@@ -632,7 +632,7 @@ class SwarpInstance:
         s += "      if (( \"$STAGE_FITS\" == \"0\" )); then\n"
         s += "          rsmpl_files=$(ls ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
         s += "      else\n"
-        s += "          rsmpl_files=$($WRAPPER ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
+        s += "          rsmpl_files=$($WRAPPER bash -c \"ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN}\")\n"
         s += "      fi\n"
         s += "      echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "      echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> \"wrapper-${process}.sh\"\n"
