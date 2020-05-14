@@ -277,8 +277,6 @@ def copy_fromlist(args):
                 stime_sd,
             ])
 
-
-
 def copy_dir(args):
     src = os.path.expandvars(args.src)
     dest = os.path.expandvars(args.dest)
@@ -395,8 +393,7 @@ def copy_dir(args):
                         0.0
                         ]
                     )
-
-            for i in range(len(files_to_copy)):
+                else:
                     writer_bb.writerow([
                         src,
                         dest,
@@ -407,6 +404,7 @@ def copy_dir(args):
                         stime_files[i]
                         ]
                     )
+
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
         
