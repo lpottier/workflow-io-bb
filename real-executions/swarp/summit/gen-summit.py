@@ -435,15 +435,14 @@ class SwarpInstance:
 
 
         s += "echo \"Warming BB... $(date --rfc-3339=ns)\"\n"
-        s += "$WRAPPER cp \"$BASE/$FILES_TO_STAGE\" \"$OUTPUT_DIR/\"\n"
-        s += "TMP_FILES_TO_STAGE=\"$OUTPUT_DIR/$FILES_TO_STAGE\"\n"
-        s += "$WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$TNP_FILES_TO_STAGE\"\n"
+        s += "$WRAPPER cp \"$BASE/$FILES_TO_STAGE\" \"$BB_OUTPUT_DIR/\"\n"
+        s += "TMP_FILES_TO_STAGE=\"$BB_OUTPUT_DIR/$FILES_TO_STAGE\"\n"
+        s += "$WRAPPER sed -i -e \"s|@INPUT@|$INPUT_DIR|g\" \"$TMP_FILES_TO_STAGE\"\n"
 
-        s += "$WRAPPER $COPY -f $TMP_FILES_TO_STAGE -d $OUTPUT_DIR\n"
+        s += "$WRAPPER $COPY -f $TMP_FILES_TO_STAGE -d $BB_OUTPUT_DIR\n"
         s += "\n"
         s += "echo \"Warming done. $(date --rfc-3339=ns)\"\n"
-        s += "$WRAPPER bash -c \"rm -rf $OUTPUT_DIR/*\"\n"
-        s += "$WRAPPER ls -alh $OUTPUT_DIR/\n"
+        s += "$WRAPPER bash -c \"rm -rf $BB_OUTPUT_DIR/*\"\n"
         s += "\n"
         return s
 
