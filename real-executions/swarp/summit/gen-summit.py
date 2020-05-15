@@ -917,7 +917,7 @@ class SwarpRun:
             f.write("    cp " + SWARP_DIR + "/tools/copy.py "+ SWARP_DIR +"/tools/build_filemap.py files_to_stage.txt \"" + WRAPPER + "\" \"resample.swarp\" \"combine.swarp\" \"${outdir}\"\n")
             f.write("    chmod u+x ${outdir}/start_interactive-${i}N.sh ${outdir}/interactive_run-swarp-scaling-bb-${i}N.sh\n")
             f.write("    cd \"${outdir}\"\n")
-            f.write("    #bsub ${script}\n")
+            f.write("    bsub ${script}\n")
             f.write("    cd ..\n")
             f.write("done\n")
 
