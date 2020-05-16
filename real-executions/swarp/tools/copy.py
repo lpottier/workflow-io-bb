@@ -383,28 +383,36 @@ def copy_dir(args):
             writer_pfs.writerow(header)
             writer_bb.writerow(header)
             for i in range(len(all_files)):
-                if not all_files[i] in files_to_copy:
-                    writer_pfs.writerow([
-                        src,
-                        src,
-                        all_files[i], 
-                        os.path.getsize(all_files[i])/(1024.0**2),
-                        0.0,
-                        0.0,
-                        0.0
-                        ]
-                    )
-                else:
-                    writer_bb.writerow([
-                        src,
-                        dest,
-                        all_files[i],
-                        size_files[i]/(1024.0**2), 
-                        utime_files[i]+stime_files[i],
-                        utime_files[i],
-                        stime_files[i]
-                        ]
-                    )
+                try:
+                    if not all_files[i] in files_to_copy:
+                        writer_pfs.writerow([
+                            src,
+                            src,
+                            all_files[i], 
+                            os.path.getsize(all_files[i])/(1024.0**2),
+                            0.0,
+                            0.0,
+                            0.0
+                            ]
+                        )
+                    else:
+                        writer_bb.writerow([
+                            src,
+                            dest,
+                            all_files[i],
+                            size_files[i]/(1024.0**2), 
+                            utime_files[i]+stime_files[i],
+                            utime_files[i],
+                            stime_files[i]
+                            ]
+                        )
+                except IndexError as e:
+                    print(e)
+                    print(i, all_files[i])
+                    print("=======")
+                    print(all_files)
+                    print("=======")
+                    print(files_to_copy)
 
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
