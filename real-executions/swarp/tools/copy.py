@@ -289,6 +289,9 @@ def copy_dir(args):
     size_files = []
     utime_files = []
     stime_files = []
+    files_notransfered = []
+    files_transfered = []
+    size_files_notransfer = []
 
     #print(os.path.abspath(args.src))
     all_files = glob.glob(src+'/*')
@@ -324,6 +327,8 @@ def copy_dir(args):
         # except IOError as e:
         #     print(e)
         except subprocess.CalledProcessError as e:
+            size_files_notransfer.append(os.path.getsize(f))
+            files_notransfered.append(f)
             print(e, file=sys.stderr)
         else:
             size_files.append(os.path.getsize(f))
@@ -332,6 +337,7 @@ def copy_dir(args):
                 size_files[-1]/(1024.0**2),
                 dest+'/')
             )
+            files_transfered.append(f)
 
     global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
     total_duration = timer() - start_duration
@@ -382,37 +388,37 @@ def copy_dir(args):
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer_pfs.writerow(header)
             writer_bb.writerow(header)
-            for i in range(len(all_files)):
-                try:
-                    if not all_files[i] in files_to_copy:
-                        writer_pfs.writerow([
-                            src,
-                            src,
-                            all_files[i], 
-                            os.path.getsize(all_files[i])/(1024.0**2),
-                            0.0,
-                            0.0,
-                            0.0
-                            ]
-                        )
-                    else:
-                        writer_bb.writerow([
-                            src,
-                            dest,
-                            all_files[i],
-                            size_files[i]/(1024.0**2), 
-                            utime_files[i]+stime_files[i],
-                            utime_files[i],
-                            stime_files[i]
-                            ]
-                        )
-                except IndexError as e:
-                    print(e)
-                    print(i, all_files[i])
-                    print("=======")
-                    print(all_files)
-                    print("=======")
-                    print(files_to_copy)
+            
+            for i in range(len(files_notransfered)):
+                writer_pfs.writerow([
+                    src,
+                    src,
+                    files_notransfered[i], 
+                    os.path.getsize(files_notransfered[i])/(1024.0**2),
+                    0.0,
+                    0.0,
+                    0.0
+                    ]
+                )
+            
+            for i in range(len(files_transfered)):
+                writer_bb.writerow([
+                    src,
+                    dest,
+                    files_transfered[i],
+                    size_files[i]/(1024.0**2), 
+                    utime_files[i]+stime_files[i],
+                    utime_files[i],
+                    stime_files[i]
+                    ]
+                )
+                # except IndexError as e:
+                #     print(e)
+                #     print(i, all_files[i])
+                #     print("=======")
+                #     print(all_files)
+                #     print("=======")
+                #     print(files_to_copy)
 
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
