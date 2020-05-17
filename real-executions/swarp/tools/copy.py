@@ -17,6 +17,7 @@ from timeit import default_timer as timer
 
 DEF_COPY_CMD  = ["cp", "-f", "-p"]
 DEF_MKDIR_CMD = ["mkdir", "-p"]
+VERBOSE = 0
 
 
 # remove the common part of both string
@@ -107,7 +108,10 @@ def copy_fromlist(args):
 
                     subprocess.run(cmdline, check=True)
                 except subprocess.CalledProcessError as e:
-                    print(e, file=sys.stderr)
+                    if VERBOSE == 1:
+                        print(e, file=sys.stderr)
+                    else:
+                        pass
             
             try:
                 #shutil.copy(src, dir_dest)
@@ -125,7 +129,10 @@ def copy_fromlist(args):
             #     print(e)
             except subprocess.CalledProcessError as e:
                 size_files_notransfer.append(os.path.getsize(src))
-                print(e, file=sys.stderr)
+                if VERBOSE == 1:
+                    print(e, file=sys.stderr)
+                else:
+                    pass
             else:
                 size_files.append(os.path.getsize(src))
                 s,d,common = shorten_strings(dir_src, dir_dest)
@@ -174,7 +181,10 @@ def copy_fromlist(args):
                     subprocess.run(cmdline, check=True)
 
                 except subprocess.CalledProcessError as e:
-                    print(e, file=sys.stderr)
+                    if VERBOSE == 1:
+                        print(e, file=sys.stderr)
+                    else:
+                        pass
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "STIME(S)", "UTIME(S)"]
@@ -307,7 +317,10 @@ def copy_dir(args):
             subprocess.run(cmdline, check=True)
 
         except subprocess.CalledProcessError as e:
-            print(e,file=sys.stderr)
+            if VERBOSE == 1:
+                print(e, file=sys.stderr)
+            else:
+                pass
 
     start_duration = timer()
     global_start = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -329,7 +342,10 @@ def copy_dir(args):
         except subprocess.CalledProcessError as e:
             size_files_notransfer.append(os.path.getsize(f))
             files_notransfered.append(f)
-            print(e, file=sys.stderr)
+            if VERBOSE == 1:
+                print(e, file=sys.stderr)
+            else:
+                pass
         else:
             size_files.append(os.path.getsize(f))
             print("{:<50} ({:.3} MB) => {:<20}".format(
@@ -373,7 +389,10 @@ def copy_dir(args):
                     subprocess.run(cmdline, check=True)
 
                 except subprocess.CalledProcessError as e:
-                    print(e, file=sys.stderr)
+                    if VERBOSE == 1:
+                        print(e, file=sys.stderr)
+                    else:
+                        pass
             args.dir = args.dir+'/'
 
         header = ["SRC", "DEST", "FILE", "SIZE(MB)", "TOTAL(S)", "UTIME(S)", "STIME(S)"]
@@ -400,7 +419,7 @@ def copy_dir(args):
                     0.0
                     ]
                 )
-            
+
             for i in range(len(files_transfered)):
                 writer_bb.writerow([
                     src,
