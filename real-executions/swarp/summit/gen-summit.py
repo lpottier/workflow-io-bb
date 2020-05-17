@@ -320,7 +320,7 @@ class SwarpInstance:
         s += "    echo \"usage: $0 [[[-f=file ] [-c=COUNT]] | [-h]]\"\n"
         s += "}\n"
 
-        s += "BBDIR=/mnt/bb/{}/\n".format(USER)
+        s += "BBDIR=/mnt/bb/{}/\n\n".format(USER)
 
         s += "\n"
         s += "CURRENT_DIR=$(pwd)\n"
@@ -449,7 +449,6 @@ class SwarpInstance:
     def average_loop(self):
         s = ''
         s += "for k in $(seq 1 1 $NB_AVG); do\n"
-        s += "    echo \"#### Starting run $k... $(date --rfc-3339=ns)\"\n"
         s += "\n"
 
         s += "    export OUTPUT_DIR=$BB_OUTPUT_DIR/${k}\n"
@@ -474,6 +473,8 @@ class SwarpInstance:
         # s += "    SCONTROL_START=$OUTPUT_DIR/scontrol_start.log\n"
         # s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
         s += "\n"
+        s += "    echo \"######################################################\" | $WRAPPER tee -a $OUTPUT_FILE\n"
+        s += "    echo \"Starting run $k ... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
         s += "    $WRAPPER mkdir -p $OUTPUT_DIR\n"
         s += "    $WRAPPER chmod 777 $OUTPUT_DIR\n"
@@ -695,7 +696,8 @@ class SwarpInstance:
         s += "    echo \"TIME STAGE_OUT $tdiff4\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "\n"
         s += "    OUTPUT_FILE=$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/output.log\n"
-        s += "    echo \"========\" | tee -a $OUTPUT_FILE\n"
+        s += "    echo \"######################################################\" | tee -a $OUTPUT_FILE\n"
+
         s += "    tdiff=$(echo \"$tdiff1 + $tdiff2 + $tdiff3 + $tdiff4\" | bc -l)\n"
         s += "    echo \"TIME TOTAL $tdiff\" | tee -a $OUTPUT_FILE\n"
 
