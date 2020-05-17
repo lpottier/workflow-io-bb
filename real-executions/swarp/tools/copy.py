@@ -89,10 +89,16 @@ def copy_fromlist(args):
 
             if not os.path.isfile(src):
                 #raise IOError("[error] IO: {} is not a file".format(src))
-                print("[warning] directory {} skipped".format(src))
+                if VERBOSE == 1:
+                    print("[warning] directory {} skipped".format(src), file=sys.stderr)
+                continue
 
             if not fnmatch.fnmatch(file_src, args.pattern) or (dir_src == dir_dest and file_src == file_dest):
-                print("{} skipped.".format(file_src))
+                if VERBOSE == 1:
+                    print("{} skipped.".format(file_src), file=sys.stderr)
+                else:
+                    pass
+
                 files_notransfered.append((dir_src, dir_dest, file_src))
                 size_files_notransfer.append(os.path.getsize(src))
                 continue
@@ -140,12 +146,9 @@ def copy_fromlist(args):
                     s,
                     file_src,
                     size_files[-1]/(1024.0**2),
-                    d+'/')
-                )
+                    d+'/'),
+                    file=sys.stderr)
                 files_transfered.append((dir_src, dir_dest, file_src))
-        #index = index + 1
-        #if index >= args.count:
-        #    break
 
     global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
     total_duration = timer() - start_duration
@@ -331,14 +334,13 @@ def copy_dir(args):
                 cmdline = shlex.split(args.wrapper) + cmdline
 
             usage_start = resource.getrusage(resource.RUSAGE_CHILDREN)                
+            
             subprocess.run(cmdline, check=True)
 
             usage_end = resource.getrusage(resource.RUSAGE_CHILDREN)
             utime_files.append(usage_end.ru_utime - usage_start.ru_utime)
             stime_files.append(usage_end.ru_stime - usage_start.ru_stime)
-            # shutil.copy(f, args.dest)
-        # except IOError as e:
-        #     print(e)
+
         except subprocess.CalledProcessError as e:
             size_files_notransfer.append(os.path.getsize(f))
             files_notransfered.append(f)
@@ -351,8 +353,8 @@ def copy_dir(args):
             print("{:<50} ({:.3} MB) => {:<20}".format(
                 os.path.basename(f),
                 size_files[-1]/(1024.0**2),
-                dest+'/')
-            )
+                dest+'/'),
+                file=sys.stderr)
             files_transfered.append(f)
 
     global_end = resource.getrusage(resource.RUSAGE_CHILDREN)
@@ -431,14 +433,6 @@ def copy_dir(args):
                     stime_files[i]
                     ]
                 )
-                # except IndexError as e:
-                #     print(e)
-                #     print(i, all_files[i])
-                #     print("=======")
-                #     print(all_files)
-                #     print("=======")
-                #     print(files_to_copy)
-
 
         header = ["NB_FILES", "TOTAL_SIZE(MB)", "NB_FILES_TRANSFERED",  "TRANSFERED_SIZE(MB)", "TRANSFER_RATIO", "DURATION(S)",  "UTIME(S)", "STIME(S)", "BANDWIDTH(MB/S)", "EFFICIENCY", "AVG_UTIME(S)",  "SD_UTIME", "AVG_STIME(S)", "SD_STIME"]
         
