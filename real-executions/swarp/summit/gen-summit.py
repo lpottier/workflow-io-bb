@@ -617,7 +617,7 @@ class SwarpInstance:
         s += "\n"
         s += "    echo \"Launching  $(echo \"$TASK_COUNT+1\" | bc -l) RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
 
-        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%j_%t.xml\" -k \"%t/error.resample.%j_%t\" --appfile resample.conf  &\n"
+        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.resample.%p_%t.xml\" -k \"%t/error.resample.%p_%t\" --appfile resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
@@ -657,7 +657,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    echo \"Launching COMBINE process  $(echo \"$TASK_COUNT+1\" | bc -l) at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
-        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.combine.%j_%t.xml\" -k \"%t/error.combine.%j_%t\" --appfile combine.conf &\n"
+        s += "    $JSRUN --stdio_mode individual -o \"%t/stat.combine.%p_%t.xml\" -k \"%t/error.combine.%p_%t\" --appfile combine.conf &\n"
         s += "\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
