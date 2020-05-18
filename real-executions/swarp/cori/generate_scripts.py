@@ -393,7 +393,7 @@ class SwarpInstance:
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}            # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
-        s += "SRUN=\"srun -n $SLURM_NTASKS -N 1 --cpu-bind=cores\"\n"
+        s += "SRUN=\"srun -n $SLURM_NTASKS --cpu-bind=cores --cpus-per-task=$CORE_COUNT\"\n"
         s += "\n"
         s += "echo \"SRUN -> $SRUN\"\n"
         s += "\n"
