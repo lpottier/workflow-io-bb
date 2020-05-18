@@ -282,9 +282,8 @@ class SwarpInstance:
 
         #TODO : check this 
 
-        #string += "#SBATCH --ntasks-per-node=1\n"
         string += "#SBATCH --ntasks-per-node=32\n"
-        string += "#SBATCH --ntasks-per-core=1\n"
+        # string += "#SBATCH --ntasks-per-core=1\n"
 
         string += "#SBATCH --time={}\n".format(self.sched_config.timeout())
         string += "#SBATCH --job-name=swarp-@NODES@\n"
@@ -575,10 +574,10 @@ class SwarpInstance:
         s += "    DU_RES=$OUTPUT_DIR/data-stagedin.log\n"
         s += "    DU_RESAMP=$OUTPUT_DIR/data-resamp.log\n"
         s += "    BB_ALLOC=$OUTPUT_DIR/bb_alloc.log\n"
-        s += "    SQUEUE_START=$OUTPUT_DIR/squeue_start.log\n"
-        s += "    SQUEUE_END=$OUTPUT_DIR/squeue_end.log\n"
-        s += "    SCONTROL_START=$OUTPUT_DIR/scontrol_start.log\n"
-        s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
+        # s += "    SQUEUE_START=$OUTPUT_DIR/squeue_start.log\n"
+        # s += "    SQUEUE_END=$OUTPUT_DIR/squeue_end.log\n"
+        # s += "    SCONTROL_START=$OUTPUT_DIR/scontrol_start.log\n"
+        # s += "    SCONTROL_END=$OUTPUT_DIR/scontrol_end.log\n"
         s += "\n"
 
         s += "    mkdir -p $OUTPUT_DIR\n"
@@ -603,10 +602,10 @@ class SwarpInstance:
         s += "\n"
 
         s += "    start=$(date --rfc-3339=seconds)\n"
-        s += "    echo $start > $SCONTROL_START\n"
-        s += "    echo $start > $SQUEUE_START\n"
-        s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
-        s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_START\n"
+        # s += "    echo $start > $SCONTROL_START\n"
+        # s += "    echo $start > $SQUEUE_START\n"
+        # s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
+        # s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_START\n"
 
         s += "\n"
 

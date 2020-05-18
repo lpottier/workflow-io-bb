@@ -274,12 +274,14 @@ class SwarpInstance:
         string += "#BSUB -P {}\n".format(PROJID)
         
         # or use ln_slots (where one slot is the smallest unit (one sequential task use 1 slots)
+        # One node is 43 slots
 
         if self.standalone:
-            # string += "#BSUB -nnodes @NODES@\n"
-            string += "#BSUB -ln_slots @NODES@\n"
+            string += "#BSUB -nnodes 1\n"
+            # string += "#BSUB -ln_slots @NODES@\n"
         else:
-            string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
+            string += "#BSUB -nnodes 1\n"
+            # string += "#BSUB -ln_slots {}\n".format(self.sched_config.nodes())
 
 
         # All processors allocated to this job must be on the same hosts
