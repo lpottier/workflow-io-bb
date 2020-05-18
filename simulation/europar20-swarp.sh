@@ -51,6 +51,9 @@ if [ -z "$MAIN_DIR" ]; then
     fi
 fi
 
+if [ -z "$CSV_OUTPUT" ]; then
+    CSV_OUTPUT="res.csv"
+fi
 
 export CC=gcc-8
 export CXX=g++-8
@@ -132,9 +135,9 @@ bb_type=$(echo "$(basename $MAIN_DIR)" | cut -f8 -d'-')
 # # ##########
 
 fits=${MAIN_DIR##*-}
-
-echo $(basename $EXP_DIR) $jobpid $max_pipeline $core $fits 
-
+if (( "$VERBOSE" >= 1 )); then
+    echo $(basename $EXP_DIR) $jobpid $max_pipeline $core $fits 
+fi
 echo "[$($DATE --rfc-3339=ns)] processing: $(basename $EXP_DIR)"
 
 echo ""
@@ -194,9 +197,6 @@ for run in $(ls $EXP_DIR | sort -n); do
             err_ks_to_wrench=1
         fi
 
-        # TODO parse the folder name to get the number of cores + stage fits
-
-
         #DAX="$pipeline/$WORKFLOW"
         $PYTHON "$KS_TO_DAX" \
             --dax="$DAX" \
@@ -206,7 +206,6 @@ for run in $(ls $EXP_DIR | sort -n); do
             --io="0.26" \
             --io-stagein="1" \
             --cores-stagein="$core" \
-            --cores="$core" \
             --cores="$core" \
             --stagein="$LOC_STAGEIN" \
             -o "$DAX" --debug \
@@ -237,7 +236,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
                 --max-pipeline="$max_pipeline" \
-                --platform="$PWD/data/platform-files/$PLATFORM" \
+                --platform="../data/platforms/$PLATFORM" \
                 --dax="$DAX" \
                 --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \
@@ -255,7 +254,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
                 --max-pipeline="$max_pipeline" \
-                --platform="$PWD/data/platform-files/$PLATFORM" \
+                --platform="../data/platforms/$PLATFORM" \
                 --dax="$DAX" \
                 --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \
@@ -274,9 +273,9 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
+        exit
     done
 done
-#done
 
 echo ""
 echo "[$($DATE --rfc-3339=ns)] Done."

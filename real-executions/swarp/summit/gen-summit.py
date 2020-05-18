@@ -498,6 +498,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "    start=$(date --rfc-3339=seconds)\n"
+        s += "    rsmpl_dir=$(mktemp -d -t resamp-XXXXXXX --tmpdir=$MEMBERWORK/csc355/)\n"
         # s += "    echo $start > $SCONTROL_START\n"
         # s += "    echo $start > $SQUEUE_START\n"
         # s += "    scontrol show burst --local -o -d >> $SCONTROL_START\n"
@@ -509,7 +510,7 @@ class SwarpInstance:
         s += "        $WRAPPER mkdir -p ${OUTPUT_DIR}/${process}\n"
         s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}\n"
         s += "        $WRAPPER mkdir -p ${OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
-        s += "        mkdir -p ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR\n"
+        s += "        mkdir -p $rsmpl_dir/${process}/\n"
         
 
         s += "\n"
@@ -519,8 +520,8 @@ class SwarpInstance:
 
         s += "        if (( \"$STAGE_FITS\" == \"0\" )); then\n"
         # We stage .resamp.fits in PFS
-        s += "            $WRAPPER sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
-        s += "            $WRAPPER sed -i -e \"s|@DIR@|${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_COMBINE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|$rsmpl_dir/${process}/|g\" \"$LOC_RESAMPLE_CONF\"\n"
+        s += "            $WRAPPER sed -i -e \"s|@DIR@|$rsmpl_dir/${process}/|g\" \"$LOC_COMBINE_CONF\"\n"
         s += "        else\n"
         # We stage .resamp.fits in BB
         s += "            $WRAPPER sed -i -e \"s|@DIR@|${OUTPUT_DIR}/${process}/$RESAMP_DIR|g\" \"$LOC_RESAMPLE_CONF\"\n"
@@ -628,9 +629,9 @@ class SwarpInstance:
         s += "        nbfiles=$($WRAPPER ls -al ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
         s += "        echo \"BB ${OUTPUT_DIR}/${process}/$RESAMP_DIR/ $nbfiles $dsize\" | $WRAPPER tee -a $DU_RESAMP\n\n"
 
-        s += "        dsize_pfs=$(du -sh ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/ | awk '{print $1}')\n"
-        s += "        nbfiles_pfs=$(ls -al ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/ | grep '^-' | wc -l)\n"
-        s += "        echo \"PFS ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR $nbfiles_pfs $dsize_pfs\" | $WRAPPER tee -a $DU_RESAMP\n"
+        s += "        dsize_pfs=$(du -sh $rsmpl_dir/${process}/ | awk '{print $1}')\n"
+        s += "        nbfiles_pfs=$(ls -al $rsmpl_dir/${process}/ | grep '^-' | wc -l)\n"
+        s += "        echo \"PFS $rsmpl_dir/${process}/ $nbfiles_pfs $dsize_pfs\" | $WRAPPER tee -a $DU_RESAMP\n"
         s += "    done\n"
         s += "\n"
 
@@ -642,7 +643,7 @@ class SwarpInstance:
 
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "      if (( \"$STAGE_FITS\" == \"0\" )); then\n"
-        s += "          rsmpl_files=$(ls ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN})\n"
+        s += "          rsmpl_files=$(ls $rsmpl_dir/${process}/${RESAMPLE_PATTERN})\n"
         s += "      else\n"
         s += "          rsmpl_files=$($WRAPPER bash -c \"ls ${OUTPUT_DIR}/${process}/$RESAMP_DIR/${RESAMPLE_PATTERN}\")\n"
         s += "      fi\n"
@@ -676,8 +677,6 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo \"Removing local resamp files if any ... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
-        s += "        rm -rf \"${LOCAL_OUTPUT_DIR}/$RESAMP_DIR\"\n"
         s += "        echo \"Launching STAGEOUT process ${process} at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
         #s += "        $COPY -i $OUTPUT_DIR -o $OUTPUT_DIR_NAME/${k} -a \"stage-out\" -d $OUTPUT_DIR_NAME/${k}\n"
         #s += "        cd ${OUTPUT_DIR}/${process}\n"
@@ -706,7 +705,7 @@ class SwarpInstance:
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         #s += "        rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
-        s += "        rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
+        s += "        rm -rf $rsmpl_dir/${process}/\n"
         #s += "        cd \"${process}\"\n"
         s += "        rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
         #s += "        cd ..\n"
