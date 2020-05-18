@@ -804,10 +804,10 @@ class SwarpInstance:
         s += "\n"
 
         s += "    end=$(date --rfc-3339=seconds)\n"
-        s += "    echo $end > $SCONTROL_END\n"
-        s += "    echo $end > $SQUEUE_END\n"
-        s += "    scontrol show burst --local -o -d >> $SCONTROL_END\n"
-        s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_END\n"
+        # s += "    echo $end > $SCONTROL_END\n"
+        # s += "    echo $end > $SQUEUE_END\n"
+        # s += "    scontrol show burst --local -o -d >> $SCONTROL_END\n"
+        # s += "    squeue -t RUNNING --noconvert --format=%all >> $SQUEUE_END\n"
 
 
         s += "    echo \"Starting STAGE_OUT... $(date --rfc-3339=ns)\" | tee -a $OUTPUT_FILE\n"
@@ -840,11 +840,8 @@ class SwarpInstance:
         s += "    echo \"=== Cleaning .fits files in output $k... $(date --rfc-3339=ns)\"\n"
         s += "    cd \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}\"\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        rm -rf ${OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
         s += "        rm -rf ${LOCAL_OUTPUT_DIR}/${process}/$RESAMP_DIR/\n"
-        s += "        cd \"${process}\"\n"
         s += "        rm -rf \"coadd.fits\" \"coadd.weight.fits\" \"combine.xml\" \"resample.xml\"\n"
-        s += "        cd ..\n"
         s += "    done\n"
 
         #s += "    rm -rf \"$CURRENT_DIR/$OUTPUT_DIR_NAME/${k}/*/*.fits\"\n"
