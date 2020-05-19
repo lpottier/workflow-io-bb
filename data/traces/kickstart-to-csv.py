@@ -821,8 +821,11 @@ class RawKickstartDirectory:
             self._bbtype = "PRIVATE"
         elif "striped" in str(self.dir.name):
             self._bbtype = "STRIPED"
+        elif "summit" in str(self.dir.name):
+            self._bbtype = "ONNODE"  
         else:
             self._bbtype = "UNKNOWN"
+
         if VERBOSE >= 2:
             print(self.dir)
 
@@ -931,9 +934,14 @@ class RawKickstartDirectory:
                     if VERBOSE >= 2:
                         print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + str(pid_run) + "*")[0]
+                    # print(str(pid_run))
+                    # print(glob.glob(str(pipeline) + "/stat.resample." + "*"))
+                    assert(len(glob.glob(str(pipeline) + "/stat.resample." + "*")) == 1) 
+                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + "*")[0]
                     pipeline_resample.append(resmpl_path)
-                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + str(pid_run) + "*")[0]
+
+                    assert(len(glob.glob(str(pipeline) + "/stat.combine." + "*")) == 1) 
+                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + "*")[0]
                     pipeline_combine.append(combine_path)
 
                 if self._concat_pipeline:
@@ -1015,6 +1023,7 @@ class RawKickstartDirectory:
 
                         BB_NB_FILES=int(self.stagein[run][avg]._data['NB_FILES_TRANSFERED'])
                         BB_SIZE_FILES_MB=float(self.stagein[run][avg]._data['TRANSFERED_SIZE(MB)'])
+                        print(BB_NB_FILES,self.stagein[run][avg]._data)
 
                         if not self._concat_pipeline:
                             MKSP = self.stagein[run][avg].duration() + self.resample[run][avg][self.max_pipeline].duration() + self.combine[run][avg][self.max_pipeline].duration()+ self.stageout[run][avg].duration()
@@ -1169,6 +1178,8 @@ class KickstartDirectory:
             self._bbtype = "PRIVATE"
         elif "striped" in str(self.dir.name):
             self._bbtype = "STRIPED"
+        elif "summit" in str(self.dir.name):
+            self._bbtype = "ONNODE"        
         else:
             self._bbtype = "UNKNOWN"
 
@@ -1269,9 +1280,12 @@ class KickstartDirectory:
                     if VERBOSE >= 2:
                         print ("Dealing with number of pipelines:", nb_pipeline)
 
-                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + str(pid_run) + "*")[0]
+                    assert(len(glob.glob(str(pipeline) + "/stat.resample." + "*")) == 1)
+                    resmpl_path = glob.glob(str(pipeline) + "/stat.resample." + "*")[0]
                     pipeline_resample.append(resmpl_path)
-                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + str(pid_run) + "*")[0]
+
+                    assert(len(glob.glob(str(pipeline) + "/stat.combine." + "*")) == 1)
+                    combine_path = glob.glob(str(pipeline) + "/stat.combine." + "*")[0]
                     pipeline_combine.append(combine_path)
 
                 avg_resample.append(KickStartPipeline(ks_entries=raw_resample))
@@ -1516,77 +1530,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # main_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/"
-
-    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/swarp-1C-50B-1_16W-XF-15-01-2020/"
-    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-1C-50B-1_16W-0F-21-1"
-    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/europar_exp/temp_exp21jan/swarp-premium-32C-50B-1_32W-0F-21-1"
-
-    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/bb_private_runs2020/"
-    
-    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_exp31.csv")
-
-
-    # exp_dir = main_dir + "bb_runs2020-32c"
-    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c.csv")
-
-    # exp_dir = main_dir + "bb-fixed_runs2020-32c"
-    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp-run-1W-32c-fixed.csv")
-
     for d in args.dir:
         directory = Path(d)
         if args.csv == None:
             args.csv = str(directory.name)+".csv" 
 
         create_data_from_exp(directory, pattern="/swarp-*", csv_file=args.csv, compact=args.compact)
-
-    #create_data_from_exp_mt(exp_dir, pattern="/swarp-*", csv_file="mt-swarp_exp31.csv")
-
-    # exp = RawKickstartDirectory(exp_dir+"/swarp-premium-1C-200B-1W-0F-30-1-private-stagefits/")
-    # exp.write_csv_global_by_pipeline(csv_file="swarp-full.csv", write_header=True)
-
-    # exp_dir = "/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/test_europar/"
-    # create_data_from_exp(exp_dir, pattern="/swarp-*", csv_file="swarp_test_switches.csv")
-
-
-    # seaborn_found = importlib.util.find_spec('seaborn')
-    # if seaborn_found is None:
-    #     sys.write.stderr("[error] Seaborn package not found. exit")
-    #     exit(-1)
-
-    # import seaborn as sns
-    # import pandas as pd
-    # import matplotlib.pyplot as plt
-    # #import matplotlib.axes as ax
-    
-    # #sns.set(style="ticks", color_codes=True)
-    
-    # csv_file = "swarp_exp.csv"
-
-    # swarp_dt = pd.read_csv(csv_file, sep=' ')
-
-    # swarp_dt_0f = swarp_dt[swarp_dt.BB_NB_FILES==8]
-
-    # sns.set(style="ticks", color_codes=True)
-
-    # print(swarp_dt_0f.info())
-    # print(swarp_dt[["NB_PIPELINE", "BB_NB_FILES" ,"MEAN_MAKESPAN_S", "SD_MAKESPAN"]])
-
-    # small_dt = swarp_dt[["NB_PIPELINE", "BB_NB_FILES" ,"MEAN_MAKESPAN_S", "SD_MAKESPAN"]]
-    # print(small_dt[small_dt.NB_PIPELINE == 16])
-
-    
-    # ax = sns.lineplot(x=swarp_dt_0f.NB_PIPELINE, y=swarp_dt_0f.MEAN_MAKESPAN_S, markers=True,
-    #          data=swarp_dt_0f)
-    # #ax.fill_between(x=swarp_dt_0f.NB_PIPELINE, y1=swarp_dt_0f.MEAN_MAKESPAN_S - swarp_dt_0f.SD_MAKESPAN, y2=swarp_dt_0f.MEAN_MAKESPAN_S + swarp_dt_0f.SD_MAKESPAN, alpha=.5)
-
-    # plt.show()
-
-
-    # parser = argparse.ArgumentParser(description='Generate SWarp configuration files and scripts')
-    
-    # parser.add_argument('--threads', '-p', type=int, nargs='?', default=1,
-    #                     help='Number of POSIX threads per workflow tasks (1 by default)')
-
-    # args = parser.parse_args()
 
