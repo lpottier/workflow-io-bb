@@ -357,6 +357,8 @@ class SwarpInstance:
         s += "\n"
         s += "jsrun --allocate_only $ALLOC -c $CORE_COUNT --nrs $TASK_COUNT -bpacked:$CORE_COUNT\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
+        s += "echo \"$($JSRUN -J $ALLOC js_task_info | sort)\"\n"
+
         s += "\n"
         s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
 
@@ -552,7 +554,7 @@ class SwarpInstance:
 
         s += "    echo \"Starting STAGE_IN... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
         s += "    t1=$(date +%s.%N)\n"
-        s += "    if [ -f \"$LOC_FILES_TO_STAGE\" ]; then\n"
+        s += "    if $WRAPPER test -f \"$LOC_FILES_TO_STAGE\" ; then\n"
         s += "        $WRAPPER $COPY -f $LOC_FILES_TO_STAGE -d $OUTPUT_DIR\n"
         s += "    else\n"
         s += "        $WRAPPER $COPY -i $INPUT_DIR_PFS -o $INPUT_DIR -d $OUTPUT_DIR\n"
