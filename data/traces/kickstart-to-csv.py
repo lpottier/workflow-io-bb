@@ -1023,7 +1023,6 @@ class RawKickstartDirectory:
 
                         BB_NB_FILES=int(self.stagein[run][avg]._data['NB_FILES_TRANSFERED'])
                         BB_SIZE_FILES_MB=float(self.stagein[run][avg]._data['TRANSFERED_SIZE(MB)'])
-                        print(BB_NB_FILES,self.stagein[run][avg]._data)
 
                         if not self._concat_pipeline:
                             MKSP = self.stagein[run][avg].duration() + self.resample[run][avg][self.max_pipeline].duration() + self.combine[run][avg][self.max_pipeline].duration()+ self.stageout[run][avg].duration()
@@ -1382,6 +1381,7 @@ class KickstartDirectory:
             if write_header:
                 csv_writer.writerow(header)
             for run in self.setup:
+                print(BB_NB_FILES,self.stagein[run]._data)
                 BB_NB_FILES=int(self.stagein[run]._data['NB_FILES_TRANSFERED'][0])
                 BB_SIZE_FILES_MB=float(self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0])
                 FITS="N"
