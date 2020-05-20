@@ -351,13 +351,11 @@ class SwarpInstance:
         s += "STAGE_CONFIG=0      #0 no stage. 1 -> stage config dir in BB\n"
         s += "NB_AVG={}           # Number of identical runs\n".format(self.nb_avg)
         s += "\n"
-        # s += "ALLOC=swarp\n"
+        s += "ALLOC=swarp\n"
         s += "WRAPPER=\"jsrun -n 1 -a 1 -c 1 \"\n"
-        s += "JSRUN=\"jsrun -c $CORE_COUNT --nrs $TASK_COUNT -bpacked:$CORE_COUNT\"\n"
+        s += "JSRUN=\"jsrun\"\n"
         s += "\n"
-        # s += "jsrun --allocate_only $ALLOC -c $CORE_COUNT --nrs $TASK_COUNT -bpacked:$CORE_COUNT\n"
         s += "echo \"JSRUN -> $JSRUN\"\n"
-        # s += "echo \"$($JSRUN -J $ALLOC js_task_info | sort)\"\n"
 
         s += "\n"
         s += "TASK_COUNT=$(echo \"$TASK_COUNT - 1\" | bc -l)\n"
@@ -601,25 +599,35 @@ class SwarpInstance:
         s += "    echo \"$nbfiles $dsize\" | $WRAPPER tee $DU_RES\n"
         s += "\n"
         s += "    input_files=$($WRAPPER cat $RESAMPLE_FILES)\n"
-        s += "    #$WRAPPER cd ${OUTPUT_DIR}/\n" # DO NOTHING
         
         s += "    cd ${LOCAL_OUTPUT_DIR}\n"
-        # s += "    rm -rf resample.conf\n\n"
 
 
         s += "    echo \"Starting RESAMPLE... $(date --rfc-3339=ns)\" | $WRAPPER tee -a $OUTPUT_FILE\n"
-        #s += "    ALLOC=\"swarp\"\n"
 
+        s += "    echo \"\" > resample.conf\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "        echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
         s += "        chmod +x \"wrapper-${process}.sh\"\n"
-        s += "        $JSRUN --stdio_mode individual -o \"${process}/stat.resample.%p_${process}.xml\" -k \"${process}/error.resample.%p_${process}\" sh wrapper-${process}.sh &\n"
-        s += "        echo \"Launching ${process} RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
-        # s += "        echo -e \"1:$ALLOC:sh wrapper-${process}.sh\" >> resample.conf \n"
+        s += "        echo -e \"1:$ALLOC:sh wrapper-${process}.sh\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
 
+        s += "    echo \"cpu_index_using: logical\" >> resample.conf\n"
+        s += "    echo \"overlapping_rs: warn\" >> resample.conf\n"
+        s += "    echo \"oversubscribe_cpu: warn\" >> resample.conf\n"
+        s += "    echo \"oversubscribe_gpu: allow\" >> resample.conf\n"
+        s += "    echo \"oversubscribe_mem: allow\" >> resample.conf\n"
+        s += "    echo \"launch_distribution: packed\" >> resample.conf\n"
+
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
+        s += "        echo \"rank: ${process}: { host: 1; cpu: {${process}} ; mem: * } : app ${process}\" >> resample.conf\n"
+        s += "    done\n"
+
+        s += "    echo \"Launching  $(echo \"$TASK_COUNT+1\" | bc -l) RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
+
+        s += "    $JSRUN --stdio_mode individual -o %t/stat.resample.%p_%t.xml -k %t/error.resample.%p_%t --erf_input resample.conf  &\n"
 
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
@@ -643,7 +651,7 @@ class SwarpInstance:
         s += "\n"
 
         s += "\n"
-        # s += "    rm -rf combine.conf\n"
+        s += "    echo \"\" > combine.conf\n"
 
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "      if (( \"$STAGE_FITS\" == \"0\" )); then\n"
@@ -654,12 +662,23 @@ class SwarpInstance:
         s += "      echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "      echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/combine.swarp \" $rsmpl_files >> \"wrapper-${process}.sh\"\n"
         s += "      chmod +x \"wrapper-${process}.sh\"\n"
-        # s += "      echo -e \"1:$ALLOC:sh wrapper-${process}.sh\" >> combine.conf \n"
-        s += "      $JSRUN --stdio_mode individual -o \"${process}/stat.combine.%p_${process}.xml\" -k \"${process}/error.combine.%p_${process}\" sh wrapper-${process}.sh &\n"
-        s += "      echo \"Launching COMBINE process ${process} at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
+        s += "      echo \"app ${process}: sh wrapper-${process}.sh\" >> combine.conf \n"
         s += "    done\n"
         s += "\n"
 
+        s += "    echo \"cpu_index_using: logical\" >> combine.conf\n"
+        s += "    echo \"overlapping_rs: warn\" >> combine.conf\n"
+        s += "    echo \"oversubscribe_cpu: warn\" >> combine.conf\n"
+        s += "    echo \"oversubscribe_gpu: allow\" >> combine.conf\n"
+        s += "    echo \"oversubscribe_mem: allow\" >> combine.conf\n"
+        s += "    echo \"launch_distribution: packed\" >> combine.conf\n"
+
+        s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
+        s += "        echo \"rank: ${process}: { host: 1; cpu: {${process}} ; mem: * } : app ${process}\" >> combine.conf\n"
+        s += "    done\n"
+
+        s += "    echo \"Launching COMBINE process  $(echo \"$TASK_COUNT+1\" | bc -l) at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
+        s += "    $JSRUN --stdio_mode individual -o %t/stat.combine.%p_%t.xml -k %t/error.combine.%p_%t --erf_input combine.conf &\n"
         s += "\n"
         s += "    t1=$(date +%s.%N)\n"
         s += "    wait\n"
