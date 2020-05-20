@@ -231,7 +231,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_fits)
               << "FITS"
               << std::left << std::setw(width_bbtype)
-              << "BB TYPE"
+              << "BBTYPE"
               << std::left << std::setw(width_pipeline) 
               << "#PIPELINES"
               << std::left << std::setw(width_cores) 
@@ -243,7 +243,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_bbdata) 
               << "LATENCY"
               << std::left << std::setw(width_link) 
-              << "BANDWITH"
+              << "BANDWIDTH"
               << std::left << std::setw(width_mksp) 
               << "SIMULATION(S)"
               << std::left << std::setw(width_walltime) 
@@ -262,7 +262,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_fits)
               << "----"
               << std::left << std::setw(width_bbtype)
-              << "-------"
+              << "------"
               << std::left << std::setw(width_pipeline) 
               << "----------"
               << std::left << std::setw(width_cores) 
@@ -274,7 +274,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
               << std::left << std::setw(width_latency) 
               << "-------"
               << std::left << std::setw(width_link) 
-              << "--------"
+              << "---------"
               << std::left << std::setw(width_mksp) 
               << "-------------"
               << std::left << std::setw(width_walltime) 
@@ -389,7 +389,7 @@ void printSimulationSummaryCSV(BBSimulation& simulation, std::string file_name, 
          << sep
          << "LATENCY"
          << sep
-         << "BANDWITH"
+         << "BANDWIDTH"
          << sep
          << "SIMULATION_S"
          << sep

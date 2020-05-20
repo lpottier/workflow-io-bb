@@ -718,6 +718,8 @@ class StageInTask:
     def duration(self):
         return float(self._data["DURATION(S)"])
 
+    def bw(self):
+        return float(self._data["BANDWIDTH(MB/S)"])
 
 class StageOutTask:
     def __init__(self, csv_file, sep=' '):
@@ -1001,7 +1003,7 @@ class RawKickstartDirectory:
         return self.dir_exp
 
     def write_csv_global_by_pipeline(self, csv_file, write_header=False, sep = ' '):
-        header="ID START END FITS NB_PIPELINE NB_CORES AVG PIPELINE BB_TYPE BB_ALLOC_SIZE_MB TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB MAKESPAN_S WALLTIME_S STAGEIN_TIME_S STAGEIN_WALLTIME_S RESAMPLE_TIME_S RESAMPLE_WALLTIME_S COMBINE_TIME_S COMBINE_WALLTIME_S STAGEOUT_TIME_S STAGEOUT_WALLTIME_S".split(' ')
+        header="ID START END FITS NB_PIPELINE NB_CORES AVG PIPELINE BB_TYPE BB_ALLOC_SIZE_MB TOTAL_NB_FILES BB_NB_FILES TOTAL_SIZE_FILES_MB BB_SIZE_FILES_MB BANDWIDTH_MBS MAKESPAN_S WALLTIME_S STAGEIN_TIME_S STAGEIN_WALLTIME_S RESAMPLE_TIME_S RESAMPLE_WALLTIME_S COMBINE_TIME_S COMBINE_WALLTIME_S STAGEOUT_TIME_S STAGEOUT_WALLTIME_S".split(' ')
         if write_header:
             open_flag = 'w'
         else:
@@ -1025,8 +1027,8 @@ class RawKickstartDirectory:
                         BB_SIZE_FILES_MB=float(self.stagein[run][avg]._data['TRANSFERED_SIZE(MB)'])
 
                         if not self._concat_pipeline:
-                            MKSP = self.stagein[run][avg].duration() + self.resample[run][avg][self.max_pipeline].duration() + self.combine[run][avg][self.max_pipeline].duration()+ self.stageout[run][avg].duration()
-                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                            MKSP = self.stagein[run][avg].duration() + self.resample[run][avg][self.max_pipeline].duration() + self.combine[run][avg][self.max_pipeline].duration()
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                                 run,
                                 self.outputlog[run][avg].start()[0],
                                 self.outputlog[run][avg].end()[0],
@@ -1041,6 +1043,7 @@ class RawKickstartDirectory:
                                 BB_NB_FILES,
                                 768.515625 * int(self.setup[run]['pipeline']),
                                 BB_SIZE_FILES_MB,
+                                self.stagein[run][avg].bw(),
                                 MKSP,
                                 self.outputlog[run][avg].walltime(),
                                 self.stagein[run][avg].duration(),
@@ -1053,7 +1056,7 @@ class RawKickstartDirectory:
                                 self.outputlog[run][avg].walltime_stageout(),
                             )
                         else:
-                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
+                            line = "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}".format(
                                 run,
                                 self.outputlog[run][avg].start()[0],
                                 self.outputlog[run][avg].end()[0],
@@ -1068,6 +1071,7 @@ class RawKickstartDirectory:
                                 BB_NB_FILES,
                                 768.515625 * int(self.setup[run]['pipeline']),
                                 BB_SIZE_FILES_MB,
+                                self.stagein[run][avg].bw(),
                                 self.makespan[run][avg],
                                 self.outputlog[run][avg].walltime(),
                                 self.stagein[run][avg].duration(),
@@ -1381,7 +1385,7 @@ class KickstartDirectory:
             if write_header:
                 csv_writer.writerow(header)
             for run in self.setup:
-                print(BB_NB_FILES,self.stagein[run]._data)
+                #print(BB_NB_FILES,self.stagein[run]._data)
                 BB_NB_FILES=int(self.stagein[run]._data['NB_FILES_TRANSFERED'][0])
                 BB_SIZE_FILES_MB=float(self.stagein[run]._data['TRANSFERED_SIZE(MB)'][0])
                 FITS="N"

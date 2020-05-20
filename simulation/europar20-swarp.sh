@@ -10,6 +10,7 @@ usage()
     echo "usage: $0 [[[-d=directory] [-c=csv] [-s print CSV header]] | [-h]]"
 }
 
+echo "WARNING: do not support GCC >= 9"
 ##### Main
 
 HEADER_CSV=1
