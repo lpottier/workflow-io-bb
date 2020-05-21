@@ -301,7 +301,7 @@ class SwarpInstance:
         # Exclusive usage of the node
         #string += "#BSUB -x\n"
 
-         # Disable SMT and activate private burst buffers access
+        # Disable SMT and activate private burst buffers access
         string += "#BSUB -alloc_flags \"smt1\"\n"
         string += "#BSUB -alloc_flags \"nvme\"\n\n"
 
@@ -622,7 +622,7 @@ class SwarpInstance:
         s += "    echo \"launch_distribution: packed\" >> resample.conf\n\n"
         
         s += "    proc_start=0\n"
-        s += "    proc_end=4\n"
+        s += "    proc_end=3\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        echo \"rank: ${process}: { host: 1; cpu: {$proc_start:$proc_end} ; mem: * } : app ${process}\" >> resample.conf\n"
         s += "        proc_start=$(echo \"$proc_start+4\" | bc -l)\n"
@@ -678,7 +678,7 @@ class SwarpInstance:
         s += "    echo \"launch_distribution: packed\" >> combine.conf\n\n"
 
         s += "    proc_start=0\n"
-        s += "    proc_end=4\n"
+        s += "    proc_end=3\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
         s += "        echo \"rank: ${process}: { host: 1; cpu: {$proc_start:$proc_end} ; mem: * } : app ${process}\" >> combine.conf\n"
         s += "        proc_start=$(echo \"$proc_start+4\" | bc -l)\n"
