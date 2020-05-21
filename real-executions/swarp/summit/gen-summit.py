@@ -610,7 +610,7 @@ class SwarpInstance:
         s += "        echo \"#!/bin/bash\" > \"wrapper-${process}.sh\"\n"
         s += "        echo \"$MONITORING $EXE -c ${OUTPUT_DIR}/${process}/resample.swarp $input_files\" >> \"wrapper-${process}.sh\"\n"
         s += "        chmod +x \"wrapper-${process}.sh\"\n"
-        s += "        echo -e \"1:$ALLOC:sh wrapper-${process}.sh\" >> resample.conf \n"
+        s += "        echo -e \"app ${process}: sh wrapper-${process}.sh\" >> resample.conf \n"
         s += "    done\n"
         s += "\n"
 
@@ -619,10 +619,14 @@ class SwarpInstance:
         s += "    echo \"oversubscribe_cpu: warn\" >> resample.conf\n"
         s += "    echo \"oversubscribe_gpu: allow\" >> resample.conf\n"
         s += "    echo \"oversubscribe_mem: allow\" >> resample.conf\n"
-        s += "    echo \"launch_distribution: packed\" >> resample.conf\n"
-
+        s += "    echo \"launch_distribution: packed\" >> resample.conf\n\n"
+        
+        s += "    proc_start=0\n"
+        s += "    proc_end=4\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo \"rank: ${process}: { host: 1; cpu: {${process}} ; mem: * } : app ${process}\" >> resample.conf\n"
+        s += "        echo \"rank: ${process}: { host: 1; cpu: {$proc_start:$proc_end} ; mem: * } : app ${process}\" >> resample.conf\n"
+        s += "        proc_start=$(echo \"$proc_start+4\" | bc -l)\n"
+        s += "        proc_end=$(echo \"$proc_end+4\" | bc -l)\n"
         s += "    done\n"
 
         s += "    echo \"Launching  $(echo \"$TASK_COUNT+1\" | bc -l) RESAMPLE process at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
@@ -671,10 +675,14 @@ class SwarpInstance:
         s += "    echo \"oversubscribe_cpu: warn\" >> combine.conf\n"
         s += "    echo \"oversubscribe_gpu: allow\" >> combine.conf\n"
         s += "    echo \"oversubscribe_mem: allow\" >> combine.conf\n"
-        s += "    echo \"launch_distribution: packed\" >> combine.conf\n"
+        s += "    echo \"launch_distribution: packed\" >> combine.conf\n\n"
 
+        s += "    proc_start=0\n"
+        s += "    proc_end=4\n"
         s += "    for process in $(seq 0 ${TASK_COUNT}); do\n"
-        s += "        echo \"rank: ${process}: { host: 1; cpu: {${process}} ; mem: * } : app ${process}\" >> combine.conf\n"
+        s += "        echo \"rank: ${process}: { host: 1; cpu: {$proc_start:$proc_end} ; mem: * } : app ${process}\" >> combine.conf\n"
+        s += "        proc_start=$(echo \"$proc_start+4\" | bc -l)\n"
+        s += "        proc_end=$(echo \"$proc_end+4\" | bc -l)\n"
         s += "    done\n"
 
         s += "    echo \"Launching COMBINE process  $(echo \"$TASK_COUNT+1\" | bc -l) at:$(date --rfc-3339=ns) ... \" | $WRAPPER tee -a $OUTPUT_FILE\n"
