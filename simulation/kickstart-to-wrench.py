@@ -43,6 +43,7 @@ def _parse_stagein(stagein_file, io_fraction, core_stagein):
     with open(stagein_file, 'r') as file:
         lines = file.readlines()[1:]
         for line in lines:
+            # We set the runtime of stage in at 0, the simulator we will simulate that execution time
             runtimes['stagein'] = float(line.split(' ')[5])*(1-float(io_fraction))
 
 
@@ -66,7 +67,7 @@ def _parse_kickstart(kickstart_file, io_fraction, core):
                         cores['combine'] = core
                         break
                     elif 'resample' in r.text:
-                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction))* float(core)
+                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction)) * float(core)
                         cores['resample'] = core
                         break
             for p in j.findall('{http://pegasus.isi.edu/schema/invocation}proc'):
@@ -149,8 +150,8 @@ def main():
     parser.add_argument('-k', '--kickstart', dest='kickstart_files', action='append', help='Kickstart file name')
     parser.add_argument('-i', '--stagein', dest='stagein_file', action='store', help='StageIn file name', default='stage-in.csv')
     parser.add_argument('--io-stagein', type=float, default=1.0, dest='io_frac_stagein', action='store', help='I/O fraction for the stage-in task (usually 1)')
-    parser.add_argument('-c', '--cores', dest='core_tasks', action='append', help='Number of cores per tasks (must be in the same order as kickstart files)')
-    parser.add_argument('--cores-stagein', dest='core_stagein', action='store', help='Number of cores for stage-in (must be in the same order as kickstart files)')
+    parser.add_argument('-c', '--cores', dest='core_tasks', action='append', help='Number of cores per tasks (must be in the same order as kickstart files!!)')
+    parser.add_argument('--cores-stagein', dest='core_stagein', action='store', help='Number of cores for stage-in (must be in the same order as kickstart files!!)')
     parser.add_argument('-o', dest='output', action='store', help='Output filename', default='wrench.dax')
     parser.add_argument('-d', '--debug', action='store_true', help='Print debug messages to stderr')
     args = parser.parse_args()
@@ -163,12 +164,15 @@ def main():
         logger.error('The provided DAX file does not exist:\n\t' + args.dax_file)
         exit(1)
 
+    if len(args.kickstart_files) != 2 or len(args.kickstart_files) != 2 or len(args.core_tasks) != 2:
+        logger.error("Must furnish 2 kickstart files, 2 io-fraction and 2 cores values")
+        exit(1)
 
     if len(args.kickstart_files) != len(args.io_frac) != len(args.core_tasks):
         logger.error("Number of kickstart files, the number of I/O fractions do not match and the number of cores must match.")
         exit(1)
 
-    for f,io,core in zip(args.kickstart_files,args.io_frac, args.core_tasks):
+    for f,io,core in zip(args.kickstart_files, args.io_frac, args.core_tasks):
         if not os.path.isfile(f):
             logger.error('The provided Kickstart file does not exist:\n\t' + f)
             exit(1)

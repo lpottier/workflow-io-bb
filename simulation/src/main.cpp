@@ -98,10 +98,9 @@ std::map<std::string, double> compute_payload_values;
 
   double temp_tot = 0.0;
   /* Stage files */
-  /* ignore the W0- in the beggining */
+  /* ignore the W0- in the beggining , it is mandatory to avoid simgrid complaining about output file with the same name*/
   for (auto f : workflow->getFiles()) {
     // Stage resamp.fits file if asked with --fits
-    // DO IT for w.resamp.weight.fits
     if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
@@ -120,7 +119,7 @@ std::map<std::string, double> compute_payload_values;
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << files_to_stages[f->getID()]->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), files_to_stages[f->getID()]));
     }
-    //std::cout << " " << f->getID() << " " << f->getSize() << " " << amount_of_data_staged << std::endl;
+    // std::cout << " " << f->getID() << " " << f->getSize() << " " << amount_of_data_staged << std::endl;
   }
 
   int nb_files_in_bb = 0;
@@ -223,23 +222,30 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["id"] = "0";
   args["jobid"] = std::to_string(getpid());
   args["cores"] = "1";
+  args["csv"] = "simu.csv";
+  args["pipeline"] = "1";
+  args["max-pipeline"] = "1";
+  args["bb-type"] = "0";
+  args["makespan"] = "0";
+  args["scheduler-log"] = "0";
+  args["output-dir"] = "0";
 
   int flag_no_header = 0;
 
   static struct option long_options[] = {
-      {"id",             required_argument, 0, 'd'},
-      {"jobid",          required_argument, 0, 'j'},
-      {"pipeline",       required_argument, 0, 'n'},
-      {"max-pipeline",   required_argument, 0, 'z'},
-      {"cores",          required_argument, 0, 'c'},
-      {"bb-type",        required_argument, 0, 'b'},
       {"platform",       required_argument, 0, 'p'},
       {"dax",            required_argument, 0, 'x'},
       {"stage-file",     required_argument, 0, 's'},
-      {"makespan",       required_argument, 0, 'm'},
-      {"scheduler-log",  required_argument, 0, 'w'},
-      {"output-dir",     required_argument, 0, 'o'},
-      {"csv",            required_argument, 0, 'a'},
+      {"id",             optional_argument, 0, 'd'},
+      {"jobid",          optional_argument, 0, 'j'},
+      {"pipeline",       optional_argument, 0, 'n'},
+      {"max-pipeline",   optional_argument, 0, 'z'},
+      {"cores",          optional_argument, 0, 'c'},
+      {"bb-type",        optional_argument, 0, 'b'},
+      {"makespan",       optional_argument, 0, 'm'},
+      {"scheduler-log",  optional_argument, 0, 'w'},
+      {"output-dir",     optional_argument, 0, 'o'},
+      {"csv",            optional_argument, 0, 'a'},
       {"fits",           no_argument,       0, 'f'},
       {"help",           no_argument,       0, 'h'},
       {"verbose",        no_argument,       0, 'v'},
@@ -259,15 +265,17 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
     switch (c) {
       case 'h':
         std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << std::endl;
+        std::cout << "       OPTIONNAL:" << std::endl;
         std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
-        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE or STRIPED)" << std::endl;
-        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
-        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
-        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE, STRIPED or ONNODE)" << std::endl;
         std::cout << "       [-f | --fits          ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
         std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
         std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;
@@ -337,15 +345,17 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
       case '?':
         std::cout << "usage: " << argv[0] << std::endl;
+        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
+        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
+        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << std::endl;
+        std::cout << "       OPTIONNAL:" << std::endl;
         std::cout << "       [-d | --id            ]  Add an JOB ID to the run (a column JOBID). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-j | --jobid         ]  Add an AVG ID to the run (a column AVG). Useful when running multiple simulations." << std::endl;
         std::cout << "       [-n | --pipeline      ]  Number of parallel pipeline in the workflow" << std::endl;
         std::cout << "       [-z | --max-pipeline  ]  Maximum number of parallel pipeline in the workflow" << std::endl;
-        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE or STRIPED)" << std::endl;
         std::cout << "       [-c | --cores         ]  Number of cores per tasks (same for all the tasks)" << std::endl;
-        std::cout << "       [-x | --dax           ]  XML workflow file " << std::endl;
-        std::cout << "       [-p | --platform      ]  XML platform file " << std::endl;
-        std::cout << "       [-s | --stage-file    ]  List of file to stage in BB " << std::endl;
+        std::cout << "       [-b | --bb-type       ]  Burst buffer allocation (PRIVATE, STRIPED or ONNODE)" << std::endl;
         std::cout << "       [-f | --fits          ]  Stage all files produced by RESAMP  in BB ( *.w.resamp.*)" << std::endl;
         std::cout << "       [-m | --makespan      ]  Measured makespan on a real platform " << std::endl;
         std::cout << "       [-w | --scheduler-log ]  Log of this workflow executed on a real platform " << std::endl;

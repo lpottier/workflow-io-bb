@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
+<platform version="4.1">
+    <zone id="AS0" routing="Full">
+        <host id="Host1" speed="2161Gf" core="44">
+            <prop id="type" value="compute"/>
+        </host>
+
+        <host id="PFSHost1" speed="1Gf" core="1">
+            <prop id="type" value="storage"/>
+            <prop id="category" value="PFS"/>
+            <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in GB -->
+        </host>
+
+        <host id="BBHost1" speed="1000Gf" core="10">
+            <prop id="type" value="storage"/>
+            <prop id="category" value="BB"/>
+            <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in GB : here we consider infinite size -->
+        </host>
+
+        <link id="pfslink" bandwidth="2.8GBps" latency="850us">
+            <prop id="type" value="pfs-summit"/>
+        </link>
+        <link id="bblink" bandwidth="6.5GBps" latency="100us">
+            <prop id="type" value="bb-summit"/>
+        </link>
+
+        <!-- route between PFS and compute host 1 (speed PFS) -->
+        <route src="PFSHost1" dst="Host1">
+            <link_ctn id="pfslink"/>
+        </route>
+
+        <!-- route between BB node 1 and compute host 1 (speed BB) -->
+        <route src="Host1" dst="BBHost1">
+            <link_ctn id="bblink"/>
+        </route>
+
+
+    </zone>
+</platform>

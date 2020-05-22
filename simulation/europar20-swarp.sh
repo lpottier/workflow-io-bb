@@ -3,7 +3,7 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-VERBOSE=0
+VERBOSE=2
 
 usage()
 {
@@ -15,15 +15,19 @@ echo "WARNING: do not support GCC >= 9"
 
 HEADER_CSV=1
 
-for i in "$@"; do
-    case $i in
-            -d=*|--dir=*)
-                MAIN_DIR="${i#*=}"
-                shift # past argument=value
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+    case $key in
+            -d|--dir)
+                MAIN_DIR="$2"
+                shift # past argument]
+                shift # value
             ;;
-            -c=*|--csv=*)
-                CSV_OUTPUT="${i#*=}"
-                shift # past argument=value
+            -c|--csv)
+                CSV_OUTPUT="$2"
+                shift # past argument
+                shift # value
             ;;
             -s|--no-header)
                 HEADER_CSV=0
@@ -38,7 +42,7 @@ for i in "$@"; do
             usage
             exit
             ;;
-esac
+    esac
 done
 
 if [ -z "$MAIN_DIR" ]; then
@@ -69,7 +73,7 @@ PWD=$(pwd)
 DIR_OUTPUT=$PWD/output/
 BUILD=$PWD/build/
 KS_TO_DAX="kickstart-to-wrench.py"
-DAXGEN_DIR="/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/pegasus/"
+DAXGEN_DIR="/Users/lpottier/research/usc-isi/projects/active/workflow-io-bb/real-executions/swarp/pegasus"
 
 FILE_MAP="files_to_stage.txt"
 OUTPUT_LOG="output.log"
@@ -77,7 +81,9 @@ STAGEIN_CSV="stage-in-bb-global.csv"
 RSMPL="stat.resample"
 COMBINE="stat.combine"
 
-PLATFORM="cori.xml"
+DIR_PLATFORM="/Users/lpottier/research/usc-isi/projects/active/workflow-io-bb/data/platforms/"
+CORI_PLATFORM="$DIR_PLATFORM/cori-1N.xml"
+SUMMIT_PLATFORM="$DIR_PLATFORM/summit-1N.xml"
 
 ### WORK ONLY WITH ONE PIPELINE
 WORKFLOW="swarp.dax"
@@ -87,8 +93,8 @@ echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
 err_make_wrench="$(mktemp /tmp/build.wrench.XXXXX)"
 
 cd $BUILD/
-cmake .. > $err_make_wrench 2>&1
-make >> $err_make_wrench 2>&1
+cmake .. #> $err_make_wrench 2>&1
+make #>> $err_make_wrench 2>&1
 cd ..
 
 if (( "$VERBOSE" >= 1 )); then
@@ -149,7 +155,7 @@ for run in $(ls $EXP_DIR | sort -n); do
     fi
     for pipeline in $(find $EXP_DIR/$run/* -maxdepth 0 -type d | sort -n); do
         if (( "$VERBOSE" >= 1 )); then
-            echo "  pipeline found: $(basename $pipeline)"
+            echo "  pipeline found: $(basename $pipeline) (be cautious: it is number of pipeline - 1)"
         fi
 
         LOC_OUTPUTLOG="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $OUTPUT_LOG)"
@@ -208,8 +214,10 @@ for run in $(ls $EXP_DIR | sort -n); do
             --io-stagein="1" \
             --cores-stagein="$core" \
             --cores="$core" \
+            --cores="$core" \
             --stagein="$LOC_STAGEIN" \
-            -o "$DAX" --debug \
+            -o "$DAX" \
+            --debug \
             2>$err_ks_to_wrench
        
         if (( "$VERBOSE" >= 1 )); then
@@ -231,13 +239,19 @@ for run in $(ls $EXP_DIR | sort -n); do
             nb_pipeline=$(echo "$nb_pipeline + 1" | bc -l)
         fi
 
+        PLATFORM=$CORI_PLATFORM
+
+        if [[ "$bb_type" == "summit" ]]; then
+            PLATFORM=$SUMMIT_PLATFORM
+        fi
+
         if [[ "$fits" == "stagefits" ]]; then
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
                 --max-pipeline="$max_pipeline" \
-                --platform="../data/platforms/$PLATFORM" \
+                --platform="$PLATFORM" \
                 --dax="$DAX" \
                 --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \
@@ -255,7 +269,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --id="$(basename $run)" \
                 --pipeline="$nb_pipeline" \
                 --max-pipeline="$max_pipeline" \
-                --platform="../data/platforms/$PLATFORM" \
+                --platform="$PLATFORM" \
                 --dax="$DAX" \
                 --bb-type="$bb_type" \
                 --stage-file="$LOC_FILEMAP" \

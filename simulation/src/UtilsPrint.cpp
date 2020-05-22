@@ -190,7 +190,7 @@ void printSimulationSummaryTTY(BBSimulation& simulation, bool header) {
   int width_fits = 5;
   int width_bbtype = 8;
   int width_workflow = 15;
-  int width_platform = 10;
+  int width_platform = 15;
   int width_latency = 10;
   int width_link = 10;
   int width_bbfile = 10;

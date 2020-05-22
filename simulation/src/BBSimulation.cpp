@@ -79,6 +79,7 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
   std::string delimiter = " ";
   std::string path_delimiter = "/\\";
   std::string bb_prefix_cori = "/var/opt/cray/dws/";
+  std::string bb_prefix_summit = "/mnt/bb/";
   std::ifstream stage_list_file (path);
 
   if (stage_list_file.is_open()) {
@@ -101,7 +102,7 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
       // std::cout << " path dst: " << dst_path << '\n';
       // std::cout << " file dst: " << dst_file << '\n';
 
-      if (src_path.find_first_of(bb_prefix_cori) == std::string::npos) {
+      if (src_path.find_first_of(bb_prefix_cori) == std::string::npos || src_path.find_first_of(bb_prefix_summit) == std::string::npos) {
         std::cerr << "[ERROR] file: " << src_file << " cannot be in burst buffers before being staged in" << std::endl;
         std::exit(1);
       }
@@ -111,7 +112,7 @@ BBSimulation::parseFilesList(std::string path, std::shared_ptr<wrench::StorageSe
         std::exit(1);
       }
 
-      if (dst_path.find_first_of(bb_prefix_cori) != std::string::npos) {
+      if (dst_path.find_first_of(bb_prefix_cori) != std::string::npos || dst_path.find_first_of(bb_prefix_summit) != std::string::npos) {
         // Goes on the first (and only) BB nodes
         files_to_stages[src_file] = bb_service;
         this->nb_files_staged++;
@@ -177,7 +178,7 @@ wrench::Workflow* BBSimulation::parse_inputs() {
   } else if (ends_with(this->raw_args["workflow_file"],"json")) {
       this->workflow = wrench::PegasusWorkflowParser::createWorkflowFromJSON(raw_args["workflow_file"], "1000Gf");
   } else {
-      std::cerr << "Workflow file name must end with '.dax' or '.json'" << std::endl;
+      std::cerr << "Workflow file: " << raw_args["workflow_file"] << "name must end with '.dax' or '.json'" << std::endl;
       exit(1);
   }
   std::cerr << "The workflow has " << this->workflow->getNumberOfTasks() << " tasks " << std::endl;
@@ -190,7 +191,10 @@ wrench::Workflow* BBSimulation::parse_inputs() {
   std::cerr.flush();
 
   // Parse real data to compare with simulated makespan
-  this->real_data_run = parseRealWorkflowLog(this->raw_args["real_log"]);
+  if (this->raw_args["real_log"] != "0")
+    this->real_data_run = parseRealWorkflowLog(this->raw_args["real_log"]);
+  else
+    this->real_data_run["TOTAL"] = 0;
 
   return this->workflow;
 }
@@ -311,10 +315,10 @@ BBSimulation::instantiate_storage_services() {
       {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_ANSWER_MESSAGE_PAYLOAD,       0},
       {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_REQUEST_MESSAGE_PAYLOAD,        0},
       {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_ANSWER_MESSAGE_PAYLOAD,         0},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       0},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        0},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        0},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       10000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        10000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        10000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         10000000},
   };
 
   try {
@@ -366,9 +370,10 @@ std::set<std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_comp
   //   compute_resources[host] = std::make_tuple(wrench::ComputeService::ALL_CORES, wrench::ComputeService::ALL_RAM);
   // }
 
+  // best for striped-stagefits 32c-32f -> 25500000000   || best for private 32c-32f -> 16000000000
   std::map<std::string, double> compute_payload_values = {
       {wrench::ComputeServiceMessagePayload::JOB_TYPE_NOT_SUPPORTED_MESSAGE_PAYLOAD,         0}, 
-      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    32000000000}, //32000000000
+      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    16000000000}, //32000000000
       {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD,              0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_FAILED_MESSAGE_PAYLOAD,            0},

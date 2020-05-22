@@ -8,8 +8,7 @@ import argparse
 from Pegasus.DAX3 import *
 
 ##################### BEGIN PARAMETERS #####################
-INPUTS_DIR="/Users/lpottier/research/usc-isi/projects/workflow-io-bb/real-workflows/swarp/input/"
-CONFIG_DIR="../config/"
+INPUTS_DIR="/Users/lpottier/research/usc-isi/projects/active/workflow-io-bb/real-executions/swarp/input/"
 
 STAGEIN="stagein"
 RESAMPLE="resample"
