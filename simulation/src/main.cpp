@@ -89,30 +89,43 @@ std::map<std::string, double> compute_payload_values;
   FileMap_t file_placement_heuristic;
   std::shared_ptr<wrench::StorageService> first_bb_node = *(simulation.getBBServices()).begin();
 
-  // Parse the file containing the list of files to stage in
+  // Parse the file containing the list of files to stage in. Create a map
   auto files_to_stages = simulation.parseFilesList(args["stage-file"], simulation.getPFSService(), first_bb_node);
 
   // Create the hashmap containing the files that will be staged in
   bool stage_fits = (args["fits"] == "1");
   // Recall that if stage_fits is true then all the files produced by resample will be written in BB
 
+  /***********************************
+  *                                  *
+  ********** SWARP SPECIFIC **********
+  *                                  *
+  ************************************/
+
   double temp_tot = 0.0;
   /* Stage files */
-  /* ignore the W0- in the beggining , it is mandatory to avoid simgrid complaining about output file with the same name*/
+  /* ignore the W0- in the beggining , it is mandatory to avoid simgrid complaining about different output files with the same name */
   for (auto f : workflow->getFiles()) {
     // Stage resamp.fits file if asked with --fits
     if (stage_fits && f->getID().find(".w.resamp.fits") != std::string::npos) {
-      std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " will be staged in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
+      std::cerr << "[INFO]: Resamp: " << std::left << std::setw(50) << f->getID() << " will be read/written in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
+      file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
+      continue;
+    }
+    // Write in BB output files even if there are not in the list (to have the same setup as real executions)
+    if (f->getID().find("coadd") != std::string::npos) {
+      std::cerr << "[INFO]: coadd: " << std::left << std::setw(50) << f->getID() << " will be written in " << std::left << std::setw(10) << first_bb_node->getHostname() << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), first_bb_node));
       continue;
     }
 
-    // If not found files stay in PFS by default
+    // If not found, files stay in PFS by default
     if (files_to_stages.count(f->getID()) == 0) {
       std::cerr << "[INFO]: " << std::left << std::setw(50) << f->getID() << " not found in " << std::left << std::setw(10) << args["stage-file"] << " This file stays in the PFS." << std::endl;
       file_placement_heuristic.insert(std::make_tuple(f, simulation.getPFSService(), simulation.getPFSService()));
     }
     else {
+      // Otherwise if found in the stage file furnished, stage this file in BB
       if (files_to_stages[f->getID()]->getHostname() != "PFSHost1"){
         temp_tot += f->getSize();
       }
@@ -121,6 +134,13 @@ std::map<std::string, double> compute_payload_values;
     }
     // std::cout << " " << f->getID() << " " << f->getSize() << " " << amount_of_data_staged << std::endl;
   }
+
+  /***********************************
+  *                                  *
+  ******** END SWARP SPECIFIC ********
+  *                                  *
+  ************************************/
+
 
   int nb_files_in_bb = 0;
   double amount_of_data_in_bb = 0;

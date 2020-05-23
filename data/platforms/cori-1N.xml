@@ -2,7 +2,7 @@
 <!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
 <platform version="4.1">
     <zone id="AS0" routing="Full">
-        <host id="Host1" speed="1177Gf" core="32">
+        <host id="Host1" speed="36.8Gf" core="32">
             <prop id="type" value="compute"/>
         </host>
 
@@ -17,7 +17,7 @@
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
         </host>
 
-        <link id="pfslink" bandwidth="2.8GBps" latency="850us">
+        <link id="pfslink" bandwidth="1GBps" latency="1000us">
             <prop id="type" value="pfs-cori"/>
         </link>
         <link id="bblink" bandwidth="6.5GBps" latency="100us">

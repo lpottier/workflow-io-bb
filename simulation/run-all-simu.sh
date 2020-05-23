@@ -27,9 +27,9 @@ for dir in $DIRS; do
     echo "[$($DATE --rfc-3339=ns)] processing: $(basename $dir)..."
     if [[ -d "$dir" && "$(ls -A $dir)" ]]; then
         if (( "$HEADER" == 0 )); then
-            VERBOSE="$verbose" bash $SCRIPT --dir="$dir" --csv="$CSV_OUTPUT"
+            VERBOSE="$verbose" bash $SCRIPT --dir "$dir" --csv "$CSV_OUTPUT"
         else
-            VERBOSE="$verbose" bash $SCRIPT --dir="$dir" --csv="$CSV_OUTPUT" --no-header
+            VERBOSE="$verbose" bash $SCRIPT --dir "$dir" --csv "$CSV_OUTPUT" --no-header
         fi
         HEADER=1
     else

@@ -13,6 +13,7 @@ runtimes = {}
 cores = {}
 jobs = {}
 
+SWARP_DATA = {'null': '0', 'ks.out.7SqNTw': '0', 'ks.err.VAN4u5': '15668', 'anon_inode:[eventpoll]': '0', 'pipe:[629424]': '0', 'socket:[629427]': '0', 'socket:[825042]': '0', 'pipe:[825041]': '0', 'kgni0': '0', 'ld.so.cache': '345151', 'libpthread-2.26.so': '144048', 'libm-2.26.so': '1355752', 'libc-2.26.so': '2038472', 'resample.swarp': '4982', 'Pacific': '2836', 'PTF201111234857_2_o_37754_06.w.fits': '33583680', 'PTF201111234857_2_o_37754_06.w.weight.fits': '16781760', 'PTF201111095206_2_o_34706_06.w.fits': '33583680', 'PTF201111095206_2_o_34706_06.w.weight.fits': '16781760', 'PTF201111294943_2_o_39822_06.w.fits': '33583680', 'PTF201111294943_2_o_39822_06.w.weight.fits': '16781760', 'PTF201111184953_2_o_36749_06.w.fits': '33583680', 'PTF201111184953_2_o_36749_06.w.weight.fits': '16781760', 'PTF201111284696_2_o_39396_06.w.fits': '33583680', 'PTF201111284696_2_o_39396_06.w.weight.fits': '16781760', 'PTF201111025412_2_o_33288_06.w.fits': '33583680', 'PTF201111025412_2_o_33288_06.w.weight.fits': '16781760', 'PTF201111224851_2_o_37387_06.w.fits': '33583680', 'PTF201111224851_2_o_37387_06.w.weight.fits': '16781760', 'PTF201111265053_2_o_38612_06.w.fits': '33583680', 'PTF201111265053_2_o_38612_06.w.weight.fits': '16781760', 'PTF201111274755_2_o_38996_06.w.fits': '33583680', 'PTF201111274755_2_o_38996_06.w.weight.fits': '16781760', 'PTF201111035427_2_o_33741_06.w.fits': '33583680', 'PTF201111035427_2_o_33741_06.w.weight.fits': '16781760', 'PTF201111015420_2_o_32874_06.w.fits': '33583680', 'PTF201111015420_2_o_32874_06.w.weight.fits': '16781760', 'PTF201111085228_2_o_34301_06.w.fits': '33583680', 'PTF201111085228_2_o_34301_06.w.weight.fits': '16781760', 'PTF201111165032_2_o_35994_06.w.fits': '33583680', 'PTF201111165032_2_o_35994_06.w.weight.fits': '16781760', 'PTF201111304878_2_o_40204_06.w.fits': '33583680', 'PTF201111304878_2_o_40204_06.w.weight.fits': '16781760', 'PTF201111155050_2_o_35570_06.w.fits': '33583680', 'PTF201111155050_2_o_35570_06.w.weight.fits': '16781760', 'PTF201111025428_2_o_33289_06.w.fits': '33583680', 'PTF201111025428_2_o_33289_06.w.weight.fits': '16781760', 'PTF201111234857_2_o_37754_06.w.resamp.fits': '30110400', 'PTF201111234857_2_o_37754_06.w.resamp.weight.fits': '30110400', 'PTF201111095206_2_o_34706_06.w.resamp.fits': '30075840', 'PTF201111095206_2_o_34706_06.w.resamp.weight.fits': '30075840', 'PTF201111294943_2_o_39822_06.w.resamp.fits': '30035520', 'PTF201111294943_2_o_39822_06.w.resamp.weight.fits': '30035520', 'PTF201111184953_2_o_36749_06.w.resamp.fits': '30090240', 'PTF201111184953_2_o_36749_06.w.resamp.weight.fits': '30090240', 'PTF201111284696_2_o_39396_06.w.resamp.fits': '30110400', 'PTF201111284696_2_o_39396_06.w.resamp.weight.fits': '30110400', 'PTF201111025412_2_o_33288_06.w.resamp.fits': '30032640', 'PTF201111025412_2_o_33288_06.w.resamp.weight.fits': '30032640', 'PTF201111224851_2_o_37387_06.w.resamp.fits': '30081600', 'PTF201111224851_2_o_37387_06.w.resamp.weight.fits': '30081600', 'PTF201111265053_2_o_38612_06.w.resamp.fits': '30150720', 'PTF201111265053_2_o_38612_06.w.resamp.weight.fits': '30150720', 'PTF201111274755_2_o_38996_06.w.resamp.fits': '30165120', 'PTF201111274755_2_o_38996_06.w.resamp.weight.fits': '30165120', 'PTF201111035427_2_o_33741_06.w.resamp.fits': '30084480', 'PTF201111035427_2_o_33741_06.w.resamp.weight.fits': '30084480', 'PTF201111015420_2_o_32874_06.w.resamp.fits': '30035520', 'PTF201111015420_2_o_32874_06.w.resamp.weight.fits': '30035520', 'PTF201111085228_2_o_34301_06.w.resamp.fits': '30061440', 'PTF201111085228_2_o_34301_06.w.resamp.weight.fits': '30061440', 'PTF201111165032_2_o_35994_06.w.resamp.fits': '30075840', 'PTF201111165032_2_o_35994_06.w.resamp.weight.fits': '30075840', 'PTF201111304878_2_o_40204_06.w.resamp.fits': '30119040', 'PTF201111304878_2_o_40204_06.w.resamp.weight.fits': '30119040', 'PTF201111155050_2_o_35570_06.w.resamp.fits': '30029760', 'PTF201111155050_2_o_35570_06.w.resamp.weight.fits': '30029760', 'PTF201111025428_2_o_33289_06.w.resamp.fits': '29995200', 'PTF201111025428_2_o_33289_06.w.resamp.weight.fits': '29995200', 'resample.xml': '24585', 'online': '4096', 'libgcc_s.so.1': '96928', 'ks.out.TdNgBR': '0', 'ks.err.btmvug': '7811', 'pipe:[622190]': '0', 'socket:[622193]': '0', 'socket:[827395]': '0', 'pipe:[827394]': '0', 'combine.swarp': '4982', 'coadd.fits': '51845760', 'coadd.weight.fits': '51845760', 'combine.xml': '26007'}
 
 def _configure_logging(debug):
     """
@@ -56,6 +57,8 @@ def _parse_kickstart(kickstart_file, io_fraction, core):
     """
     logger.info('Parsing Kickstart file: ' + os.path.basename(kickstart_file))
     logger.info('Using I/O fraction: ' + str(io_fraction))
+    
+    global files
 
     try:
         e = xml.etree.ElementTree.parse(kickstart_file).getroot()
@@ -63,13 +66,14 @@ def _parse_kickstart(kickstart_file, io_fraction, core):
             for a in j.findall('{http://pegasus.isi.edu/schema/invocation}argument-vector'):
                 for r in a.findall('{http://pegasus.isi.edu/schema/invocation}arg'):
                     if 'combine' in r.text:
-                        runtimes['combine'] = float(j.get('duration'))*(1-float(io_fraction)) * float(core)
+                        runtimes['combine'] = float(j.get('duration'))*(1-float(io_fraction))
                         cores['combine'] = core
                         break
                     elif 'resample' in r.text:
-                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction)) * float(core)
+                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction))
                         cores['resample'] = core
                         break
+
             for p in j.findall('{http://pegasus.isi.edu/schema/invocation}proc'):
                 for f in p.findall('{http://pegasus.isi.edu/schema/invocation}file'):
                     files[os.path.basename(f.get('name'))] = f.get('size')
@@ -77,6 +81,10 @@ def _parse_kickstart(kickstart_file, io_fraction, core):
     except xml.etree.ElementTree.ParseError as ex:
         logger.warning(str(ex))
 
+    if files == {}:
+        logger.warning("It appears that the Kickstart record: {0} does not contain file size information. To include file size and I/O runs Kickstart with the option -z or -Z".format(kickstart_file))
+        ## Use SWARP data: Temporary fix
+        files = SWARP_DATA
 
 def _parse_dax(dax_file):
     """
@@ -95,14 +103,13 @@ def _parse_dax(dax_file):
             job['core'] = str(cores[job['name']])
             job['parents'] = []
             job['files'] = []
-
+            
             for f in j.findall('{http://pegasus.isi.edu/schema/DAX}uses'):
                 file = collections.OrderedDict()
                 file['link'] = f.get('link')
                 file['name'] = f.get('name') if not f.get('name') == None else f.get('file')
                 if len(file['name'].split('-')) == 2:
-                    #Dirty fix
-                    # To deal with multi pipeline workflow where some files are prefixed with 'W'X'-' where X is the id of the pipeline
+                    #Dirty fix:  To deal with multi pipeline workflow where some files are prefixed with 'W'X'-' where X is the id of the pipeline
                     file['size'] = files[file['name'].split('-')[1]]
                 else:
                     file['size'] = files[file['name']]

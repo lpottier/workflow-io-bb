@@ -106,7 +106,7 @@ def main():
             resample_output = File(output_name)
             resample_output_files.append(resample_output)
 
-            resample.uses(resample_output, link=Link.OUTPUT, transfer=False, register=False)
+            resample.uses(resample_output, link=Link.OUTPUT, transfer=True, register=True)
             resample.addArguments(os.path.basename(in_file))
 
         for output in RESAMPLE_OUTPUT:

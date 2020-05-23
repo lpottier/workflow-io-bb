@@ -3,7 +3,7 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-VERBOSE=2
+VERBOSE=0
 
 usage()
 {
@@ -93,8 +93,8 @@ echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
 err_make_wrench="$(mktemp /tmp/build.wrench.XXXXX)"
 
 cd $BUILD/
-cmake .. #> $err_make_wrench 2>&1
-make #>> $err_make_wrench 2>&1
+cmake .. > $err_make_wrench 2>&1
+make >> $err_make_wrench 2>&1
 cd ..
 
 if (( "$VERBOSE" >= 1 )); then
@@ -161,23 +161,56 @@ for run in $(ls $EXP_DIR | sort -n); do
         LOC_OUTPUTLOG="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $OUTPUT_LOG)"
         LOC_FILEMAP="$(find $pipeline -maxdepth 1 -type f -name $FILE_MAP)"
 
+        # For summit the FILE_MAP is not located at the same place (dumb me..)
+        if [ -z "$LOC_FILEMAP" ]; then
+            LOC_FILEMAP="$(find $MAIN_DIR/swarp*.*/ -maxdepth 1 -type f -name $FILE_MAP)"
+            # I forget to copy back the input_File with the real BB path
+            sed -i -e "s|@INPUT@|/mnt/bb/lpottier/input/|g" $LOC_FILEMAP
+        fi
+
         LOC_STAGEIN="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $STAGEIN_CSV)"
         LOC_RSMPL="$(find $pipeline -maxdepth 1 -type f -name $RSMPL*)"
         LOC_COMBINE="$(find $pipeline -maxdepth 1 -type f -name $COMBINE*)"
 
         if (( "$VERBOSE" >= 2 )); then
-            echo "  |-> $OUTPUT_LOG found: $(basename $LOC_OUTPUTLOG)"
-            echo "  |-> $FILE_MAP found: $(basename $LOC_FILEMAP)"
-            echo "  |-> $STAGEIN_CSV found: $(basename $LOC_STAGEIN)"
-            echo "  |-> $RSMPL found: $LOC_RSMPL"
-            echo "  |-> $COMBINE found: $LOC_COMBINE"
+            if [ ! -z "$LOC_OUTPUTLOG" ]; then
+                echo "  |-> $OUTPUT_LOG found: $LOC_OUTPUTLOG"
+            else
+                echo "  |-> ERROR: $OUTPUT_LOG not found"
+                exit 1
+            fi
+            if [ ! -z "$LOC_FILEMAP" ]; then
+                echo "  |-> $FILE_MAP found: $LOC_FILEMAP"
+            else
+                echo "  |-> ERROR: $FILE_MAP not found neither in $pipeline nor $MAIN_DIR/swarp*.*/"
+                exit 1
+            fi
+            if [ ! -z "$LOC_STAGEIN" ]; then
+                echo "  |-> $STAGEIN_CSV found: $LOC_STAGEIN"
+            else
+                echo "  |-> ERROR: $STAGEIN_CSV not found"
+                exit 1
+            fi
+            if [ ! -z "$LOC_RSMPL" ]; then
+                echo "  |-> $RSMPL found: $LOC_RSMPL"
+            else
+                echo "  |-> ERROR: $RSMPL not found"
+                exit 1
+            fi
+            if [ ! -z "$LOC_COMBINE" ]; then
+                echo "  |-> $COMBINE found: $LOC_COMBINE"
+            else
+                echo "  |-> ERROR: $COMBINE not found"
+                exit 1
+            fi
         fi
+
 
         stagein=$(awk -F "\"* \"*" '{print $6}' $LOC_STAGEIN)
         stagein=$(echo $stagein | cut -d' ' -f2) 
         rsmpl=$(LC_ALL=C sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_RSMPL)
         combine=$(LC_ALL=C sed -n 's/^<invocation.*duration=\"\([0-9]*\.[0-9]*\)\".*>/\1/p' $LOC_COMBINE)
-        mksp=$(echo "$stagein + $rsmpl + $combine" | bc -l)
+        mksp=$(awk "BEGIN { print $stagein + $rsmpl + $combine }")
 
         err_daxgen="/dev/null"
         if (( "$VERBOSE" >= 1 )); then
@@ -244,7 +277,7 @@ for run in $(ls $EXP_DIR | sort -n); do
         if [[ "$bb_type" == "summit" ]]; then
             PLATFORM=$SUMMIT_PLATFORM
         fi
-
+ 
         if [[ "$fits" == "stagefits" ]]; then
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
@@ -288,7 +321,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
-        exit
+
     done
 done
 

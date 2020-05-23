@@ -304,7 +304,7 @@ BBSimulation::instantiate_storage_services() {
   this->pfs_link = this->check_links(this->cs_to_pfs);
   this->bb_link = this->check_links(this->cs_to_bb);
 
-  std::map<std::string, double> message_payload_values = {
+  std::map<std::string, double> pfs_payload = {
       {wrench::SimpleStorageServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD,              0},
       {wrench::SimpleStorageServiceMessagePayload::DAEMON_STOPPED_MESSAGE_PAYLOAD,           0},
       {wrench::SimpleStorageServiceMessagePayload::FREE_SPACE_REQUEST_MESSAGE_PAYLOAD,       0},
@@ -315,10 +315,27 @@ BBSimulation::instantiate_storage_services() {
       {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_ANSWER_MESSAGE_PAYLOAD,       0},
       {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_REQUEST_MESSAGE_PAYLOAD,        0},
       {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_ANSWER_MESSAGE_PAYLOAD,         0},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       10000000},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        10000000},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        10000000},
-      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         10000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       100000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        100000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        100000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         100000},
+  };
+
+  std::map<std::string, double> bb_payload = {
+      {wrench::SimpleStorageServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD,              0},
+      {wrench::SimpleStorageServiceMessagePayload::DAEMON_STOPPED_MESSAGE_PAYLOAD,           0},
+      {wrench::SimpleStorageServiceMessagePayload::FREE_SPACE_REQUEST_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FREE_SPACE_ANSWER_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_DELETE_REQUEST_MESSAGE_PAYLOAD,      0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_DELETE_ANSWER_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_REQUEST_MESSAGE_PAYLOAD,      0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_LOOKUP_ANSWER_MESSAGE_PAYLOAD,       0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_REQUEST_MESSAGE_PAYLOAD,        0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_COPY_ANSWER_MESSAGE_PAYLOAD,         0},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_REQUEST_MESSAGE_PAYLOAD,       120000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_WRITE_ANSWER_MESSAGE_PAYLOAD,        120000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_REQUEST_MESSAGE_PAYLOAD,        120000000},
+      {wrench::SimpleStorageServiceMessagePayload::FILE_READ_ANSWER_MESSAGE_PAYLOAD,         120000000},
   };
 
   try {
@@ -329,7 +346,7 @@ BBSimulation::instantiate_storage_services() {
                                               this->pfs_link.second,
                                               {},
                                               {},
-                                              message_payload_values)
+                                              pfs_payload)
                                       );
     this->storage_services.insert(this->pfs_storage_service);
   } catch (std::invalid_argument &e) {
@@ -347,7 +364,7 @@ BBSimulation::instantiate_storage_services() {
                                     this->pfs_storage_service,
                                     {},
                                     {},
-                                    message_payload_values)
+                                    bb_payload)
                               );
       this->storage_services.insert(service);
       this->bb_storage_services.insert(service);
@@ -370,10 +387,9 @@ std::set<std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_comp
   //   compute_resources[host] = std::make_tuple(wrench::ComputeService::ALL_CORES, wrench::ComputeService::ALL_RAM);
   // }
 
-  // best for striped-stagefits 32c-32f -> 25500000000   || best for private 32c-32f -> 16000000000
   std::map<std::string, double> compute_payload_values = {
       {wrench::ComputeServiceMessagePayload::JOB_TYPE_NOT_SUPPORTED_MESSAGE_PAYLOAD,         0}, 
-      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    16000000000}, //32000000000
+      {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD,    3000000000}, //32000000000
       {wrench::ComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD,              0},
       {wrench::ComputeServiceMessagePayload::STANDARD_JOB_FAILED_MESSAGE_PAYLOAD,            0},
