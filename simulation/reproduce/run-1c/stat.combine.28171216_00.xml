@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invocation xmlns="http://pegasus.isi.edu/schema/invocation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pegasus.isi.edu/schema/invocation http://pegasus.isi.edu/schema/iv-2.3.xsd" version="2.3" start="2020-02-14T21:26:46.632-08:00" duration="20.914" interface="ipogif0" hostaddr="10.128.5.132" hostname="nid01401" pid="29099" uid="79874" user="lpottier" gid="79874" group="lpottier" umask="0007">
+  <mainjob start="2020-02-14T21:26:46.670-08:00" duration="20.876" pid="29100">
+    <usage utime="8.232" stime="7.708" maxrss="1040000" minflt="259554" majflt="0" nswap="0" inblock="3624" outblock="202616" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="3783046" nivcsw="36265"/>
+    <status raw="0"><regular exitcode="0"/></status>
+    <statcall error="0">
+      <file name="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp">7F454C46020101000000000000000000</file>
+      <statinfo mode="0100770" size="1868194" inode="144191976101662615" nlink="1" blksize="4194304" blocks="3664" mtime="2020-02-13T13:35:25-08:00" atime="2020-02-14T21:25:13-08:00" ctime="2020-02-13T13:35:25-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    </statcall>
+    <argument-vector>
+      <arg nr="1">-c</arg>
+      <arg nr="2">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/combine.swarp</arg>
+      <arg nr="3">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits</arg>
+      <arg nr="4">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits</arg>
+      <arg nr="5">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits</arg>
+      <arg nr="6">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits</arg>
+      <arg nr="7">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits</arg>
+      <arg nr="8">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits</arg>
+      <arg nr="9">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits</arg>
+      <arg nr="10">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits</arg>
+      <arg nr="11">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits</arg>
+      <arg nr="12">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits</arg>
+      <arg nr="13">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits</arg>
+      <arg nr="14">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits</arg>
+      <arg nr="15">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits</arg>
+      <arg nr="16">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits</arg>
+      <arg nr="17">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits</arg>
+      <arg nr="18">/var/opt/cray/dws/mounts/batch/28171216_private_scratch///swarp-1.batch.1c.32f.28171216//1/0/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits</arg>
+    </argument-vector>
+    <proc ppid="29099" pid="29100" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1581744406.720995" stop="1581744427.534831" utime="8.230" stime="7.700" iowait="0.020" finthreads="1" maxthreads="0" totthreads="0" vmpeak="1813164" rsspeak="1040000" rchar="962530671" wchar="103725347" rbytes="1855488" wbytes="103739392" cwbytes="0" syscr="214289" syscw="14575">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.bqoPQf" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.ye0I6y" bread="0" nread="0" bwrite="7851" nwrite="145" bseek="0" nseek="0" size="7851"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="306641"/>
+      <file name="/lib64/libpthread-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="140688"/>
+      <file name="/lib64/libm-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="1356080"/>
+      <file name="/lib64/libc-2.26.so" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2034840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/combine.swarp" bread="4981" nread="5" bwrite="0" nwrite="0" bseek="0" nseek="0" size="4981"/>
+      <file name="/usr/share/zoneinfo/US/Pacific" bread="4638" nread="2" bwrite="0" nwrite="0" bseek="0" nseek="0" size="2836"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111015420_2_o_32874_06.w.resamp.fits" bread="30035584" nread="6740" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111015420_2_o_32874_06.w.resamp.weight.fits" bread="30035584" nread="6740" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111025412_2_o_33288_06.w.resamp.fits" bread="30031488" nread="6723" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111025412_2_o_33288_06.w.resamp.weight.fits" bread="30031488" nread="6723" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30032640"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111025428_2_o_33289_06.w.resamp.fits" bread="29995648" nread="6537" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111025428_2_o_33289_06.w.resamp.weight.fits" bread="29995648" nread="6537" bwrite="0" nwrite="0" bseek="0" nseek="0" size="29995200"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111035427_2_o_33741_06.w.resamp.fits" bread="30084736" nread="6735" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111035427_2_o_33741_06.w.resamp.weight.fits" bread="30084736" nread="6735" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30084480"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111085228_2_o_34301_06.w.resamp.fits" bread="30062208" nread="6746" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111085228_2_o_34301_06.w.resamp.weight.fits" bread="30062208" nread="6746" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30061440"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111095206_2_o_34706_06.w.resamp.fits" bread="30076544" nread="6733" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111095206_2_o_34706_06.w.resamp.weight.fits" bread="30076544" nread="6733" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111155050_2_o_35570_06.w.resamp.fits" bread="30030784" nread="6545" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111155050_2_o_35570_06.w.resamp.weight.fits" bread="30030784" nread="6545" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30029760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111165032_2_o_35994_06.w.resamp.fits" bread="30076544" nread="6733" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111165032_2_o_35994_06.w.resamp.weight.fits" bread="30076544" nread="6733" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30075840"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111184953_2_o_36749_06.w.resamp.fits" bread="30088832" nread="6752" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111184953_2_o_36749_06.w.resamp.weight.fits" bread="30088832" nread="6752" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30090240"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111224851_2_o_37387_06.w.resamp.fits" bread="30080640" nread="6750" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111224851_2_o_37387_06.w.resamp.weight.fits" bread="30080640" nread="6750" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30081600"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111234857_2_o_37754_06.w.resamp.fits" bread="30111360" nread="6741" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111234857_2_o_37754_06.w.resamp.weight.fits" bread="30111360" nread="6741" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111265053_2_o_38612_06.w.resamp.fits" bread="30151296" nread="6766" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111265053_2_o_38612_06.w.resamp.weight.fits" bread="30151296" nread="6766" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30150720"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111274755_2_o_38996_06.w.resamp.fits" bread="30165632" nread="6753" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111274755_2_o_38996_06.w.resamp.weight.fits" bread="30165632" nread="6753" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30165120"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111284696_2_o_39396_06.w.resamp.fits" bread="30111360" nread="6562" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111284696_2_o_39396_06.w.resamp.weight.fits" bread="30111360" nread="6562" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30110400"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111294943_2_o_39822_06.w.resamp.fits" bread="30035584" nread="6740" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111294943_2_o_39822_06.w.resamp.weight.fits" bread="30035584" nread="6740" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30035520"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111304878_2_o_40204_06.w.resamp.fits" bread="30120064" nread="6564" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/0/resamp/PTF201111304878_2_o_40204_06.w.resamp.weight.fits" bread="30120064" nread="6564" bwrite="0" nwrite="0" bseek="0" nseek="0" size="30119040"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.fits" bread="0" nread="0" bwrite="51845760" nwrite="7202" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.weight.fits" bread="0" nread="0" bwrite="51845760" nwrite="7202" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/combine.xml" bread="0" nread="0" bwrite="25976" nwrite="26" bseek="0" nseek="0" size="25976"/>
+    </proc>
+    <proc ppid="29099" pid="29101" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1581744406.889361" stop="1581744427.493655" utime="8.230" stime="7.670" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1813164" rsspeak="1039844" rchar="962530671" wchar="103699329" rbytes="1855488" wbytes="103710720" cwbytes="0" syscr="214289" syscw="14546">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.bqoPQf" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.ye0I6y" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7809"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/etc/ld.so.cache" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="306641"/>
+      <file name="/lib64/libgcc_s.so.1" bread="832" nread="1" bwrite="0" nwrite="0" bseek="0" nseek="0" size="96680"/>
+    </proc>
+    <proc ppid="29099" pid="29102" exe="/global/cscratch1/sd/lpottier/workflow-io-bb/real-workflows/swarp/bin/swarp" start="1581744406.889504" stop="1581744427.493557" utime="8.230" stime="7.670" iowait="0.000" finthreads="3" maxthreads="0" totthreads="0" vmpeak="1813164" rsspeak="1039844" rchar="962530671" wchar="103699329" rbytes="1855488" wbytes="103710720" cwbytes="0" syscr="214289" syscw="14546">
+      <file name="/dev/null" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.out.bqoPQf" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+      <file name="/tmp/ks.err.ye0I6y" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="7809"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1/coadd.weight.fits" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="51845760"/>
+      <file name="/dev/kgni0" bread="0" nread="0" bwrite="0" nwrite="0" bseek="0" nseek="0" size="0"/>
+    </proc>
+  </mainjob>
+  <jobids lrm="28171216" lrmtype="slurm"/>
+  <cwd>/var/opt/cray/dws/mounts/batch/28171216_private_scratch/swarp-1.batch.1c.32f.28171216/1</cwd>
+  <usage utime="4.319" stime="9.047" maxrss="2208" minflt="186" majflt="1" nswap="0" inblock="8" outblock="0" msgsnd="0" msgrcv="0" nsignals="0" nvcsw="1043203" nivcsw="2302"/>
+  <machine page-size="4096">
+    <stamp>2020-02-14T21:26:46.632-08:00</stamp>
+    <uname system="linux" nodename="nid01401" release="4.12.14-150.17_5.0.87-cray_ari_c" machine="x86_64">#1 SMP Tue Nov 19 02:19:53 UTC 2019 (b97317c)</uname>
+    <linux>
+      <ram total="131895080" free="129167776" shared="491352" buffer="2792"/>
+      <swap total="0" free="0"/>
+      <boot idle="31387446.070">2020-02-04T17:44:22.003-08:00</boot>
+      <cpu count="64" speed="2301" vendor="GenuineIntel">Intel(R) Xeon(R) CPU E5-2698 v3 @ 2.30GHz</cpu>
+      <load min1="0.85" min5="2.76" min15="13.94"/>
+      <procs total="775" running="1" sleeping="774" vmsize="8448868" rss="398880"/>
+      <task total="832" running="1" sleeping="831"/>
+    </linux>
+  </machine>
+  <statcall error="0" id="stdin">
+    <file name="/dev/null"/>
+    <statinfo mode="020666" size="0" inode="7" nlink="1" blksize="4096" blocks="0" mtime="2020-02-04T17:47:23-08:00" atime="2020-02-04T17:47:23-08:00" ctime="2020-02-04T17:47:23-08:00" uid="0" user="root" gid="0" group="root"/>
+  </statcall>
+  <statcall error="0" id="stdout">
+    <temporary name="/tmp/ks.out.bqoPQf" descriptor="3"/>
+    <statinfo mode="0100600" size="0" inode="3789899" nlink="1" blksize="4096" blocks="0" mtime="2020-02-14T21:26:46-08:00" atime="2020-02-14T21:26:46-08:00" ctime="2020-02-14T21:26:46-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+  <statcall error="0" id="stderr">
+    <temporary name="/tmp/ks.err.ye0I6y" descriptor="4"/>
+    <statinfo mode="0100600" size="7851" inode="3789900" nlink="1" blksize="4096" blocks="16" mtime="2020-02-14T21:27:07-08:00" atime="2020-02-14T21:26:46-08:00" ctime="2020-02-14T21:27:07-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+    <data>
+----- SWarp 2.38.0 started on 2020-02-14 at 21:26:46 with 1 thread
+
+Examining input data ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.fits ...
+Looking for PTF201111015420_2_o_32874_06.w.resamp.weight.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.fits ...
+Looking for PTF201111025412_2_o_33288_06.w.resamp.weight.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.fits ...
+Looking for PTF201111025428_2_o_33289_06.w.resamp.weight.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.fits ...
+Looking for PTF201111035427_2_o_33741_06.w.resamp.weight.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.fits ...
+Looking for PTF201111085228_2_o_34301_06.w.resamp.weight.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.fits ...
+Looking for PTF201111095206_2_o_34706_06.w.resamp.weight.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.fits ...
+Looking for PTF201111155050_2_o_35570_06.w.resamp.weight.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.fits ...
+Looking for PTF201111165032_2_o_35994_06.w.resamp.weight.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.fits ...
+Looking for PTF201111184953_2_o_36749_06.w.resamp.weight.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.fits ...
+Looking for PTF201111224851_2_o_37387_06.w.resamp.weight.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.fits ...
+Looking for PTF201111234857_2_o_37754_06.w.resamp.weight.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.fits ...
+Looking for PTF201111265053_2_o_38612_06.w.resamp.weight.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.fits ...
+Looking for PTF201111274755_2_o_38996_06.w.resamp.weight.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.fits ...
+Looking for PTF201111284696_2_o_39396_06.w.resamp.weight.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.fits ...
+Looking for PTF201111294943_2_o_39822_06.w.resamp.weight.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.fits ...
+Looking for PTF201111304878_2_o_40204_06.w.resamp.weight.fits ...
+Creating NEW output image ...
+Creating NEW weight-map ...
+
+------- Output File coadd.fits:
+    &quot;no ident&quot;  WEIGHTED  no ext. header  3600x3600  32 bits (floats)
+    Center: 14:01:00.00 +54:15:00.0   60&apos;x60&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 0 e-/ADU   Flux scaling (astrom/photom): 1 X / 1 X
+
+Loading input data ...
+
+-------------- File PTF201111015420_2_o_32874_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.54 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 119.2759   RMS: 11.63282   Weight scale: 1
+
+
+-------------- File PTF201111025412_2_o_33288_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3372  32 bits (floats)
+    Center: 14:01:49.26 +54:13:05.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 110.2946   RMS: 11.38889   Weight scale: 1
+
+
+-------------- File PTF201111025428_2_o_33289_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3371  32 bits (floats)
+    Center: 14:01:49.26 +54:13:04.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 137.8565   RMS: 12.12808   Weight scale: 1
+
+
+-------------- File PTF201111035427_2_o_33741_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3378  32 bits (floats)
+    Center: 14:01:49.14 +54:13:08.4   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 116.4897   RMS: 12.96285   Weight scale: 1
+
+
+-------------- File PTF201111085228_2_o_34301_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3377  32 bits (floats)
+    Center: 14:01:50.45 +54:13:07.8   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 74.64999   RMS: 13.19936   Weight scale: 1
+
+
+-------------- File PTF201111095206_2_o_34706_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.83 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 183.7839   RMS: 15.27972   Weight scale: 1
+
+
+-------------- File PTF201111155050_2_o_35570_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3375  32 bits (floats)
+    Center: 14:01:49.94 +54:13:06.9   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 114.2248   RMS: 12.80604   Weight scale: 1
+
+
+-------------- File PTF201111165032_2_o_35994_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3377  32 bits (floats)
+    Center: 14:01:49.94 +54:13:07.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 99.6018   RMS: 12.30586   Weight scale: 1
+
+
+-------------- File PTF201111184953_2_o_36749_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3380  32 bits (floats)
+    Center: 14:01:50.23 +54:13:09.3   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 91.81 X
+    Background: 120.8314   RMS: 12.98723   Weight scale: 1
+
+
+-------------- File PTF201111224851_2_o_37387_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3379  32 bits (floats)
+    Center: 14:01:49.77 +54:13:08.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 65.78442   RMS: 14.06748   Weight scale: 1
+
+
+-------------- File PTF201111234857_2_o_37754_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3381  32 bits (floats)
+    Center: 14:01:49.83 +54:13:09.9   37.1&apos;x56.3&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 100.7 X
+    Background: 206.4612   RMS: 13.8399   Weight scale: 1
+
+
+-------------- File PTF201111265053_2_o_38612_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3387  32 bits (floats)
+    Center: 14:01:48.97 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 50.61902   RMS: 13.02685   Weight scale: 1
+
+
+-------------- File PTF201111274755_2_o_38996_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2226x3387  32 bits (floats)
+    Center: 14:01:49.14 +54:13:12.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 69.64 X
+    Background: 75.32168   RMS: 11.85545   Weight scale: 1
+
+
+-------------- File PTF201111284696_2_o_39396_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3384  32 bits (floats)
+    Center: 14:01:49.60 +54:13:11.4   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 76.36 X
+    Background: 88.89362   RMS: 11.94137   Weight scale: 1
+
+
+-------------- File PTF201111294943_2_o_39822_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2225x3374  32 bits (floats)
+    Center: 14:01:49.09 +54:13:06.4   37.1&apos;x56.2&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 4394 X
+    Background: 130.9393   RMS: 11.89085   Weight scale: 1
+
+
+-------------- File PTF201111304878_2_o_40204_06.w.resamp.fits:
+    &quot;PTF_survey&quot;  WEIGHTED  no ext. header  2224x3385  32 bits (floats)
+    Center: 14:01:48.92 +54:13:11.9   37.1&apos;x56.4&apos;  Scale: 1 &apos;&apos;/pixel
+    Gain: 1.8 e-/ADU   Flux scaling (astrom/photom): 1 X / 63.52 X
+    Background: 60.07642   RMS: 11.90138   Weight scale: 1
+
+-------------- Co-adding frames            
+Maximum overlap density: 16 frames
+Closing files ...
+
+&gt; All done (in 20.7 s)
+</data>
+  </statcall>
+  <statcall error="0" id="metadata">
+    <temporary name="/tmp/ks.meta.nbwCmS" descriptor="5"/>
+    <statinfo mode="0100600" size="0" inode="3789901" nlink="1" blksize="4096" blocks="0" mtime="2020-02-14T21:26:46-08:00" atime="2020-02-14T21:26:46-08:00" ctime="2020-02-14T21:26:46-08:00" uid="79874" user="lpottier" gid="79874" group="lpottier"/>
+  </statcall>
+</invocation>

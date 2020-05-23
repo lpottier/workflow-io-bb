@@ -3,7 +3,7 @@
 #  0: No print, only simulation results
 #  1: Basic print
 #  2: Debug print
-VERBOSE=0
+VERBOSE=3
 
 usage()
 {
@@ -93,8 +93,8 @@ echo "[$($DATE --rfc-3339=ns)] Building WRENCH simulator..."
 err_make_wrench="$(mktemp /tmp/build.wrench.XXXXX)"
 
 cd $BUILD/
-cmake .. > $err_make_wrench 2>&1
-make >> $err_make_wrench 2>&1
+cmake .. #> $err_make_wrench 2>&1
+make #>> $err_make_wrench 2>&1
 cd ..
 
 if (( "$VERBOSE" >= 1 )); then
@@ -118,7 +118,6 @@ if (( "$HEADER_CSV" == 0 )); then
     print_header="--no-header"
 fi
 
-
 #for folder in $SWARP_FOLDER; do
 
 EXP_DIR=$(echo $MAIN_DIR/swarp*.*/swarp*/)
@@ -126,7 +125,8 @@ EXP_DIR=$(echo $MAIN_DIR/swarp*.*/swarp*/)
 max_pipeline=$(echo "$(basename $EXP_DIR)" | cut -f1 -d'.')
 max_pipeline=$(echo "$max_pipeline" | cut -f2 -d'-')
 
-max_pipeline=1
+#max_pipeline=1
+ 
 
 core=$(echo "$(basename $EXP_DIR)" | cut -f3 -d'.')
 core=${core%%c}
@@ -155,7 +155,7 @@ for run in $(ls $EXP_DIR | sort -n); do
     fi
     for pipeline in $(find $EXP_DIR/$run/* -maxdepth 0 -type d | sort -n); do
         if (( "$VERBOSE" >= 1 )); then
-            echo "  pipeline found: $(basename $pipeline) (be cautious: it is number of pipeline - 1)"
+            echo "  pipeline found: $(basename $pipeline) (be cautious: it is number of pipeline + 1)"
         fi
 
         LOC_OUTPUTLOG="$(find $EXP_DIR/$run -maxdepth 1 -type f -name $OUTPUT_LOG)"
@@ -219,6 +219,7 @@ for run in $(ls $EXP_DIR | sort -n); do
 
         DAX="$pipeline/${WORKFLOW%%.*}-$(basename $pipeline).dax"
         ## Generate Pegasus DAX
+
         $PYTHON $DAXGEN_DIR/daxgen.py \
             --dax-file "$DAX" \
             --scalability "$max_pipeline" \
@@ -230,7 +231,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "  [$($DATE --rfc-3339=ns)] Generate a WRENCH compatible DAX from $(basename $WORKFLOW)..."
         fi
-        #DAX="$pipeline/${WORKFLOW%%.*}-$(basename $pipeline).dax"
+        # DAX="$pipeline/${WORKFLOW%%.*}-$(basename $pipeline).dax"
 
         err_ks_to_wrench="/dev/null"
         if (( "$VERBOSE" >= 1 )); then
@@ -260,7 +261,6 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
         fi
 
-
         err_wrench="$pipeline/wrench.err"
         if (( "$VERBOSE" >= 2 )); then
             err_wrench=1
@@ -277,7 +277,7 @@ for run in $(ls $EXP_DIR | sort -n); do
         if [[ "$bb_type" == "summit" ]]; then
             PLATFORM=$SUMMIT_PLATFORM
         fi
- 
+
         if [[ "$fits" == "stagefits" ]]; then
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
@@ -295,7 +295,7 @@ for run in $(ls $EXP_DIR | sort -n); do
                 --fits \
                 --csv="$CSV_OUTPUT" \
                 "$print_header" \
-                2> $err_wrench
+                # 2> $err_wrench
         else
             $PWD/build/workflow-io-bb \
                 --jobid="$jobpid" \
@@ -321,7 +321,7 @@ for run in $(ls $EXP_DIR | sort -n); do
             echo ""
             echo "[$($DATE --rfc-3339=ns)] Done. Log written in $err_wrench"
         fi
-
+        exit
     done
 done
 

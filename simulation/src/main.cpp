@@ -249,7 +249,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["makespan"] = "0";
   args["scheduler-log"] = "0";
   args["output-dir"] = "0";
-
+  
   int flag_no_header = 0;
 
   static struct option long_options[] = {

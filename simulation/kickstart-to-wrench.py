@@ -66,11 +66,13 @@ def _parse_kickstart(kickstart_file, io_fraction, core):
             for a in j.findall('{http://pegasus.isi.edu/schema/invocation}argument-vector'):
                 for r in a.findall('{http://pegasus.isi.edu/schema/invocation}arg'):
                     if 'combine' in r.text:
-                        runtimes['combine'] = float(j.get('duration'))*(1-float(io_fraction))
+                        runtimes['combine'] = float(j.get('duration'))*(1-float(io_fraction)) * float(core) #/(core*2.3*16*10**9)
+                        print("COMBINE: ", runtimes['combine'])
                         cores['combine'] = core
                         break
                     elif 'resample' in r.text:
-                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction))
+                        runtimes['resample'] = float(j.get('duration'))*(1-float(io_fraction)) * float(core) #/(core*2.3*16*10**9)
+                        print("RESAMPLE: ", runtimes['resample'])
                         cores['resample'] = core
                         break
 
