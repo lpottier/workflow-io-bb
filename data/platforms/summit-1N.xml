@@ -18,10 +18,10 @@
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in GB : here we consider infinite size -->
         </host>
 
-        <link id="pfslink" bandwidth="2.1GBps" latency="200us">
+        <link id="pfslink" bandwidth="2.1GBps" latency="300us">
             <prop id="type" value="pfs-summit"/>
         </link>
-        <link id="bblink" bandwidth="6.5GBps" latency="100us">
+        <link id="bblink" bandwidth="6.5GBps" latency="50us">
             <prop id="type" value="bb-summit"/>
         </link>
 

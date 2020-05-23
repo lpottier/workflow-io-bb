@@ -17,10 +17,10 @@
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
         </host>
 
-        <link id="pfslink" bandwidth="1GBps" latency="1000us">
+        <link id="pfslink" bandwidth="1GBps" latency="1300us">
             <prop id="type" value="pfs-cori"/>
         </link>
-        <link id="bblink" bandwidth="6.5GBps" latency="100us">
+        <link id="bblink" bandwidth="6.5GBps" latency="800us">
             <prop id="type" value="bb-cori"/>
         </link>
 
