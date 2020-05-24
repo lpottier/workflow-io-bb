@@ -113,7 +113,7 @@ void BBWMS::addStageOutTask(const std::string& task_id, unsigned int paralleliza
 
   // Retrieve the last tasks to connect the new BB tasks
   int nb_level = this->getWorkflow()->getNumLevels();
-  std::vector<wrench::WorkflowTask*> last_tasks = this->getWorkflow()->getTasksInTopLevelRange(nb_level-1,nb_level-1);  
+  std::vector<wrench::WorkflowTask*> last_tasks = this->getWorkflow()->getTasksInTopLevelRange(nb_level-1,nb_level-1);
 
   // Connect the BB stage out task to the last tasks in the workflow
   for (auto task : last_tasks) {
@@ -130,24 +130,24 @@ void BBWMS::printFileAllocationTTY() {
   int width_size = 30;
 
   //print current files allocation
-  std::cout << std::left << std::setw(width_name+1) 
+  std::cout << std::left << std::setw(width_name+1)
             << " FILE"
             << std::left << std::setw(width_storage)
             << " STORAGE"
-            << std::left << std::setw(width_size) 
+            << std::left << std::setw(width_size)
             << " SIZE(MB)" << std::endl;
-  std::cout << std::left << std::setw(width_name+1) 
+  std::cout << std::left << std::setw(width_name+1)
             << " ----"
             << std::left << std::setw(width_storage)
             << " -------"
-            << std::left << std::setw(width_size) 
+            << std::left << std::setw(width_size)
             << " --------" << std::endl;
   for (auto storage : this->getAvailableStorageServices()) {
     for (auto file : this->getWorkflow()->getFiles()) {
-      if(storage->lookupFile(file)) {
-        std::cout << " " << std::left << std::setw(width_name+1) 
-                  << file->getID() << std::setw(width_storage) 
-                  << std::left << storage->getHostname() 
+      if(storage->lookupFile(file, wrench::FileLocation::LOCATION(storage))) {
+        std::cout << " " << std::left << std::setw(width_name+1)
+                  << file->getID() << std::setw(width_storage)
+                  << std::left << storage->getHostname()
                   << std::left << std::setw(width_size)
                   << file->getSize()/std::pow(2,20) << std::endl;
       }

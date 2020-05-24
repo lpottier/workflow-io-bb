@@ -1,11 +1,13 @@
 # Simulation
 
 ## Reproducibility
-For the paper we used WRENCH 1.4 and SimGrid 3.24 compiled with GCC 8.3.0.
+For the paper we used [**WRENCH 1.5**](http://wrench-project.org) 
+and [**SimGrid 3.25**](http://simgrid.org) compiled with GCC 8.3.0.
 The runs have been done on macOS 10.15.3.
 
 ## Build
-The simulator is based on WRENCH so first you need to install WRENCH see: [https://wrench-project.org/wrench/1.4/user/install.html](How to install WRENCH).
+The simulator is based on WRENCH so first you need to install WRENCH 
+see: [How to install WRENCH](https://wrench-project.org/wrench/1.5/user/install.html).
 
 ## How to run the simulator
 

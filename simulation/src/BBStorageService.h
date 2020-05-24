@@ -27,15 +27,15 @@ public:
   const double getLinkSpeed() const { return this->linkspeed; }
   const double getLinkLatency() const { return this->linklatency; }
 
-  std::shared_ptr<wrench::StorageService> getPFSStorage() const { 
+  std::shared_ptr<wrench::StorageService> getPFSStorage() const {
     return this->pfs_storage;
   }
 
-  const std::set<wrench::WorkflowFile*> getFiles() const { 
+  const std::set<wrench::WorkflowFile*> getFiles() const {
     return this->files;
   }
 
-  const bool type() const { 
+  const bool type() const {
     return STORAGE_TYPE::BB;
   }
 

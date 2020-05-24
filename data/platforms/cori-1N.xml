@@ -4,23 +4,35 @@
     <zone id="AS0" routing="Full">
         <host id="Host1" speed="36.8Gf" core="32">
             <prop id="type" value="compute"/>
+            <disk id="large_disk" read_bw="1MBps" write_bw="1MBps">
+                <prop id="size" value="5000GiB"/>
+                <prop id="mount" value="/"/>
+            </disk>
         </host>
 
         <host id="PFSHost1" speed="1Gf" core="1">
             <prop id="type" value="storage"/>
             <prop id="category" value="PFS"/>
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
+            <disk id="large_disk" read_bw="10MBps" write_bw="10MBps">
+                <prop id="size" value="5000GiB"/>
+                <prop id="mount" value="/"/>
+            </disk>
         </host>
         <host id="BBHost1" speed="1Gf" core="1">
             <prop id="type" value="storage"/>
             <prop id="category" value="BB"/>
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
+            <disk id="large_disk" read_bw="950MBps" write_bw="950MBps">
+                <prop id="size" value="5000GiB"/>
+                <prop id="mount" value="/"/>
+            </disk>
         </host>
 
-        <link id="pfslink" bandwidth="1GBps" latency="1300us">
+        <link id="pfslink" bandwidth="1GBps" latency="2000us">
             <prop id="type" value="pfs-cori"/>
         </link>
-        <link id="bblink" bandwidth="6.5GBps" latency="800us">
+        <link id="bblink" bandwidth="800MBps" latency="1500us">
             <prop id="type" value="bb-cori"/>
         </link>
 
@@ -35,8 +47,8 @@
         </route>
 
         <!-- route between BB node 1 and PFS 1 (speed PFS) -->
-<!--         <route src="BBHost1" dst="PFSHost1">
-            <link_ctn id="pfslink"/>
-        </route> -->
+        <!--         <route src="BBHost1" dst="PFSHost1">
+                    <link_ctn id="pfslink"/>
+                </route> -->
     </zone>
 </platform>

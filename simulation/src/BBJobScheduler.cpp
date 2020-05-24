@@ -14,7 +14,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(bb_scheduler, "Log category for BB Scheduler");
 /**
  * @brief Create a JobScheduler with two types of storages PFS and BB
  */
-BBJobScheduler::BBJobScheduler(const FileMap_t &file_placement, const std::string& nb_cores) : 
+BBJobScheduler::BBJobScheduler(const FileMap_t &file_placement, const std::string& nb_cores) :
                 file_placement(file_placement), nb_cores(nb_cores) {}
 
 /**
@@ -36,17 +36,17 @@ void BBJobScheduler::scheduleTasks(
   auto compute_service = *compute_services.begin();
 
   WRENCH_INFO("There are %ld ready tasks to schedule", tasks.size());
-  
+
   std::map< std::string, std::string> tasks_resource_mapping;
-  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::StorageService> > file_locations;
+  std::map<wrench::WorkflowFile*, std::shared_ptr<wrench::FileLocation> > file_locations;
 
   for (auto task : tasks) {
     for (auto tuple : this->file_placement) {
-      file_locations[std::get<0>(tuple)] = std::get<2>(tuple);
+      file_locations[std::get<0>(tuple)] = wrench::FileLocation::LOCATION(std::get<2>(tuple));
     }
     tasks_resource_mapping[task->getID()] = this->nb_cores;
   }
-  
+
   wrench::WorkflowJob *job = (wrench::WorkflowJob *) this->getJobManager()->createStandardJob(tasks, file_locations);
   this->getJobManager()->submitJob(job, compute_service, tasks_resource_mapping);
 
@@ -83,7 +83,7 @@ void BBJobScheduler::scheduleTasks(
 
 //     // We prepare the stage-in of input files
 //     if (task->getID() == "bb_stagein") {
-//       // We build the input files required by the job from the original 
+//       // We build the input files required by the job from the original
 //       // file_placement by selecting only the input files
 
 //       // We run stage-in/out task with only one core
@@ -125,5 +125,3 @@ void BBJobScheduler::scheduleTasks(
 //   }
 //   WRENCH_INFO("Done with scheduling tasks as standard jobs");
 // }
-
-

@@ -48,9 +48,9 @@ std::map<std::string, double> compute_payload_values;
             args["cores"],
             args["fits"],
             args["bb-type"],
-            args["platform"], 
-            args["dax"], 
-            args["stage-file"], 
+            args["platform"],
+            args["dax"],
+            args["stage-file"],
             args["scheduler-log"],
             args["makespan"],
             args["output"]);
@@ -65,6 +65,7 @@ std::map<std::string, double> compute_payload_values;
   wrench::Workflow *workflow = simulation.parse_inputs();
 
   std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> route;
+  std::cerr << "CREATE HOSTS" << std::endl;
   route = simulation.create_hosts();
 
   // printHostStorageAssociationTTY(cs_to_pfs);
@@ -73,15 +74,18 @@ std::map<std::string, double> compute_payload_values;
   //printHostRouteTTY(route);
 
   // Create a list of storage services that will be used by the WMS
+  std::cerr << "SS" << std::endl;
   std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services();
 
   // Create a list of compute services that will be used by the WMS
   // Instantiate a bare metal service and add it to the simulation
+  std::cerr << "CS" << std::endl;
   std::set<std::shared_ptr<wrench::ComputeService>> compute_services = simulation.instantiate_compute_services();
-
+  std::cerr << "END CS" << std::endl;
 
   //All services run on the main PFS node (by rule PFSHost1)
-  //wrench::FileRegistryService* file_registry_service = 
+  //wrench::FileRegistryService* file_registry_service =
+  std::cerr << "FRS" << std::endl;
   simulation.instantiate_file_registry_service();
 
 
@@ -150,43 +154,44 @@ std::map<std::string, double> compute_payload_values;
       nb_files_in_bb = nb_files_in_bb + 1;
       amount_of_data_in_bb = amount_of_data_in_bb + std::get<0>(alloc)->getSize();
     }
-    // std::cout << " " << std::left << std::setw(60) 
+    // std::cout << " " << std::left << std::setw(60)
     //         << std::get<0>(alloc)->getID()
     //         << std::left << std::setw(20)
     //         << std::get<1>(alloc)->getHostname()
     //         << std::left << std::setw(20)
     //         << std::get<2>(alloc)->getHostname()
-    //         << std::left << std::setw(10) 
+    //         << std::left << std::setw(10)
     //         << std::get<0>(alloc)->getSize()/std::pow(2,20) << std::endl;
 }
 
   // Store some useful information for later
+  std::cerr << "SETS" << std::endl;
   simulation.setNBFileInBB(nb_files_in_bb);
   simulation.setDataInBB(amount_of_data_in_bb);
   simulation.setDataStaged(temp_tot);
 
-  // std::cout << nb_files_staged << "/" 
-  //           << workflow->getFiles().size() 
-  //           << " files staged in BB (" 
-  //           << amount_of_data_staged/std::pow(2,20) 
+  // std::cout << nb_files_staged << "/"
+  //           << workflow->getFiles().size()
+  //           << " files staged in BB ("
+  //           << amount_of_data_staged/std::pow(2,20)
   //           << " MB)." << std::endl;
 
-  /* One file in first BB node */ 
+  /* One file in first BB node */
   // for (auto f : workflow->getFiles()) {
   //   file_placement_heuristic.insert(std::make_tuple(
-  //                                   f, 
-  //                                   simulation.getPFSService(), 
+  //                                   f,
+  //                                   simulation.getPFSService(),
   //                                   first_bb_node
   //                                   )
   //                             );
   //   break;
   // }
 
-  /* All BB heuristic : as we can have multiple BB : *(simulation.getBBServices()).begin() */ 
+  /* All BB heuristic : as we can have multiple BB : *(simulation.getBBServices()).begin() */
   // for (auto f : workflow->getFiles()) {
   //   file_placement_heuristic.insert(std::make_tuple(
-  //                                   f, 
-  //                                   simulation.getPFSService(), 
+  //                                   f,
+  //                                   simulation.getPFSService(),
   //                                   *(simulation.getBBServices()).begin()
   //                                   )
   //                             );
@@ -199,8 +204,10 @@ std::map<std::string, double> compute_payload_values;
   // InitialFileAlloc initFileAlloc(file_placement_heuristic);
 
   // It is necessary to store, or "stage", input files in the PFS
-  //std::pair<int, double> stagein_fstat = 
+  //std::pair<int, double> stagein_fstat =
+  std::cerr << "SIF" << std::endl;
   simulation.stage_input_files();
+  std::cerr << "END SIF" << std::endl;
   //std::cerr << "Staged "<< stagein_fstat.first << ". Total size:" << stagein_fstat.second << std::endl;
 
   // auto ftest = *(workflow->getFiles()).begin();
@@ -214,6 +221,7 @@ std::map<std::string, double> compute_payload_values;
   //printWorkflowFile(workflow_id, workflow, output_dir + "/workflow-stat.csv");
   simulation.dumpWorkflowStatCSV();
 
+  std::cerr << "LAUNCH" << std::endl;
   // Launch the simulation
   try {
     simulation.launch();
@@ -249,7 +257,7 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
   args["makespan"] = "0";
   args["scheduler-log"] = "0";
   args["output-dir"] = "0";
-  
+
   int flag_no_header = 0;
 
   static struct option long_options[] = {
@@ -405,4 +413,3 @@ std::map<std::string, std::string> parse_args(int argc, char **argv) {
 
   return args;
 }
-
