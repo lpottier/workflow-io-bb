@@ -4,7 +4,7 @@
     <zone id="AS0" routing="Full">
         <host id="Host1" speed="49.12Gf" core="44">
             <prop id="type" value="compute"/>
-            <disk id="large_disk" read_bw="1MBps" write_bw="1MBps">
+            <disk id="large_disk" read_bw="100MBps" write_bw="100MBps">
                 <prop id="size" value="5000GiB"/>
                 <prop id="mount" value="/"/>
             </disk>
@@ -14,7 +14,7 @@
             <prop id="type" value="storage"/>
             <prop id="category" value="PFS"/>
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in GB -->
-            <disk id="large_disk" read_bw="50MBps" write_bw="50MBps">
+            <disk id="large_disk" read_bw="100MBps" write_bw="100MBps">
                 <prop id="size" value="5000GiB"/>
                 <prop id="mount" value="/"/>
             </disk>

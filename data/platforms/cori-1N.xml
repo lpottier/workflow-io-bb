@@ -4,7 +4,7 @@
     <zone id="AS0" routing="Full">
         <host id="Host1" speed="36.8Gf" core="32">
             <prop id="type" value="compute"/>
-            <disk id="large_disk" read_bw="1MBps" write_bw="1MBps">
+            <disk id="large_disk" read_bw="100MBps" write_bw="100MBps">
                 <prop id="size" value="5000GiB"/>
                 <prop id="mount" value="/"/>
             </disk>
@@ -14,7 +14,7 @@
             <prop id="type" value="storage"/>
             <prop id="category" value="PFS"/>
             <prop id="size" value="340282366920938463463374607431768211456"/> <!-- size in B -->
-            <disk id="large_disk" read_bw="10MBps" write_bw="10MBps">
+            <disk id="large_disk" read_bw="100MBps" write_bw="100MBps">
                 <prop id="size" value="5000GiB"/>
                 <prop id="mount" value="/"/>
             </disk>
@@ -47,8 +47,8 @@
         </route>
 
         <!-- route between BB node 1 and PFS 1 (speed PFS) -->
-        <!--         <route src="BBHost1" dst="PFSHost1">
-                    <link_ctn id="pfslink"/>
-                </route> -->
+<!--        <route src="BBHost1" dst="PFSHost1">-->
+<!--            <link_ctn id="pfslink"/>-->
+<!--        </route>-->
     </zone>
 </platform>

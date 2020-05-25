@@ -65,7 +65,6 @@ std::map<std::string, double> compute_payload_values;
   wrench::Workflow *workflow = simulation.parse_inputs();
 
   std::map<std::pair<std::string, std::string>, std::vector<simgrid::s4u::Link*>> route;
-  std::cerr << "CREATE HOSTS" << std::endl;
   route = simulation.create_hosts();
 
   // printHostStorageAssociationTTY(cs_to_pfs);
@@ -74,18 +73,14 @@ std::map<std::string, double> compute_payload_values;
   //printHostRouteTTY(route);
 
   // Create a list of storage services that will be used by the WMS
-  std::cerr << "SS" << std::endl;
   std::set<std::shared_ptr<wrench::StorageService>> storage_services = simulation.instantiate_storage_services();
 
   // Create a list of compute services that will be used by the WMS
   // Instantiate a bare metal service and add it to the simulation
-  std::cerr << "CS" << std::endl;
   std::set<std::shared_ptr<wrench::ComputeService>> compute_services = simulation.instantiate_compute_services();
-  std::cerr << "END CS" << std::endl;
 
   //All services run on the main PFS node (by rule PFSHost1)
   //wrench::FileRegistryService* file_registry_service =
-  std::cerr << "FRS" << std::endl;
   simulation.instantiate_file_registry_service();
 
 
@@ -165,7 +160,6 @@ std::map<std::string, double> compute_payload_values;
 }
 
   // Store some useful information for later
-  std::cerr << "SETS" << std::endl;
   simulation.setNBFileInBB(nb_files_in_bb);
   simulation.setDataInBB(amount_of_data_in_bb);
   simulation.setDataStaged(temp_tot);
@@ -205,9 +199,7 @@ std::map<std::string, double> compute_payload_values;
 
   // It is necessary to store, or "stage", input files in the PFS
   //std::pair<int, double> stagein_fstat =
-  std::cerr << "SIF" << std::endl;
   simulation.stage_input_files();
-  std::cerr << "END SIF" << std::endl;
   //std::cerr << "Staged "<< stagein_fstat.first << ". Total size:" << stagein_fstat.second << std::endl;
 
   // auto ftest = *(workflow->getFiles()).begin();
@@ -221,7 +213,6 @@ std::map<std::string, double> compute_payload_values;
   //printWorkflowFile(workflow_id, workflow, output_dir + "/workflow-stat.csv");
   simulation.dumpWorkflowStatCSV();
 
-  std::cerr << "LAUNCH" << std::endl;
   // Launch the simulation
   try {
     simulation.launch();

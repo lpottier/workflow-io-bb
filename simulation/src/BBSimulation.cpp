@@ -428,7 +428,7 @@ std::set <std::shared_ptr<wrench::ComputeService>> BBSimulation::instantiate_com
             {wrench::ComputeServiceMessagePayload::TERMINATE_PILOT_JOB_ANSWER_MESSAGE_PAYLOAD,     0},
             {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_REQUEST_MESSAGE_PAYLOAD,   0},
             {wrench::ComputeServiceMessagePayload::RESOURCE_DESCRIPTION_ANSWER_MESSAGE_PAYLOAD,    0},
-            {wrench::BareMetalComputeServiceProperty::THREAD_STARTUP_OVERHEAD,                     0},
+            {wrench::BareMetalComputeServiceProperty::TASK_STARTUP_OVERHEAD,                       0},
     };
 
     try {
@@ -473,6 +473,7 @@ std::pair<int, double> BBSimulation::stage_input_files() {
     auto input_files = this->workflow->getInputFiles();
     for (auto const &f : input_files) {
         try {
+            std::cerr << "------ STAGING: " << f.second->getID() << std::endl;
             this->stageFile(f.second, this->pfs_storage_service);
         } catch (std::runtime_error &e) {
             std::cerr << "Exception: " << e.what() << std::endl;
